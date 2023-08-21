@@ -1,0 +1,24 @@
+head
+    title Telefono
+section#formTelefono
+h2 Ingresar Teléfonos
+form(action="/guardar-telefono" method="post")
+      label(for="persona") Seleccione un DNI de una Persona existente:
+      select(name="persona", onchange="document.querySelector('#dni').value = this.value")
+        option(value="" selected)
+        each tel in personas
+            option(value=tel.DNI) #{tel.DNI}
+      br
+      br
+      label(for="dni") DNI:
+      input(type="text" id="dni" name="DNI" required)
+      br
+      br
+      label(for="celular1") Celular 1:
+      input(type="text" id="celular1" name="celular1")
+      label(for="celular2") Celular 2:
+      input(type="text" id="celular2" name="celular2")
+      br
+      br
+      
+      button(type="submit") Guardar

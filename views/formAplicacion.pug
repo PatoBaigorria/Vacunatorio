@@ -1,0 +1,30 @@
+head
+    title Aplicacion Vacunas
+section#formAplicacion
+h2 Aplicación de Vacunas
+form(action="/guardar-aplicacion" method="post")
+      label(for="DNI") DNIAgente:
+      select#DNIAgenteSelect(name="DNI")
+            option(value="") Selecciona un Agente De Salud
+                each agente in personas
+                    if agente.ocupacion === "Agente de Salud"
+                        option(value=agente.DNI) #{agente.nombre}
+      br
+      br
+      label(for="dni") DNIPaciente:
+      input(type="text" id="dni" name="DNIPaciente" required)
+      br
+      br
+      label(for="num-serie") Nº de Serie Lote Interno:
+      select#numeroDeSerieSelect(name="numeroDeSerie")
+            option(value="") Selecciona un Lote Interno
+                each loteI in lotesInternos
+                    option(value=loteI.numeroDeSerie)= loteI.numeroDeSerie
+      br
+      br
+      label(for="fecha-aplic") Fecha Aplicación Vacuna:
+      input(type="date" id="fecha-aplic" name="fechaDeAplicacion" required)
+      br
+      br
+    
+      button(type="submit") Guardar

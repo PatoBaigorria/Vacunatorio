@@ -1,0 +1,30 @@
+head
+    title Traslados
+section#formTraslado
+h2 Ingresar Traslados
+form(action="/guardar-traslado" method="post")
+      
+      label(for="num-serie") Nº de Serie Lote Interno:
+      select#numeroDeSerieSelect(name="numeroDeSerie")
+            option(value="") Selecciona un Lote Interno
+                each loteI in lotesInternos
+                    option(value=loteI.numeroDeSerie)= loteI.numeroDeSerie
+      br
+      br
+      label(for="id-ctrovac") Centro de Vacunacion:
+        select#idCentroDeVacunacion(name="idCentroDeVacunacion")
+            option(value="") Selecciona un Centro de Vacunación
+                each cvac in centrosDeVacunacion
+                    option(value=cvac.idCentroDeVacunacion)= cvac.idCentroDeVacunacion
+      br
+      br
+      label(for="fecha-sal-trasl") Fecha Salida de Traslado:
+      input(type="date" id="fecha-sal-trasl" name="fechaDeSalida" required)
+      br
+      br
+      label(for="fecha-lleg-trasl") Fecha Llegada de Traslado:
+      input(type="date" id="fecha-lleg-trasl" name="fechaDeLlegada" required)
+      br
+      br
+      
+      button(type="submit") Guardar

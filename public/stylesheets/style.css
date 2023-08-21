@@ -1,0 +1,52 @@
+/* styles.css */
+
+/* Estilos generales */
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+.container {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+h1 {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+h2 {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+p {
+  margin-bottom: 10px;
+}
+
+/* Estilos para las vistas específicas */
+/* index.pug */
+#index {
+  text-align: center;
+  margin-top: 50px;
+}
+
+/* loteinterno.pug */
+#loteinterno {
+  margin-top: 50px;
+}
+
+/* descarte.pug */
+#descarte {
+  margin-top: 50px;
+}
+
+/* aplicacion.pug */
+#aplicacion {
+  margin-top: 50px;
+}

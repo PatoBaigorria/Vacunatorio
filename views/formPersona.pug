@@ -1,0 +1,53 @@
+head
+    title Persona
+section#formPersona
+h2 Ingresar una Persona
+if mensaje
+   p(style="color: red; font-weight: bold; margin-top: 10px;") #{mensaje}
+form(action="/guardar-persona" method="post")
+      label(for="dni") DNI:
+      input(type="text" id="dni" name="DNI" required)
+      br
+      br
+      label(for="nombre") Nombre:
+      input(type="text" id="nombre" name="nombre" required)
+      label(for="apellido") Apellido:
+      input(type="text" id="apellido" name="apellido" required)
+      br
+      br
+      label(for="email") Email:
+      input(type="text" id="email" name="email" required)
+      label(for="fecha-nac") Fecha de Nacimiento:
+      input(type="date" id="fecha-nac" name="fechadenacimiento" required)
+      br
+      br
+      label(for="ocupacion") Ocupación:
+      select(name = "ocupacion" id = "ocupacion" required)
+        option(value="") Selecciona una Ocupacion:
+        option(value="agente") Agente de Salud
+        option(value="otro") Otra
+      br
+      br
+      div#matricula
+        if ocupacion === "agente"
+          label(for="matricula") Matricula:
+          input(type="text" name="matricula" id="matricula")
+        
+      br
+      label Género:
+      select(name="genero" required)
+        option(value="masculino") Masculino
+        option(value="femenino") Femenino
+        option(value="otro") Otro
+      br
+      br
+      label(for="longitud") Longitud:
+      input(type="text" id="longitud" name="longitud" placeholder="Ej. 32.801725" required)
+      label(for="latitud") Latitud:
+      input(type="text" id="latitud" name="latitud" placeholder="Ej. -34.603722" required)
+      br
+      br
+      
+      button(type="submit") Guardar
+
+
