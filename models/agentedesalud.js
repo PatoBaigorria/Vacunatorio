@@ -1,7 +1,7 @@
 "use strict";
 const { Model, DataTypes } = require("sequelize");
 const sequelize = require("../database/db");
-class Agentedesalud extends Model {}
+class Agentedesalud extends Model { }
 
 const agentedesalud = Agentedesalud.init(
   {

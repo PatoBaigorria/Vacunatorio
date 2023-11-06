@@ -1,18 +1,14 @@
 head
-    title Agente Salud
+    title Agente de Salud
 section#formAgenteDeSalud
 h2 Ingresar Agente de Salud
 form(action="/guardar-agentedesalud" method="post")
       label(for="persona") Seleccione un Agente de Salud existente:
-      select(name="persona", onchange="document.querySelector('#dni').value = this.value")
-        option(value="" selected)
-        each agente in personas
-            if agente.ocupacion === "Agente de Salud"
-                option(value=agente.DNI) #{agente.DNI}
-      br
-      br
-      label(for="dni") DNI:
-      input(type="text" id="dni" name="DNI" required)
+      select#personaSelect(name="DNI")
+        option(value="") Seleccione un agente de salud para ingresar su matricula:
+            each persona in personas
+                if(persona.ocupacion === "agenteDeSalud")
+                    option(value=persona.DNI)= persona.nombre + ' ' + persona.apellido
       br
       br
       label(for="matricula") Matrícula:

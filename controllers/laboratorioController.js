@@ -1,7 +1,7 @@
 const {
   Laboratorio,
-  Loteproveedor,
-  Loteinterno,
+  LoteProveedor,
+  LoteInterno,
 } = require("../models/relaciones");
 
 // Obtener todos los laboratorios
@@ -51,14 +51,14 @@ const deleteLaboratorio = async (req, res) => {
 const getLotesProveedoresByLaboratorioId = async (req, res) => {
   try {
     const laboratorio = await Laboratorio.findByPk(req.params.id, {
-      include: [Loteproveedor],
+      include: [LoteProveedor],
     });
 
     if (!laboratorio) {
       return res.status(404).json({ message: "Laboratorio no encontrado." });
     }
 
-    res.json(laboratorio.loteproveedores);
+    res.json(laboratorio.LoteProveedor);
   } catch (error) {
     res.status(500).json({
       message: "Error al obtener los lotes proveedores del laboratorio.",
@@ -70,14 +70,14 @@ const getLotesProveedoresByLaboratorioId = async (req, res) => {
 const getLotesInternosByLaboratorioId = async (req, res) => {
   try {
     const laboratorio = await Laboratorio.findByPk(req.params.id, {
-      include: [Loteinterno],
+      include: [LoteInterno],
     });
 
     if (!laboratorio) {
       return res.status(404).json({ message: "Laboratorio no encontrado." });
     }
 
-    res.json(laboratorio.loteinternos);
+    res.json(laboratorio.LoteInterno);
   } catch (error) {
     res.status(500).json({
       message: "Error al obtener los lotes internos del laboratorio.",

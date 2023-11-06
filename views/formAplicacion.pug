@@ -3,16 +3,19 @@ head
 section#formAplicacion
 h2 Aplicación de Vacunas
 form(action="/guardar-aplicacion" method="post")
-      label(for="DNI") DNIAgente:
-      select#DNIAgenteSelect(name="DNI")
-            option(value="") Selecciona un Agente De Salud
-                each agente in personas
-                    if agente.ocupacion === "Agente de Salud"
-                        option(value=agente.DNI) #{agente.nombre}
+      label(for="persona") Seleccione un Agente de Salud existente:
+      select#personaSelect(name="DNIAgente")
+        option(value="") Seleccione un agente de salud para ingresar su matricula:
+            each persona in personas
+                if(persona.ocupacion === "agenteDeSalud")
+                    option(value=persona.DNI)= persona.nombre + ' ' + persona.apellido
       br
       br
-      label(for="dni") DNIPaciente:
-      input(type="text" id="dni" name="DNIPaciente" required)
+      label(for="persona") Seleccione un DNI de una Persona existente:
+      select#personaSelect(name="DNIPaciente")
+        option(value="") Seleccione un DNI para asignarle una patologia a la vez:
+            each persona in personas
+                option(value=persona.DNI)= persona.nombre + ' ' + persona.apellido
       br
       br
       label(for="num-serie") Nº de Serie Lote Interno:

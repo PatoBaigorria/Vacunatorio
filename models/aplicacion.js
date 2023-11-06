@@ -2,7 +2,7 @@
 const { Model, DataTypes } = require("sequelize");
 const sequelize = require("../database/db");
 
-class Aplicacion extends Model {}
+class Aplicacion extends Model { }
 
 const aplicacion = Aplicacion.init(
   {

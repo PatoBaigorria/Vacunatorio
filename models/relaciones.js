@@ -7,146 +7,143 @@ const sequelize = new Sequelize("vacunatorio2", "root", "", {
 */
 
 const sequelize = require("../database/db");
-const Agentedesalud = require("./agentedesalud");
+const AgenteDeSalud = require("./agentedesalud");
 const Aplicacion = require("./aplicacion");
-const Centrodevacunacion = require("./centrodevacunacion");
-const Depositonacional = require("./depositonacional");
-const Depositoprovincial = require("./depositoprovincial");
+const CentroDeVacunacion = require("./centrodevacunacion");
+const DepositoNacional = require("./depositonacional");
+const DepositoProvincial = require("./depositoprovincial");
 const Descarte = require("./descarte");
 const Laboratorio = require("./laboratorio");
-const Loteinterno = require("./loteinterno");
-const Loteproveedor = require("./loteproveedor");
-const Patologiabase = require("./patologiabase");
+const LoteInterno = require("./loteinterno");
+const LoteProveedor = require("./loteproveedor");
+const PatologiaBase = require("./patologiabase");
 const Persona = require("./persona");
 const Telefono = require("./telefono");
 const Traslado = require("./traslado");
 
 // Relaciones entre los modelos
-
-Laboratorio.hasMany(Loteproveedor, {
-  foreignKey: "idLaboratorio",
+Laboratorio.hasMany(LoteProveedor, {
+  foreignKey: 'idLaboratorio'
 });
 
-Loteproveedor.belongsTo(Laboratorio, {
-  foreignKey: "idLaboratorio",
+LoteProveedor.belongsTo(Laboratorio, {
+  foreignKey: 'idLaboratorio'
 });
 
-Loteproveedor.hasMany(Loteinterno, {
-  foreignKey: "numeroDeLote",
-});
-Loteinterno.belongsTo(Loteproveedor, {
-  foreignKey: "numeroDeLote",
+LoteProveedor.hasMany(LoteInterno, {
+  foreignKey: 'idLaboratorio'
 });
 
-Loteproveedor.hasMany(Loteinterno, {
-  foreignKey: "idLaboratorio",
-});
-Loteinterno.belongsTo(Loteproveedor, {
-  foreignKey: "idLaboratorio",
+LoteInterno.belongsTo(LoteProveedor, {
+  foreignKey: 'numeroDeLote'
 });
 
-Depositonacional.hasMany(Loteinterno, {
-  foreignKey: "idDepositoNacional",
+LoteInterno.belongsTo(LoteProveedor, {
+  foreignKey: 'idLaboratorio'
 });
 
-Depositoprovincial.hasMany(Loteinterno, {
-  foreignKey: "idDepositoProvincial",
+DepositoNacional.hasMany(LoteInterno, {
+  foreignKey: 'idDepositoNacional'
 });
 
-Centrodevacunacion.hasMany(Loteinterno, {
-  foreignKey: "idCentroDeVacunacion",
+DepositoProvincial.hasMany(LoteInterno, {
+  foreignKey: 'idDepositoProvincial'
 });
 
-Loteinterno.belongsTo(Depositonacional, {
-  foreignKey: "idDepositoNacional",
+CentroDeVacunacion.hasMany(LoteInterno, {
+  foreignKey: 'idCentroDeVacunacion',
 });
 
-Loteinterno.belongsTo(Depositoprovincial, {
-  foreignKey: "idDepositoProvincial",
+LoteInterno.belongsTo(DepositoNacional, {
+  foreignKey: 'idDepositoNacional',
 });
 
-Loteinterno.belongsTo(Centrodevacunacion, {
-  foreignKey: "idCentroDeVacunacion",
+LoteInterno.belongsTo(DepositoProvincial, {
+  foreignKey: 'idDepositoProvincial',
 });
 
-Loteinterno.belongsToMany(Centrodevacunacion, {
+LoteInterno.belongsTo(CentroDeVacunacion, {
+  foreignKey: 'idCentroDeVacunacion',
+});
+
+LoteInterno.belongsToMany(CentroDeVacunacion, {
   through: Traslado,
-  foreignKey: "numeroDeSerie",
+  foreignKey: 'numeroDeSerie'
 });
 
-Centrodevacunacion.belongsToMany(Loteinterno, {
+CentroDeVacunacion.belongsToMany(LoteInterno, {
   through: Traslado,
-  foreignKey: "idCentroDeVacunacion",
+  foreignKey: 'idCentroDeVacunacion'
 });
 
-Persona.hasMany(Telefono, {
-  foreignKey: "DNI",
+Persona.hasOne(Telefono, {
+  foreignKey: 'DNI'
 });
 
-Persona.hasMany(Patologiabase, {
-  foreignKey: "DNI",
+Persona.hasMany(PatologiaBase, {
+  foreignKey: 'DNI'
 });
 
 Telefono.belongsTo(Persona, {
-  foreignKey: "DNI",
+  foreignKey: 'DNI'
 });
 
-Patologiabase.belongsTo(Persona, {
-  foreignKey: "DNI",
+PatologiaBase.belongsTo(Persona, {
+  foreignKey: 'DNI'
 });
 
-Persona.hasOne(Agentedesalud, {
-  foreignKey: "DNI",
+Persona.hasOne(AgenteDeSalud, {
+  foreignKey: 'DNI',
 });
 
-Agentedesalud.belongsTo(Persona, {
-  foreignKey: "DNI",
+AgenteDeSalud.belongsTo(Persona, {
+  foreignKey: 'DNI',
 });
 
 Persona.hasMany(Aplicacion, {
-  foreignKey: "DNIPaciente",
+  foreignKey: 'DNIPaciente'
 });
 
-Agentedesalud.hasMany(Aplicacion, {
-  foreignKey: "DNIAgente",
+AgenteDeSalud.hasMany(Aplicacion, {
+  foreignKey: 'DNIAgente'
 });
 
-Loteinterno.hasMany(Aplicacion, {
-  foreignKey: "numeroDeSerie",
+LoteInterno.hasMany(Aplicacion, {
+  foreignKey: 'numeroDeSerie',
 });
 
 Aplicacion.belongsTo(Persona, {
-  foreignKey: "DNIPaciente",
+  foreignKey: 'DNIPaciente'
 });
 
-Aplicacion.belongsTo(Agentedesalud, {
-  foreignKey: "DNIAgente",
+Aplicacion.belongsTo(AgenteDeSalud, {
+  foreignKey: 'DNIAgente'
 });
 
-Aplicacion.belongsTo(Loteinterno, {
-  foreignKey: "numeroDeSerie",
+Aplicacion.belongsTo(LoteInterno, {
+  foreignKey: 'numeroDeSerie'
 });
 
-Loteinterno.hasMany(Descarte, {
-  foreignKey: "numeroDeSerie",
+LoteInterno.hasMany(Descarte, {
+  foreignKey: 'numeroDeSerie'
 });
 
-Agentedesalud.hasMany(Descarte, {
-  foreignKey: "DNIAgente",
+AgenteDeSalud.hasMany(Descarte, {
+  foreignKey: 'DNIAgente'
 });
 
-Descarte.hasMany(Loteinterno, {
-  foreignKey: "numeroDeSerie",
+/*Descarte.hasMany(LoteInterno, {
+  foreignKey: 'numeroDeSerie'
 });
 
-Descarte.belongsTo(Agentedesalud, {
-  foreignKey: "DNIAgente",
-});
+Descarte.belongsTo(AgenteDeSalud, {
+  foreignKey: 'DNIAgente'
+});*/
 
 async function sincronizarModelos() {
   try {
     await sequelize.sync({
-      force: false,
+      force: true,
     }); // La opción force: true creará las tablas borrando los datos existentes
     console.log("Modelos sincronizados con la base de datos.");
   } catch (error) {
@@ -161,16 +158,16 @@ async function sincronizarModelos() {
 sincronizarModelos();
 
 module.exports = {
-  Agentedesalud,
+  AgenteDeSalud,
   Aplicacion,
-  Centrodevacunacion,
-  Depositonacional,
-  Depositoprovincial,
+  CentroDeVacunacion,
+  DepositoNacional,
+  DepositoProvincial,
   Descarte,
   Laboratorio,
-  Loteinterno,
-  Loteproveedor,
-  Patologiabase,
+  LoteInterno,
+  LoteProveedor,
+  PatologiaBase,
   Persona,
   Telefono,
   Traslado,

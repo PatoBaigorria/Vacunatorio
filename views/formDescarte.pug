@@ -3,12 +3,12 @@ head
 section#formDescarte
 h2 Ingresar un Descarte
 form(action="/guardar-descarte" method="post")
-      label(for="DNI") DNIAgente:
-      select#DNIAgenteSelect(name="DNI")
-            option(value="") Selecciona un Agente De Salud
-                each agente in personas
-                    if agente.ocupacion === "Agente de Salud"
-                        option(value=agente.DNI) #{agente.nombre}
+      label(for="persona") Seleccione un Agente de Salud existente:
+      select#personaSelect(name="DNIAgente")
+        option(value="") Seleccione un agente de salud para ingresar su matricula:
+            each persona in personas
+                if(persona.ocupacion === "agenteDeSalud")
+                    option(value=persona.DNI)= persona.nombre + ' ' + persona.apellido
       br
       br
       label(for="num-serie") Nº de Serie Lote Interno:

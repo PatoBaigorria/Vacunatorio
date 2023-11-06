@@ -2,6 +2,7 @@ head
     title Lote Interno
 section#formLoteInterno
 h2 Ingresar Lotes Internos
+form#myForm
 form(action="/guardar-loteinterno" method="post")
       label(for="idLaboratorio") Laboratorio:
         select#laboratorioSelect(name="idLaboratorio")
@@ -14,7 +15,6 @@ form(action="/guardar-loteinterno" method="post")
             option(value="") Selecciona un Lote Proveedor
                 each numLote in lotesProveedores
                     option(value=numLote.numeroDeLote)= numLote.numeroDeLote
-
       br
       br
       label(for="cant-vac") Cantidad de Vacunas:
@@ -26,12 +26,14 @@ form(action="/guardar-loteinterno" method="post")
             option(value="") Selecciona un Depósito Nacional
                 each depnac in depositosNacionales
                     option(value=depnac.idDepositoNacional)= depnac.idDepositoNacional
+                //option(value="null") Ningún deposito
       br
       br
       label(for="fecha-lleg-depos-nac") Fecha Llegada Depósito Nacional:
-      input(type="date" id="fecha-lleg-depos-nac" name="fechaDeLlegadaDepositoNacional" required)
+      input(type="date" id="fecha-lleg-depos-nac" name="fechaDeLlegadaDepositoNacional" class="fecha-llegada")
       label(for="fecha-salida-depos-nac") Fecha Salida Depósito Nacional:
-      input(type="date" id="fecha-salida-depos-nac" name="fechaDeSalidaDepositoNacional" required)
+      input(type="date" id="fecha-salida-depos-nac" name="fechaDeSalidaDepositoNacional" class="fecha-salida")
+
       br
       br
       label(for="id-depprov") Depósito Provincial:
@@ -39,12 +41,13 @@ form(action="/guardar-loteinterno" method="post")
             option(value="") Selecciona un Depósito Provincial
                 each dprov in depositosProvinciales
                     option(value=dprov.idDepositoProvincial)= dprov.idDepositoProvincial
+                //option(value="null") Ningún deposito
       br
       br
       label(for="fecha-lleg-depos-prov") Fecha Llegada Depósito Provincial:
-      input(type="date" id="fecha-lleg-depos-prov" name="fechaDeLlegadaDepositoProvincial" required)
+      input(type="date" id="fecha-lleg-depos-prov" name="fechaDeLlegadaDepositoProvincial")
       label(for="fecha-salida-depos-prov") Fecha Salida Depósito Provincial:
-      input(type="date" id="fecha-salida-depos-prov" name="fechaDeSalidaDepositoProvincial" required)
+      input(type="date" id="fecha-salida-depos-prov" name="fechaDeSalidaDepositoProvincial")
       br
       br
       label(for="id-ctrovac") Centro de Vacunacion:
@@ -52,11 +55,11 @@ form(action="/guardar-loteinterno" method="post")
             option(value="") Selecciona un Centro de Vacunación
                 each cvac in centrosDeVacunacion
                     option(value=cvac.idCentroDeVacunacion)= cvac.idCentroDeVacunacion
+                //option(value="null") Ningún centro
       br
       br           
       label(for="fecha-lleg-ctro-vac") Fecha Llegada Centro Vacunación:
-      input(type="date" id="fecha-lleg-ctro-vac" name="fechaDeLlegadaCentroDeVacunacion" required)
+      input(type="date" id="fecha-lleg-ctro-vac" name="fechaDeLlegadaCentroDeVacunacion")
       br
       br
-    
       button(type="submit") Guardar

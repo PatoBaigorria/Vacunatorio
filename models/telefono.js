@@ -2,7 +2,7 @@
 const { Model, DataTypes } = require("sequelize");
 const sequelize = require("../database/db");
 
-class Telefono extends Model {}
+class Telefono extends Model { }
 
 const telefono = Telefono.init(
   {

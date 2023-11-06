@@ -2,7 +2,7 @@
 const { Model, DataTypes } = require("sequelize");
 const sequelize = require("../database/db");
 
-class Persona extends Model {}
+class Persona extends Model { }
 
 const persona = Persona.init(
   {

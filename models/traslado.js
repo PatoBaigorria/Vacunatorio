@@ -2,7 +2,7 @@
 const { Model, DataTypes } = require("sequelize");
 const sequelize = require("../database/db");
 
-class Traslado extends Model {}
+class Traslado extends Model { }
 
 const traslado = Traslado.init(
   {

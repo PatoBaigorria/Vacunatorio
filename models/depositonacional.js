@@ -1,7 +1,7 @@
 "use strict";
 const { Model, DataTypes } = require("sequelize");
 const sequelize = require("../database/db");
-class Depositonacional extends Model {}
+class Depositonacional extends Model { }
 
 const depositonacional = Depositonacional.init(
   {

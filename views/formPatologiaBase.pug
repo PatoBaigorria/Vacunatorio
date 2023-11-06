@@ -4,14 +4,10 @@ section#formPatologiaBase
 h2 Ingresar Patologías Base
 form(action="/guardar-patologiabase" method="post")
       label(for="persona") Seleccione un DNI de una Persona existente:
-        select(name="persona", onchange="document.querySelector('#dni').value = this.value")
-            option(value="" selected)
-                each pat in personas
-                    option(value=pat.DNI) #{pat.DNI}
-      br
-      br
-      label(for="dni") DNI:
-      input(type="text" id="dni" name="DNI" required)
+      select#personaSelect(name="DNI")
+        option(value="") Seleccione un DNI para asignarle una patologia a la vez:
+            each persona in personas
+                option(value=persona.DNI)= persona.nombre + ' ' + persona.apellido
       br
       br
       label(for="patol-base") Patología Base:

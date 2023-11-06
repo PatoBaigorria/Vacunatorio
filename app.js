@@ -7,16 +7,16 @@ const indexRouter = require("./routes/index");
 // Importar modelos
 const {
   Persona,
-  Agentedesalud,
-  Centrodevacunacion,
+  AgenteDeSalud,
+  CentroDeVacunacion,
   Laboratorio,
   Telefono,
-  Loteproveedor,
-  Patologiabase,
-  Depositonacional,
-  Depositoprovincial,
+  LoteProveedor,
+  PatologiaBase,
+  DepositoNacional,
+  DepositoProvincial,
   Aplicacion,
-  Loteinterno,
+  LoteInterno,
   Descarte,
   Traslado,
 } = require("./models/relaciones");
@@ -43,7 +43,7 @@ app.use("/", indexRouter);
 
 // Importa módulo de configuración de la base de datos
 const db = require("./database/db");
-//const { Agentedesalud, Centrodevacunacion } = require("./models/relaciones");
+//const { AgenteDeSalud, CentroDeVacunacion } = require("./models/relaciones");
 
 db.authenticate()
   .then(() => {
@@ -75,7 +75,7 @@ app.get("/guardar-agentedesalud", async (req, res) => {
 app.get("/guardar-aplicacion", async (req, res) => {
   try {
     const personas = await Persona.findAll();
-    const lotesInternos = await Loteinterno.findAll();
+    const lotesInternos = await LoteInterno.findAll();
     res.render("formAplicacion", { personas, lotesInternos });
   } catch (error) {
     console.error(error);
@@ -94,7 +94,7 @@ app.get("/formDepositoProvincial", (req, res) => {
 app.get("/guardar-descarte", async (req, res) => {
   try {
     const personas = await Persona.findAll();
-    const lotesInternos = await Loteinterno.findAll();
+    const lotesInternos = await LoteInterno.findAll();
     res.render("formDescarte", { personas, lotesInternos });
   } catch (error) {
     console.error(error);
@@ -107,10 +107,10 @@ app.get("/formLaboratorio", (req, res) => {
 app.get("/guardar-loteinterno", async (req, res) => {
   try {
     const laboratorios = await Laboratorio.findAll();
-    const lotesProveedores = await Loteproveedor.findAll();
-    const depositosNacionales = await Depositonacional.findAll();
-    const depositosProvinciales = await Depositoprovincial.findAll();
-    const centrosDeVacunacion = await Centrodevacunacion.findAll();
+    const lotesProveedores = await LoteProveedor.findAll();
+    const depositosNacionales = await DepositoNacional.findAll();
+    const depositosProvinciales = await DepositoProvincial.findAll();
+    const centrosDeVacunacion = await CentroDeVacunacion.findAll();
     res.render("formLoteInterno", {
       laboratorios,
       lotesProveedores,
@@ -155,8 +155,8 @@ app.get("/guardar-patologiabase", async (req, res) => {
 });
 app.get("/guardar-traslado", async (req, res) => {
   try {
-    const centrosDeVacunacion = await Centrodevacunacion.findAll();
-    const lotesInternos = await Loteinterno.findAll();
+    const centrosDeVacunacion = await CentroDeVacunacion.findAll();
+    const lotesInternos = await LoteInterno.findAll();
     res.render("formTraslado", { centrosDeVacunacion, lotesInternos });
   } catch (error) {
     console.error(error);
@@ -189,7 +189,7 @@ app.post("/guardar-persona", async (req, res) => {
 
     if (ocupacion === "agente") {
       const { matricula } = req.body;
-      nuevoRegistro = await Agentedesalud.create({
+      nuevoRegistro = await AgenteDeSalud.create({
         DNI,
         matricula,
       });
@@ -220,7 +220,7 @@ app.post("/guardar-agentedesalud", async (req, res) => {
     const { DNI, matricula } = req.body;
 
     // Crear una nueva instancia de Agente utilizando Sequelize
-    const nuevoAgente = await Agentedesalud.create({
+    const nuevoAgente = await AgenteDeSalud.create({
       DNI,
       matricula,
     });
@@ -314,7 +314,7 @@ app.post("/guardar-centrovacunacion", async (req, res) => {
     const { longitud, latitud } = req.body;
 
     // Crear una nueva instancia de Centro utilizando Sequelize
-    const nuevoCentro = await Centrodevacunacion.create({
+    const nuevoCentro = await CentroDeVacunacion.create({
       longitud,
       latitud,
     });
@@ -346,7 +346,7 @@ app.post("/guardar-laboratorio", async (req, res) => {
     res.redirect("/"); // Redirige a la página principal o a donde quieras
   } catch (error) {
     console.error("Error al insertar datos:", error);
-    res.status(500).send("Error al insertar datos");
+    res.status(500).send("Error al insertar datos en el laboratorio");
   }
 });
 //                    LOTE PROVEEDOR
@@ -364,7 +364,8 @@ app.post("/guardar-loteproveedor", async (req, res) => {
     } = req.body;
 
     // Crear una nueva instancia de Lote Proveedor utilizando Sequelize
-    const nuevoLoteProveedor = await Loteproveedor.create({
+    console.log("Creando lote");
+    const nuevoLoteProveedor = await LoteProveedor.create({
       numeroDeLote,
       idLaboratorio,
       tipoDeVacuna,
@@ -379,7 +380,7 @@ app.post("/guardar-loteproveedor", async (req, res) => {
     res.redirect("/"); // Redirige a la página principal o a donde quieras
   } catch (error) {
     console.error("Error al insertar datos:", error);
-    res.status(500).send("Error al insertar datos");
+    res.status(500).send("Error al insertar datos en el lote proveedor");
   }
 });
 //                  DEPOSITO NACIONAL
@@ -388,7 +389,7 @@ app.post("/guardar-depositonacional", async (req, res) => {
     const { longitud, latitud } = req.body;
 
     // Crear una nueva instancia de Centro utilizando Sequelize
-    const nuevoDepNacional = await Depositonacional.create({
+    const nuevoDepNacional = await DepositoNacional.create({
       longitud,
       latitud,
     });
@@ -406,7 +407,7 @@ app.post("/guardar-depositoprovincial", async (req, res) => {
     const { longitud, latitud } = req.body;
 
     // Crear una nueva instancia de Centro utilizando Sequelize
-    const nuevoDepProvincial = await Depositoprovincial.create({
+    const nuevoDepProvincial = await DepositoProvincial.create({
       longitud,
       latitud,
     });
@@ -420,6 +421,31 @@ app.post("/guardar-depositoprovincial", async (req, res) => {
 });
 //                  LOTE INTERNO
 app.post("/guardar-loteinterno", async (req, res) => {
+  // Convertir fechas vacías a null
+  if (req.body.idDepositoNacional == '') {
+    req.body.idDepositoNacional = null;
+  }
+  if (req.body.idDepositoProvincial == '') {
+    req.body.idDepositoProvincial = null;
+  }
+  if (req.body.idCentroDeVacunacion == '') {
+    req.body.idCentroDeVacunacion = null;
+  }
+  if (req.body.fechaDeLlegadaDepositoNacional === '') {
+    req.body.fechaDeLlegadaDepositoNacional = null;
+  }
+  if (req.body.fechaDeSalidaDepositoNacional === '') {
+    req.body.fechaDeSalidaDepositoNacional = null;
+  }
+  if (req.body.fechaDeLlegadaDepositoProvincial === '') {
+    req.body.fechaDeLlegadaDepositoProvincial = null;
+  }
+  if (req.body.fechaDeSalidaDepositoProvincial === '') {
+    req.body.fechaDeSalidaDepositoProvincial = null;
+  }
+  if (req.body.fechaDeLlegadaCentroDeVacunacion === '') {
+    req.body.fechaDeLlegadaCentroDeVacunacion = null;
+  }
   try {
     const {
       numeroDeSerie,
@@ -437,7 +463,7 @@ app.post("/guardar-loteinterno", async (req, res) => {
     } = req.body;
 
     // Crear una nueva instancia de Lote Interno utilizando Sequelize
-    const nuevoLoteInterno = await Loteinterno.create({
+    const nuevoLoteInterno = await LoteInterno.create({
       numeroDeSerie,
       numeroDeLote,
       idLaboratorio,
@@ -455,8 +481,8 @@ app.post("/guardar-loteinterno", async (req, res) => {
     console.log("Lote Interno creado:", nuevoLoteInterno);
     res.redirect("/"); // Redirige a la página principal o a donde quieras
   } catch (error) {
-    console.error("Error al insertar datos:", error);
-    res.status(500).send("Error al insertar datos");
+    console.error("Error al insertar datos en la tabla LI:", error);
+    res.status(500).send("Error al insertar datos en la tabla LI:" + error);
   }
 });
 //                   TELEFONOS
@@ -484,7 +510,7 @@ app.post("/guardar-patologiabase", async (req, res) => {
     const { DNI, patologiaBase } = req.body;
 
     // Crear una nueva instancia de Patologia Base utilizando Sequelize
-    const nuevaPatologia = await Patologiabase.create({
+    const nuevaPatologia = await PatologiaBase.create({
       DNI,
       patologiaBase,
     });

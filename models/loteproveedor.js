@@ -2,7 +2,7 @@
 const { Model, DataTypes } = require("sequelize");
 const sequelize = require("../database/db");
 
-class Loteproveedor extends Model {}
+class Loteproveedor extends Model { }
 
 const loteproveedor = Loteproveedor.init(
   {

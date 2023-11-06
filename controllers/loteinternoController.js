@@ -1,7 +1,7 @@
 const {
-  Loteinterno,
-  Loteproveedor,
-  Centrodevacunacion,
+  LoteInterno,
+  LoteProveedor,
+  CentroDeVacunacion,
   Aplicacion,
   Descarte,
 } = require("../models/relaciones");
@@ -9,7 +9,7 @@ const {
 // Obtener todos los lotes internos
 const getAllLotesInternos = async (req, res) => {
   try {
-    const lotesInternos = await Loteinterno.findAll();
+    const lotesInternos = await LoteInterno.findAll();
     res.json(lotesInternos);
   } catch (error) {
     res.status(500).json({
@@ -21,7 +21,7 @@ const getAllLotesInternos = async (req, res) => {
 // Crear un nuevo lote interno
 const createLoteInterno = async (req, res) => {
   try {
-    const nuevoLoteInterno = await Loteinterno.create(req.body);
+    const nuevoLoteInterno = await LoteInterno.create(req.body);
     res.json(nuevoLoteInterno);
   } catch (error) {
     res.status(500).json({
@@ -33,7 +33,7 @@ const createLoteInterno = async (req, res) => {
 // Actualizar un lote interno por su ID
 const updateLoteInterno = async (req, res) => {
   try {
-    const loteInternoActualizado = await Loteinterno.update(req.body, {
+    const loteInternoActualizado = await LoteInterno.update(req.body, {
       where: {
         numeroDeSerie: req.params.numeroDeSerie
       },
@@ -49,7 +49,7 @@ const updateLoteInterno = async (req, res) => {
 // Eliminar un lote interno por su ID
 const deleteLoteInterno = async (req, res) => {
   try {
-    await Loteinterno.destroy({
+    await LoteInterno.destroy({
       where: {
         numeroDeSerie: req.params.numeroDeSerie
       },
@@ -67,8 +67,8 @@ const deleteLoteInterno = async (req, res) => {
 // Obtener el lote proveedor asociado a un lote interno por su número de serie
 const getLoteProveedorByLoteInternoSerie = async (req, res) => {
   try {
-    const loteInterno = await Loteinterno.findByPk(req.params.numeroDeSerie, {
-      include: [Loteproveedor],
+    const loteInterno = await LoteInterno.findByPk(req.params.numeroDeSerie, {
+      include: [LoteProveedor],
     });
 
     if (!loteInterno) {
@@ -88,8 +88,8 @@ const getLoteProveedorByLoteInternoSerie = async (req, res) => {
 // Obtener el centro de vacunación asociado a un lote interno por su número de serie
 const getCentroDeVacunacionByLoteInternoSerie = async (req, res) => {
   try {
-    const loteInterno = await Loteinterno.findByPk(req.params.numeroDeSerie, {
-      include: [Centrodevacunacion],
+    const loteInterno = await LoteInterno.findByPk(req.params.numeroDeSerie, {
+      include: [CentroDeVacunacion],
     });
 
     if (!loteInterno) {
@@ -140,7 +140,7 @@ const getDescartesByLoteInternoSerie = async (req, res) => {
       });
     }
 
-    res.json(loteInterno.descartes);
+    res.json(loteInterno.Descarte);
   } catch (error) {
     res.status(500).json({
       message: "Error al obtener los descartes asociados al lote interno.",

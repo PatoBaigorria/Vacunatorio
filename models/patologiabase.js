@@ -2,7 +2,7 @@
 const { Model, DataTypes } = require("sequelize");
 const sequelize = require("../database/db");
 
-class Patologiabase extends Model {}
+class Patologiabase extends Model { }
 const patologiabase = Patologiabase.init(
   {
     DNI: {
