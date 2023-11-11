@@ -1,8 +1,8 @@
 const {
   Aplicacion,
   Persona,
-  Agentedesalud,
-  Loteinterno,
+  AgenteDeSalud,
+  LoteInterno,
 } = require("../models/relaciones");
 
 // Obtener todas las aplicaciones
@@ -51,7 +51,7 @@ const deleteAplicacion = async (req, res) => {
 const getAplicacionById = async (req, res) => {
   try {
     const aplicacion = await Aplicacion.findByPk(req.params.id, {
-      include: [Persona, Agentedesalud, Loteinterno],
+      include: [Persona, AgenteDeSalud, LoteInterno],
     });
 
     if (!aplicacion) {

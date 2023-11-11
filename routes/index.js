@@ -7,54 +7,54 @@ router.get("/", function (req, res, next) {
   res.render("index", { title: "Express" });
 });
 // Ruta para mostrar todos los formularios
-router.get("/formAgenteDeSalud", (req, res) => {
+router.get("/Altas/formAgenteDeSalud", (req, res) => {
   res.render("formAgenteDeSalud");
 });
 
-router.get("/formAplicacion", (req, res) => {
+router.get("/Altas/formAplicacion", (req, res) => {
   res.render("formAplicacion");
 });
 
-router.get("/formCentroDeVacunacion", (req, res) => {
+router.get("/Altas/formCentroDeVacunacion", (req, res) => {
   res.render("formCentroDeVacunacion");
 });
 
-router.get("/formDepositoNacional", (req, res) => {
+router.get("/Altas/formDepositoNacional", (req, res) => {
   res.render("formDepositoNacional");
 });
 
-router.get("/formDepositoProvincial", (req, res) => {
+router.get("/Altas/formDepositoProvincial", (req, res) => {
   res.render("formDepositoProvincial");
 });
 
-router.get("/formDescarte", (req, res) => {
+router.get("/Altas/formDescarte", (req, res) => {
   res.render("formDescarte");
 });
 
-router.get("/formLaboratorio", (req, res) => {
+router.get("/Altas/formLaboratorio", (req, res) => {
   res.render("formLaboratorio");
 });
 
-router.get("/formLoteInterno", (req, res) => {
+router.get("/Altas/formLoteInterno", (req, res) => {
   res.render("formLoteInterno");
 });
-router.get("/formLoteProveedor", (req, res) => {
+router.get("/Altas/formLoteProveedor", (req, res) => {
   res.render("formLoteProveedor");
 });
 
-router.get("/formPatologiaBase", (req, res) => {
+router.get("/Altas/formPatologiaBase", (req, res) => {
   res.render("formPatologiaBase");
 });
 
-router.get("/formPersona", (req, res) => {
+router.get("/Altas/formPersona", (req, res) => {
   res.render("formPersona");
 });
 
-router.get("/formTelefono", (req, res) => {
+router.get("/Altas/formTelefono", (req, res) => {
   res.render("formTelefono");
 });
 
-router.get("/formTraslado", (req, res) => {
+router.get("/Altas/formTraslado", (req, res) => {
   res.render("formTraslado");
 });
 

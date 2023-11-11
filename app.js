@@ -20,9 +20,9 @@ const {
   Descarte,
   Traslado,
 } = require("./models/relaciones");
-
+const override = require("method-override");
 const app = express();
-
+app.use(override("_method"));
 // Configuracion de pug
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "pug");
@@ -327,7 +327,9 @@ app.post("/guardar-centrovacunacion", async (req, res) => {
   }
 });
 //                       LABORATORIO
-app.post("/guardar-laboratorio", async (req, res) => {
+const laboratorioRoutes = require("./routes/laboratorioRoutes");
+app.use("/laboratorios", laboratorioRoutes);
+/*app.post("/", async (req, res) => {
   try {
     const { nombreLaboratorio, pais, email, telefono, longitud, latitud } =
       req.body;
@@ -348,7 +350,7 @@ app.post("/guardar-laboratorio", async (req, res) => {
     console.error("Error al insertar datos:", error);
     res.status(500).send("Error al insertar datos en el laboratorio");
   }
-});
+});*/
 //                    LOTE PROVEEDOR
 app.post("/guardar-loteproveedor", async (req, res) => {
   try {
