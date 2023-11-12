@@ -4,6 +4,7 @@ const controllers = require("../controllers/indexController");
 
 //Importacion del Controlador
 router.get("/", controllers.laboratorioController.getAllLaboratorios);
+router.get("/crear", controllers.laboratorioController.crearLaboratorio);
 router.post("/", controllers.laboratorioController.createLaboratorio);
 router.get("/:id", controllers.laboratorioController.getLaboratorioById);
 router.put("/:id", controllers.laboratorioController.updateLaboratorio);

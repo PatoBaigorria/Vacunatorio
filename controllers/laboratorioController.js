@@ -6,7 +6,7 @@ const {
 const getAllLaboratorios = async (req, res) => {
   try {
     let laboratorios = await Laboratorio.findAll();
-    res.render("viewLaboratorio", { laboratorios: laboratorios });
+    res.render("laboratorio/viewLaboratorio", { laboratorios: laboratorios });
   } catch (error) {
     res.status(500).json({
       message: "Error al obtener los laboratorios.",
@@ -14,6 +14,15 @@ const getAllLaboratorios = async (req, res) => {
   }
 };
 
+const crearLaboratorio = async (req, res) => {
+  try {
+    res.render("laboratorio/formLaboratorio");
+  } catch (error) {
+    res.status(500).json({
+      message: "Error al crear el laboratorio.",
+    });
+  }
+}
 // Crear un nuevo laboratorio
 const createLaboratorio = async (req, res) => {
   try {
@@ -31,7 +40,7 @@ const createLaboratorio = async (req, res) => {
     });
 
     console.log("Laboratorio creado:", nuevoLaboratorio);
-    res.redirect("/laboratorios"); // Redirige a la página principal o a donde quieras
+    res.redirect("/laboratorios");
   } catch (error) {
     console.error("Error al insertar datos:", error);
     res.status(500).send("Error al insertar datos en el laboratorio");
@@ -41,7 +50,7 @@ const createLaboratorio = async (req, res) => {
 const getLaboratorioById = async (req, res) => {
   try {
     const laboratorio = await Laboratorio.findByPk(req.params.id);
-    res.render("editLaboratorio", { laboratorio: laboratorio });
+    res.render("laboratorio/editLaboratorio", { laboratorio: laboratorio });
   } catch (error) {
     res.status(500).json({
       message: "Error al obtener el laboratorio.",
@@ -84,6 +93,7 @@ const deleteLaboratorio = async (req, res) => {
 
 module.exports = {
   getAllLaboratorios,
+  crearLaboratorio,
   createLaboratorio,
   getLaboratorioById,
   updateLaboratorio,
