@@ -1,78 +1,99 @@
 const {
-  Centrodevacunacion
+  CentroDeVacunacion
 } = require("../models/relaciones");
 
 // Obtener todos los centros de vacunación
-const getAllCentrosDeVacunacion = async (req, res) => {
+const listarCentrosDeVacunacion = async (req, res) => {
   try {
-    const centrosDeVacunacion = await Centrodevacunacion.findAll();
-    res.json(centrosDeVacunacion);
+    let centrosVac = await CentroDeVacunacion.findAll();
+    res.render("centrodevacunacion/viewCentroDeVacunacion", { centrosVac: centrosVac });
   } catch (error) {
     res
       .status(500)
-      .json({
-        message: "Error al obtener los centros de vacunación."
-      });
+      .json({ message: "Error al obtener los Centros De Vacunacion." });
   }
 };
 
-// Crear un nuevo centro de vacunación
-const createCentroDeVacunacion = async (req, res) => {
+// Muestra formulario de creacion de Deposito Nacional
+const mostrarFormularioCreacionCentroVac = async (req, res) => {
   try {
-    const nuevoCentroDeVacunacion = await Centrodevacunacion.create(req.body);
-    res.json(nuevoCentroDeVacunacion);
+    res.render("centrodevacunacion/formCentroDeVacunacion");
   } catch (error) {
-    res
-      .status(500)
-      .json({
-        message: "Error al crear el centro de vacunación."
-      });
+    res.status(500).json({
+      message: "Error al crear un Centro De Vacunacion.",
+    });
+  }
+}
+// Crear un nuevo Centro De Vacunacion desde el Formulario
+const crearCentroVacDesdeFormulario = async (req, res) => {
+  try {
+    const { longitud, latitud } =
+      req.body;
+
+    // Crear una nueva instancia de Centro De Vacunacion utilizando Sequelize
+    const nuevoCentroVac = await CentroDeVacunacion.create({
+      longitud,
+      latitud,
+    });
+
+    console.log("Centro de Vacunacion creado:", nuevoCentroVac);
+    res.redirect("/centrosdevacunacion");
+  } catch (error) {
+    console.error("Error al insertar datos:", error);
+    res.status(500).send("Error al insertar datos en el Centro de Vacunacion");
   }
 };
+// Editar Deposito Nacional por ID
+const editarCentroVac = async (req, res) => {
+  try {
+    const centroV = await CentroDeVacunacion.findByPk(req.params.id);
+    res.render("centrodevacunacion/editCentroDeVacunacion", { centroV: centroV });
+  } catch (error) {
+    res.status(500).json({
+      message: "Error al obtener el Centro De Vacunacion." + error.message,
+    });
+  }
+}
 
-// Actualizar un centro de vacunación por su ID
+// Actualizar un Depósito Nacional por su ID
 const updateCentroDeVacunacion = async (req, res) => {
   try {
-    const centroDeVacunacionActualizado = await Centrodevacunacion.update(
-      req.body, {
-        where: {
-          id: req.params.id
-        },
+    await CentroDeVacunacion.update(req.body,
+      {
+        where: { idCentroDeVacunacion: req.params.id, },
       }
     );
-    res.json(centroDeVacunacionActualizado);
+    res.redirect("/centrosdevacunacion");
   } catch (error) {
     res
       .status(500)
-      .json({
-        message: "Error al actualizar el centro de vacunación."
-      });
+      .json({ message: "Error al actualizar el centro de vacunacion." });
   }
 };
 
-// Eliminar un centro de vacunación por su ID
+// Eliminar un depósito provincial por su ID
 const deleteCentroDeVacunacion = async (req, res) => {
   try {
-    await Centrodevacunacion.destroy({
+    await CentroDeVacunacion.destroy({
       where: {
-        id: req.params.id
-      }
+        idCentroDeVacunacion: req.params.id,
+      },
     });
-    res.json({
-      message: "Centro de vacunación eliminado correctamente."
-    });
+    res.redirect("/centrosdevacunacion");
   } catch (error) {
     res
       .status(500)
       .json({
-        message: "Error al eliminar el centro de vacunación."
+        message: "Error al eliminar el centro de vacunacion."
       });
   }
 };
 
 module.exports = {
-  getAllCentrosDeVacunacion,
-  createCentroDeVacunacion,
+  listarCentrosDeVacunacion,
+  mostrarFormularioCreacionCentroVac,
+  crearCentroVacDesdeFormulario,
+  editarCentroVac,
   updateCentroDeVacunacion,
   deleteCentroDeVacunacion,
 };

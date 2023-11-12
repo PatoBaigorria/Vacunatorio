@@ -310,48 +310,13 @@ app.post("/guardar-traslado", async (req, res) => {
 });
 
 //                  CENTRO DE VACUNACION
-app.post("/guardar-centrovacunacion", async (req, res) => {
-  try {
-    const { longitud, latitud } = req.body;
+const centrodevacunacionRoutes = require("./routes/centrodevacunacionRoutes");
+app.use("/centrosdevacunacion", centrodevacunacionRoutes);
 
-    // Crear una nueva instancia de Centro utilizando Sequelize
-    const nuevoCentro = await CentroDeVacunacion.create({
-      longitud,
-      latitud,
-    });
-
-    console.log("Centro creado:", nuevoCentro);
-    res.redirect("/"); // Redirige a la página principal o a donde quieras
-  } catch (error) {
-    console.error("Error al insertar datos:", error);
-    res.status(500).send("Error al insertar datos");
-  }
-});
 //                       LABORATORIO
 const laboratorioRoutes = require("./routes/laboratorioRoutes");
 app.use("/laboratorios", laboratorioRoutes);
-/*app.post("/", async (req, res) => {
-  try {
-    const { nombreLaboratorio, pais, email, telefono, longitud, latitud } =
-      req.body;
 
-    // Crear una nueva instancia de Laboratorio utilizando Sequelize
-    const nuevoLaboratorio = await Laboratorio.create({
-      nombreLaboratorio,
-      pais,
-      email,
-      telefono,
-      longitud,
-      latitud,
-    });
-
-    console.log("Laboratorio creado:", nuevoLaboratorio);
-    res.redirect("/"); // Redirige a la página principal o a donde quieras
-  } catch (error) {
-    console.error("Error al insertar datos:", error);
-    res.status(500).send("Error al insertar datos en el laboratorio");
-  }
-});*/
 //                    LOTE PROVEEDOR
 app.post("/guardar-loteproveedor", async (req, res) => {
   try {
@@ -387,43 +352,13 @@ app.post("/guardar-loteproveedor", async (req, res) => {
   }
 });
 //                  DEPOSITO NACIONAL
-app.post("/guardar-depositonacional", async (req, res) => {
-  try {
-    const { longitud, latitud } = req.body;
+const depositonacionalRoutes = require("./routes/depositonacionalRoutes");
+app.use("/depositosnacionales", depositonacionalRoutes);
 
-    // Crear una nueva instancia de Centro utilizando Sequelize
-    const nuevoDepNacional = await DepositoNacional.create({
-      longitud,
-      latitud,
-    });
-
-    console.log("Deposito Nacional creado:", nuevoDepNacional);
-    res.redirect("/"); // Redirige a la página principal o a donde quieras
-  } catch (error) {
-    console.error("Error al insertar datos:", error);
-    res.status(500).send("Error al insertar datos");
-  }
-});
 //                  DEPOSITO PROVINCIAL
 const depositoprovincialRoutes = require("./routes/depositoprovincialRoutes");
 app.use("/depositosprovinciales", depositoprovincialRoutes);
-/*app.post("/guardar-depositoprovincial", async (req, res) => {
-  try {
-    const { longitud, latitud } = req.body;
 
-    // Crear una nueva instancia de Centro utilizando Sequelize
-    const nuevoDepProvincial = await DepositoProvincial.create({
-      longitud,
-      latitud,
-    });
-
-    console.log("Deposito Provincial creado:", nuevoDepProvincial);
-    res.redirect("/"); // Redirige a la página principal o a donde quieras
-  } catch (error) {
-    console.error("Error al insertar datos:", error);
-    res.status(500).send("Error al insertar datos");
-  }
-});*/
 //                  LOTE INTERNO
 app.post("/guardar-loteinterno", async (req, res) => {
   // Convertir fechas vacías a null

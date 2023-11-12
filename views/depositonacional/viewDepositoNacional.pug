@@ -1,19 +1,22 @@
 head
     title Deposito Nacional
 section#viewDepositosNacionales
+h2 Listado de Depósitos Nacionales
     table
         thead
             tr
+                th ID
                 th Longitud
                 th Latitud
         tbody
             each depositoN in depositosNac
                 tr
+                    td= depositoN.idDepositoNacional
                     td= depositoN.longitud
                     td= depositoN.latitud 
                     td 
                         button(onclick=`redirectToURL(${depositoN.idDepositoNacional})`) Editar
-                        form(method="post" action="/depositosprovinciales/"+depositoN.idDepositoNacional+"?_method=DELETE" style="display: inline")
+                        form(method="post" action="/depositosnacionales/"+depositoN.idDepositoNacional+"?_method=DELETE" style="display: inline")
                             button(type="submit") Eliminar 
     button(onclick="crear()") Crear 
     button(type="submit") Volver

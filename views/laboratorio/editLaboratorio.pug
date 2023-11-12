@@ -1,7 +1,7 @@
 head
     title Laboratorio
 section#formLaboratorio
-h2 Editar un Laboratorio
+h2 Editar Laboratorio
 form(action="/laboratorios/"+laboratorio.idLaboratorio+"?_method=PUT" method="post")
     label(for="nombre") Nombre Laboratorio:
     input(type="text" id="nombre" name="nombreLaboratorio" value=laboratorio.nombreLaboratorio required)

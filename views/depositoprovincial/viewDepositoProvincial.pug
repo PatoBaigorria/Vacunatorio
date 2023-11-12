@@ -1,14 +1,17 @@
 head
     title Deposito Provincial
 section#viewDepositosProvinciales
+h2 Listado de Depósitos Provinciales
     table
         thead
             tr
+                th ID
                 th Longitud
                 th Latitud
         tbody
             each depositoP in depositosProv
                 tr
+                    td= depositoN.idDepositoProvincial
                     td= depositoP.longitud
                     td= depositoP.latitud 
                     td 
