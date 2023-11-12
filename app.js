@@ -318,39 +318,7 @@ const laboratorioRoutes = require("./routes/laboratorioRoutes");
 app.use("/laboratorios", laboratorioRoutes);
 
 //                    LOTE PROVEEDOR
-app.post("/guardar-loteproveedor", async (req, res) => {
-  try {
-    const {
-      numeroDeLote,
-      idLaboratorio,
-      tipoDeVacuna,
-      nombreComercial,
-      cantidadDeLotesInternos,
-      fechaDeFabricacion,
-      fechaDeVencimiento,
-      fechaDeCompra,
-    } = req.body;
 
-    // Crear una nueva instancia de Lote Proveedor utilizando Sequelize
-    console.log("Creando lote");
-    const nuevoLoteProveedor = await LoteProveedor.create({
-      numeroDeLote,
-      idLaboratorio,
-      tipoDeVacuna,
-      nombreComercial,
-      cantidadDeLotesInternos,
-      fechaDeFabricacion,
-      fechaDeVencimiento,
-      fechaDeCompra,
-    });
-
-    console.log("Lote Proveedor creado:", nuevoLoteProveedor);
-    res.redirect("/"); // Redirige a la página principal o a donde quieras
-  } catch (error) {
-    console.error("Error al insertar datos:", error);
-    res.status(500).send("Error al insertar datos en el lote proveedor");
-  }
-});
 //                  DEPOSITO NACIONAL
 const depositonacionalRoutes = require("./routes/depositonacionalRoutes");
 app.use("/depositosnacionales", depositonacionalRoutes);

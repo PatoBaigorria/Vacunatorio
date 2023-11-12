@@ -26,11 +26,9 @@ const mostrarFormularioCreacionLaboratorio = async (req, res) => {
 // Crear un nuevo laboratorio desde el Formulario
 const crearLaboratorioDesdeFormulario = async (req, res) => {
   try {
-    const { nombreLaboratorio, pais, email, telefono, longitud, latitud } =
-      req.body;
-
+    const { nombreLaboratorio, pais, email, telefono, longitud, latitud } = req.body;
     // Crear una nueva instancia de Laboratorio utilizando Sequelize
-    const nuevoLaboratorio = await Laboratorio.create({
+    await Laboratorio.create({
       nombreLaboratorio,
       pais,
       email,
@@ -38,8 +36,6 @@ const crearLaboratorioDesdeFormulario = async (req, res) => {
       longitud,
       latitud,
     });
-
-    console.log("Laboratorio creado:", nuevoLaboratorio);
     res.redirect("/laboratorios");
   } catch (error) {
     console.error("Error al insertar datos:", error);
@@ -56,7 +52,7 @@ const editarLaboratorio = async (req, res) => {
       message: "Error al obtener el laboratorio.",
     });
   }
-}
+};
 
 // Actualizar un laboratorio por su ID
 const updateLaboratorio = async (req, res) => {

@@ -1,27 +1,17 @@
 const express = require("express");
 const router = express.Router();
 const controllers = require("../controllers/indexController");
-const {
-  LoteInterno
-} = require("../models/relaciones");
 
 // Ruta para obtener todos los lotes internos
 router.get("/", controllers.loteInternoController.getAllLotesInternos);
-
-// Ruta para crear un nuevo lote interno
+router.get("/crear", controllers.loteInternoController.crearLoteInterno);
 router.post("/", controllers.loteInternoController.createLoteInterno);
-
-// Ruta para obtener un lote interno por su ID
-//router.get("/:id", controllers.loteInternoController.getLoteInternoById);
-
-// Ruta para actualizar un lote interno por su ID
+router.get("/:id", controllers.loteInternoController.getLoteInternoById);
 router.put("/:id", controllers.loteInternoController.updateLoteInterno);
-
-// Ruta para eliminar un lote interno por su ID
 router.delete("/:id", controllers.loteInternoController.deleteLoteInterno);
 
 // Obtener todos los lotes internos
-router.get("/lotesinternos", async (req, res) => {
+/*router.get("/lotesinternos", async (req, res) => {
   try {
     const lotesInternos = await LoteInterno.findAll();
     res.json(lotesInternos);
@@ -76,6 +66,6 @@ router.delete("/lotesinternos/:id", async (req, res) => {
       message: "Error al eliminar el lote interno."
     });
   }
-});
+});*/
 
 module.exports = router;
