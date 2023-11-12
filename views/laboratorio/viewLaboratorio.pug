@@ -22,7 +22,7 @@ section#viewLaboratorios
                     td 
                         button(onclick=`redirectToURL(${laboratorio.idLaboratorio})`) Editar
                         form(method="post" action="/laboratorios/"+laboratorio.idLaboratorio+"?_method=DELETE" style="display: inline")
-                            button(type="submit") Eliminar 
+                            button(type="submit") Eliminar
     button(onclick="crear()") Crear 
     button(type="submit") Volver
 script.

@@ -1,24 +1,33 @@
 head
     title Lote Interno
 section#formLoteInterno
-h2 Ingresar Lotes Internos
-form#myForm
-form(action="/lotesinternos" method="post")
+h2 Actualice el lote interno
+form(action="/lotesinternos/"+loteInterno.numeroDeSerie+"?_method=PUT" method="post")
     label(for="idLaboratorio") Laboratorio:
         select#laboratorioSelect(name="idLaboratorio")
-            option(value="") Selecciona un Laboratorio
-                each lab in laboratorios
-                    option(value=lab.idLaboratorio)= lab.nombreLaboratorio
+            each lab in laboratorios
+                if loteInterno.idLaboratorio==lab.idLaboratorio
+                    option(value=lab.idLaboratorio)=lab.nombreLaboratorio
+            each lab in laboratorios
+                if loteInterno.idLaboratorio==lab.idLaboratorio
+                    break
+                else
+                    option(value=lab.idLaboratorio)=lab.nombreLaboratorio
 
     label(for="num-lote") Lote Proveedor:
         select#loteProveedorSelect(name="numeroDeLote")
-            option(value="") Selecciona un Lote Proveedor
-                each numLote in lotesProveedores
+            each numLote in lotesProveedores
+                if loteInterno.numeroDeLote==numLote.numeroDeLote
+                    option(value=numLote.numeroDeLote)=numLote.numeroDeLote
+            each numLote in lotesProveedores
+                if loteInterno.numeroDeLote==numLote.numeroDeLote
+                    break
+                else
                     option(value=numLote.numeroDeLote)= numLote.numeroDeLote
     br
     br
     label(for="cant-vac") Cantidad de Vacunas:
-    input(type="text" id="cant-vac" name="cantidadDeVacunas" required)
+    input(type="text" id="cant-vac" name="cantidadDeVacunas" value=loteInterno.cantidadDeVacunas required)
     br
     br
     label(for="id-deponac") Depósito Nacional:
@@ -62,4 +71,4 @@ form(action="/lotesinternos" method="post")
     input(type="date" id="fecha-lleg-ctro-vac" name="fechaDeLlegadaCentroDeVacunacion")
     br
     br
-    button(type="submit") Guardar
+    button(type="submit") Actualizar

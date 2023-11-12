@@ -1,0 +1,43 @@
+head
+    title Lote proveedor
+section#viewLoteProveedor
+    table
+        thead
+            tr
+                th Número de lote
+                th Nombre del laboratorio
+                th Tipo de Vacuna
+                th Nombre comercial de la vacuna
+                th Cantidad de lotes internos
+                th Fecha de fabricación
+                th Fecha de vencimiento
+                th Fecha de compra
+        tbody
+            each loteProveedor in lotesProveedores
+                tr
+                    td= loteProveedor.numeroDeLote
+                    each laboratorio in laboratorios
+                        if loteProveedor.idLaboratorio==laboratorio.idLaboratorio 
+                            td= laboratorio.nombreLaboratorio
+                    td= loteProveedor.tipoDeVacuna
+                    td= loteProveedor.nombreComercial
+                    td= loteProveedor.cantidadDeLotesInternos
+                    td= loteProveedor.fechaDeFabricacion
+                    td= loteProveedor.fechaDeVencimiento
+                    td= loteProveedor.fechaDeCompra
+                    td 
+                        button(onclick=`redirectToURL('${loteProveedor.idLaboratorio}-${loteProveedor.numeroDeLote}')`) Editar
+                        form(method="post" action=`/lotesProveedores/${loteProveedor.idLaboratorio}-${loteProveedor.numeroDeLote}?_method=DELETE` style="display: inline")
+                            button(type="submit") Eliminar
+
+    button(onclick="crear()") Crear 
+    button(type="submit") Volver
+script.
+    function redirectToURL(combinedKey){
+        const [idLaboratorio, numeroDeLote] = combinedKey.split('-');
+        window.location.href = `/lotesProveedores/${idLaboratorio}/${numeroDeLote}`;
+    }
+
+    function crear(){
+        window.location.href= "/lotesproveedores/crear"
+    }

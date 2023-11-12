@@ -1,0 +1,38 @@
+head
+    title Lote Proveedor
+section#formLoteProveedor
+h2 Ingresar un Lote Proveedor
+form(action=`/lotesproveedores/${loteProveedor.idLaboratorio}-${loteProveedor.numeroDeLote}?_method=PUT` method="post")
+    label(for="idLaboratorio") Laboratorio:
+    select#laboratorioSelect(name="idLaboratorio")
+        option(value="") Selecciona un Laboratorio
+            each lab in laboratorios
+                option(value=lab.idLaboratorio)= lab.nombreLaboratorio
+    br
+    br
+    label(for="tipo-vac") Tipo de Vacuna:
+    input(type="text" id="tipo-vac" name="tipoDeVacuna" value=loteProveedor.tipoDeVacuna required)
+    br
+    br
+    label(for="nombre-vac") Nombre Comercial de la Vacuna:
+    input(type="text" id="nombre-vac" name="nombreComercial" value=loteProveedor.nombreComercial required)
+    br
+    br
+    label(for="cant-lote-int") Cantidad de Lotes Internos:
+    input(type="text" id="cant-lote-int" name="cantidadDeLotesInternos" value=loteProveedor.cantidadDeLotesInternos required)
+    br
+    br
+    label(for="fecha-fab") Fecha de Fabricación de la Vacuna:
+    input(type="date" id="fecha-fab" name="fechaDeFabricacion" value=loteProveedor.fechaDeFabricacion required)
+    br
+    br
+    label(for="fecha-compra") Fecha de Compra de la Vacuna:
+    input(type="date" id="fecha-compra" name="fechaDeCompra" value=loteProveedor.fechaDeCompra required)
+    br
+    br
+    label(for="fecha-vto") Fecha de Vencimiento de la Vacuna:
+    input(type="date" id="fecha-vto" name="fechaDeVencimiento" value=loteProveedor.fechaDeVencimiento required)
+    br
+    br
+
+    button(type="submit") Actualizar

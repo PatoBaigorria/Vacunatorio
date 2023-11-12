@@ -1,0 +1,49 @@
+head
+  title Lote interno
+section#viewLoteInterno
+  table
+    thead
+      tr
+        th Número de serie
+        th Número de lote
+        th Nombre del laboratorio
+        th Cantidad de vacunas
+        th fecha de llegada al depósito nacional
+        th ID del depósito nacional
+        th Fecha de salida del depósito nacional
+        th Fecha de llegada al depósito provincial
+        th ID del depósito provincial
+        th Fecha de salida del depósito provincial
+        th Fecha de llegada al centro de salud
+        th ID del centro de salud
+    tbody
+      each loteInterno in lotesInternos
+        tr
+          td= loteInterno.numeroDeSerie
+          td= loteInterno.numeroDeLote
+          each laboratorio in laboratorios
+            if loteInterno.idLaboratorio==laboratorio.idLaboratorio 
+              td= laboratorio.nombreLaboratorio
+          td= loteInterno.cantidadDeVacunas
+          td= loteInterno.fechaDeLlegadaDepositoNacional
+          td= loteInterno.idDepositoNacional
+          td= loteInterno.fechaDeSalidaDepositoNacional
+          td= loteInterno.fechaDeLlegadaDepositoProvincial
+          td= loteInterno.idDepositoProvincial
+          td= loteInterno.fechaDeSalidaDepositoProvincial
+          td= loteInterno.fechaDeLlegadaCentroDeVacunacion
+          td= loteInterno.idCentroDeVacunacion
+          td 
+            button(onclick=`redirectToURL('${loteInterno.numeroDeSerie}')`) Editar
+            form(method="post" action=`/lotesinternos/${loteInterno.numeroDeSerie}?_method=DELETE` style="display: inline")
+              button(type="submit") Eliminar
+
+  button(onclick="crear()") Crear 
+  button(type="submit") Volver
+script.
+  function redirectToURL(id){
+    window.location.href= "/lotesinternos/" + id
+  }
+  function crear(){
+    window.location.href= "/lotesinternos/crear"
+  }
