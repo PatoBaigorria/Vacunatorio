@@ -1,13 +1,12 @@
 const {
-  Depositoprovincial,
-  Loteinterno
+  DepositoProvincial
 } = require("../models/relaciones");
 
 // Obtener todos los depósitos provinciales
-const getAllDepositosProvinciales = async (req, res) => {
+const listarDepositosProvinciales = async (req, res) => {
   try {
-    const depositosProvinciales = await Depositoprovincial.findAll();
-    res.json(depositosProvinciales);
+    let depositosProv = await DepositoProvincial.findAll();
+    res.render("depositoprovincial/viewDepositoProvincial", { depositosProv: depositosProv });
   } catch (error) {
     res
       .status(500)
@@ -15,26 +14,56 @@ const getAllDepositosProvinciales = async (req, res) => {
   }
 };
 
-// Crear un nuevo depósito provincial
-const createDepositoProvincial = async (req, res) => {
+// Muestra formulario de creacion de Deposito Provincial
+const mostrarFormularioCreacionDepProv = async (req, res) => {
   try {
-    const nuevoDepositoProvincial = await Depositoprovincial.create(req.body);
-    res.json(nuevoDepositoProvincial);
+    res.render("depositoprovincial/formDepositoProvincial");
   } catch (error) {
-    res.status(500).json({ message: "Error al crear el depósito provincial." });
+    res.status(500).json({
+      message: "Error al crear un Deposito Provincial.",
+    });
+  }
+}
+// Crear un nuevo Deposito Provincial desde el Formulario
+const crearDepProvDesdeFormulario = async (req, res) => {
+  try {
+    const { longitud, latitud } =
+      req.body;
+
+    // Crear una nueva instancia de Deposito Provincial utilizando Sequelize
+    const nuevoDepProv = await DepositoProvincial.create({
+      longitud,
+      latitud,
+    });
+
+    console.log("Deposito Provincial creado:", nuevoDepProv);
+    res.redirect("/depositosprovinciales");
+  } catch (error) {
+    console.error("Error al insertar datos:", error);
+    res.status(500).send("Error al insertar datos en el Deposito Provincial");
   }
 };
+// Editar Deposito Provincial por ID
+const editarDepProv = async (req, res) => {
+  try {
+    const depositoP = await DepositoProvincial.findByPk(req.params.id);
+    res.render("depositoprovincial/editDepositoProvincial", { depositoP: depositoP });
+  } catch (error) {
+    res.status(500).json({
+      message: "Error al obtener el Deposito Provincial." + error.message,
+    });
+  }
+}
 
-// Actualizar un depósito provincial por su ID
+// Actualizar un Depósito Provincial por su ID
 const updateDepositoProvincial = async (req, res) => {
   try {
-    const depositoProvincialActualizado = await Depositoprovincial.update(
-      req.body,
+    await DepositoProvincial.update(req.body,
       {
-        where: { id: req.params.id },
+        where: { idDepositoProvincial: req.params.id, },
       }
     );
-    res.json(depositoProvincialActualizado);
+    res.redirect("/depositosprovinciales");
   } catch (error) {
     res
       .status(500)
@@ -45,12 +74,18 @@ const updateDepositoProvincial = async (req, res) => {
 // Eliminar un depósito provincial por su ID
 const deleteDepositoProvincial = async (req, res) => {
   try {
-    await Depositoprovincial.destroy({ where: { id: req.params.id } });
-    res.json({ message: "Depósito provincial eliminado correctamente." });
+    await DepositoProvincial.destroy({
+      where: {
+        idDepositoProvincial: req.params.id,
+      },
+    });
+    res.redirect("/depositosprovinciales");
   } catch (error) {
     res
       .status(500)
-      .json({ message: "Error al eliminar el depósito provincial." });
+      .json({
+        message: "Error al eliminar el depósito provincial."
+      });
   }
 };
 
@@ -78,8 +113,10 @@ const getLotesInternosByDepositoProvincialId = async (req, res) => {
   }
 };
 module.exports = {
-  getAllDepositosProvinciales,
-  createDepositoProvincial,
+  listarDepositosProvinciales,
+  mostrarFormularioCreacionDepProv,
+  crearDepProvDesdeFormulario,
+  editarDepProv,
   updateDepositoProvincial,
   deleteDepositoProvincial,
   getLotesInternosByDepositoProvincialId,

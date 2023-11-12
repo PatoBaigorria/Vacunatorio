@@ -1,0 +1,13 @@
+head
+    title Deposito Provincial
+section#formDepositoProvincial
+h2 Editar Depósito Provincial
+form(action="/depositosprovinciales/"+depositoP.idDepositoProvincial+"?_method=PUT" method="post")
+      label(for="longitud") Longitud:
+      input(type="text" id="longitud" name="longitud" value=depositoP.longitud required)
+      label(for="latitud") Latitud:
+      input(type="text" id="latitud" name="latitud" value=depositoP.latitud required)
+      br
+      br
+    
+      button(type="submit") Actualizar

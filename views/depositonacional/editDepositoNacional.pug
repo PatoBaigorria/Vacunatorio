@@ -1,0 +1,13 @@
+head
+    title Deposito Nacional
+section#formDepositoNacional
+h2 Editar Depósito Nacional
+form(action="/depositosnacionales/"+depositoN.idDepositoNacional+"?_method=PUT" method="post")
+      label(for="longitud") Longitud:
+      input(type="text" id="longitud" name="longitud" value=depositoN.longitud required)
+      label(for="latitud") Latitud:
+      input(type="text" id="latitud" name="latitud" value=depositoN.latitud required)
+      br
+      br
+    
+      button(type="submit") Actualizar

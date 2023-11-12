@@ -23,6 +23,7 @@ const {
 const override = require("method-override");
 const app = express();
 app.use(override("_method"));
+
 // Configuracion de pug
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "pug");
@@ -404,7 +405,9 @@ app.post("/guardar-depositonacional", async (req, res) => {
   }
 });
 //                  DEPOSITO PROVINCIAL
-app.post("/guardar-depositoprovincial", async (req, res) => {
+const depositoprovincialRoutes = require("./routes/depositoprovincialRoutes");
+app.use("/depositosprovinciales", depositoprovincialRoutes);
+/*app.post("/guardar-depositoprovincial", async (req, res) => {
   try {
     const { longitud, latitud } = req.body;
 
@@ -420,7 +423,7 @@ app.post("/guardar-depositoprovincial", async (req, res) => {
     console.error("Error al insertar datos:", error);
     res.status(500).send("Error al insertar datos");
   }
-});
+});*/
 //                  LOTE INTERNO
 app.post("/guardar-loteinterno", async (req, res) => {
   // Convertir fechas vacías a null

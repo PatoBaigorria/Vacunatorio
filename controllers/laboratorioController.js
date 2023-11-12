@@ -3,7 +3,7 @@ const {
 } = require("../models/relaciones");
 
 // Obtener todos los laboratorios
-const getAllLaboratorios = async (req, res) => {
+const listarLaboratorios = async (req, res) => {
   try {
     let laboratorios = await Laboratorio.findAll();
     res.render("laboratorio/viewLaboratorio", { laboratorios: laboratorios });
@@ -13,8 +13,8 @@ const getAllLaboratorios = async (req, res) => {
     });
   }
 };
-
-const crearLaboratorio = async (req, res) => {
+// Muestra formulario de creacion de Laboratorio
+const mostrarFormularioCreacionLaboratorio = async (req, res) => {
   try {
     res.render("laboratorio/formLaboratorio");
   } catch (error) {
@@ -23,8 +23,8 @@ const crearLaboratorio = async (req, res) => {
     });
   }
 }
-// Crear un nuevo laboratorio
-const createLaboratorio = async (req, res) => {
+// Crear un nuevo laboratorio desde el Formulario
+const crearLaboratorioDesdeFormulario = async (req, res) => {
   try {
     const { nombreLaboratorio, pais, email, telefono, longitud, latitud } =
       req.body;
@@ -46,8 +46,8 @@ const createLaboratorio = async (req, res) => {
     res.status(500).send("Error al insertar datos en el laboratorio");
   }
 };
-
-const getLaboratorioById = async (req, res) => {
+// Editar Laboratorio por ID
+const editarLaboratorio = async (req, res) => {
   try {
     const laboratorio = await Laboratorio.findByPk(req.params.id);
     res.render("laboratorio/editLaboratorio", { laboratorio: laboratorio });
@@ -92,10 +92,10 @@ const deleteLaboratorio = async (req, res) => {
 };
 
 module.exports = {
-  getAllLaboratorios,
-  crearLaboratorio,
-  createLaboratorio,
-  getLaboratorioById,
+  listarLaboratorios,
+  mostrarFormularioCreacionLaboratorio,
+  crearLaboratorioDesdeFormulario,
+  editarLaboratorio,
   updateLaboratorio,
   deleteLaboratorio,
 };

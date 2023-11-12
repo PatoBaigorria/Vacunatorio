@@ -1,0 +1,26 @@
+head
+    title Deposito Provincial
+section#viewDepositosProvinciales
+    table
+        thead
+            tr
+                th Longitud
+                th Latitud
+        tbody
+            each depositoP in depositosProv
+                tr
+                    td= depositoP.longitud
+                    td= depositoP.latitud 
+                    td 
+                        button(onclick=`redirectToURL(${depositoP.idDepositoProvincial})`) Editar
+                        form(method="post" action="/depositosprovinciales/"+depositoP.idDepositoProvincial+"?_method=DELETE" style="display: inline")
+                            button(type="submit") Eliminar 
+    button(onclick="crear()") Crear 
+    button(type="submit") Volver
+script.
+    function redirectToURL(id){
+        window.location.href= "/depositosprovinciales/" + id
+    }
+    function crear(){
+        window.location.href= "/depositosprovinciales/crear"
+    }
