@@ -32,10 +32,20 @@ form(action="/lotesinternos/"+loteInterno.numeroDeSerie+"?_method=PUT" method="p
     br
     label(for="id-deponac") Depósito Nacional:
         select#idDepositoNacional(name="idDepositoNacional")
-            option(value="") Selecciona un Depósito Nacional
-                each depnac in depositosNacionales
-                    option(value=depnac.idDepositoNacional)= depnac.idDepositoNacional
-                //option(value="null") Ningún deposito
+            each depN in depositosNacionales
+                if loteInterno.idDepositoNacional==depN.idDepositoNacional && loteInterno.idDepositoNacional != null
+                    option(depN.idDepositoNacional)=depN.idDepositoNacional
+                    option(value="") Ningún depósito
+            if loteInterno.idDepositoNacional != null
+                each depN in depositosNacionales
+                    if loteInterno.idDepositoNacional==depN.idDepositoNacional
+                        break
+                    else
+                        option(depN.idDepositoNacional)=depN.idDepositoNacional
+            else
+                option(value="") Seleccione un depósito nacional
+                each depN in depositosNacionales
+                    option(depN.idDepositoNacional)=depN.idDepositoNacional
     br
     br
     label(for="fecha-lleg-depos-nac") Fecha Llegada Depósito Nacional:
@@ -47,10 +57,21 @@ form(action="/lotesinternos/"+loteInterno.numeroDeSerie+"?_method=PUT" method="p
     br
     label(for="id-depprov") Depósito Provincial:
         select#idDepositoProvincial(name="idDepositoProvincial")
-            option(value="") Selecciona un Depósito Provincial
-                each dprov in depositosProvinciales
-                    option(value=dprov.idDepositoProvincial)= dprov.idDepositoProvincial
-                //option(value="null") Ningún deposito
+            each depP in depositosProvinciales
+                if loteInterno.idDepositoProvincial==depP.idDepositoProvincial && loteInterno.idDepositoProvincial != null
+                    option(depP.idDepositoProvincial)=depP.idDepositoProvincial
+                    option(value="") Ningún depósito
+            if loteInterno.idDepositoProvincial != null
+                each depP in depositosProvinciales
+                    if loteInterno.idDepositoProvincial==depP.idDepositoProvincial
+                        break
+                    else
+                        option(depP.idDepositoProvincial)=depP.idDepositoProvincial
+            else
+                option(value="") Seleccione un depósito provincial
+                each depP in depositosProvinciales
+                    option(depP.idDepositoProvincial)=depP.idDepositoProvincial
+
     br
     br
     label(for="fecha-lleg-depos-prov") Fecha Llegada Depósito Provincial:
@@ -61,10 +82,20 @@ form(action="/lotesinternos/"+loteInterno.numeroDeSerie+"?_method=PUT" method="p
     br
     label(for="id-ctrovac") Centro de Vacunacion:
         select#idCentroDeVacunacion(name="idCentroDeVacunacion")
-            option(value="") Selecciona un Centro de Vacunación
-                each cvac in centrosDeVacunaciones
-                    option(value=cvac.idCentroDeVacunacion)= cvac.idCentroDeVacunacion
-                //option(value="null") Ningún centro
+            each ctrosDeVac in centrosDeVacunaciones
+                if loteInterno.idCentroDeVacunacion==ctrosDeVac.idCentroDeVacunacion && loteInterno.idCentroDeVacunacion != null
+                    option(ctrosDeVac.idCentroDeVacunacion)=ctrosDeVac.idCentroDeVacunacion
+                    option(value="") Ningún centro de vacunación
+            if loteInterno.idCentroDeVacunacion != null
+                each ctrosDeVac in centrosDeVacunaciones
+                    if loteInterno.idCentroDeVacunacion==ctrosDeVac.idCentroDeVacunacion
+                        break
+                    else
+                        option(ctrosDeVac.idCentroDeVacunacion)=ctrosDeVac.idCentroDeVacunacion
+            else
+                option(value="") Selecciona un Centro de Vacunación
+                    each cvac in centrosDeVacunaciones
+                        option(value=cvac.idCentroDeVacunacion)= cvac.idCentroDeVacunacion
     br
     br           
     label(for="fecha-lleg-ctro-vac") Fecha Llegada Centro Vacunación:
