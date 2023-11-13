@@ -3,23 +3,7 @@ const express = require("express");
 const path = require("path");
 const cookieParser = require("cookie-parser");
 const logger = require("morgan");
-const indexRouter = require("./routes/index");
-// Importar modelos
-const {
-  Persona,
-  AgenteDeSalud,
-  CentroDeVacunacion,
-  Laboratorio,
-  Telefono,
-  LoteProveedor,
-  PatologiaBase,
-  DepositoNacional,
-  DepositoProvincial,
-  Aplicacion,
-  LoteInterno,
-  Descarte,
-  Traslado,
-} = require("./models/relaciones");
+const indexRouter = require("./routes/indexRoutes");
 const override = require("method-override");
 const app = express();
 app.use(override("_method"));
@@ -27,7 +11,6 @@ app.use(override("_method"));
 // Configuracion de pug
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "pug");
-
 app.use(logger("dev"));
 app.use(express.json());
 app.use(
@@ -41,6 +24,7 @@ app.use(express.static("public"));
 
 // Agrega las rutas a la aplicación
 app.use("/", indexRouter);
+
 
 // Importa módulo de configuración de la base de datos
 const db = require("./database/db");
@@ -59,7 +43,7 @@ const port = 3000;
 app.listen(port, () => {
   console.log(`Servidor escuchando en el puerto ${port}`);
 });
-
+/*
 //Ruta para mostrar los formularios
 app.get("/", (req, res) => {
   res.render("index", {});
@@ -284,7 +268,9 @@ app.post("/guardar-descarte", async (req, res) => {
   }
 });
 //                      TRASLADO
-app.post("/guardar-traslado", async (req, res) => {
+const trasladoRoutes = require("./routes/trasladoRoutes");
+app.use("/traslados", trasladoRoutes);
+/*app.post("/guardar-traslado", async (req, res) => {
   try {
     const {
       numeroDeSerie,
@@ -429,7 +415,7 @@ app.post("/guardar-patologiabase", async (req, res) => {
     console.error("Error al insertar datos:", error);
     res.status(500).send("Error al insertar datos");
   }
-});
+});*/
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
   next(createError(404));

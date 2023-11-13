@@ -14,7 +14,7 @@ const listarCentrosDeVacunacion = async (req, res) => {
   }
 };
 
-// Muestra formulario de creacion de Deposito Nacional
+// Muestra formulario de creacion de Centro de Vacunacion
 const mostrarFormularioCreacionCentroVac = async (req, res) => {
   try {
     res.render("centrodevacunacion/formCentroDeVacunacion");
@@ -43,7 +43,7 @@ const crearCentroVacDesdeFormulario = async (req, res) => {
     res.status(500).send("Error al insertar datos en el Centro de Vacunacion");
   }
 };
-// Editar Deposito Nacional por ID
+// Editar Centro de Vacunacion por ID
 const editarCentroVac = async (req, res) => {
   try {
     const centroV = await CentroDeVacunacion.findByPk(req.params.id);
@@ -55,7 +55,7 @@ const editarCentroVac = async (req, res) => {
   }
 }
 
-// Actualizar un Depósito Nacional por su ID
+// Actualizar un Centro de Vacunacion por su ID
 const updateCentroDeVacunacion = async (req, res) => {
   try {
     await CentroDeVacunacion.update(req.body,
@@ -71,7 +71,7 @@ const updateCentroDeVacunacion = async (req, res) => {
   }
 };
 
-// Eliminar un depósito provincial por su ID
+// Eliminar un Centro de Vacunacion por su ID
 const deleteCentroDeVacunacion = async (req, res) => {
   try {
     await CentroDeVacunacion.destroy({
