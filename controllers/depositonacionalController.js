@@ -3,7 +3,9 @@ const { DepositoNacional } = require("../models/relaciones");
 // Obtener todos los depósitos nacionales
 const listarDepositosNacionales = async (req, res) => {
   try {
-    let depositosNac = await DepositoNacional.findAll();
+    let depositosNac = await DepositoNacional.findAll({
+      raw: true
+    });
     res.render("depositonacional/viewDepositoNacional", { depositosNac: depositosNac });
   } catch (error) {
     res
@@ -13,7 +15,7 @@ const listarDepositosNacionales = async (req, res) => {
 };
 
 // Muestra formulario de creacion de Deposito Nacional
-const mostrarFormularioCreacionDepNac = async (req, res) => {
+const altaDepNac = async (req, res) => {
   try {
     res.render("depositonacional/formDepositoNacional");
   } catch (error) {
@@ -23,18 +25,16 @@ const mostrarFormularioCreacionDepNac = async (req, res) => {
   }
 }
 // Crear un nuevo Deposito Nacional desde el Formulario
-const crearDepNacDesdeFormulario = async (req, res) => {
+const createDepNac = async (req, res) => {
   try {
     const { longitud, latitud } =
       req.body;
 
     // Crear una nueva instancia de Deposito Provincial utilizando Sequelize
-    const nuevoDepNac = await DepositoNacional.create({
+    await DepositoNacional.create({
       longitud,
       latitud,
     });
-
-    console.log("Deposito Nacionañ creado:", nuevoDepNac);
     res.redirect("/depositosnacionales");
   } catch (error) {
     console.error("Error al insertar datos:", error);
@@ -86,7 +86,7 @@ const deleteDepositoNacional = async (req, res) => {
       });
   }
 };
-
+/*
 // Obtener los lotes internos asociados a un depósito nacional por su ID
 const getLotesInternosByDepositoNacionalId = async (req, res) => {
   try {
@@ -106,13 +106,13 @@ const getLotesInternosByDepositoNacionalId = async (req, res) => {
       message: "Error al obtener los lotes internos del depósito nacional.",
     });
   }
-};
+};*/
 module.exports = {
   listarDepositosNacionales,
-  mostrarFormularioCreacionDepNac,
-  crearDepNacDesdeFormulario,
+  altaDepNac,
+  createDepNac,
   editarDepNac,
   updateDepositoNacional,
   deleteDepositoNacional,
-  getLotesInternosByDepositoNacionalId,
+  //getLotesInternosByDepositoNacionalId,
 };

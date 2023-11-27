@@ -4,12 +4,12 @@ const controllers = require("../controllers/indexController");
 
 //Importacion del Controlador
 router.get("/", controllers.depositoNacionalController.listarDepositosNacionales);
-router.get("/crear", controllers.depositoNacionalController.mostrarFormularioCreacionDepNac);
-router.post("/", controllers.depositoNacionalController.crearDepNacDesdeFormulario);
+router.get("/altaDN", controllers.depositoNacionalController.altaDepNac);
+router.post("/", controllers.depositoNacionalController.createDepNac);
 router.get("/:id", controllers.depositoNacionalController.editarDepNac);
 router.put("/:id", controllers.depositoNacionalController.updateDepositoNacional);
 router.delete("/:id", controllers.depositoNacionalController.deleteDepositoNacional);
-
+/*
 // Obtener los lotes internos asociados a un depósito nacional por su ID
 router.get("/depositosnacionales/:id/lotesinternos", async (req, res) => {
   try {
@@ -31,6 +31,6 @@ router.get("/depositosnacionales/:id/lotesinternos", async (req, res) => {
       message: "Error al obtener los lotes internos del depósito nacional.",
     });
   }
-});
+});*/
 
 module.exports = router;

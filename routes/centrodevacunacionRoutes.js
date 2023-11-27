@@ -4,13 +4,13 @@ const controllers = require("../controllers/indexController");
 
 //Importacion del Controlador
 router.get("/", controllers.centroDeVacunacionController.listarCentrosDeVacunacion);
-router.get("/crear", controllers.centroDeVacunacionController.mostrarFormularioCreacionCentroVac);
-router.post("/", controllers.centroDeVacunacionController.crearCentroVacDesdeFormulario);
+router.get("/altaCV", controllers.centroDeVacunacionController.altaCentroVac);
+router.post("/", controllers.centroDeVacunacionController.createCentroVac);
 router.get("/:id", controllers.centroDeVacunacionController.editarCentroVac);
 router.put("/:id", controllers.centroDeVacunacionController.updateCentroDeVacunacion);
 router.delete("/:id", controllers.centroDeVacunacionController.deleteCentroDeVacunacion);
 
-// Obtener los lotes internos asociados a un centro de vacunación por su ID
+/* Obtener los lotes internos asociados a un centro de vacunación por su ID
 router.get("/centrosdevacunacion/:id/lotesinternos", async (req, res) => {
   try {
     const centroDeVacunacion = await CentroDeVacunacion.findByPk(
@@ -33,6 +33,6 @@ router.get("/centrosdevacunacion/:id/lotesinternos", async (req, res) => {
       message: "Error al obtener los lotes internos del centro de vacunación.",
     });
   }
-});
+});*/
 
 module.exports = router;

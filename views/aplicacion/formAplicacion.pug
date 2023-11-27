@@ -1,33 +1,47 @@
 head
     title Aplicacion Vacunas
 section#formAplicacion
-h2 Aplicación de Vacunas
-form(action="/guardar-aplicacion" method="post")
-      label(for="persona") Seleccione un Agente de Salud existente:
-      select#personaSelect(name="DNIAgente")
-        option(value="") Seleccione un agente de salud para ingresar su matricula:
-            each persona in personas
-                if(persona.ocupacion === "agenteDeSalud")
-                    option(value=persona.DNI)= persona.nombre + ' ' + persona.apellido
-      br
-      br
-      label(for="persona") Seleccione un DNI de una Persona existente:
-      select#personaSelect(name="DNIPaciente")
-        option(value="") Seleccione un DNI para asignarle una patologia a la vez:
-            each persona in personas
-                option(value=persona.DNI)= persona.nombre + ' ' + persona.apellido
-      br
-      br
-      label(for="num-serie") Nº de Serie Lote Interno:
-      select#numeroDeSerieSelect(name="numeroDeSerie")
-            option(value="") Selecciona un Lote Interno
-                each loteI in lotesInternos
-                    option(value=loteI.numeroDeSerie)= loteI.numeroDeSerie
-      br
-      br
-      label(for="fecha-aplic") Fecha Aplicación Vacuna:
-      input(type="date" id="fecha-aplic" name="fechaDeAplicacion" required)
-      br
-      br
-    
-      button(type="submit") Guardar
+    h2 Crear Aplicación de Vacunas
+    form(action="/aplicaciones" method="post")
+        label(for="DNIPaciente") Paciente:
+        select(name="DNIPaciente" id="DNIPaciente" onchange=`agenteS(${JSON.stringify(agentes)}, ${JSON.stringify(personas)})` required)
+            option Seleccione un Paciente
+                each persona in personas
+                    option(value=persona.DNI) #{persona.nombre} #{persona.apellido}
+        br
+        br
+        
+        label(for="DNIAgente") Agente de Salud:
+        select(name="DNIAgente" id="DNIAgente" class="DNIAgente" required)
+            option Seleccione un Agente de Salud
+        br
+        br
+        
+        label(for="numeroDeSerie") Lote de Vacunas que se Aplicará al Paciente:
+        select(name="numeroDeSerie" id="numeroDeSerie" required)
+            option Seleccione un Paciente
+                each lote in lotes
+                    option(value=lote.numeroDeSerie) #{lote.numeroDeSerie}
+        br
+        br
+        
+        label(for="fechaDeAplicacion") Fecha de Aplicación:
+        input(type="date" name="fechaDeAplicacion" id="fechaDeAplicacion" required)
+        br
+        br
+
+        button(type="submit") Guardar
+
+script.
+    function agenteS(agentes, pacientes) {
+        let paciente = null
+        let pacienteSelect = document.getElementById("DNIPaciente").value;
+        let agenteSelect = document.getElementById("DNIAgente");
+        agenteSelect.innerHTML = "";  // Limpiar el contenido actual
+        for (let i = 0; i < agentes.length; i++) {
+            if (agentes[i].DNI != pacienteSelect) {
+                paciente = pacientes.filter(paciente => paciente.DNI===agentes[i].DNI);
+                agenteSelect.innerHTML += `<option value=${paciente[0].DNI}>${paciente[0].nombre} ${paciente[0].apellido}</option>`;
+            }
+        }
+    }

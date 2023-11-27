@@ -6,7 +6,7 @@ const router = express.Router();
 router.get("/", function (req, res, next) {
   res.render("index", { title: "Express" });
 });
-// Ruta para mostrar todos los formularios
+/* Ruta para mostrar todos los formularios
 router.get("/Altas/formAgenteDeSalud", (req, res) => {
   res.render("formAgenteDeSalud");
 });
@@ -56,7 +56,7 @@ router.get("/Altas/formTelefono", (req, res) => {
 
 router.get("/Altas/formTraslado", (req, res) => {
   res.render("formTraslado");
-});
+});*/
 
 // Importar los archivos de rutas específicos
 const agentedesaludRoutes = require("./agentedesaludRoutes");
@@ -76,7 +76,7 @@ const trasladoRoutes = require("./trasladoRoutes");
 // Configurar las rutas principales
 router.use("/agentesdesalud", agentedesaludRoutes);
 router.use("/aplicaciones", aplicacionRoutes);
-router.use("/centrosdevacunaciones", centrodevacunacionRoutes);
+router.use("/centrosdevacunacion", centrodevacunacionRoutes);
 router.use("/depositosnacionales", depositonacionalRoutes);
 router.use("/depositosprovinciales", depositoprovincialRoutes);
 router.use("/descartes", descarteRoutes);

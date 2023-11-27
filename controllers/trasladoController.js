@@ -7,9 +7,15 @@ const {
 // Obtener todos los traslados
 const listarTraslados = async (req, res) => {
   try {
-    const traslados = await Traslado.findAll();
-    const lotesInternos = await LoteInterno.findAll();
-    const centrosDeVacunacion = await CentroDeVacunacion.findAll();
+    const traslados = await Traslado.findAll({
+      raw: true
+    });
+    const lotesInternos = await LoteInterno.findAll({
+      raw: true
+    });
+    const centrosDeVacunacion = await CentroDeVacunacion.findAll({
+      raw: true
+    });
     res.render("traslado/viewTraslado", {
       traslados: traslados,
       lotesInternos: lotesInternos,
@@ -23,7 +29,7 @@ const listarTraslados = async (req, res) => {
 };
 
 // Muestra formulario de creacion de Traslado
-const mostrarFormularioCreacionTraslado = async (req, res) => {
+const altaTraslado = async (req, res) => {
   try {
     const lotesInternos = await LoteInterno.findAll();
     const centrosDeVacunacion = await CentroDeVacunacion.findAll();
@@ -39,7 +45,7 @@ const mostrarFormularioCreacionTraslado = async (req, res) => {
   }
 };
 // Crear un nuevo Traslado desde el Formulario
-const crearTrasladosDesdeFormulario = async (req, res) => {
+const createTraslados = async (req, res) => {
   try {
     const { numeroDeSerie, idCentroDeVacunacion, fechaDeSalida, fechaDeLlegada } = req.body;
     await Traslado.create({
@@ -147,8 +153,8 @@ const getCentroDeVacunacionByTrasladoId = async (req, res) => {
 };*/
 module.exports = {
   listarTraslados,
-  mostrarFormularioCreacionTraslado,
-  crearTrasladosDesdeFormulario,
+  altaTraslado,
+  createTraslados,
   editarTraslado,
   updateTraslado,
   deleteTraslado,

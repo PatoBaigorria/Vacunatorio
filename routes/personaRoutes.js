@@ -1,31 +1,15 @@
 const express = require("express");
 const router = express.Router();
 const controllers = require("../controllers/indexController");
-const {
-  Persona,
-  Telefono,
-  PatologiaBase,
-  AgenteDeSalud,
-  Aplicacion,
-} = require("../models/relaciones");
 
-// Ruta para obtener todas las personas
-router.get("/", controllers.personaController.getAllPersonas);
-
-// Ruta para crear una nueva persona
-router.post("/", controllers.personaController.createPersona);
-
-// Ruta para obtener una persona por su ID
-//router.get("/:id", controllers.personaController.getPersonaById);
-
-// Ruta para actualizar una persona por su ID
+router.get("/", controllers.personaController.listarPersonas);
+router.get("/crear", controllers.personaController.mostrarFormularioCrearPersona);
+router.post("/", controllers.personaController.crearPersonaDesdeFormulario);
+router.get("/:id", controllers.personaController.editarPersona);
 router.put("/:id", controllers.personaController.updatePersona);
-
-// Ruta para eliminar una persona por su ID
 router.delete("/:id", controllers.personaController.deletePersona);
 
-// Obtener todas las personas
-router.get("/personas", async (req, res) => {
+/*router.get("/personas", async (req, res) => {
   try {
     const personas = await Persona.findAll();
     res.json(personas);
@@ -172,6 +156,6 @@ router.get("/personas/:dni/aplicaciones", async (req, res) => {
         message: "Error al obtener las aplicaciones de la persona."
       });
   }
-});
+});*/
 
 module.exports = router;

@@ -1,10 +1,9 @@
 head
   title Persona
-
 section#formPersona
-  h2 Ingresar una Persona
+h2 Ingresar una Persona
 
-  form(action="/guardar-persona" method="post")
+form(action="/personas" method="post")
     label(for="dni") DNI:
     input(type="text" id="dni" name="DNI" required)
     br
@@ -25,35 +24,74 @@ section#formPersona
     br
     br
 
-    label(for="fecha-nac") Fecha de Nacimiento:
-    input(type="date" id="fecha-nac" name="fechadenacimiento" required)
+    label(for="fechaDeNacimiento") Fecha de Nacimiento:
+    input(type="date" id="fechaDeNacimiento" name="fechaDeNacimiento" required)
     br
     br
 
     label(for="ocupacion") Ocupación:
-    select(name="ocupacion" id="ocupacion" required)
-      option(value="") Selecciona una Ocupacion:
-      option(value="agenteDeSalud") Agente de Salud
-      option(value="otro") Otra
+    select(name="ocupacion" id="ocupacion" onchange="toggleInput()" required)
+      option(disabled selected hidden) Selecciona una Ocupacion:
+      option(value="agente de salud") agente de salud
+      option(value="otro") otro
     br
     br
 
+    label(for="matricula" id="matriculaLabel" style="display: none;") Matrícula:
+    input(type="number" id="matricula" name="matricula" style="display: none;")
+    div(id="matriculaDiv" style="display: none;")
+      br
+      br
+
     label Género:
     select(name="genero" required)
-      option(value="masculino") Masculino
-      option(value="femenino") Femenino
-      option(value="otro") Otro
+      option(value="Masculino") Masculino
+      option(value="Femenino") Femenino
+      option(value="Otro") Otro
+    br
+    br
+
+    label(for="celular1") Celular 1:
+    input(type="number" id="celular1" name="celular1" placeholder="Ej. 12345678")
+    br
+    br
+
+    label(for="celular2") Celular 2:
+    input(type="number" id="celular2" name="celular2" placeholder="Ej. 12345678")
+    br
+    br
+
+    label(for="patologiaBase") Patologia base:
+    input(type="text" id="patologiaBase" name="patologiaBase" value="" placeholder="Ej. Asma")
     br
     br
 
     label(for="longitud") Longitud:
-    input(type="text" id="longitud" name="longitud" placeholder="Ej. 32.801725" required)
+    input(type="text" id="longitud" name="longitud" placeholder="Ej. 32.801725")
     br
     br
 
     label(for="latitud") Latitud:
-    input(type="text" id="latitud" name="latitud" placeholder="Ej. -34.603722" required)
+    input(type="text" id="latitud" name="latitud" placeholder="Ej. -34.603722")
     br
     br
 
     button(type="submit") Guardar
+
+script.
+    function toggleInput() {
+      var rolSelect = document.getElementById("ocupacion");
+      var matriculaLabel = document.getElementById("matriculaLabel");
+      var matriculaInput = document.getElementById("matricula");
+      var matriculaDiv = document.getElementById("matriculaDiv");
+
+      if (rolSelect.value === "agente de salud") {
+        matriculaLabel.style.display = "inline";
+        matriculaInput.style.display = "inline";
+        matriculaDiv.style.display = "inline"
+      } else {
+        matriculaLabel.style.display = "none";
+        matriculaInput.style.display = "none";
+        matriculaDiv.style.display = "none";
+      }
+    }

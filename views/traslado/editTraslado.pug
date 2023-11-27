@@ -40,7 +40,7 @@ form(action="/traslados/"+traslado.idTraslado+"?_method=PUT" method="post")
             input(type="date" id="fecha-sal-trasl" name="fechaDeSalida" class="fecha-salida" required)
     br
     br
-    label(for="fecha-lleg-trasl") Fecha Llegada de Traslado:
+    label(for="fecha-lleg-trasl") Fecha Llegada de Traslado en Destino:
         if traslado.fechaDeLlegada != null
             input(type="date" id="fecha-lleg-trasl" name="fechaDeLlegada" class="fecha-llegada" value=traslado.fechaDeLlegada required)
         else

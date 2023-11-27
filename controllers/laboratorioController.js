@@ -1,11 +1,11 @@
-const {
-  Laboratorio,
-} = require("../models/relaciones");
+const { Laboratorio } = require("../models/relaciones");
 
 // Obtener todos los laboratorios
 const listarLaboratorios = async (req, res) => {
   try {
-    let laboratorios = await Laboratorio.findAll();
+    let laboratorios = await Laboratorio.findAll({
+      raw: true
+    });
     res.render("laboratorio/viewLaboratorio", { laboratorios: laboratorios });
   } catch (error) {
     res.status(500).json({
@@ -14,7 +14,7 @@ const listarLaboratorios = async (req, res) => {
   }
 };
 // Muestra formulario de creacion de Laboratorio
-const mostrarFormularioCreacionLaboratorio = async (req, res) => {
+const altaLaboratorio = async (req, res) => {
   try {
     res.render("laboratorio/formLaboratorio");
   } catch (error) {
@@ -24,7 +24,7 @@ const mostrarFormularioCreacionLaboratorio = async (req, res) => {
   }
 }
 // Crear un nuevo laboratorio desde el Formulario
-const crearLaboratorioDesdeFormulario = async (req, res) => {
+const createLaboratorio = async (req, res) => {
   try {
     const { nombreLaboratorio, pais, email, telefono, longitud, latitud } = req.body;
     // Crear una nueva instancia de Laboratorio utilizando Sequelize
@@ -43,7 +43,7 @@ const crearLaboratorioDesdeFormulario = async (req, res) => {
   }
 };
 // Editar Laboratorio por ID
-const editarLaboratorio = async (req, res) => {
+const editLaboratorio = async (req, res) => {
   try {
     const laboratorio = await Laboratorio.findByPk(req.params.id);
     res.render("laboratorio/editLaboratorio", { laboratorio: laboratorio });
@@ -89,9 +89,9 @@ const deleteLaboratorio = async (req, res) => {
 
 module.exports = {
   listarLaboratorios,
-  mostrarFormularioCreacionLaboratorio,
-  crearLaboratorioDesdeFormulario,
-  editarLaboratorio,
+  altaLaboratorio,
+  createLaboratorio,
+  editLaboratorio,
   updateLaboratorio,
   deleteLaboratorio,
 };

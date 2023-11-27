@@ -1,7 +1,7 @@
 head
     title Traslados
 section#formTraslado
-h2 Ingresar Traslados
+h2 Crear Traslados
 form(action="/traslados" method="post")
     label(for="num-serie") Nº de Serie Lote Interno:
         select#numeroDeSerieSelect(name="numeroDeSerie")
@@ -21,7 +21,7 @@ form(action="/traslados" method="post")
     input(type="date" id="fecha-sal-trasl" name="fechaDeSalida" required)
     br
     br
-    label(for="fecha-lleg-trasl") Fecha Llegada de Traslado:
+    label(for="fecha-lleg-trasl") Fecha Llegada de Traslado en Destino:
     input(type="date" id="fecha-lleg-trasl" name="fechaDeLlegada" required)
     br
     br

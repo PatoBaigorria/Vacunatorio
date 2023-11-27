@@ -4,26 +4,33 @@ section#formLaboratorio
 h2 Ingresar un Laboratorio
 form(action="/laboratorios/" method="post")
     label(for="nombre") Nombre Laboratorio:
-    input(type="text" id="nombre" name="nombreLaboratorio" required)
+    input(type="text" id="nombre" name="nombreLaboratorio" placeholder="Ej. Laboratorio 1" required)
     br
     br
+
     label(for="pais") País:
-    input(type="text" id="pais" name="pais" required)
+    input(type="text" id="pais" name="pais" placeholder="Ej. Argentina" required)
     br
     br
+
     label(for="email") Email:
-    input(type="text" id="email" name="email" required)
+    input(type="text" id="email" name="email" placeholder="Ej. 8JpjA@example.com" required)
     br
     br
+
     label(for="telefono") Teléfono:
-    input(type="text" id="telefono" name="telefono" required)
+    input(type="text" id="telefono" name="telefono" placeholder="Ej. 123456789" required)
     br
     br
+
     label(for="longitud") Longitud:
     input(type="text" id="longitud" name="longitud" placeholder="Ej. -54.801725" required)
+    br
+    br
+
     label(for="latitud") Latitud:
     input(type="text" id="latitud" name="latitud" placeholder="Ej. 32.603722" required)
     br
     br
 
-    button(type="submit") Guardar
+    button(type="submit") Dar de Alta

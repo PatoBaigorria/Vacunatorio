@@ -1,0 +1,139 @@
+head
+  title Persona
+section#formPersona
+h2 Actualice a la Persona
+
+  form(action="/personas/"+persona.DNI+"?_method=PUT" method="post")
+    label(for="dni") DNI:
+    input(type="text" id="dni" name="DNI" value=persona.DNI readonly)
+    br
+    br
+
+    label(for="nombre") Nombre:
+    input(type="text" id="nombre" name="nombre" value=persona.nombre required)
+    br
+    br
+
+    label(for="apellido") Apellido:
+    input(type="text" id="apellido" name="apellido" value=persona.apellido required)
+    br
+    br
+
+    label(for="email") Email:
+    input(type="text" id="email" name="email" value=persona.email required)
+    br
+    br
+
+    label(for="fechaDeNacimiento") Fecha de Nacimiento:
+    input(type="date" id="fechaDeNacimiento" name="fechaDeNacimiento" value=persona.fechaDeNacimiento required)
+    br
+    br
+
+    label(for="ocupacion") Ocupación:
+    if(persona.ocupacion=="agente de salud")
+      select(name="ocupacion" id="ocupacion" onchange="toggleInput()" required)
+        option(value=persona.ocupacion)= persona.ocupacion
+        option(value="otro") otro
+      br
+      br
+
+      label(for="matricula" id="matriculaLabel" style="display: inline;") Matrícula:
+      input(type="number" id="matricula" name="matricula" style="display: inline;" value=agentedesalud.matricula)
+      div(id="matriculaDiv" style="display: inline;")
+        br
+        br
+    else
+      select(name="ocupacion" id="ocupacion" onchange="toggleInput()" required)
+        option(value=persona.ocupacion)= persona.ocupacion
+        option(value="agente de salud") agente de salud
+      br
+      br
+
+      label(for="matricula" id="matriculaLabel" style="display: none;") Matrícula:
+      input(type="number" id="matricula" name="matricula" style="display: none;")
+      div(id="matriculaDiv" style="display: none;")
+        br
+        br
+
+    label(for="matricula" id="matriculaLabel" style="display: none;") Matrícula:
+    input(type="number" id="matricula" name="matricula" style="display: none;")
+    div(id="matriculaDiv" style="display: none;")
+      br
+      br
+
+    label Género:
+    select(name="genero" required)
+      option(value=persona.genero)= persona.genero
+        if(persona.genero=="Masculino")
+            option(value="Femenino") Femenino
+            option(value="Otro") Otro
+        else if(persona.genero=="Femenino")
+            option(value="Masculino") Masculino
+            option(value="Otro") Otro
+        else 
+            option(value="Masculino") Masculino
+            option(value="Femenino") Femenino
+    br
+    br
+
+    if telefono.celular1 != null
+      label(for="celular1") Celular 1:
+      input(type="number" id="celular1" name="celular1" value=telefono.celular1)
+      br
+      br
+    else
+      label(for="celular1") Celular 1:
+      input(type="number" id="celular2" name="celular1")
+      br
+      br
+    if telefono.celular2 != null
+      label(for="celular2") Celular 2:
+      input(type="number" id="celular2" name="celular2" value=telefono.celular2)
+      br
+      br
+    else
+      label(for="celular2") Celular 2:
+      input(type="number" id="celular2" name="celular2")
+      br
+      br
+
+    if(patologiabase == null)
+      label(for="patologiaBase") Patologia base:
+      input(type="text" id="patologiaBase" name="patologiaBase")
+      br
+      br
+    else
+      label(for="patologiaBase") Patologia base:
+      input(type="text" id="patologiaBase" name="patologiaBase" value=patologiabase.patologiaBase)
+      br
+      br
+
+    label(for="longitud") Longitud:
+    input(type="text" id="longitud" name="longitud" value=persona.longitud)
+    br
+    br
+
+    label(for="latitud") Latitud:
+    input(type="text" id="latitud" name="latitud" value=persona.latitud)
+    br
+    br
+    button(type="submit") Actualizar
+
+script.
+    function toggleInput() {
+      var rolSelect = document.getElementById("ocupacion");
+      var matriculaLabel = document.getElementById("matriculaLabel");
+      var matriculaInput = document.getElementById("matricula");
+      var matriculaDiv = document.getElementById("matriculaDiv");
+
+      if (rolSelect.value === "agente de salud") {
+        matriculaDiv.style.display = "inline"
+        matriculaLabel.style.display = "inline";
+        matriculaInput.style.display = "inline";
+        matriculaInput.value = agentedesalud.matricula;
+      } else {
+        matriculaLabel.style.display = "none";
+        matriculaInput.style.display = "none";
+        matriculaDiv.style.display = "none";
+      }
+    }

@@ -8,14 +8,26 @@ const {
 } = require("../models/relaciones");
 
 // Obtener todos los lotes internos
-const getAllLotesInternos = async (req, res) => {
+const listarLotesInternos = async (req, res) => {
   try {
-    const lotesInternos = await LoteInterno.findAll();
-    const lotesProveedores = await LoteProveedor.findAll();
-    const laboratorios = await Laboratorio.findAll();
-    const depositosNacionales = await DepositoNacional.findAll();
-    const depositosProvinciales = await DepositoProvincial.findAll();
-    const centrosDeVacunaciones = await CentroDeVacunacion.findAll();
+    const lotesInternos = await LoteInterno.findAll({
+      raw: true
+    });
+    const lotesProveedores = await LoteProveedor.findAll({
+      raw: true
+    });
+    const laboratorios = await Laboratorio.findAll({
+      raw: true
+    });
+    const depositosNacionales = await DepositoNacional.findAll({
+      raw: true
+    });
+    const depositosProvinciales = await DepositoProvincial.findAll({
+      raw: true
+    });
+    const centrosDeVacunaciones = await CentroDeVacunacion.findAll({
+      raw: true
+    });
     res.render("loteinterno/viewLoteInterno", {
       lotesInternos: lotesInternos,
       lotesProveedores: lotesProveedores,
@@ -104,7 +116,7 @@ const createLoteInterno = async (req, res) => {
   }
 };
 
-const getLoteInternoById = async (req, res) => {
+const editarLoteInterno = async (req, res) => {
   try {
     const loteInterno = await LoteInterno.findByPk(req.params.id);
     const lotesProveedores = await LoteProveedor.findAll();
@@ -282,10 +294,10 @@ const getDescartesByLoteInternoSerie = async (req, res) => {
 };*/
 
 module.exports = {
-  getAllLotesInternos,
+  listarLotesInternos,
   crearLoteInterno,
   createLoteInterno,
-  getLoteInternoById,
+  editarLoteInterno,
   updateLoteInterno,
   deleteLoteInterno,
 };

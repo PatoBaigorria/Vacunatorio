@@ -5,7 +5,9 @@ const {
 // Obtener todos los depósitos provinciales
 const listarDepositosProvinciales = async (req, res) => {
   try {
-    let depositosProv = await DepositoProvincial.findAll();
+    let depositosProv = await DepositoProvincial.findAll({
+      raw: true
+    });
     res.render("depositoprovincial/viewDepositoProvincial", { depositosProv: depositosProv });
   } catch (error) {
     res
@@ -15,7 +17,7 @@ const listarDepositosProvinciales = async (req, res) => {
 };
 
 // Muestra formulario de creacion de Deposito Provincial
-const mostrarFormularioCreacionDepProv = async (req, res) => {
+const altaDepProv = async (req, res) => {
   try {
     res.render("depositoprovincial/formDepositoProvincial");
   } catch (error) {
@@ -25,18 +27,16 @@ const mostrarFormularioCreacionDepProv = async (req, res) => {
   }
 }
 // Crear un nuevo Deposito Provincial desde el Formulario
-const crearDepProvDesdeFormulario = async (req, res) => {
+const createDepProv = async (req, res) => {
   try {
     const { longitud, latitud } =
       req.body;
 
     // Crear una nueva instancia de Deposito Provincial utilizando Sequelize
-    const nuevoDepProv = await DepositoProvincial.create({
+    await DepositoProvincial.create({
       longitud,
       latitud,
     });
-
-    console.log("Deposito Provincial creado:", nuevoDepProv);
     res.redirect("/depositosprovinciales");
   } catch (error) {
     console.error("Error al insertar datos:", error);
@@ -114,8 +114,8 @@ const getLotesInternosByDepositoProvincialId = async (req, res) => {
 };
 module.exports = {
   listarDepositosProvinciales,
-  mostrarFormularioCreacionDepProv,
-  crearDepProvDesdeFormulario,
+  altaDepProv,
+  createDepProv,
   editarDepProv,
   updateDepositoProvincial,
   deleteDepositoProvincial,

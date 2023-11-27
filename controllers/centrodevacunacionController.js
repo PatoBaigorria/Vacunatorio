@@ -1,11 +1,11 @@
-const {
-  CentroDeVacunacion
-} = require("../models/relaciones");
+const { CentroDeVacunacion } = require("../models/relaciones");
 
 // Obtener todos los centros de vacunación
 const listarCentrosDeVacunacion = async (req, res) => {
   try {
-    let centrosVac = await CentroDeVacunacion.findAll();
+    let centrosVac = await CentroDeVacunacion.findAll({
+      raw: true
+    });
     res.render("centrodevacunacion/viewCentroDeVacunacion", { centrosVac: centrosVac });
   } catch (error) {
     res
@@ -15,7 +15,7 @@ const listarCentrosDeVacunacion = async (req, res) => {
 };
 
 // Muestra formulario de creacion de Centro de Vacunacion
-const mostrarFormularioCreacionCentroVac = async (req, res) => {
+const altaCentroVac = async (req, res) => {
   try {
     res.render("centrodevacunacion/formCentroDeVacunacion");
   } catch (error) {
@@ -25,18 +25,15 @@ const mostrarFormularioCreacionCentroVac = async (req, res) => {
   }
 }
 // Crear un nuevo Centro De Vacunacion desde el Formulario
-const crearCentroVacDesdeFormulario = async (req, res) => {
+const createCentroVac = async (req, res) => {
   try {
-    const { longitud, latitud } =
-      req.body;
+    const { longitud, latitud } = req.body;
 
     // Crear una nueva instancia de Centro De Vacunacion utilizando Sequelize
-    const nuevoCentroVac = await CentroDeVacunacion.create({
+    await CentroDeVacunacion.create({
       longitud,
       latitud,
     });
-
-    console.log("Centro de Vacunacion creado:", nuevoCentroVac);
     res.redirect("/centrosdevacunacion");
   } catch (error) {
     console.error("Error al insertar datos:", error);
@@ -75,7 +72,8 @@ const updateCentroDeVacunacion = async (req, res) => {
 const deleteCentroDeVacunacion = async (req, res) => {
   try {
     await CentroDeVacunacion.destroy({
-      where: {
+      where: 
+      {
         idCentroDeVacunacion: req.params.id,
       },
     });
@@ -91,8 +89,8 @@ const deleteCentroDeVacunacion = async (req, res) => {
 
 module.exports = {
   listarCentrosDeVacunacion,
-  mostrarFormularioCreacionCentroVac,
-  crearCentroVacDesdeFormulario,
+  altaCentroVac,
+  createCentroVac,
   editarCentroVac,
   updateCentroDeVacunacion,
   deleteCentroDeVacunacion,
