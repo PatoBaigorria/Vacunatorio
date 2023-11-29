@@ -1,9 +1,9 @@
 head
-  title Persona
+    title Persona
 section#formPersona
 h2 Actualice a la Persona
 
-  form(action="/personas/"+persona.DNI+"?_method=PUT" method="post")
+form(action="/personas/"+persona.DNI+"?_method=PUT" method="post")
     label(for="dni") DNI:
     input(type="text" id="dni" name="DNI" value=persona.DNI readonly)
     br
@@ -33,7 +33,7 @@ h2 Actualice a la Persona
     if(persona.ocupacion=="agente de salud")
       select(name="ocupacion" id="ocupacion" onchange="toggleInput()" required)
         option(value=persona.ocupacion)= persona.ocupacion
-        option(value="otro") otro
+        option(value="otro") Otro
       br
       br
 
@@ -45,7 +45,7 @@ h2 Actualice a la Persona
     else
       select(name="ocupacion" id="ocupacion" onchange="toggleInput()" required)
         option(value=persona.ocupacion)= persona.ocupacion
-        option(value="agente de salud") agente de salud
+        option(value="agente de salud") Agente de Salud
       br
       br
 
@@ -98,12 +98,12 @@ h2 Actualice a la Persona
       br
 
     if(patologiabase == null)
-      label(for="patologiaBase") Patologia base:
+      label(for="patologiaBase") Patologia Base:
       input(type="text" id="patologiaBase" name="patologiaBase")
       br
       br
     else
-      label(for="patologiaBase") Patologia base:
+      label(for="patologiaBase") Patologia Base:
       input(type="text" id="patologiaBase" name="patologiaBase" value=patologiabase.patologiaBase)
       br
       br

@@ -12,9 +12,9 @@ head
 body
     div.container.my-4
       div.row
-        div.col-sm-12.col-md-12.col-lg-12.col-xl-12
+        div.col-sm-13.col-md-13.col-lg-13.col-xl-13
             section#viewPersonas
-                h2 Listado de personas
+                h2 Listado de Personas
                 br
                 div(style="text-align: left;")
                     a.btn.btn-primary.btn-lg(href="/personas/crearP") Crear
@@ -64,7 +64,7 @@ script.
                 {data: 'latitud', title: 'Latitud'},
 
                 {
-                    data: null,
+                    data: 'opciones', title: 'Opciones',
                     render: function(data, type, row) {
                         return `<button class="btn btn-success btn-sm fa-solid fa-pencil me-2"></button>` +
                             `<button class="btn btn-danger btn-sm fa-solid fa-trash-can"></button>`;
@@ -72,11 +72,11 @@ script.
                 }
             ],
             columnDefs: [
-                //{orderable: false, targets:[12]}, // Columna de "Opciones"
+               // {orderable: false, targets:[13]}, // Columna de "Opciones"
                 {searchable: false, targets:[1, 2, 3]},
-                {className: "dt-center", targets: [2, 3, 5, 8, 11]},
+                {className: "dt-center", targets: [0, 3, 4, 5, 9, 13]},
                 { width: "7%", targets: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11] },
-                { width: "10%", targets: [12] }
+                { width: "10%", targets: [13] }
             ]
         });
     });
