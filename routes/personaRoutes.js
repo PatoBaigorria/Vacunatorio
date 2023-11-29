@@ -3,7 +3,7 @@ const router = express.Router();
 const controllers = require("../controllers/indexController");
 
 router.get("/", controllers.personaController.listarPersonas);
-router.get("/crear", controllers.personaController.mostrarFormularioCrearPersona);
+router.get("/crearP", controllers.personaController.mostrarFormularioCrearPersona);
 router.post("/", controllers.personaController.crearPersonaDesdeFormulario);
 router.get("/:id", controllers.personaController.editarPersona);
 router.put("/:id", controllers.personaController.updatePersona);

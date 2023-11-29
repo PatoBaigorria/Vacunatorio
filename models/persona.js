@@ -13,7 +13,7 @@ const persona = Persona.init(
     nombre: DataTypes.STRING,
     apellido: DataTypes.STRING,
     email: DataTypes.STRING,
-    fechadenacimiento: {
+    fechaDeNacimiento: {
       type: DataTypes.DATEONLY,
     },
     ocupacion: DataTypes.STRING,

@@ -1,3 +1,4 @@
+const { increment } = require("../models/agentedesalud");
 const { Persona, Telefono, PatologiaBase, AgenteDeSalud } = require("../models/relaciones");
 
 // Controlador para mostrar el formulario de ingreso de datos de persona
@@ -5,15 +6,14 @@ const { Persona, Telefono, PatologiaBase, AgenteDeSalud } = require("../models/r
 // Obtener todas las personas
 const listarPersonas = async (req, res) => {
   try {
-    const Personas = await Persona.findAll();
-    const Telefonos = await Telefono.findAll();
-    const PatologiasBases = await PatologiaBase.findAll();
-    const AgentesDeSalud = await AgenteDeSalud.findAll();
+    const Personas = await Persona.findAll(
+      {include:[{model: Telefono, attributes: ['celular1','celular2']},
+              {model: PatologiaBase, attributes: ['patologiaBase']},
+              {model: AgenteDeSalud, attributes: ['matricula']}]
+    });
+    console.log(JSON.stringify(Personas))
     res.render("persona/viewPersona", {
       Personas: Personas,
-      Telefonos: Telefonos,
-      PatologiasBases: PatologiasBases,
-      AgentesDeSalud: AgentesDeSalud
     })
   } catch (error) {
     res.status(500).json({ message: "Error al obtener las personas." });
@@ -65,6 +65,10 @@ const crearPersonaDesdeFormulario = async (req, res) => {
         DNI,
         celular2
       });
+    } else {
+      await Telefono.create({
+        DNI
+      });
     };
     if (patologiaBase !== "") {
       await PatologiaBase.create({
@@ -84,6 +88,7 @@ const editarPersona = async (req, res) => {
     const telefono = await Telefono.findByPk(req.params.id);
     const patologiabase = await PatologiaBase.findByPk(req.params.id);
     const agentedesalud = await AgenteDeSalud.findByPk(req.params.id);
+    console.log(agentedesalud)
     if (!persona) {
       // Manejar el caso donde no se encuentra la persona
       return res.status(404).render("error", {

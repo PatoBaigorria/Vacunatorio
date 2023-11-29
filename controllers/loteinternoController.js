@@ -201,11 +201,9 @@ const deleteLoteInterno = async (req, res) => {
         numeroDeSerie: req.params.id
       },
     });
-    res.redirect("/lotesinternos");
+    res.redirect("/lotesinternos?successMessage=Lote interno eliminado correctamente");
   } catch (error) {
-    res.status(500).json({
-      message: "Error al eliminar el lote interno."
-    });
+    res.redirect("/lotesinternos?errorMessage=Error al eliminar el lote interno: " + error.message);
   }
 };
 
