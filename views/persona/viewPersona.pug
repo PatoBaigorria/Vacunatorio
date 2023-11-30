@@ -15,6 +15,9 @@ body
             section#viewPersonas
                 h2 Listado de Personas
                 br
+                if messages.success
+                    .alert.alert-success
+                        = messages.success
                 div(style="text-align: left;")
                     a.btn.btn-primary.btn-lg(href="/personas/alta") Alta
                     br

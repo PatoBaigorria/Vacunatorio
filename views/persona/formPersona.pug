@@ -1,97 +1,157 @@
-head
-  title Persona
-section#formPersona
-h2 Ingresar una Persona
+doctype html
+html(lang="es")
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport", content="width=device-width, initial-scale=1, shrink-to-fit=no")
+    title Persona
+    // Agrega la referencia a Bootstrap CSS
+    link(rel="stylesheet", href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css")
+    style.
+      body {
+        padding: 20px;
+      }
 
-form(action="/personas" method="post")
-    label(for="dni") DNI:
-    input(type="text" id="dni" name="DNI" required)
-    br
-    br
+      #formPersona {
+        max-width: 600px;
+        margin: auto;
+      }
 
-    label(for="nombre") Nombre:
-    input(type="text" id="nombre" name="nombre" required)
-    br
-    br
+      label {
+        margin-bottom: 5px;
+      }
 
-    label(for="apellido") Apellido:
-    input(type="text" id="apellido" name="apellido" required)
-    br
-    br
+      #matriculaLabel, #matricula, #matriculaDiv {
+        display: none;
+      }
+  body
+    #formPersona
+      h2.text-center Ingresar una Persona
+      // Agregar lógica para mostrar mensajes flash aquí
+      if messages.error
+        .alert.alert-danger
+          = messages.error
+      form(action="/personas", method="post" onsubmit="return validarFormulario()")
+        .form-group
+          label(for="dni") DNI:
+          input(type="text" class="form-control" id="dni" name="DNI" required title="Debe contener exactamente 7 u 8 números")
+        .form-group
+          label(for="nombre") Nombre:
+          input(type="text" class="form-control" id="nombre" name="nombre" required)
+        .form-group
+          label(for="apellido") Apellido:
+          input(type="text" class="form-control" id="apellido" name="apellido" required)
+        .form-group
+          label(for="email") Email:
+          input(type="email" class="form-control" id="email" name="email" required)
+        .form-group
+          label(for="fechaDeNacimiento") Fecha de Nacimiento:
+          input(type="date" class="form-control" id="fechaDeNacimiento" name="fechaDeNacimiento" required)
+        .form-group
+          label(for="ocupacion") Ocupación:
+          select(class="form-control" name="ocupacion" id="ocupacion" onchange="seleccionarOcupacion()" required)
+            option(disabled selected hidden) Selecciona una Ocupacion:
+            option(value="agente de salud") Agente de Salud
+            option(value="otro") Otro
+        .form-group#matriculaDiv
+          label(for="matricula" id="matriculaLabel" style="display: none;") Matrícula:
+          input(type="number" class="form-control" id="matricula" name="matricula" style="display: none;")
+        .form-group
+          label(for="genero") Género:
+          select(class="form-control" name="genero" required)
+            option(value="Masculino") Masculino
+            option(value="Femenino") Femenino
+            option(value="Otro") Otro
+        .form-group
+          label(for="celular1") Celular 1:
+          input(type="tel" class="form-control" id="celular1" name="celular1" title="Debe contener un máximo de 10 digitos")
+        .form-group
+          label(for="celular2") Celular 2:
+          input(type="tel" class="form-control" id="celular2" name="celular2" title="Debe contener un máximo de 10 digitos")
+        .form-group
+          label(for="patologiaBase") Patologia Base:
+          input(type="text" class="form-control" id="patologiaBase" name="patologiaBase")
+        .form-group
+          label(for="longitud") Longitud:
+          input(type="text" class="form-control" id="longitud" name="longitud" required)
+        .form-group
+          label(for="latitud") Latitud:
+          input(type="text" class="form-control" id="latitud" name="latitud" required)
+        button(type="submit" class="btn btn-primary") Guardar
 
-    label(for="email") Email:
-    input(type="text" id="email" name="email" required)
-    br
-    br
+  // Agrega la referencia a Bootstrap JS (opcional, solo si lo necesitas)
+  script(src="https://code.jquery.com/jquery-3.2.1.slim.min.js")
+  script(src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js")
+  script(src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js")
 
-    label(for="fechaDeNacimiento") Fecha de Nacimiento:
-    input(type="date" id="fechaDeNacimiento" name="fechaDeNacimiento" required)
-    br
-    br
-
-    label(for="ocupacion") Ocupación:
-    select(name="ocupacion" id="ocupacion" onchange="toggleInput()" required)
-      option(disabled selected hidden) Selecciona una Ocupacion:
-      option(value="agente de salud") Agente de Salud
-      option(value="otro") Otro
-    br
-    br
-
-    label(for="matricula" id="matriculaLabel" style="display: none;") Matrícula:
-    input(type="number" id="matricula" name="matricula" style="display: none;")
-    div(id="matriculaDiv" style="display: none;")
-      br
-      br
-
-    label Género:
-    select(name="genero" required)
-      option(value="Masculino") Masculino
-      option(value="Femenino") Femenino
-      option(value="Otro") Otro
-    br
-    br
-
-    label(for="celular1") Celular 1:
-    input(type="number" id="celular1" name="celular1" placeholder="Ej. 12345678")
-    br
-    br
-
-    label(for="celular2") Celular 2:
-    input(type="number" id="celular2" name="celular2" placeholder="Ej. 12345678")
-    br
-    br
-
-    label(for="patologiaBase") Patologia Base:
-    input(type="text" id="patologiaBase" name="patologiaBase" value="" placeholder="Ej. Asma")
-    br
-    br
-
-    label(for="longitud") Longitud:
-    input(type="text" id="longitud" name="longitud" placeholder="Ej. 32.801725")
-    br
-    br
-
-    label(for="latitud") Latitud:
-    input(type="text" id="latitud" name="latitud" placeholder="Ej. -34.603722")
-    br
-    br
-
-    button(type="submit") Guardar
-
-script.
-    function toggleInput() {
+  script.
+    function seleccionarOcupacion() {
       var rolSelect = document.getElementById("ocupacion");
       var matriculaLabel = document.getElementById("matriculaLabel");
       var matriculaInput = document.getElementById("matricula");
       var matriculaDiv = document.getElementById("matriculaDiv");
-
       if (rolSelect.value === "agente de salud") {
-        matriculaLabel.style.display = "inline";
-        matriculaInput.style.display = "inline";
-        matriculaDiv.style.display = "inline"
+        matriculaLabel.style.display = "block";
+        matriculaInput.style.display = "block";
+        matriculaDiv.style.display = "block";
       } else {
         matriculaLabel.style.display = "none";
         matriculaInput.style.display = "none";
         matriculaDiv.style.display = "none";
       }
+    }
+
+    function validarFormulario() {
+      // Validación DNI
+      var dniInput = document.getElementById("dni");
+      var dniPattern = /^[0-9]{7,8}$/;
+      if (!dniPattern.test(dniInput.value)) {
+        alert("El DNI debe contener exactamente 7 u 8 números.");
+        return false;
+      }
+
+      // Validación Nombre y Apellido
+      var nombreInput = document.getElementById("nombre");
+      var apellidoInput = document.getElementById("apellido");
+      var namePattern = /^[A-Za-záéíóúüñÁÉÍÓÚÜÑ\s]{1,30}$/;
+      if (!namePattern.test(nombreInput.value) || !namePattern.test(apellidoInput.value)) {
+        alert("Nombre y Apellido deben contener solo letras hasta 30 caracteres.");
+        return false;
+      }
+
+      /*// Validación Email
+      var emailInput = document.getElementById("email");
+      var emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+      if (!emailPattern.test(emailInput.value)) {
+        alert("Ingrese un email válido.");
+        return false;
+      }
+
+      // Validación Fecha
+      var fechaInput = document.getElementById("fechaDeNacimiento");
+      var currentDate = new Date().toISOString().split("T")[0];
+      if (fechaInput.value > currentDate) {
+        alert("La fecha de nacimiento no puede ser posterior a la actual.");
+        return false;
+      }
+
+      // Validación Celulares
+      var celular1Input = document.getElementById("celular1");
+      var celular2Input = document.getElementById("celular2");
+      var phonePattern = /^[0-9]{10}$/;
+      if (!phonePattern.test(celular1Input.value) || !phonePattern.test(celular2Input.value)) {
+        alert("Los números de celular deben contener solo números y tener 10 dígitos.");
+        return false;
+      }
+
+      // Validación Longitud y Latitud
+      var longitudInput = document.getElementById("longitud");
+      var latitudInput = document.getElementById("latitud");
+      var longitudPattern = /^(-?((180\.0{0,6})|(((\d|[1-9]\d|1[0-7]\d)(\.\d{0,6})?)|180)))$/;
+      var latitudPattern = /^(-?([1-8]?\d(\.\d{0,6})?|90(\.0{0,6})?))$/;
+      if (!longitudPattern.test(longitudInput.value) || !latitudPattern.test(latitudInput.value)) {
+        alert("Ingrese valores válidos para Longitud y Latitud.");
+        return false;
+      }*/
+
+      return true;
     }

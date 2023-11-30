@@ -31,6 +31,15 @@ const altaPersona = async (req, res) => {
 const createPersona = async (req, res) => {
   try {
     const { DNI, nombre, apellido, fechaDeNacimiento, email, ocupacion, celular1, celular2, patologiaBase, matricula, genero, longitud, latitud } = req.body;
+    const existingPersona = await Persona.findByPk(DNI);
+
+    if (existingPersona) {
+      // Mostrar un mensaje flash indicando que la persona ya existe
+      req.flash('error', 'La persona ya existe en la base de datos.');
+      // Redirigir al formulario de alta
+      return res.redirect("/personas/alta");
+    }
+
     await Persona.create({
       DNI,
       nombre,
@@ -42,6 +51,7 @@ const createPersona = async (req, res) => {
       longitud,
       latitud
     });
+
     if (ocupacion === "agente de salud") {
       await AgenteDeSalud.create({
         DNI,
@@ -69,18 +79,28 @@ const createPersona = async (req, res) => {
       await Telefono.create({
         DNI
       });
-    };
+    }
+
     if (patologiaBase !== "") {
       await PatologiaBase.create({
         DNI,
         patologiaBase
       });
     }
+
+    // Utiliza req.flash() para establecer el mensaje flash
+    req.flash('success', 'Persona creada exitosamente.');
+
+    // Redirige a la vista de personas
     res.redirect("/personas");
   } catch (error) {
-    res.status(500).json({ message: "Error al crear la persona.", error: error.message });
+    // Manejar errores
+    console.error(error);
+    req.flash('error', 'Error al crear la persona.');
+    res.status(500).redirect("/personas/alta");
   }
 }
+
 
 const editPersona = async (req, res) => {
   try {
