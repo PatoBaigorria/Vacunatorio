@@ -1,3 +1,6 @@
+include ..\includes\layout
+block content
+
 head
     title Lote Interno
     link(rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous")
@@ -22,21 +25,6 @@ body
                     br
                     div.table.responsive
                         table#lotesinternos.table.table-striped.table-bordered
-                            thead
-                                tr
-                                    th Número de Serie
-                                    th Número de Lote
-                                    th ID Laboratorio
-                                    th Cantidad de Vacunas 
-                                    th Fecha de LLegada Depósito Nacional 
-                                    th ID Depósito Nacional 
-                                    th Fecha de Salida Depósito Nacional 
-                                    th Fecha de LLegada Depósito Provincial 
-                                    th ID Depósito Provincial 
-                                    th Fecha de Salida Depósito Provincial 
-                                    th Fecha de Llegada Centro de Vacunación 
-                                    th ID Centro de Vacunación
-                                    th Opciones
             #mensajeModal.modal.fade(tabindex='-1' aria-labelledby='mensajeModalLabel' aria-hidden='true')
                 .modal-dialog
                     .modal-content
@@ -83,21 +71,20 @@ script.
                 url: '//cdn.datatables.net/plug-ins/1.13.7/i18n/es-AR.json'
             },
             columns:[
-                {data: 'numeroDeSerie'},
-                {data: 'numeroDeLote'},
-                {data: 'idLaboratorio'},
-                {data: 'cantidadDeVacunas'},
-                {data: 'fechaDeLlegadaDepositoNacional'},
-                {data: 'idDepositoNacional'},
-                {data: 'fechaDeSalidaDepositoNacional'},
-                {data: 'fechaDeLlegadaDepositoProvincial'},
-                {data: 'idDepositoProvincial'},
-                {data: 'fechaDeSalidaDepositoProvincial'},
-                {data: 'fechaDeLlegadaCentroDeVacunacion'},
-                {data: 'idCentroDeVacunacion'},
-
+                {data: 'numeroDeSerie', title: 'Número de Serie'},
+                {data: 'numeroDeLote', title: 'Número de Lote'},
+                {data: 'Loteproveedor.Laboratorio.nombreLaboratorio', title: 'Laboratorio fabricante'},
+                {data: 'cantidadDeVacunas', title: 'Cantidad de Vacunas'},
+                {data: 'fechaDeLlegadaDepositoNacional', title: 'Fecha de Llegada al Deposito Nacional'},
+                {data: 'idDepositoNacional', title: 'ID del Deposito Nacional'},
+                {data: 'fechaDeSalidaDepositoNacional', title: 'Fecha de Salida del Deposito Nacional'},
+                {data: 'fechaDeLlegadaDepositoProvincial', title: 'Fecha de Llegada al Deposito Provincial'},
+                {data: 'idDepositoProvincial', title: 'ID del Deposito Provincial'},
+                {data: 'fechaDeSalidaDepositoProvincial', title: 'Fecha de Salida del Deposito Provincial'},
+                {data: 'fechaDeLlegadaCentroDeVacunacion', title: 'Fecha de Llegada al Centro de Vacunación'},
+                {data: 'idCentroDeVacunacion', title: 'ID del Centro de Vacunación'},
                 {
-                    data: null,
+                    data: null, title: 'Opciones',
                     render: function(data, type, row) {
                         return `<button class="btn btn-success btn-sm fa-solid fa-pencil me-2"></button>` +
                             `<button class="btn btn-danger btn-sm fa-solid fa-trash-can"></button>`;

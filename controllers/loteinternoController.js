@@ -11,34 +11,23 @@ const {
 const listarLotesInternos = async (req, res) => {
   try {
     const lotesInternos = await LoteInterno.findAll({
-      raw: true
-    });
-    const lotesProveedores = await LoteProveedor.findAll({
-      raw: true
-    });
-    const laboratorios = await Laboratorio.findAll({
-      raw: true
-    });
-    const depositosNacionales = await DepositoNacional.findAll({
-      raw: true
-    });
-    const depositosProvinciales = await DepositoProvincial.findAll({
-      raw: true
-    });
-    const centrosDeVacunaciones = await CentroDeVacunacion.findAll({
-      raw: true
+      include: [
+        {
+          model: LoteProveedor,
+          attributes: ['numeroDeLote'],
+          include: [{
+            model: Laboratorio,
+            attributes: ['nombreLaboratorio']
+          }]
+        }
+      ]
     });
     res.render("loteinterno/viewLoteInterno", {
       lotesInternos: lotesInternos,
-      lotesProveedores: lotesProveedores,
-      laboratorios: laboratorios,
-      depositosNacionales: depositosNacionales,
-      depositosProvinciales: depositosProvinciales,
-      centrosDeVacunacions: centrosDeVacunaciones,
     });
   } catch (error) {
     res.status(500).json({
-      message: "Error al obtener los lotes internos."
+      message: "Error al obtener los lotes internos. " + error.message
     });
   }
 };

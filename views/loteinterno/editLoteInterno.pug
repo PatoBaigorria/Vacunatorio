@@ -7,10 +7,7 @@ form(action="/lotesinternos/"+loteInterno.numeroDeSerie+"?_method=PUT" method="p
         select#laboratorioSelect(name="idLaboratorio")
             each lab in laboratorios
                 if loteInterno.idLaboratorio==lab.idLaboratorio
-                    option(value=lab.idLaboratorio)=lab.nombreLaboratorio
-            each lab in laboratorios
-                if loteInterno.idLaboratorio==lab.idLaboratorio
-                    break
+                    option(value=lab.idLaboratorio selected)=lab.nombreLaboratorio
                 else
                     option(value=lab.idLaboratorio)=lab.nombreLaboratorio
 
@@ -18,10 +15,7 @@ form(action="/lotesinternos/"+loteInterno.numeroDeSerie+"?_method=PUT" method="p
         select#loteProveedorSelect(name="numeroDeLote")
             each numLote in lotesProveedores
                 if loteInterno.numeroDeLote==numLote.numeroDeLote
-                    option(value=numLote.numeroDeLote)=numLote.numeroDeLote
-            each numLote in lotesProveedores
-                if loteInterno.numeroDeLote==numLote.numeroDeLote
-                    break
+                    option(value=numLote.numeroDeLote selected)=numLote.numeroDeLote
                 else
                     option(value=numLote.numeroDeLote)= numLote.numeroDeLote
     br
