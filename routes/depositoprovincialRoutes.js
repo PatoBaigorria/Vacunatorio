@@ -4,12 +4,12 @@ const controllers = require("../controllers/indexController");
 
 //Importacion del Controlador
 router.get("/", controllers.depositoProvincialController.listarDepositosProvinciales);
-router.get("/altaDP", controllers.depositoProvincialController.altaDepProv);
+router.get("/alta", controllers.depositoProvincialController.altaDepProv);
 router.post("/", controllers.depositoProvincialController.createDepProv);
 router.get("/:id", controllers.depositoProvincialController.editarDepProv);
 router.put("/:id", controllers.depositoProvincialController.updateDepositoProvincial);
 router.delete("/:id", controllers.depositoProvincialController.deleteDepositoProvincial);
-  
+
 /* Obtener los lotes internos asociados a un depósito provincial por su ID
 router.get("/depositosprovinciales/:id/lotesinternos", async (req, res) => {
   try {

@@ -17,7 +17,7 @@ body
                 h2 Listado de Lotes Internos
                 br
                 div(style="text-align: left;")
-                    a.btn.btn-primary.btn-lg(href="/lotesinternos/crearLI") Crear
+                    a.btn.btn-primary.btn-lg(href="/lotesinternos/crear") Crear
                     br
                     br
                     div.table.responsive
@@ -125,6 +125,6 @@ script.
             } else {window.location.href= "/lotesinternos/" + data.numeroDeSerie}
         })
     });
-    function crearLI(){
-        window.location.href= "/lotesinternos/crearLI"
+    function crear(){
+        window.location.href= "/lotesinternos/crear"
     }

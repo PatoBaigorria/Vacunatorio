@@ -16,7 +16,6 @@ const getAllDescartes = async (req, res) => {
         ]
       }
     );
-    console.log(Descartes); // Imprimir los datos
     res.render("descarte/viewDescarte", { Descartes: Descartes });
   } catch (error) {
     res.status(500).json({ message: "Error al obtener los descartes. " + error.message });

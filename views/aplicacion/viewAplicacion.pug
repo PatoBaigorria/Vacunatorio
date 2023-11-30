@@ -17,7 +17,7 @@ body
                 h2 Listado de Aplicaciones
                 br
                 div(style="text-align: left;")
-                    a.btn.btn-primary.btn-lg(href="/aplicaciones/alta") Alta
+                    a.btn.btn-primary.btn-lg(href="/aplicaciones/crear") Crear
                     br
                     br
                     div.table.responsive
@@ -75,6 +75,6 @@ script.
             } else {window.location.href= "/aplicaciones/" + data.idAplicacion}
         })
     });
-    function altaAP(){
-        window.location.href= "/aplicaciones/alta"
+    function crear(){
+        window.location.href= "/aplicaciones/crear"
     }

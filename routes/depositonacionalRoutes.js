@@ -4,7 +4,7 @@ const controllers = require("../controllers/indexController");
 
 //Importacion del Controlador
 router.get("/", controllers.depositoNacionalController.listarDepositosNacionales);
-router.get("/altaDN", controllers.depositoNacionalController.altaDepNac);
+router.get("/alta", controllers.depositoNacionalController.altaDepNac);
 router.post("/", controllers.depositoNacionalController.createDepNac);
 router.get("/:id", controllers.depositoNacionalController.editarDepNac);
 router.put("/:id", controllers.depositoNacionalController.updateDepositoNacional);

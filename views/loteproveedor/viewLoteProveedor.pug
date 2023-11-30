@@ -17,7 +17,7 @@ body
                 h2 Listado de lotes proveedores
                 br
                 div(style="text-align: left;")
-                    a.btn.btn-primary.btn-lg(href="/lotesproveedores/alta") Crear
+                    a.btn.btn-primary.btn-lg(href="/lotesproveedores/alta") Alta
                     br
                     br
                     div.table.responsive 
@@ -55,7 +55,7 @@ script.
                 { data: 'fechaDeVencimiento', title: 'Fecha de vencimiento' },
                 { data: 'fechaDeCompra', title: 'Fecha de compra' },
                 {
-                    data: null,
+                    data: null, title: 'Opciones',
                     render: function(data, type, row) {
                         return `<button class="btn btn-success btn-sm fa-solid fa-pencil me-2"></button>` +
                             `<button class="btn btn-danger btn-sm fa-solid fa-trash-can"></button>`;
