@@ -1,0 +1,70 @@
+head
+    title Descarte
+    link(rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous")
+    link(href="https://cdn.datatables.net/v/dt/dt-1.13.8/b-2.4.2/datatables.min.css" rel="stylesheet")
+    link(href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" rel="stylesheet")
+    style.
+        h2 {
+            text-align: center;
+            text-decoration: underline;
+            text-underline-offset: 4px; /* Ajusta el espacio entre el texto y el subrayado */
+        }
+body
+    div.container.my-4
+        div.row
+            div.col-sm-12.col-md-12.col-lg-12.col-xl-12
+            section#viewDescarte
+                h2 Listado de Descartes
+                br
+                div(style="text-align: left;")
+                    a.btn.btn-primary.btn-lg(href="/descartes/alta") Crear
+                    br
+                    br
+                    div.table.responsive
+                        table#descartes.table.table-striped.table-bordered
+                            
+            script(src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous")
+            script(src='https://code.jquery.com/jquery-3.6.0.min.js')
+            script(src="https://cdn.datatables.net/v/dt/dt-1.13.8/b-2.4.2/datatables.min.js")
+
+script.
+    let desc = !{JSON.stringify(Descartes)};
+    //let agentes = Persona.foreach(persona => {persona.ocupacion == 'agente de salud'});
+    let desctab
+    $(document).ready(function(){
+        desctab = $('#descartes').DataTable({
+            data: desc,
+            pageLength:5,
+            lengthMenu:[5,10,15,20],
+            language: {
+                url: '//cdn.datatables.net/plug-ins/1.13.7/i18n/es-AR.json'
+            },
+            columns:[
+                {data:'idDescarte', title: 'ID del descarte'},
+                {data: 'Agentedesalud.Persona.nombre', title:'Nombre del agente'},
+                {data: 'Agentedesalud.Persona.apellido', title: 'Apellido del agente'},
+                {data: 'numeroDeSerie', title: 'N° de serie del lote'},
+                {data: 'empresaDescartante', title: 'Empresa descartante'},
+                {data: 'motivo', title: 'Motivo del descarte'},
+                {data: 'cantidadDeVacunas', title: 'Cant. de vacunas descartadas'},
+                {data: 'fechaDeDescarte', title: 'Fecha de descarte'},
+                {data: 'opciones', title: 'Opciones',
+                    render: function (data) {
+                        return `<button class="btn btn-success btn-sm fa-solid fa-pencil me-2"></button>` +
+                            `<button class="btn btn-danger btn-sm fa-solid fa-trash-can"></button>`;
+                    }}
+            ],
+        });
+    });
+    $(document).ready(function(){
+        desctab.on('click', 'button', function(f){
+            let data = desctab.row(f.target.closest('tr')).data();
+            if($(event.target).hasClass('fa-trash-can')){
+                if(confirm('¿Seguro que desea eliminar este descarte?')) {
+                $.post('/descartes/'+data.idDescarte+'?_method=DELETE', function(data){
+                         window.location.href = "/descartes";
+                    })
+                }
+                } else {window.location.href= "/descartes/" + data.idDescarte}
+        })
+    });

@@ -132,13 +132,13 @@ AgenteDeSalud.hasMany(Descarte, {
   foreignKey: 'DNIAgente'
 });
 
-/*Descarte.hasMany(LoteInterno, {
+Descarte.belongsTo(LoteInterno, {
   foreignKey: 'numeroDeSerie'
 });
 
 Descarte.belongsTo(AgenteDeSalud, {
   foreignKey: 'DNIAgente'
-});*/
+});
 
 async function sincronizarModelos() {
   try {

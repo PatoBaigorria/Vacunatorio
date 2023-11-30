@@ -7,11 +7,11 @@ const { Persona, Telefono, PatologiaBase, AgenteDeSalud } = require("../models/r
 const listarPersonas = async (req, res) => {
   try {
     const Personas = await Persona.findAll(
-      {include:[{model: Telefono, attributes: ['celular1','celular2']},
-              {model: PatologiaBase, attributes: ['patologiaBase']},
-              {model: AgenteDeSalud, attributes: ['matricula']}]
-    });
-    console.log(JSON.stringify(Personas))
+      {
+        include: [{ model: Telefono, attributes: ['celular1', 'celular2'] },
+        { model: PatologiaBase, attributes: ['patologiaBase'] },
+        { model: AgenteDeSalud, attributes: ['matricula'] }]
+      });
     res.render("persona/viewPersona", {
       Personas: Personas,
     })
@@ -20,7 +20,7 @@ const listarPersonas = async (req, res) => {
   }
 };
 
-const mostrarFormularioCrearPersona = async (req, res) => {
+const altaPersona = async (req, res) => {
   try {
     res.render("persona/formPersona");
   } catch (error) {
@@ -28,7 +28,7 @@ const mostrarFormularioCrearPersona = async (req, res) => {
   }
 };
 
-const crearPersonaDesdeFormulario = async (req, res) => {
+const createPersona = async (req, res) => {
   try {
     const { DNI, nombre, apellido, fechaDeNacimiento, email, ocupacion, celular1, celular2, patologiaBase, matricula, genero, longitud, latitud } = req.body;
     await Persona.create({
@@ -82,7 +82,7 @@ const crearPersonaDesdeFormulario = async (req, res) => {
   }
 }
 
-const editarPersona = async (req, res) => {
+const editPersona = async (req, res) => {
   try {
     const persona = await Persona.findByPk(req.params.id);
     const telefono = await Telefono.findByPk(req.params.id);
@@ -225,9 +225,9 @@ const deletePersona = async (req, res) => {
 };
 module.exports = {
   listarPersonas,
-  mostrarFormularioCrearPersona,
-  crearPersonaDesdeFormulario,
-  editarPersona,
+  altaPersona,
+  createPersona,
+  editPersona,
   updatePersona,
   deletePersona,
   //mostrarFormulario,

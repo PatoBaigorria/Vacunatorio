@@ -17,7 +17,7 @@ body
                 h2 Listado de Depositos Provinciales
                 br
                 div(style="text-align: left;")
-                    a.btn.btn-primary.btn-lg(href="/depositosprovinciales/altaDP") Alta
+                    a.btn.btn-primary.btn-lg(href="/depositosprovinciales/alta") Alta
                     br
                     br
                     div.table.responsive
@@ -79,6 +79,6 @@ script.
             } else {window.location.href= "/depositosprovinciales/" + data.idDepositoProvincial}
         })
     });
-    function altaDP(){
-        window.location.href= "/depositosprovinciales/altaDP"
+    function alta(){
+        window.location.href= "/depositosprovinciales/alta"
     }

@@ -19,7 +19,7 @@ section#formAplicacion
         
         label(for="numeroDeSerie") Lote de Vacunas que se Aplicará al Paciente:
         select(name="numeroDeSerie" id="numeroDeSerie" required)
-            option Seleccione un Paciente
+            option Seleccione un Lote
                 each lote in lotes
                     option(value=lote.numeroDeSerie) #{lote.numeroDeSerie}
         br

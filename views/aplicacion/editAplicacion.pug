@@ -4,37 +4,41 @@ section#formAplicacion
 h2 Editar Aplicación de Vacunas
 form(action="/aplicaciones/"+aplicacion.idAplicacion+"?_method=PUT" method="post")
         label(for="DNIPaciente") Seleccione un Paciente:
-        //select(name="DNIPaciente" id="DNIPaciente" onchange=`agenteS(${JSON.stringify(agentes)}, ${JSON.stringify(personas)})` required)
-            option(value=persona.DNI) #{persona.nombre} #{persona.apellido}
-            select(name="DNIPaciente" id="DNIPaciente" onchange=`agenteS(${JSON.stringify(agentes)}, ${JSON.stringify(personas)})` required)
+        select(name="DNIPaciente" id="DNIPaciente" onchange=`agenteS(${JSON.stringify(agentes)}, ${JSON.stringify(personas)})` required)
+            each persona in personas
+                if(persona.DNI === aplicacion.DNIPaciente)
+                    option(value=persona.DNI selected) #{persona.nombre} #{persona.apellido}
+                else
                     option(value=persona.DNI) #{persona.nombre} #{persona.apellido}
-                    each p in personas
-                        if(p.DNI != aplicacion.DNIPaciente)
-                            option(value=p.DNI) #{p.nombre} #{p.apellido}
         br
         br
 
         label(for="DNIAgente") Seleccione un Agente de Salud:
-        //select(name="DNIAgente" id="DNIAgente" class="DNIAgente" required)
-            option Seleccione un paciente
+        select(name="DNIAgente" id="DNIAgente" class="DNIAgente" required)
+            each persona in personas
+                if(persona.DNI === aplicacion.DNIAgente)
+                    option(value=aplicacion.DNIAgente) #{persona.nombre} #{persona.apellido}
         br
         br
         
         label(for="numeroDeSerie") Seleccione el Lote de Vacunas que se Aplicara al Paciente:
-            //select(name="numeroDeSerie" id="numeroDeSerie" required)
+            select(name="numeroDeSerie" id="numeroDeSerie" required)
                 each lote in lotes
-                    option(value=lote.numeroDeSerie) #{lote.numeroDeSerie}
+                    if(lote.numeroDeSerie === aplicacion.numeroDeSerie)
+                        option(value=lote.numeroDeSerie selected) #{lote.numeroDeSerie}
+                    else
+                        option(value=lote.numeroDeSerie) #{lote.numeroDeSerie}
         br
         br
         
         label(for="fechaDeAplicacion") Fecha de Aplicación:
-        input(type="date" name="fechaDeAplicacion" id="fechaDeAplicacion" required)
+        input(type="date" name="fechaDeAplicacion" id="fechaDeAplicacion" value=aplicacion.fechaDeAplicacion required)
         br
         br
 
         button(type="submit") Actualizar
 
-//script.
+script.
     function agenteS(agentes, pacientes) {
         let paciente = null
         let pacienteSelect = document.getElementById("DNIPaciente").value;

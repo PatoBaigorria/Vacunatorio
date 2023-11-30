@@ -6,9 +6,11 @@ const {
 // Obtener todos los lotes proveedores
 const getAllLotesProveedores = async (req, res) => {
   try {
-    const lotesProveedores = await LoteProveedor.findAll();
-    const laboratorios = await Laboratorio.findAll();
-    res.render("loteproveedor/viewLoteProveedor", { lotesProveedores: lotesProveedores, laboratorios: laboratorios });
+    const lotesProveedores = await LoteProveedor.findAll(
+      { include: [{ model: Laboratorio, attributes: ['nombreLaboratorio', 'pais', 'email', 'telefono', 'longitud', 'latitud'] }] }
+    );
+    //const laboratorios = await Laboratorio.findAll();
+    res.render("loteproveedor/viewLoteProveedor", { lotesProveedores: lotesProveedores });
   } catch (error) {
     res.status(500).json({
       message: "Error al obtener los lotes proveedores."
@@ -16,7 +18,7 @@ const getAllLotesProveedores = async (req, res) => {
   }
 };
 
-const crearLoteProveedor = async (req, res) => {
+const altaLoteProveedor = async (req, res) => {
   try {
     const laboratorios = await Laboratorio.findAll();
     res.render("loteproveedor/formLoteProveedor", { laboratorios: laboratorios });
@@ -51,8 +53,9 @@ const createLoteProveedor = async (req, res) => {
 
 const getLoteProveedorById = async (req, res) => {
   try {
-    const loteProveedor = await LoteProveedor.findByPk(req.params.numeroDeLote, req.params.idLaboratorio);
-    res.render("lotesproveedores/editLoteProveedor", { loteProveedor: loteProveedor });
+    const loteProveedor = await LoteProveedor.findByPk(req.params.id);
+    const laboratorios = await Laboratorio.findAll();
+    res.render("loteproveedor/editLoteProveedor", { loteProveedor: loteProveedor, laboratorios: laboratorios });
   } catch (error) {
     res.status(500).json({
       message: "Error al obtener el lote proveedor.",
@@ -65,8 +68,7 @@ const updateLoteProveedor = async (req, res) => {
   try {
     await LoteProveedor.update(req.body, {
       where: {
-        numeroDeLote: req.params.numeroDeLote,
-        idLaboratorio: req.params.id
+        numeroDeLote: req.params.id
       },
     });
     res.redirect("/lotesproveedores");
@@ -82,8 +84,7 @@ const deleteLoteProveedor = async (req, res) => {
   try {
     await LoteProveedor.destroy({
       where: {
-        numeroDeLote: req.params.numeroDeLote,
-        idLaboratorio: req.params.idLaboratorio
+        numeroDeLote: req.params.id,
       }
     });
     res.json({
@@ -142,7 +143,7 @@ const getLotesInternosByLoteProveedorId = async (req, res) => {
 module.exports = {
   getAllLotesProveedores,
   createLoteProveedor,
-  crearLoteProveedor,
+  altaLoteProveedor,
   updateLoteProveedor,
   deleteLoteProveedor,
   getLoteProveedorById

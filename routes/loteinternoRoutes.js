@@ -4,7 +4,7 @@ const controllers = require("../controllers/indexController");
 
 // Ruta para obtener todos los lotes internos
 router.get("/", controllers.loteInternoController.listarLotesInternos);
-router.get("/crearLI", controllers.loteInternoController.crearLoteInterno);
+router.get("/crear", controllers.loteInternoController.crearLoteInterno);
 router.post("/", controllers.loteInternoController.createLoteInterno);
 router.get("/:id", controllers.loteInternoController.editarLoteInterno);
 router.put("/:id", controllers.loteInternoController.updateLoteInterno);

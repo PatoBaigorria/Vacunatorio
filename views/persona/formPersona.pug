@@ -32,8 +32,8 @@ form(action="/personas" method="post")
     label(for="ocupacion") Ocupación:
     select(name="ocupacion" id="ocupacion" onchange="toggleInput()" required)
       option(disabled selected hidden) Selecciona una Ocupacion:
-      option(value="agente de salud") agente de salud
-      option(value="otro") otro
+      option(value="agente de salud") Agente de Salud
+      option(value="otro") Otro
     br
     br
 
@@ -61,7 +61,7 @@ form(action="/personas" method="post")
     br
     br
 
-    label(for="patologiaBase") Patologia base:
+    label(for="patologiaBase") Patologia Base:
     input(type="text" id="patologiaBase" name="patologiaBase" value="" placeholder="Ej. Asma")
     br
     br

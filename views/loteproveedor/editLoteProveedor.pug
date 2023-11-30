@@ -2,12 +2,17 @@ head
     title Lote Proveedor
 section#formLoteProveedor
 h2 Ingresar un Lote Proveedor
-form(action=`/lotesproveedores/${loteProveedor.idLaboratorio}-${loteProveedor.numeroDeLote}?_method=PUT` method="post")
+form(action=`/lotesproveedores/${loteProveedor.numeroDeLote}?_method=PUT` method="post")
     label(for="idLaboratorio") Laboratorio:
-    select#laboratorioSelect(name="idLaboratorio")
-        option(value="") Selecciona un Laboratorio
+        select#laboratorioSelect(name="idLaboratorio")
             each lab in laboratorios
-                option(value=lab.idLaboratorio)= lab.nombreLaboratorio
+                if loteProveedor.idLaboratorio==lab.idLaboratorio
+                    option(value=loteProveedor.idLaboratorio)=lab.nombreLaboratorio
+            each lab in laboratorios
+                if loteProveedor.idLaboratorio==lab.idLaboratorio
+                    break
+                else
+                    option(value=lab.idLaboratorio)=lab.nombreLaboratorio
     br
     br
     label(for="tipo-vac") Tipo de Vacuna:

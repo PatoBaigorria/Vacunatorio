@@ -8,26 +8,30 @@ const {
 // Obtener todas las aplicaciones
 const listarAplicacion = async (req, res) => {
   try {
-    const aplicaciones = await Aplicacion.findAll({
-      raw: true
-    });
-    const lotes = await LoteInterno.findAll({
-      raw: true
-    });
-    const personas = await Persona.findAll({
-      raw: true
-    });
-    const agentes = await AgenteDeSalud.findAll({
-      raw: true
-    });
-    res.render("aplicacion/viewAplicacion", {
-      aplicaciones: aplicaciones,
-      lotes: lotes,
-      personas: personas,
-      agentes: agentes,
-    })
+    const aplicacion = await Aplicacion.findAll(
+      {
+        include: [{
+          model: AgenteDeSalud,
+          attributes: ['DNI'],  // Puedes incluir solo los atributos necesarios de AgenteDeSalud si es necesario
+          include: [{
+            model: Persona,
+            attributes: ['DNI', 'nombre', 'apellido']
+          }]
+        },
+        {
+          model: Persona,
+          attributes: ['DNI', 'nombre', 'apellido']
+        },
+        {
+          model: LoteInterno,
+          attributes: ['numeroDeSerie'],
+        }
+        ]
+      }
+    );
+    res.render("aplicacion/viewAplicacion", { aplicacion: aplicacion });
   } catch (error) {
-    res.status(500).json({ message: "Error al crear la persona.", error: error.message });
+    res.status(500).json({ message: "Error al obtener las aplicaciones.", error: error.message });
   }
 };
 
@@ -81,9 +85,9 @@ const updateAplicacion = async (req, res) => {
     Aplicacion.update(req.body, {
       where: { idAplicacion: req.params.id },
     });
-    res.json(aplicacionActualizada);
+    res.redirect('/aplicaciones');
   } catch (error) {
-    res.status(500).json({ message: "Error al actualizar la aplicación." });
+    res.status(500).json({ message: "Error al actualizar la aplicación. " + error.message });
   }
 };
 
@@ -110,5 +114,5 @@ module.exports = {
   editarAplicacion,
   updateAplicacion,
   deleteAplicacion,
-  
+
 };

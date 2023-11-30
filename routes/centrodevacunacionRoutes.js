@@ -4,7 +4,7 @@ const controllers = require("../controllers/indexController");
 
 //Importacion del Controlador
 router.get("/", controllers.centroDeVacunacionController.listarCentrosDeVacunacion);
-router.get("/altaCV", controllers.centroDeVacunacionController.altaCentroVac);
+router.get("/alta", controllers.centroDeVacunacionController.altaCentroVac);
 router.post("/", controllers.centroDeVacunacionController.createCentroVac);
 router.get("/:id", controllers.centroDeVacunacionController.editarCentroVac);
 router.put("/:id", controllers.centroDeVacunacionController.updateCentroDeVacunacion);

@@ -2,12 +2,12 @@ head
     title Descarte
 section#formDescarte
 h2 Ingresar un Descarte
-form(action="/guardar-descarte" method="post")
+form(action="/descartes/" method="post")
       label(for="persona") Seleccione un Agente de Salud existente:
       select#personaSelect(name="DNIAgente")
         option(value="") Seleccione un agente de salud para ingresar su matricula:
             each persona in personas
-                if(persona.ocupacion === "agenteDeSalud")
+                if(persona.ocupacion === "agente de salud")
                     option(value=persona.DNI)= persona.nombre + ' ' + persona.apellido
       br
       br
