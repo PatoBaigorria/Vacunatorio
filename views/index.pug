@@ -1,72 +1,14 @@
-// index.pug (vista principal)
-doctype html
-html
-  head
-    title Mi Página Principal
-    //link(rel="stylesheet" href="ruta-del-archivo.css")
-    script(src="/cargarFormularios.js")
-
-  body
-    // Contenido principal de la página
-    main
-        h1 Argentina Vacuna
-    // Contenedor principal
-    .container
-      // Menú
-      nav
-        ul
-          li
-            a(href="#") Inicio
-          li
-            a(href="javascript:void(0)", onclick="cargarFormulario('/formPersona')") Datos de Personas
-          li
-            a(href="javascript:void(0)", onclick="cargarFormulario('/guardar-agentedesalud')") Agentes de Salud
-          li
-            a(href="javascript:void(0)", onclick="cargarFormulario('/formCentroDeVacunacion')") Centros de Vacunacion
-          li
-            a(href="javascript:void(0)", onclick="cargarFormulario('/formLaboratorio')") Laboratorios
-          li
-            a(href="javascript:void(0)", onclick="cargarFormulario('/guardar-loteproveedor')") Lotes Proveedores
-          li
-            a(href="javascript:void(0)", onclick="cargarFormulario('/formDepositoNacional')") Depósito Nacional
-          li
-            a(href="javascript:void(0)", onclick="cargarFormulario('/formDepositoProvincial')") Depósito Provincial
-          li
-            a(href="javascript:void(0)", onclick="cargarFormulario('/guardar-loteinterno')") Lotes Internos
-          li
-            a(href="javascript:void(0)", onclick="cargarFormulario('/guardar-aplicacion')") Aplicacion de Vacunas
-          li
-            a(href="javascript:void(0)", onclick="cargarFormulario('/guardar-descarte')") Descartes
-          li
-            a(href="javascript:void(0)", onclick="cargarFormulario('/guardar-telefono')") Telefonos
-          li
-            a(href="javascript:void(0)", onclick="cargarFormulario('/guardar-patologiabase')") Patologías Base
-          li
-            a(href="javascript:void(0)", onclick="cargarFormulario('/guardar-traslado')") Traslados
-          li
-            a(href="/formConsultas") Consultas
-              ul
-                li 
-                  a(href="/formConsultaPersona", target="_blank") Personas
-                li 
-                  a(href="/formConsultaAplicacion", target="_blank") Aplicacion de Vacunas
-                li 
-                  a(href="/formConsultaAgenteDeSalud", target="_blank") Agentes de Salud
-                li 
-                  a(href="/formConsultaCentroDeVacunacion", target="_blank") Centro de Vacunación
-                li 
-                  a(href="/formConsultaDepositoNacional", target="_blank") Depósito Nacional
-                li 
-                  a(href="/formConsultaDepositoProvincial", target="_blank") Depósito Provincial
-                li 
-                  a(href="/formConsultaDescarte", target="_blank") Descartes
-                li 
-                  a(href="/viewLaboratorio") Laboratorios
-                li 
-                  a(href="/formConsultaLoteInterno", target="_blank") Lotes Internos
-                li 
-                  a(href="/formConsultaLoteProveedor", target="_blank") Lotes Proveedores
-                li 
-                  a(href="/formConsultaTraslado", target="_blank") Traslados
-    // Contenedor para cargar los formularios
-    #formulario-container
+include .\includes\layout
+block content
+head
+  title Argentina Programa
+  link(rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous")
+  link(href="https://cdn.datatables.net/v/dt/dt-1.13.8/b-2.4.2/datatables.min.css" rel="stylesheet")
+  link(href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" rel="stylesheet")
+  style.
+    h2 {
+        text-align: center;
+        text-decoration: underline;
+        text-underline-offset: 4px; /* Ajusta el espacio entre el texto y el subrayado */
+    }
+body

@@ -2,9 +2,6 @@ include ..\includes\layout
 block content
 head
     title Centro de Vacunacion
-    link(rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous")
-    link(href="https://cdn.datatables.net/v/dt/dt-1.13.8/b-2.4.2/datatables.min.css" rel="stylesheet")
-    link(href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" rel="stylesheet")
     style.
         h2 {
             text-align: center;
@@ -23,12 +20,7 @@ body
                     br
                     br
                     div.table.responsive
-                        table#centrosdevacunacion.table.table-striped.table-bordered   
-            script(src="https://cdn.datatables.net/v/dt/dt-1.13.8/b-2.4.2/datatables.min.js")
-            script(src="https://code.jquery.com/jquery-3.6.0.slim.min.js", integrity="sha384-uLlR6ZHi0I0Zv8zOe4u/gj11Bnz9qgIn1eXt2uI8z5l5shCh/d3Q9DHgm49P" crossorigin="anonymous")
-            script(src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js", integrity="sha384-Yw1sE6UJ68UEU/5IcJkGJgBhzqQ1S4C4yDO5AqbohMz3zAzpXVrK8f5XW6OlYIzR", crossorigin="anonymous")
-            script(src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.min.js", integrity="sha384-pzjw8L+3D5IIU/9TUKJ6gZwU0txhx9RWK/E5LD8jLlAxCj9tt3fcF1jMWL8ceM" crossorigin="anonymous")
-       
+                        table#centrosdevacunacion.table.table-striped.table-bordered    
 script.
     let centvac = !{JSON.stringify(centrosVac)};
     let cvtab 
