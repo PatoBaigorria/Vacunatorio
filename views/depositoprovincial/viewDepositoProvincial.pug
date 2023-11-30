@@ -24,14 +24,6 @@ body
                     br
                     div.table.responsive
                         table#depositosprovinciales.table.table-striped.table-bordered
-                            thead
-                                tr
-                                    th ID
-                                    th Longitud
-                                    th Latitud
-                                    th Opciones
-              
-                
             script(src="https://cdn.datatables.net/v/dt/dt-1.13.8/b-2.4.2/datatables.min.js")
             script(src="https://code.jquery.com/jquery-3.6.0.slim.min.js", integrity="sha384-uLlR6ZHi0I0Zv8zOe4u/gj11Bnz9qgIn1eXt2uI8z5l5shCh/d3Q9DHgm49P" crossorigin="anonymous")
             script(src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js", integrity="sha384-Yw1sE6UJ68UEU/5IcJkGJgBhzqQ1S4C4yDO5AqbohMz3zAzpXVrK8f5XW6OlYIzR", crossorigin="anonymous")
@@ -49,12 +41,12 @@ script.
                 url: '//cdn.datatables.net/plug-ins/1.13.7/i18n/es-AR.json'
             },
             columns:[
-                {data: 'idDepositoProvincial'},
-                {data: 'longitud'},
-                {data: 'latitud'},
+                {data: 'idDepositoProvincial', title: 'ID Centro de Vacunación'},
+                {data: 'longitud', title: 'Longitud'},
+                {data: 'latitud', title: 'Latitud'},
 
                 {
-                    data: null,
+                    data: null, title: 'Opciones',
                     render: function(data, type, row) {
                         return `<button class="btn btn-success btn-sm fa-solid fa-pencil me-2"></button>` +
                             `<button class="btn btn-danger btn-sm fa-solid fa-trash-can"></button>`;
