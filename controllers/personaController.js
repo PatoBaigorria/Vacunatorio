@@ -7,11 +7,11 @@ const { Persona, Telefono, PatologiaBase, AgenteDeSalud } = require("../models/r
 const listarPersonas = async (req, res) => {
   try {
     const Personas = await Persona.findAll(
-      {include:[{model: Telefono, attributes: ['celular1','celular2']},
-              {model: PatologiaBase, attributes: ['patologiaBase']},
-              {model: AgenteDeSalud, attributes: ['matricula']}]
-    });
-    console.log(JSON.stringify(Personas))
+      {
+        include: [{ model: Telefono, attributes: ['celular1', 'celular2'] },
+        { model: PatologiaBase, attributes: ['patologiaBase'] },
+        { model: AgenteDeSalud, attributes: ['matricula'] }]
+      });
     res.render("persona/viewPersona", {
       Personas: Personas,
     })

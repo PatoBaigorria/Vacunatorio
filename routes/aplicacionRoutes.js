@@ -8,7 +8,7 @@ const {
   LoteInterno,
 } = require("../models/relaciones");
 router.get("/", controllers.aplicacionController.listarAplicacion);
-router.get("/altaAP", controllers.aplicacionController.crearAplicacion);
+router.get("/alta", controllers.aplicacionController.crearAplicacion);
 router.post("/", controllers.aplicacionController.createAplicacion);
 router.get("/:id", controllers.aplicacionController.editarAplicacion);
 router.put("/:id", controllers.aplicacionController.updateAplicacion);

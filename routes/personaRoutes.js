@@ -3,9 +3,15 @@ const router = express.Router();
 const controllers = require("../controllers/indexController");
 
 router.get("/", controllers.personaController.listarPersonas);
+<<<<<<< Updated upstream
 router.get("/crearP", controllers.personaController.altaPersona);
 router.post("/", controllers.personaController.createPersona);
 router.get("/:id", controllers.personaController.editPersona);
+=======
+router.get("/alta", controllers.personaController.mostrarFormularioCrearPersona);
+router.post("/", controllers.personaController.crearPersonaDesdeFormulario);
+router.get("/:id", controllers.personaController.editarPersona);
+>>>>>>> Stashed changes
 router.put("/:id", controllers.personaController.updatePersona);
 router.delete("/:id", controllers.personaController.deletePersona);
 
