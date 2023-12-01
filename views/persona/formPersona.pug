@@ -76,10 +76,10 @@ html(lang="es")
           input(type="text" class="form-control" id="patologiaBase" name="patologiaBase")
         .form-group
           label(for="longitud") Longitud:
-          input(type="text" class="form-control" id="longitud" name="longitud" required)
+          input(type="text" class="form-control" id="longitud" name="longitud")
         .form-group
           label(for="latitud") Latitud:
-          input(type="text" class="form-control" id="latitud" name="latitud" required)
+          input(type="text" class="form-control" id="latitud" name="latitud")
         button(type="submit" class="btn btn-primary") Guardar
 
   // Agrega la referencia a Bootstrap JS (opcional, solo si lo necesitas)
@@ -168,6 +168,26 @@ html(lang="es")
           }
         })
       })
+      $('#nombre').on('focusout', ()=> {
+        var namePattern = /^[A-Za-záéíóúüñÁÉÍÓÚÜÑ\s]{1,30}$/;
+        if (!namePattern.test($('#nombre').val())) {
+          $('#nombre').removeClass('is-valid')
+          $('#nombre').addClass('is-invalid')
+        } else {
+          $('#nombre').removeClass('is-invalid')
+          $('#nombre').addClass('is-valid')
+        }
+      })
+      $('#apellido').on('focusout', ()=> {
+        var namePattern = /^[A-Za-záéíóúüñÁÉÍÓÚÜÑ\s]{1,30}$/;
+        if (!namePattern.test($('#apellido').val())) {
+          $('#apellido').removeClass('is-valid')
+          $('#apellido').addClass('is-invalid')
+        } else {
+          $('#apellido').removeClass('is-invalid')
+          $('#apellido').addClass('is-valid')
+        }
+      })
       $('#email').on('focusout', ()=> {
         var emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
         if(!emailPattern.test($('#email').val())) {
@@ -178,60 +198,72 @@ html(lang="es")
           $('#email').addClass('is-valid')
         }
       })
-      $('#celular1').on('focusout', ()=> {
-        var phonePattern = /^[0-9]{10}$/;
-        if (!phonePattern.test($('#celular1').val())) {
-          $('#celular1').removeClass('is-valid')
-          $('#celular1').addClass('is-invalid')
-        } else {
-          $('#celular1').removeClass('is-invalid')
-          $('#celular1').addClass('is-valid')
-        }
-      })
-      $('#celular2').on('focusout', ()=> {
-        var phonePattern = /^[0-9]{10}$/;
-        if (!phonePattern.test($('#celular2').val())) {
-          $('#celular2').removeClass('is-valid')
-          $('#celular2').addClass('is-invalid')
-        } else {
-          $('#celular2').removeClass('is-invalid')
-          $('#celular2').addClass('is-valid')
-        }
-      })
-      $('#longitud').on('focusout', ()=> {
-        var longitudPattern = /^(-?((180\.0{0,6})|(((\d|[1-9]\d|1[0-7]\d)(\.\d{0,6})?)|180)))$/;
-        if (!longitudPattern.test($('#longitud').val())) {
-          $('#longitud').removeClass('is-valid')
-          $('#longitud').addClass('is-invalid')
-        } else {
-          $('#longitud').removeClass('is-invalid')
-          $('#longitud').addClass('is-valid')
-        }
-      })
-      $('#latitud').on('focusout', ()=> {
-        var latitudPattern = /^(-?([1-8]?\d(\.\d{0,6})?|90(\.0{0,6})?))$/;
-        if (!latitudPattern.test($('#latitud').val())) {
-          $('#latitud').removeClass('is-valid')
-          $('#latitud').addClass('is-invalid')
-        } else {
-          $('#latitud').removeClass('is-invalid')
-          $('#latitud').addClass('is-valid')
-        }
-      })
-      $('#fechaNacimiento').on('focusout', ()=> {
-        // Obtén la fecha del elemento con id "fechaDeNacimiento"
-        const fechaNacimiento = $('#fechaDeNacimiento').val();
-        // Crea un objeto Date con la fecha de nacimiento
-        const date = new Date(fechaNacimiento);
-        // Obtiene el año
+      $('#fechaDeNacimiento').on('focusout', ()=> {
+        const fechaActual = new Date();
+        const date = new Date($('#fechaDeNacimiento').val());
         const year = date.getFullYear();
-        console.log(fechaNacimiento); // Esto imprimirá el año en la consola
-        if (!datePattern.test($('#fechaNacimiento').val())) {
-          $('#fechaNacimiento').removeClass('is-valid')
-          $('#fechaNacimiento').addClass('is-invalid')
+        if (isNaN(date.getTime()) || year < 1922 || fechaActual < date || $('#ocupacion').val() === 'agente de salud' && fechaActual.getFullYear()-year < 23) {
+          $('#fechaDeNacimiento').removeClass('is-valid')
+          $('#fechaDeNacimiento').addClass('is-invalid')
+          $('#formPersona').on('submit', (event)=> {
+            event.preventDefault();
+          })
         } else {
-          $('#fechaNacimiento').removeClass('is-invalid')
-          $('#fechaNacimiento').addClass('is-valid')
+          $('#fechaDeNacimiento').removeClass('is-invalid')
+          $('#fechaDeNacimiento').addClass('is-valid')
+        }
+      })
+      $('#ocupacion').on('click', ()=> {
+        const fechaActual = new Date();
+        const date = new Date($('#fechaDeNacimiento').val());
+        const year = date.getFullYear();
+        if ($('#ocupacion').val() === 'agente de salud' && fechaActual.getFullYear()-year < 23 || isNaN(date.getTime())) {
+          $('#fechaDeNacimiento').removeClass('is-valid')
+          $('#fechaDeNacimiento').addClass('is-invalid')
+        } else {
+          $('#fechaDeNacimiento').removeClass('is-invalid')
+          $('#fechaDeNacimiento').addClass('is-valid')
+        }
+        console.log($('#ocupacion').val())
+        if($('#ocupacion').val() === null) {
+          $('#ocupacion').removeClass('is-valid')
+          $('#ocupacion').addClass('is-invalid')
+        } else {
+          $('#ocupacion').removeClass('is-invalid')
+          $('#ocupacion').addClass('is-valid')
+        }
+      })
+      $('#ocupacion').on('click', ()=> {
+        const fechaActual = new Date();
+        const date = new Date($('#fechaDeNacimiento').val());
+        const year = date.getFullYear();
+        if ($('#ocupacion').val() === 'agente de salud' && fechaActual.getFullYear()-year < 23 || isNaN(date.getTime())) {
+          $('#fechaDeNacimiento').removeClass('is-valid')
+          $('#fechaDeNacimiento').addClass('is-invalid')
+        } else {
+          $('#fechaDeNacimiento').removeClass('is-invalid')
+          $('#fechaDeNacimiento').addClass('is-valid')
+        }
+        console.log($('#ocupacion').val())
+        if($('#ocupacion').val() === null) {
+          $('#ocupacion').removeClass('is-valid')
+          $('#ocupacion').addClass('is-invalid')
+        } else {
+          $('#ocupacion').removeClass('is-invalid')
+          $('#ocupacion').addClass('is-valid')
+        }
+      })
+      $('#matricula').on('focusout', ()=> {
+        var matriculaPattern = /^[0-9]{8}$/;
+        if (!matriculaPattern.test($('#matricula').val())) {
+          $('#matricula').removeClass('is-valid')
+          $('#matricula').addClass('is-invalid')
+          $('#formPersona').on('submit', (event)=> {
+            event.preventDefault();
+          })
+        } else {
+          $('#matricula').removeClass('is-invalid')
+          $('#matricula').addClass('is-valid')
         }
       })
     })
