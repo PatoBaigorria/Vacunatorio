@@ -30,12 +30,21 @@ const altaPersona = async (req, res) => {
 
 const createPersona = async (req, res) => {
   try {
-    const { DNI, nombre, apellido, fechaDeNacimiento, email, ocupacion, celular1, celular2, patologiaBase, matricula, genero, longitud, latitud } = req.body;
+    const { DNI, nombre, apellido, fechaDeNacimiento, email, ocupacion, celular1, celular2, patologiaBase, genero, longitud, latitud } = req.body;
+    const matricula = parseFloat(req.body.matricula);
     const existingPersona = await Persona.findByPk(DNI);
+    const agentes = await AgenteDeSalud.findAll();
 
     if (existingPersona) {
       // Mostrar un mensaje flash indicando que la persona ya existe
       req.flash('error', 'La persona ya existe en la base de datos.');
+      // Redirigir al formulario de alta
+      return res.redirect("/personas/alta");
+    }
+
+    if (agentes.map(x => x.matricula).includes(matricula)) {
+      // Mostrar un mensaje flash indicando que la persona ya existe
+      req.flash('error', 'El agente ya existe en la base de datos.');
       // Redirigir al formulario de alta
       return res.redirect("/personas/alta");
     }
@@ -243,6 +252,19 @@ const deletePersona = async (req, res) => {
     res.status(500).json({ message: "Error al eliminar la persona." });
   }
 };
+
+const isDNIExistente = async (req, res, next) => {
+  try {
+    const persona = await Persona.findOne({ where: { DNI: req.body.DNI } });
+    if (persona) {
+      return res.status(400).json({ message: "El DNI ya existe." });
+    }
+    next();
+  } catch (error) {
+    res.status(500).json({ message: "Error al comprobar el DNI." });
+  }
+}
+
 module.exports = {
   listarPersonas,
   altaPersona,
@@ -250,5 +272,4 @@ module.exports = {
   editPersona,
   updatePersona,
   deletePersona,
-  //mostrarFormulario,
 };

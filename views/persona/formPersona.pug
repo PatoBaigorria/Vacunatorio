@@ -1,20 +1,24 @@
-doctype html
+include ..\includes\layout
+block content
 html(lang="es")
   head
     meta(charset="UTF-8")
     meta(name="viewport", content="width=device-width, initial-scale=1, shrink-to-fit=no")
-    title Persona
+    title Alta de Persona
     // Agrega la referencia a Bootstrap CSS
     link(rel="stylesheet", href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css")
     style.
-      body {
-        padding: 20px;
-      }
-
       #formPersona {
         max-width: 600px;
         margin: auto;
       }
+
+      h2 {
+            text-align: center;
+            text-decoration: underline;
+            text-underline-offset: 4px; /* Ajusta el espacio entre el texto y el subrayado */
+            margin-top: 10px;
+        }
 
       label {
         margin-bottom: 5px;
@@ -101,16 +105,8 @@ html(lang="es")
     }
 
     function validarFormulario() {
-      // Validación DNI
-      var dniInput = document.getElementById("dni");
-      var dniPattern = /^[0-9]{7,8}$/;
-      if (!dniPattern.test(dniInput.value)) {
-        alert("El DNI debe contener exactamente 7 u 8 números.");
-        return false;
-      }
-
       // Validación Nombre y Apellido
-      var nombreInput = document.getElementById("nombre");
+      /*var nombreInput = document.getElementById("nombre");
       var apellidoInput = document.getElementById("apellido");
       var namePattern = /^[A-Za-záéíóúüñÁÉÍÓÚÜÑ\s]{1,30}$/;
       if (!namePattern.test(nombreInput.value) || !namePattern.test(apellidoInput.value)) {
@@ -118,7 +114,7 @@ html(lang="es")
         return false;
       }
 
-      /*// Validación Email
+      // Validación Email
       var emailInput = document.getElementById("email");
       var emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
       if (!emailPattern.test(emailInput.value)) {
@@ -153,5 +149,84 @@ html(lang="es")
         return false;
       }*/
 
-      return true;
+      //return true;
     }
+
+    $(function (){
+      $('#dni').on('focusout', ()=> {
+        var dniPattern = /^[0-9]{7,8}$/;
+        if (!dniPattern.test($('#dni').val())) {
+          $('#dni').removeClass('is-valid')
+          $('#dni').addClass('is-invalid')
+        } else {
+          $('#dni').removeClass('is-invalid')
+          $('#dni').addClass('is-valid')
+        }
+      })
+      $('#email').on('focusout', ()=> {
+        var emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        if(!emailPattern.test($('#email').val())) {
+          $('#email').removeClass('is-valid')
+          $('#email').addClass('is-invalid')
+        } else {
+          $('#email').removeClass('is-invalid')
+          $('#email').addClass('is-valid')
+        }
+      })
+      $('#celular1').on('focusout', ()=> {
+        var phonePattern = /^[0-9]{10}$/;
+        if (!phonePattern.test($('#celular1').val())) {
+          $('#celular1').removeClass('is-valid')
+          $('#celular1').addClass('is-invalid')
+        } else {
+          $('#celular1').removeClass('is-invalid')
+          $('#celular1').addClass('is-valid')
+        }
+      })
+      $('#celular2').on('focusout', ()=> {
+        var phonePattern = /^[0-9]{10}$/;
+        if (!phonePattern.test($('#celular2').val())) {
+          $('#celular2').removeClass('is-valid')
+          $('#celular2').addClass('is-invalid')
+        } else {
+          $('#celular2').removeClass('is-invalid')
+          $('#celular2').addClass('is-valid')
+        }
+      })
+      $('#longitud').on('focusout', ()=> {
+        var longitudPattern = /^(-?((180\.0{0,6})|(((\d|[1-9]\d|1[0-7]\d)(\.\d{0,6})?)|180)))$/;
+        if (!longitudPattern.test($('#longitud').val())) {
+          $('#longitud').removeClass('is-valid')
+          $('#longitud').addClass('is-invalid')
+        } else {
+          $('#longitud').removeClass('is-invalid')
+          $('#longitud').addClass('is-valid')
+        }
+      })
+      $('#latitud').on('focusout', ()=> {
+        var latitudPattern = /^(-?([1-8]?\d(\.\d{0,6})?|90(\.0{0,6})?))$/;
+        if (!latitudPattern.test($('#latitud').val())) {
+          $('#latitud').removeClass('is-valid')
+          $('#latitud').addClass('is-invalid')
+        } else {
+          $('#latitud').removeClass('is-invalid')
+          $('#latitud').addClass('is-valid')
+        }
+      })
+      $('#fechaNacimiento').on('focusout', ()=> {
+        // Obtén la fecha del elemento con id "fechaDeNacimiento"
+        const fechaNacimiento = $('#fechaDeNacimiento').val();
+        // Crea un objeto Date con la fecha de nacimiento
+        const date = new Date(fechaNacimiento);
+        // Obtiene el año
+        const year = date.getFullYear();
+        console.log(fechaNacimiento); // Esto imprimirá el año en la consola
+        if (!datePattern.test($('#fechaNacimiento').val())) {
+          $('#fechaNacimiento').removeClass('is-valid')
+          $('#fechaNacimiento').addClass('is-invalid')
+        } else {
+          $('#fechaNacimiento').removeClass('is-invalid')
+          $('#fechaNacimiento').addClass('is-valid')
+        }
+      })
+    })
