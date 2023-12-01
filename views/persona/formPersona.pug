@@ -83,7 +83,6 @@ html(lang="es")
         button(type="submit" class="btn btn-primary") Guardar
 
   // Agrega la referencia a Bootstrap JS (opcional, solo si lo necesitas)
-  script(src="https://code.jquery.com/jquery-3.2.1.slim.min.js")
   script(src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js")
   script(src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js")
 
@@ -162,6 +161,12 @@ html(lang="es")
           $('#dni').removeClass('is-invalid')
           $('#dni').addClass('is-valid')
         }
+        $.post('dni',{dni:$('#dni').val()}, data=>{
+          if(data){
+            $('#dni').removeClass('is-valid')
+            $('#dni').addClass('is-invalid')
+          }
+        })
       })
       $('#email').on('focusout', ()=> {
         var emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;

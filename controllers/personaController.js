@@ -4,6 +4,16 @@ const { Persona, Telefono, PatologiaBase, AgenteDeSalud } = require("../models/r
 // Controlador para mostrar el formulario de ingreso de datos de persona
 
 // Obtener todas las personas
+
+const dni = async (req, res) => {
+  try {
+    const docu = await Persona.findOne({raw:true, where:{DNI:req.body.dni}});
+    res.json(!!docu);
+  } catch (error) {
+    res.status(500).json({ message: "Error al comprobar el DNI." });
+  }
+}
+
 const listarPersonas = async (req, res) => {
   try {
     const Personas = await Persona.findAll(
@@ -253,17 +263,6 @@ const deletePersona = async (req, res) => {
   }
 };
 
-const isDNIExistente = async (req, res, next) => {
-  try {
-    const persona = await Persona.findOne({ where: { DNI: req.body.DNI } });
-    if (persona) {
-      return res.status(400).json({ message: "El DNI ya existe." });
-    }
-    next();
-  } catch (error) {
-    res.status(500).json({ message: "Error al comprobar el DNI." });
-  }
-}
 
 module.exports = {
   listarPersonas,
@@ -272,4 +271,5 @@ module.exports = {
   editPersona,
   updatePersona,
   deletePersona,
+  dni,
 };
