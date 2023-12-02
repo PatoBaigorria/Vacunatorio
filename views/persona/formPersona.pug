@@ -1,45 +1,37 @@
+- var title ='Alta de Persona'
 include ..\includes\layout
 block content
 html(lang="es")
   head
-    meta(charset="UTF-8")
-    meta(name="viewport", content="width=device-width, initial-scale=1, shrink-to-fit=no")
-    title Alta de Persona
-    // Agrega la referencia a Bootstrap CSS
-    link(rel="stylesheet", href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css")
     style.
       #formPersona {
         max-width: 600px;
         margin: auto;
       }
-
       h2 {
-            text-align: center;
-            text-decoration: underline;
-            text-underline-offset: 4px; /* Ajusta el espacio entre el texto y el subrayado */
-            margin-top: 10px;
-        }
-
+        text-align: center;
+        text-decoration: underline;
+        text-underline-offset: 4px;
+        margin-top: 10px;
+      }
       label {
         margin-bottom: 5px;
-      }
-
-      #matriculaLabel, #matricula, #matriculaDiv {
-        display: none;
       }
   body
     #formPersona
       h2.text-center Ingresar una Persona
-      // Agregar lógica para mostrar mensajes flash aquí
       if messages.error
         .alert.alert-danger
           = messages.error
       form(action="/personas", method="post" onsubmit="return validarFormulario()")
         .form-group
-          label(for="dni") DNI:
-          input(type="text" class="form-control" id="dni" name="DNI" required title="Debe contener exactamente 7 u 8 números")
+          label.form-label(for="dni") DNI:
+          .input-group.has-validation
+            input.form-control(type="text" id="dni" name="DNI" required)
+            .invalid-feedback.d-none(id="dniExiste") dni ya existe
+            .invalid-feedback.d-none(id="dniInvalido") dni no es valido
         .form-group
-          label(for="nombre") Nombre:
+          label.form-label(for="nombre") Nombre:
           input(type="text" class="form-control" id="nombre" name="nombre" required)
         .form-group
           label(for="apellido") Apellido:
@@ -52,13 +44,13 @@ html(lang="es")
           input(type="date" class="form-control" id="fechaDeNacimiento" name="fechaDeNacimiento" required)
         .form-group
           label(for="ocupacion") Ocupación:
-          select(class="form-control" name="ocupacion" id="ocupacion" onchange="seleccionarOcupacion()" required)
+          select(class="form-control" name="ocupacion" id="ocupacion" required)
             option(disabled selected hidden) Selecciona una Ocupacion:
             option(value="agente de salud") Agente de Salud
             option(value="otro") Otro
-        .form-group#matriculaDiv
-          label(for="matricula" id="matriculaLabel" style="display: none;") Matrícula:
-          input(type="number" class="form-control" id="matricula" name="matricula" style="display: none;")
+        .form-group.d-none#matriculaDiv
+          label(for="matricula" id="matriculaLabel") Matrícula:
+          input(type="number" class="form-control" id="matricula" name="matricula")
         .form-group
           label(for="genero") Género:
           select(class="form-control" name="genero" required)
@@ -82,11 +74,8 @@ html(lang="es")
           input(type="text" class="form-control" id="latitud" name="latitud")
         button(type="submit" class="btn btn-primary") Guardar
 
-  // Agrega la referencia a Bootstrap JS (opcional, solo si lo necesitas)
-  script(src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js")
-  script(src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js")
-
   script.
+    /*
     function seleccionarOcupacion() {
       var rolSelect = document.getElementById("ocupacion");
       var matriculaLabel = document.getElementById("matriculaLabel");
@@ -102,114 +91,63 @@ html(lang="es")
         matriculaDiv.style.display = "none";
       }
     }
+    */
+    const namePattern = /^[A-Za-záéíóúüñÁÉÍÓÚÜÑ\s]{1,30}$/;
+    const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
-    function validarFormulario() {
-      // Validación Nombre y Apellido
-      /*var nombreInput = document.getElementById("nombre");
-      var apellidoInput = document.getElementById("apellido");
-      var namePattern = /^[A-Za-záéíóúüñÁÉÍÓÚÜÑ\s]{1,30}$/;
-      if (!namePattern.test(nombreInput.value) || !namePattern.test(apellidoInput.value)) {
-        alert("Nombre y Apellido deben contener solo letras hasta 30 caracteres.");
-        return false;
+    function validarRegex(regex){
+      if(!regex.test($(this).val())){
+        this.addClass('is-invalid');
+        this.removeClass('is-valid');
+      } else {
+        this.addClass('is-valid');
+        this.removeClass('is-invalid');
       }
+    }
 
-      // Validación Email
-      var emailInput = document.getElementById("email");
-      var emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-      if (!emailPattern.test(emailInput.value)) {
-        alert("Ingrese un email válido.");
-        return false;
-      }
-
-      // Validación Fecha
-      var fechaInput = document.getElementById("fechaDeNacimiento");
-      var currentDate = new Date().toISOString().split("T")[0];
-      if (fechaInput.value > currentDate) {
-        alert("La fecha de nacimiento no puede ser posterior a la actual.");
-        return false;
-      }
-
-      // Validación Celulares
-      var celular1Input = document.getElementById("celular1");
-      var celular2Input = document.getElementById("celular2");
-      var phonePattern = /^[0-9]{10}$/;
-      if (!phonePattern.test(celular1Input.value) || !phonePattern.test(celular2Input.value)) {
-        alert("Los números de celular deben contener solo números y tener 10 dígitos.");
-        return false;
-      }
-
-      // Validación Longitud y Latitud
-      var longitudInput = document.getElementById("longitud");
-      var latitudInput = document.getElementById("latitud");
-      var longitudPattern = /^(-?((180\.0{0,6})|(((\d|[1-9]\d|1[0-7]\d)(\.\d{0,6})?)|180)))$/;
-      var latitudPattern = /^(-?([1-8]?\d(\.\d{0,6})?|90(\.0{0,6})?))$/;
-      if (!longitudPattern.test(longitudInput.value) || !latitudPattern.test(latitudInput.value)) {
-        alert("Ingrese valores válidos para Longitud y Latitud.");
-        return false;
-      }*/
-
-      //return true;
+    function validarExistente(endpoint){
+      $.post(endpoint, {data:this.val()},  res=>{
+        if(res.existe || !res.valido){
+          $('#'+endpoint).addClass('is-invalid').removeClass('is-valid');
+          if (res.existe){
+            $('#'+endpoint+'Existe').addClass("is-invalid").removeClass("d-none")
+          } else if (!res.valido){
+            $('#'+endpoint+'Invalido').addClass("is-invalid").removeClass("d-none")
+          }
+        } else {
+          $('#'+endpoint).addClass('is-valid').removeClass('is-invalid');
+          $('#'+endpoint+'Invalido').addClass("d-none").removeClass("is-invalid")
+          $('#'+endpoint+'Existe').addClass("d-none").removeClass("is-invalid")
+        }
+      })
     }
 
     $(function (){
-      $('#dni').on('focusout', ()=> {
-        var dniPattern = /^[0-9]{7,8}$/;
-        if (!dniPattern.test($('#dni').val())) {
-          $('#dni').removeClass('is-valid')
-          $('#dni').addClass('is-invalid')
+      $('#ocupacion').on('change', function(){
+        console.log($('#ocupacion').val()==='agente de salud')
+        if($('#ocupacion').val()==='agente de salud'){
+          $('#matriculaDiv').removeClass('d-none')
         } else {
-          $('#dni').removeClass('is-invalid')
-          $('#dni').addClass('is-valid')
-        }
-        $.post('dni',{dni:$('#dni').val()}, data=>{
-          if(data){
-            $('#dni').removeClass('is-valid')
-            $('#dni').addClass('is-invalid')
-          }
-        })
-      })
-      $('#nombre').on('focusout', ()=> {
-        var namePattern = /^[A-Za-záéíóúüñÁÉÍÓÚÜÑ\s]{1,30}$/;
-        if (!namePattern.test($('#nombre').val())) {
-          $('#nombre').removeClass('is-valid')
-          $('#nombre').addClass('is-invalid')
-        } else {
-          $('#nombre').removeClass('is-invalid')
-          $('#nombre').addClass('is-valid')
+          $('#matriculaDiv').addClass('d-none')
         }
       })
-      $('#apellido').on('focusout', ()=> {
-        var namePattern = /^[A-Za-záéíóúüñÁÉÍÓÚÜÑ\s]{1,30}$/;
-        if (!namePattern.test($('#apellido').val())) {
-          $('#apellido').removeClass('is-valid')
-          $('#apellido').addClass('is-invalid')
-        } else {
-          $('#apellido').removeClass('is-invalid')
-          $('#apellido').addClass('is-valid')
-        }
-      })
-      $('#email').on('focusout', ()=> {
-        var emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-        if(!emailPattern.test($('#email').val())) {
-          $('#email').removeClass('is-valid')
-          $('#email').addClass('is-invalid')
-        } else {
-          $('#email').removeClass('is-invalid')
-          $('#email').addClass('is-valid')
-        }
-      })
+      $('#dni').on('keyup',  validarExistente.bind( $('#dni'), 'dni'));
+      $('#matricula').on('keyup',  validarExistente.bind($('#matricula'), 'matricula'));
+      $('#nombre').on('keyup', validarRegex.bind($('#nombre'), namePattern));
+      $('#apellido').on('keyup', validarRegex.bind($('#apellido'), namePattern));
+      $('#email').on('change', validarRegex.bind($('#email'), emailPattern));
+      
+      
       $('#fechaDeNacimiento').on('focusout', ()=> {
         const fechaActual = new Date();
         const date = new Date($('#fechaDeNacimiento').val());
         const year = date.getFullYear();
         if (isNaN(date.getTime()) || year < 1922 || fechaActual < date || $('#ocupacion').val() === 'agente de salud' && fechaActual.getFullYear()-year < 23) {
-          $('#fechaDeNacimiento').removeClass('is-valid')
           $('#fechaDeNacimiento').addClass('is-invalid')
           $('#formPersona').on('submit', (event)=> {
             event.preventDefault();
           })
         } else {
-          $('#fechaDeNacimiento').removeClass('is-invalid')
           $('#fechaDeNacimiento').addClass('is-valid')
         }
       })
@@ -218,18 +156,14 @@ html(lang="es")
         const date = new Date($('#fechaDeNacimiento').val());
         const year = date.getFullYear();
         if ($('#ocupacion').val() === 'agente de salud' && fechaActual.getFullYear()-year < 23 || isNaN(date.getTime())) {
-          $('#fechaDeNacimiento').removeClass('is-valid')
           $('#fechaDeNacimiento').addClass('is-invalid')
         } else {
-          $('#fechaDeNacimiento').removeClass('is-invalid')
           $('#fechaDeNacimiento').addClass('is-valid')
         }
         console.log($('#ocupacion').val())
         if($('#ocupacion').val() === null) {
-          $('#ocupacion').removeClass('is-valid')
           $('#ocupacion').addClass('is-invalid')
         } else {
-          $('#ocupacion').removeClass('is-invalid')
           $('#ocupacion').addClass('is-valid')
         }
       })
@@ -238,32 +172,16 @@ html(lang="es")
         const date = new Date($('#fechaDeNacimiento').val());
         const year = date.getFullYear();
         if ($('#ocupacion').val() === 'agente de salud' && fechaActual.getFullYear()-year < 23 || isNaN(date.getTime())) {
-          $('#fechaDeNacimiento').removeClass('is-valid')
           $('#fechaDeNacimiento').addClass('is-invalid')
         } else {
-          $('#fechaDeNacimiento').removeClass('is-invalid')
           $('#fechaDeNacimiento').addClass('is-valid')
         }
         console.log($('#ocupacion').val())
         if($('#ocupacion').val() === null) {
-          $('#ocupacion').removeClass('is-valid')
           $('#ocupacion').addClass('is-invalid')
         } else {
-          $('#ocupacion').removeClass('is-invalid')
           $('#ocupacion').addClass('is-valid')
         }
       })
-      $('#matricula').on('focusout', ()=> {
-        var matriculaPattern = /^[0-9]{8}$/;
-        if (!matriculaPattern.test($('#matricula').val())) {
-          $('#matricula').removeClass('is-valid')
-          $('#matricula').addClass('is-invalid')
-          $('#formPersona').on('submit', (event)=> {
-            event.preventDefault();
-          })
-        } else {
-          $('#matricula').removeClass('is-invalid')
-          $('#matricula').addClass('is-valid')
-        }
-      })
-    })
+      
+    });

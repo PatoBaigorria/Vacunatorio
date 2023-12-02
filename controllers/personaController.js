@@ -7,8 +7,27 @@ const { Persona, Telefono, PatologiaBase, AgenteDeSalud } = require("../models/r
 
 const dni = async (req, res) => {
   try {
-    const docu = await Persona.findOne({raw:true, where:{DNI:req.body.dni}});
-    res.json(!!docu);
+    const dniRegex = /^[0-9]{7,8}$/;
+    if (dniRegex.test(req.body.data)){
+      const respuesta = await Persona.findOne({raw:true, where:{DNI:req.body.data}});
+      res.json({valido: true, existe: !!respuesta});
+    } else {
+      res.json({valido: false, existe: false});
+    }
+  } catch (error) {
+    res.status(500).json({ message: "Error al comprobar el DNI." });
+  }
+}
+
+const matricula = async (req, res) => {
+  try {
+    const matriculaRegex = /^[0-9]{8}$/;
+    if (matriculaRegex.test(req.body.data)){
+      const respuesta = await AgenteDeSalud.findOne({raw:true, where:{matricula:req.body.data}});
+      res.json({valido:true, existe: !!respuesta});
+  } else {
+    res.json({valido:false, existe: false});
+  }
   } catch (error) {
     res.status(500).json({ message: "Error al comprobar el DNI." });
   }
@@ -272,4 +291,5 @@ module.exports = {
   updatePersona,
   deletePersona,
   dni,
+  matricula,
 };
