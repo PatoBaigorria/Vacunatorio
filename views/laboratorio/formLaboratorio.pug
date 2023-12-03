@@ -1,36 +1,102 @@
-head
-    title Laboratorio
-section#formLaboratorio
-h2 Ingresar un Laboratorio
-form(action="/laboratorios/" method="post")
-    label(for="nombre") Nombre Laboratorio:
-    input(type="text" id="nombre" name="nombreLaboratorio" placeholder="Ej. Laboratorio 1" required)
-    br
-    br
+- var title ='Alta de Laboratorio'
+include ..\includes\layout
+block content
+html(lang="es")    
+    head
+        style.
+            #formLaboratorio {
+                max-width: 600px;
+                margin: auto;
+            }
+            h2 {
+                text-align: center;
+                text-decoration: underline;
+                text-underline-offset: 4px;
+                margin-top: 10px;
+            }
+            label {
+                margin-bottom: 5px;
+            }
+    body
+        #formLaboratorio
+            h2.text-center Ingresar un Laboratorio
+            if messages.error
+                .alert.alert-danger
+                    = messages.error
+            br
+            form(action="/laboratorios" method="post")
+                .form-group
+                    label.form-label(for="nombre") Nombre Laboratorio:
+                    .input-group.has-validation
+                        input.form-control(type="text" id="nombre" name="nombreLaboratorio" required)
+                        .invalid-feedback(id="nombreInvalido") Ingrese solo letras
+                        .invalid-feedback.none(id="nombreExiste") Laboratorio Existente
+                .form-group
+                    label.form-label(for="pais") País:
+                    .input-group.has-validation
+                        input.form-control(type="text" id="pais" name="pais" required)
+                        .invalid-feedback(id="paisInvalido") Ingrese solo letras
+                .form-group
+                    label.form-label(for="email") Email:
+                    .input-group.has-validation
+                        input.form-control(type="text" id="email" name="email" required)
+                .form-group
+                    label.form-label(for="telefono") Teléfono:
+                    .input-group.has-validation
+                        input.form-control(type="text" id="telefono" name="telefono" required)
+                        .invalid-feedback(id="telInvalido") Ingrese solo números
+                .form-group
+                    label.form-label(for="longitud") Longitud:
+                    .input-group.has-validation
+                        input.form-control(type="text" id="longitud" name="longitud")
+                        .invalid-feedback(id="longInvalido") Ingrese solo números
+                .form-group
+                    label.form-label(for="latitud") Latitud:
+                    .input-group.has-validation
+                        input.form-control(type="text" id="latitud" name="latitud")
+                        .invalid-feedback(id="latInvalido") Ingrese solo números
+                    br
+                button(type="submit" class="btn btn-primary") Dar de Alta
+    script.
+        const namePattern = /^[A-Za-záéíóúüñÁÉÍÓÚÜÑ\s]{1,30}$/;
+        const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        const telefonoPattern = /^\d{10,}$/;
+        const longitudPattern = /^[-+]?([1-8]?\d(\.\d+)?|90(\.0+)?)$/;
+        const latitudPattern = /^[-+]?([1-8]?\d(\.\d+)?|90(\.0+)?)$/;
+ 
 
-    label(for="pais") País:
-    input(type="text" id="pais" name="pais" placeholder="Ej. Argentina" required)
-    br
-    br
+        function validarRegex(regex){
+            if(!regex.test($(this).val())){
+                this.addClass('is-invalid');
+                this.removeClass('is-valid');
+            } else {
+                this.addClass('is-valid');
+                this.removeClass('is-invalid');
+            }
+        }
 
-    label(for="email") Email:
-    input(type="text" id="email" name="email" placeholder="Ej. 8JpjA@example.com" required)
-    br
-    br
+        function validarExistente(endpoint){
+            $.post(endpoint, {data:this.val()},  res=>{
+                if(res.existe || !res.valido){
+                    $('#'+endpoint).addClass('is-invalid').removeClass('is-valid');
+                    if (res.existe){
+                        $('#'+endpoint+'Existe').addClass("is-invalid").removeClass("d-none")
+                    } else if (!res.valido){
+                        $('#'+endpoint+'Invalido').addClass("is-invalid").removeClass("d-none")
+                    }
+                } else {
+                    $('#'+endpoint).addClass('is-valid').removeClass('is-invalid');
+                    $('#'+endpoint+'Invalido').addClass("d-none").removeClass("is-invalid")
+                    $('#'+endpoint+'Existe').addClass("d-none").removeClass("is-invalid")
+                }
+            })
+        }
 
-    label(for="telefono") Teléfono:
-    input(type="text" id="telefono" name="telefono" placeholder="Ej. 123456789" required)
-    br
-    br
-
-    label(for="longitud") Longitud:
-    input(type="text" id="longitud" name="longitud" placeholder="Ej. -54.801725" required)
-    br
-    br
-
-    label(for="latitud") Latitud:
-    input(type="text" id="latitud" name="latitud" placeholder="Ej. 32.603722" required)
-    br
-    br
-
-    button(type="submit") Dar de Alta
+        $(function (){
+            $('#nombre').on('keyup', validarExistente.bind($('#nombre'), 'nombre'));
+            $('#pais').on('keyup', validarRegex.bind($('#pais'), namePattern));
+            $('#email').on('keyup', validarRegex.bind($('#email'), emailPattern));
+            $('#telefono').on('keyup', validarRegex.bind($('#telefono'), telefonoPattern));
+            $('#longitud').on('keyup', validarRegex.bind($('#longitud'), longitudPattern));
+            $('#latitud').on('keyup', validarRegex.bind($('#latitud'), latitudPattern));
+        });

@@ -1,16 +1,32 @@
 const { Laboratorio } = require("../models/relaciones");
 
+const nombre = async (req, res) => {
+  try {
+    const nombreRegex = /^[A-Za-záéíóúüñÁÉÍÓÚÜÑ\s]{1,30}$/;
+    if (nombreRegex.test(req.body.data)){
+      const respuesta = await Laboratorio.findOne({raw:true, where: {nombreLaboratorio: req.body.data}});
+      console.log(respuesta);
+      res.json({valido: true, existe: !!respuesta});
+      
+    } else {
+      res.json({valido: false, existe: false});
+    }
+  } catch (error) {
+    res.status(500).json({ message: "Error al comprobar el Nombre de Laboratorio." });
+  }
+}
+
+
 // Obtener todos los laboratorios
 const listarLaboratorios = async (req, res) => {
   try {
     let laboratorios = await Laboratorio.findAll({
       raw: true
     });
-    res.render("laboratorio/viewLaboratorio", { laboratorios: laboratorios });
+    
+    res.render("laboratorio/viewLaboratorio", { laboratorios: laboratorios});
   } catch (error) {
-    res.status(500).json({
-      message: "Error al obtener los laboratorios.",
-    });
+    res.status(500).json({message: "Error al obtener los laboratorios.",});
   }
 };
 // Muestra formulario de creacion de Laboratorio
@@ -23,11 +39,20 @@ const altaLaboratorio = async (req, res) => {
     });
   }
 }
-// Crear un nuevo laboratorio desde el Formulario
+
 const createLaboratorio = async (req, res) => {
   try {
     const { nombreLaboratorio, pais, email, telefono, longitud, latitud } = req.body;
-    // Crear una nueva instancia de Laboratorio utilizando Sequelize
+    const existeLaboratorio = await Laboratorio.findOne({
+      where: {
+        nombreLaboratorio,
+      },
+    });
+
+    if (existeLaboratorio) {
+      req.flash('error', 'Ya existe el laboratorio.');
+      return res.redirect("/laboratorios/alta");
+    }
     await Laboratorio.create({
       nombreLaboratorio,
       pais,
@@ -36,13 +61,15 @@ const createLaboratorio = async (req, res) => {
       longitud,
       latitud,
     });
+    req.flash('success', 'Laboratorio creado exitosamente.');
     res.redirect("/laboratorios");
   } catch (error) {
-    console.error("Error al insertar datos:", error);
-    res.status(500).send("Error al insertar datos en el laboratorio");
+    console.error(error);
+    req.flash('error', 'Error al crear el laboratorio.');
+    res.status(500).redirect("/laboratorios/alta");
   }
 };
-// Editar Laboratorio por ID
+
 const editLaboratorio = async (req, res) => {
   try {
     const laboratorio = await Laboratorio.findByPk(req.params.id);
@@ -79,7 +106,9 @@ const deleteLaboratorio = async (req, res) => {
         idLaboratorio: req.params.id,
       },
     });
-    res.redirect("/laboratorios");
+    req.flash('success', 'Laboratorio eliminado exitosamente.');
+    res.json({success:true});
+  
   } catch (error) {
     res.status(500).json({
       message: "Error al eliminar el laboratorio.",
@@ -88,6 +117,7 @@ const deleteLaboratorio = async (req, res) => {
 };
 
 module.exports = {
+  nombre,
   listarLaboratorios,
   altaLaboratorio,
   createLaboratorio,

@@ -8,6 +8,7 @@ head
             text-decoration: underline;
             text-underline-offset: 4px; /* Ajusta el espacio entre el texto y el subrayado */
         }
+
 body
     div.container.my-4
       div.row
@@ -15,6 +16,9 @@ body
             section#viewLaboratorios
                 h2 Listado de Laboratorios
                 br
+                if messages.success
+                    .alert.alert-success
+                        = messages.success 
                 div(style="text-align: left;")
                     a.btn.btn-primary.btn-lg(href="/laboratorios/alta") Alta
     
@@ -63,13 +67,25 @@ script.
     });
     
     $(document).ready(function() {
-        tabla.on('click', 'button', function (fila) {
-            let data = tabla.row(fila.target.closest('tr')).data();
+        tabla.on('click', 'button', function (f) {
+            let data = tabla.row(f.target.closest('tr')).data();
             if ($(event.target).hasClass('fa-trash-can')) {
-                if(confirm("¿Desea eliminar el laboratorio?")){
-                    $.post('/laboratorios/'+data.idLaboratorio+'?_method=DELETE', function(data){
-                        window.location.href = "/laboratorios";
-                    })
+                if(confirm("¿Desea eliminar el Laboratorio?")){
+                    $.ajax({
+                        url: '/laboratorios/'+data.idLaboratorio+'?_method=DELETE',
+                        type: 'POST',
+                        success: function(data) {
+                            if (data.success) {
+                                window.location.href = "/laboratorios";
+                            } else {
+                                console.error(data.message);
+                                window.location.href = "/laboratorios";
+                            }
+                        },
+                        error: function(error) {
+                            console.error(error);
+                        }
+                    });
                 }
             } else {window.location.href= "/laboratorios/" + data.idLaboratorio}
         })
