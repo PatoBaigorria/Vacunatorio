@@ -32,7 +32,10 @@ html(lang="es")
             .invalid-feedback.d-none(id="dniInvalido") dni no es valido
         .form-group
           label.form-label(for="nombre") Nombre:
-          input(type="text" class="form-control" id="nombre" name="nombre" required)
+          .input-group.has-validation
+            input.form-control(type="text" id="nombre" name="nombre" required)
+            .invalid-feedback.d-none(id="nombreExiste") El campo nombre no puede contener más de treinta caracteres
+            .invalid-feedback.d-none(id="campoVacio") El campo nombre no puede estar vacío
         .form-group
           label(for="apellido") Apellido:
           input(type="text" class="form-control" id="apellido" name="apellido" required)
@@ -94,7 +97,8 @@ html(lang="es")
     */
     const namePattern = /^[A-Za-záéíóúüñÁÉÍÓÚÜÑ\s]{1,30}$/;
     const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-
+    const fechaDeNac = new Date($('#fechaDeNacimiento').val())
+    const fechaAct = new Date()
     function validarRegex(regex){
       if(!regex.test($(this).val())){
         this.addClass('is-invalid');
@@ -122,9 +126,16 @@ html(lang="es")
       })
     }
 
+    function campoVacio(campo){
+      if($(campo).val() === ""){
+        $(campo).addClass('is-invalid').removeClass('d-none');
+      } else {
+        $(campo).addClass('d-none').removeClass('is-invalid');
+      }
+    }
+
     $(function (){
       $('#ocupacion').on('change', function(){
-        console.log($('#ocupacion').val()==='agente de salud')
         if($('#ocupacion').val()==='agente de salud'){
           $('#matriculaDiv').removeClass('d-none')
         } else {
@@ -135,8 +146,8 @@ html(lang="es")
       $('#matricula').on('keyup',  validarExistente.bind($('#matricula'), 'matricula'));
       $('#nombre').on('keyup', validarRegex.bind($('#nombre'), namePattern));
       $('#apellido').on('keyup', validarRegex.bind($('#apellido'), namePattern));
-      $('#email').on('change', validarRegex.bind($('#email'), emailPattern));
-      
+      $('#email').on('keyup', validarRegex.bind($('#email'), emailPattern));
+      $('fechaDeNacimiento').on()
       
       $('#fechaDeNacimiento').on('focusout', ()=> {
         const fechaActual = new Date();
