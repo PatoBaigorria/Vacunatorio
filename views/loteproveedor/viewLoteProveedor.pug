@@ -1,7 +1,7 @@
 include ..\includes\layout
 block content
 head
-    title Lote proveedor
+    title Lote Proveedor
     style.
         h2 {
             text-align: center;
@@ -13,7 +13,7 @@ body
         div.row
             div.col-sm-12.col-md-12.col-lg-12.col-xl-12
             section#viewLotesProveedores
-                h2 Listado de lotes proveedores
+                h2 Listado de Lotes Proveedores
                 br
                 div(style="text-align: left;")
                     a.btn.btn-primary.btn-lg(href="/lotesproveedores/alta") Alta
@@ -39,14 +39,14 @@ script.
                 url: '//cdn.datatables.net/plug-ins/1.13.7/i18n/es-AR.json'
             },
             columns: [
-                { data: 'numeroDeLote', title: 'Número de lote' },
-                { data: 'Laboratorio.nombreLaboratorio', title: 'Nombre del laboratorio' },
-                { data: 'tipoDeVacuna', title: 'Tipo de vacuna' },
-                { data: 'nombreComercial', title: 'Nombre comercial de la vacuna' },
-                { data: 'cantidadDeLotesInternos', title: 'Cantidad de lotes internos' },
-                { data: 'fechaDeFabricacion', title: 'Fecha de fabricación' },
-                { data: 'fechaDeVencimiento', title: 'Fecha de vencimiento' },
-                { data: 'fechaDeCompra', title: 'Fecha de compra' },
+                { data: 'numeroDeLote', title: 'Número de Lote' },
+                { data: 'Laboratorio.nombreLaboratorio', title: 'Nombre del Laboratorio' },
+                { data: 'tipoDeVacuna', title: 'Tipo de Vacuna' },
+                { data: 'nombreComercial', title: 'Nombre Comercial de la Vacuna' },
+                { data: 'cantidadDeLotesInternos', title: 'Cantidad de Lotes Internos' },
+                { data: 'fechaDeFabricacion', title: 'Fecha de Fabricación' },
+                { data: 'fechaDeVencimiento', title: 'Fecha de Vencimiento' },
+                { data: 'fechaDeCompra', title: 'Fecha de Compra' },
                 {
                     data: null, title: 'Opciones',
                     render: function(data, type, row) {
@@ -55,9 +55,15 @@ script.
                     }
                 }
             ],
+            columnDefs: [
+                {orderable: false, targets:[8]}, // Columna de "Opciones"
+                {searchable: false, targets:[1, 2, 3]},
+                {className: "dt-center", targets: [0, 1, 2, 3, 4, 5, 6, 7, 8]},
+                { width: "7%", targets: [0, 1, 5, 6, 7, 8] },
+                { width: "10%", targets: [2, 3, 4] }
+            ]
         });
     });
-
     $(document).ready(function() {
         lotestab.on('click', 'button', function(f) {
             let data = lotestab.row(f.target.closest('tr')).data();
@@ -73,50 +79,3 @@ script.
         });
     })
 
-//script.
-    let lotes = !{JSON.stringify(lotesProveedores)}
-    let lotestab
-
-    $(document).ready(function() {
-        lotestab = $('#lotes').DataTable({
-            data: lotes,
-            pageLength:5,
-            lengthMenu:[5,10,15,20],
-            language: {
-                url: '//cdn.datatables.net/plug-ins/1.13.7/i18n/es-AR.json'
-            }
-            columns:[
-                {data: 'numeroDeLote', title:'Número de lote'},
-                {data: 'Laboratorio.nombreLaboratorio', title: 'Nombre del laboratorio'},
-                {data: 'tipoDeVacuna', title: 'Tipo de vacuna'},
-                {data: 'nombreComercial', title: 'Nombre comercial de la vacuna'},
-                {data: 'cantidadDeLotesInternos', title: 'Cantidad de lotes internos'},
-                {data: 'fechaDeFabricacion', title: 'Fecha de fabricación'},
-                {data: 'fechaDeVencimiento', title: 'Fecha de vencimiento'},
-                {data: 'fechaDeCompra', title: 'Fecha de compra'},
-                {
-                    data: null.
-                    render: function(data, type, row){
-                        return `<button class="btn btn-success btn-sm fa-solid fa-pencil me-2"></button>` +
-                            `<button class="btn btn-danger btn-sm fa-solid fa-trash-can"></button>`;
-                    }
-                }
-            ],
-            /*columnDefs: [
-                {searchable: false, targets: [4, 5, 6, 7]},
-
-            ]*/
-        });
-    });
-    $(document).ready(function(f) {
-        perstab.on('click', 'button', function() {
-            let data = lotestab.row(f.target.closest('tr')).data();
-            if($(event.target).hasClass('fa-trash-can')){
-                if(confirm('¿Seguro que desea eliminar este lote?')){
-                    $.post('/lotesproveedores/'+data.numeroDeLote+'?_method=DELETE', function(data) {
-                        window.location.href = "/lotesproveedores";
-                    })
-                }
-            } else {window.location.href= "/lotesproveedores/" + data.numeroDeLote}}
-        );
-    });

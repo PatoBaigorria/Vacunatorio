@@ -34,20 +34,27 @@ script.
                 url: '//cdn.datatables.net/plug-ins/1.13.7/i18n/es-AR.json'
             },
             columns:[
-                {data:'idDescarte', title: 'ID del descarte'},
-                {data: 'Agentedesalud.Persona.nombre', title:'Nombre del agente'},
-                {data: 'Agentedesalud.Persona.apellido', title: 'Apellido del agente'},
-                {data: 'numeroDeSerie', title: 'N° de serie del lote'},
-                {data: 'empresaDescartante', title: 'Empresa descartante'},
-                {data: 'motivo', title: 'Motivo del descarte'},
-                {data: 'cantidadDeVacunas', title: 'Cant. de vacunas descartadas'},
-                {data: 'fechaDeDescarte', title: 'Fecha de descarte'},
+                {data:'idDescarte', title: 'ID Descarte'},
+                {data: 'Agentedesalud.Persona.nombre', title:'Nombre del Agente'},
+                {data: 'Agentedesalud.Persona.apellido', title: 'Apellido del Agente'},
+                {data: 'numeroDeSerie', title: 'N° de Serie del Lote'},
+                {data: 'empresaDescartante', title: 'Empresa Descartante'},
+                {data: 'motivo', title: 'Motivo del Descarte'},
+                {data: 'cantidadDeVacunas', title: 'Cant. de Vacunas Descartadas'},
+                {data: 'fechaDeDescarte', title: 'Fecha de Descarte'},
                 {data: 'opciones', title: 'Opciones',
                     render: function (data) {
                         return `<button class="btn btn-success btn-sm fa-solid fa-pencil me-2"></button>` +
                             `<button class="btn btn-danger btn-sm fa-solid fa-trash-can"></button>`;
                     }}
             ],
+            columnDefs: [
+                {orderable: false, targets:[8]}, // Columna de "Opciones"
+                {className: "dt-center", targets: [0, 1, 2, 3, 4, 5, 6, 7, 8]},
+                { width: '10%', targets: [0, 1, 2, 3] },
+                { width: '15%', targets: [4, 6] },	
+                { width: '10%', targets: [5, 7, 8] },
+            ]
         });
     });
     $(document).ready(function(){
