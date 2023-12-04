@@ -74,18 +74,32 @@ script.
             ]
         });
     });
+
     $(document).ready(function() {
         perstab.on('click', 'button', function (f) {
             let data = perstab.row(f.target.closest('tr')).data();
             if ($(event.target).hasClass('fa-trash-can')) {
                 if(confirm("¿Desea eliminar la Persona?")){
-                    $.post('/personas/'+data.DNI+'?_method=DELETE', function(data){
-                         window.location.href = "/personas";
-                    })
+                    $.ajax({
+                        url: '/personas/'+data.DNI+'?_method=DELETE',
+                        type: 'POST',
+                        success: function(data) {
+                            if (data.success) {
+                                window.location.href = "/personas";
+                            } else {
+                                console.error(data.message);
+                                window.location.href = "/personas";
+                            }
+                        },
+                        error: function(error) {
+                            console.error(error);
+                        }
+                    });
                 }
             } else {window.location.href= "/personas/" + data.DNI}
         })
-    });
+    }); 
+    
     function crearP(){
         window.location.href= "/personas/alta"
     }
