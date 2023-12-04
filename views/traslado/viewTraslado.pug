@@ -15,6 +15,9 @@ body
             section#viewTraslados
                 h2 Listado de Traslados
                 br
+                if messages.success
+                    .alert.alert-success
+                        = messages.success
                 div(style="text-align: left;")
                     a.btn.btn-primary.btn-lg(href="/traslados/crear") Crear
                     br
@@ -35,9 +38,9 @@ script.
             columns:[
                 {data: 'idTraslado', title: 'ID del Traslado'},
                 {data: 'numeroDeSerie', title: 'Número de Serie'},
-                {data: 'idCentroDeVacunacion', title: 'ID del centro de vacunación'},
-                {data: 'fechaDeSalida', title: 'Fecha de salida'},
-                {data: 'fechaDeLlegada', title: 'Fecha de llegada'},
+                {data: 'idCentroDeVacunacion', title: 'ID del Centro de Vacunación'},
+                {data: 'fechaDeSalida', title: 'Fecha de Salida'},
+                {data: 'fechaDeLlegada', title: 'Fecha de Llegada'},
 
                 {
                     data: null, title: 'Opciones',
@@ -50,7 +53,7 @@ script.
             columnDefs: [
                 {orderable: false, targets:[5]}, // Columna de "Opciones"
                 {searchable: false, targets:[5]},
-                {className: "dt-center", targets: [0, 5]},
+                {className: "dt-center", targets: [0, 1, 2, 3, 4, 5]},
                 { width: '15%', targets: [0,1] },
                 { width: '15%', targets: [2, 3, 4] },
                 { width: '1%', targets: [5] },

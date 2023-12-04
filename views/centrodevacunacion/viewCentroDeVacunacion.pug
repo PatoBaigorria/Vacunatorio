@@ -1,7 +1,7 @@
 include ..\includes\layout
 block content
 head
-    title Centro de Vacunacion
+    title Centro de Vacunación
     style.
         h2 {
             text-align: center;
@@ -15,6 +15,9 @@ body
             section#viewCentrosDeVacunacion
                 h2 Listado de Centros de Vacunación
                 br
+                if messages.success
+                    .alert.alert-success
+                        = messages.success
                 div(style="text-align: left;")
                     a.btn.btn-primary.btn-lg(href="/centrosdevacunacion/alta") Alta
                     br
@@ -48,7 +51,7 @@ script.
             columnDefs: [
                 {orderable: false, targets:[3]}, // Columna de "Opciones"
                 {searchable: false, targets:[1, 2, 3]},
-                {className: "dt-center", targets: [3]},
+                {className: "dt-center", targets: [0, 1, 2, 3]},
                 { width: '5%', targets: [0, 1, 2] },
                 { width: '1%', targets: [3] },
             ]

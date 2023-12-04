@@ -1,15 +1,57 @@
-head
-    title Deposito Provincial
-section#formDepositoProvincial
-h2 Depósito Provincial
-form(action="/depositosprovinciales/" method="post")
-      label(for="longitud") Longitud:
-      input(type="text" id="longitud" name="longitud" placeholder="Ej. -54.801725" required)
-      br
-      br
-      label(for="latitud") Latitud:
-      input(type="text" id="latitud" name="latitud" placeholder="Ej. 32.603722" required)
-      br
-      br
-    
-      button(type="submit") Dar de Alta
+- var title ='Alta de Depósito Provincial'
+include ..\includes\layout
+block content
+html(lang="es") 
+    head
+        style.
+            #formDepositoProvincial {
+                max-width: 600px;
+                margin: auto;
+            }
+            h2 {
+                text-align: center;
+                text-decoration: underline;
+                text-underline-offset: 4px;
+                margin-top: 10px;
+            }
+            label {
+                margin-bottom: 5px;
+            }
+    body
+        #formDepositoProvincial
+            h2.text-center Ingresar un Depósito Provincial
+            if messages.error
+                .alert.alert-danger
+                    = messages.error
+            br
+            form(action="/depositosprovinciales" method="post")
+                .form-group
+                    label.form-label(for="longitud") Longitud:
+                    .input-group.has-validation
+                        input.form-control(type="text" id="longitud" name="longitud")
+                        .invalid-feedback(id="longInvalido") Ingrese solo números
+                .form-group
+                    label.form-label(for="latitud") Latitud:
+                    .input-group.has-validation
+                        input.form-control(type="text" id="latitud" name="latitud")
+                        .invalid-feedback(id="latInvalido") Ingrese solo números
+                    br
+                button(type="submit" class="btn btn-primary") Dar de Alta
+    script.
+        const longitudPattern = /^[-+]?([1-8]?\d(\.\d+)?|90(\.0+)?)$/;
+        const latitudPattern = /^[-+]?([1-8]?\d(\.\d+)?|90(\.0+)?)$/;
+
+        function validarRegex(regex){
+            if(!regex.test($(this).val())){
+                this.addClass('is-invalid');
+                this.removeClass('is-valid');
+            } else {
+                this.addClass('is-valid');
+                this.removeClass('is-invalid');
+            }
+        }
+
+        $(function (){
+            $('#longitud').on('keyup', validarRegex.bind($('#longitud'), longitudPattern));
+            $('#latitud').on('keyup', validarRegex.bind($('#latitud'), latitudPattern));
+        });

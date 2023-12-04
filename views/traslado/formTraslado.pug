@@ -1,29 +1,95 @@
-head
-    title Traslados
-section#formTraslado
-h2 Crear Traslados
-form(action="/traslados" method="post")
-    label(for="num-serie") Nº de Serie Lote Interno:
-        select#numeroDeSerieSelect(name="numeroDeSerie")
-            option(value="") Selecciona un Lote Interno
-                each loteI in lotesInternos
-                    option(value=loteI.numeroDeSerie)= loteI.numeroDeSerie
-    br
-    br
-    label(for="id-ctrovac") Centro de Vacunacion:
-        select#idCentroDeVacunacion(name="idCentroDeVacunacion")
-            option(value="") Selecciona un Centro de Vacunación
-                each cvac in centrosDeVacunacion
-                    option(value=cvac.idCentroDeVacunacion)= cvac.idCentroDeVacunacion
-    br
-    br
-    label(for="fecha-sal-trasl") Fecha Salida de Traslado:
-    input(type="date" id="fecha-sal-trasl" name="fechaDeSalida" required)
-    br
-    br
-    label(for="fecha-lleg-trasl") Fecha Llegada de Traslado en Destino:
-    input(type="date" id="fecha-lleg-trasl" name="fechaDeLlegada" required)
-    br
-    br
-      
-    button(type="submit") Guardar
+- var title ='Crear Traslado'
+include ..\includes\layout
+block content
+html(lang="es")    
+    head
+        style.
+            #formTraslado {
+                max-width: 600px;
+                margin: auto;
+            }
+            h2 {
+                text-align: center;
+                text-decoration: underline;
+                text-underline-offset: 4px;
+                margin-top: 10px;
+            }
+            label {
+                margin-bottom: 5px;
+            }
+    body
+        #formTraslado
+            h2.text-center Crear Traslados
+            if messages.error
+                    .alert.alert-danger
+                        = messages.error
+            br
+            form(action="/traslados" method="post")
+                .form-group
+                    label(for="num-serie") Nº de Serie Lote Interno:
+                    .input-group.has-validation
+                        select.form-control#numeroDeSerieSelect(name="numeroDeSerie")
+                            option(value="") Selecciona un Lote Interno
+                                each loteI in lotesInternos
+                                    option(value=loteI.numeroDeSerie)= loteI.numeroDeSerie
+                       
+                .form-group
+                    label(for="id-ctrovac") Centro de Vacunación:
+                    .input-group.has-validation
+                        select.form-control#idCentroDeVacunacion(name="idCentroDeVacunacion")
+                            option(value="") Selecciona un Centro de Vacunación
+                                each cvac in centrosDeVacunacion
+                                    option(value=cvac.idCentroDeVacunacion)= cvac.idCentroDeVacunacion
+                       
+                .form-group
+                    label.form-label(for="fecha-sal-trasl") Fecha Salida de Traslado:
+                    .input-group.has-validation
+                        input.form-control(type="date" id="fecha-sal-trasl" name="fechaDeSalida")
+                        
+                .form-group
+                    label.form-label(for="fecha-lleg-trasl") Fecha Llegada de Traslado en Destino:
+                    .input-group.has-validation
+                        input.form-control(type="date" id="fecha-lleg-trasl" name="fechaDeLlegada")
+                    #fechaInvalida.invalid-feedback(style="display: none") La fecha de llegada debe ser mayor o igual a la de salida 
+                br                
+                button(type="submit" class="btn btn-primary") Guardar
+    script.
+            $(function () {
+                const fechaSalidaPattern = /^(20)\d\d-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$/;
+                const fechaLlegadaPattern = /^(20)\d\d-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$/;
+
+                function validarFechaSalida() {
+                    const fechaSalida = new Date($('#fecha-sal-trasl').val());
+                    if (fechaSalidaPattern.test($('#fecha-sal-trasl').val()) && fechaSalida <= new Date()) {
+                        $('#fecha-sal-trasl').addClass('is-valid').removeClass('is-invalid');
+                    } else {
+                        $('#fecha-sal-trasl').addClass('is-invalid').removeClass('is-valid');
+                    }
+                }
+
+                function validarFechaLlegada() {
+                    const fechaSalida = new Date($('#fecha-sal-trasl').val());
+                    const fechaLlegada = new Date($('#fecha-lleg-trasl').val());
+                    const fechaInvalidaMsg = $('#fechaInvalida');
+                    if (
+                        fechaLlegadaPattern.test($('#fecha-lleg-trasl').val()) &&
+                        fechaLlegada >= fechaSalida
+                    ) {
+                        $('#fecha-lleg-trasl').addClass('is-valid').removeClass('is-invalid');
+                        fechaInvalidaMsg.hide();
+                        return true;
+                    } else {
+                        $('#fecha-lleg-trasl').addClass('is-invalid').removeClass('is-valid');
+                        fechaInvalidaMsg.show().text('La fecha de llegada debe ser mayor o igual a la de salida');
+                        return false;
+                    }
+                }
+
+                $('#formTraslado').submit(function (event) {
+                    if (!validarFechaLlegada()) {
+                        event.preventDefault();
+                    } else {
+                       
+                    }
+                });
+            });

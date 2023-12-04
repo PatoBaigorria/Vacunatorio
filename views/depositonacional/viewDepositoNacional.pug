@@ -13,8 +13,11 @@ body
       div.row
         div.col-sm-12.col-md-12.col-lg-12.col-xl-12
             section#viewDepositosNacionales
-                h2 Listado de Depositos Nacionales
+                h2 Listado de Depósitos Nacionales
                 br
+                if messages.success
+                    .alert.alert-success
+                        = messages.success 
                 div(style="text-align: left;")
                     a.btn.btn-primary.btn-lg(href="/depositosnacionales/alta") Alta
                     br

@@ -29,18 +29,16 @@ const altaDepProv = async (req, res) => {
 // Crear un nuevo Deposito Provincial desde el Formulario
 const createDepProv = async (req, res) => {
   try {
-    const { longitud, latitud } =
-      req.body;
-
-    // Crear una nueva instancia de Deposito Provincial utilizando Sequelize
+    const { longitud, latitud } = req.body;
     await DepositoProvincial.create({
       longitud,
       latitud,
     });
+    req.flash("success", "Depósito Provincial creado exitosamente");
     res.redirect("/depositosprovinciales");
   } catch (error) {
     console.error("Error al insertar datos:", error);
-    res.status(500).send("Error al insertar datos en el Deposito Provincial");
+    res.status(500).send("Error al insertar datos en el Depósito Provincial");
   }
 };
 // Editar Deposito Provincial por ID
@@ -79,7 +77,8 @@ const deleteDepositoProvincial = async (req, res) => {
         idDepositoProvincial: req.params.id,
       },
     });
-    res.redirect("/depositosprovinciales");
+    req.flash('success', 'Depósito Provincial eliminado exitosamente.');
+    res.json({success:true});
   } catch (error) {
     res
       .status(500)

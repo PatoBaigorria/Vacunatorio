@@ -44,7 +44,7 @@ const altaTraslado = async (req, res) => {
     });
   }
 };
-// Crear un nuevo Traslado desde el Formulario
+
 const createTraslados = async (req, res) => {
   try {
     const { numeroDeSerie, idCentroDeVacunacion, fechaDeSalida, fechaDeLlegada } = req.body;
@@ -54,7 +54,7 @@ const createTraslados = async (req, res) => {
       fechaDeSalida, 
       fechaDeLlegada
     });
-
+    req.flash("success", "Traslado creado exitosamente");
     res.redirect("/traslados");
   } catch (error) {
     res.status(500).json({
@@ -102,55 +102,15 @@ const deleteTraslado = async (req, res) => {
         idTraslado: req.params.id
       }
     });
-    res.redirect("/traslados");
+    req.flash('success', 'Traslado eliminado exitosamente.');
+    res.json({success:true});
   } catch (error) {
     res.status(500).json({
       message: "Error al eliminar el traslado." + error.message
     });
   }
 };
-/*
-// Obtener el lote interno asociado a un traslado por su ID
-const getLoteInternoByTrasladoId = async (req, res) => {
-  try {
-    const traslado = await Traslado.findByPk(req.params.id, {
-      include: [Loteinterno],
-    });
 
-    if (!traslado) {
-      return res.status(404).json({
-        message: "Traslado no encontrado."
-      });
-    }
-
-    res.json(traslado.loteinterno);
-  } catch (error) {
-    res.status(500).json({
-      message: "Error al obtener el lote interno asociado al traslado.",
-    });
-  }
-};
-
-// Obtener el centro de vacunación asociado a un traslado por su ID
-const getCentroDeVacunacionByTrasladoId = async (req, res) => {
-  try {
-    const traslado = await Traslado.findByPk(req.params.id, {
-      include: [Centrodevacunacion],
-    });
-
-    if (!traslado) {
-      return res.status(404).json({
-        message: "Traslado no encontrado."
-      });
-    }
-
-    res.json(traslado.centrodevacunacion);
-  } catch (error) {
-    res.status(500).json({
-      message: "Error al obtener el centro de vacunación asociado al traslado.",
-    });
-  }
-};*/
 module.exports = {
   listarTraslados,
   altaTraslado,

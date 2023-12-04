@@ -1,7 +1,7 @@
 include ..\includes\layout
 block content
 head
-    title Deposito Provincial
+    title Depósito Provincial
     style.
         h2 {
             text-align: center;
@@ -13,8 +13,11 @@ body
       div.row
         div.col-sm-12.col-md-12.col-lg-12.col-xl-12
             section#viewDepositosProvinciales
-                h2 Listado de Depositos Provinciales
+                h2 Listado de Depósitos Provinciales
                 br
+                if messages.success
+                    .alert.alert-success
+                        = messages.success
                 div(style="text-align: left;")
                     a.btn.btn-primary.btn-lg(href="/depositosprovinciales/alta") Alta
                     br
@@ -25,7 +28,7 @@ script.
     let depprov = !{JSON.stringify(depositosProv)};
     let dpt 
     $(document).ready(function() {
-        dnt = $('#depositosprovinciales').DataTable({
+        dpt = $('#depositosprovinciales').DataTable({
             data: depprov,
             pageLength:5,
             lengthMenu:[5,10,15,20],
@@ -33,7 +36,7 @@ script.
                 url: '//cdn.datatables.net/plug-ins/1.13.7/i18n/es-AR.json'
             },
             columns:[
-                {data: 'idDepositoProvincial', title: 'ID Centro de Vacunación'},
+                {data: 'idDepositoProvincial', title: 'ID Depósito Provincial'},
                 {data: 'longitud', title: 'Longitud'},
                 {data: 'latitud', title: 'Latitud'},
 

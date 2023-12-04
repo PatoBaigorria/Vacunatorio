@@ -28,7 +28,6 @@ body
                         table#laboratorios.table.table-striped.table-bordered
                 //Bootstrap   
 script.
-    //let table = new DataTable('#laboratorios');
     let labs = !{JSON.stringify(laboratorios)};
     let tabla 
     $(document).ready(function() {
@@ -41,9 +40,9 @@ script.
             },
             columns:[
                 {data: 'nombreLaboratorio', title: 'Nombre'},
-                {data: 'pais', title: 'Pais'},
+                {data: 'pais', title: 'País'},
                 {data: 'email', title: 'Email'},
-                {data: 'telefono', title: 'Telefono'},
+                {data: 'telefono', title: 'Teléfono'},
                 {data: 'longitud', title: 'Longitud'},
                 {data: 'latitud', title: 'Latitud'},
                 {
@@ -57,7 +56,7 @@ script.
             columnDefs: [
                 {orderable: false, targets:[6]}, // Columna de "Opciones"
                 {searchable: false, targets:[4, 5, 6]},
-                {className: "dt-center", targets: [6]},
+                {className: "dt-center", targets: [0, 1, 2, 3, 4, 5, 6]},
                 { width: '5%', targets: [0] },
                 { width: '10%', targets: [3, 4, 5] },
                 { width: '15%', targets: [0, 1, 2] }, // Ancho del 10% para la primera columna

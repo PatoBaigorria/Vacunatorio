@@ -35,6 +35,7 @@ const createDepNac = async (req, res) => {
       longitud,
       latitud,
     });
+    req.flash("success", "Depósito Nacional creado exitosamente");
     res.redirect("/depositosnacionales");
   } catch (error) {
     console.error("Error al insertar datos:", error);
@@ -77,7 +78,8 @@ const deleteDepositoNacional = async (req, res) => {
         idDepositoNacional: req.params.id,
       },
     });
-    res.redirect("/depositosnacionales");
+    req.flash('success', 'Depósito Nacional eliminado exitosamente.');
+    res.json({success:true});
   } catch (error) {
     res
       .status(500)
@@ -86,27 +88,7 @@ const deleteDepositoNacional = async (req, res) => {
       });
   }
 };
-/*
-// Obtener los lotes internos asociados a un depósito nacional por su ID
-const getLotesInternosByDepositoNacionalId = async (req, res) => {
-  try {
-    const depositoNacional = await Depositonacional.findByPk(req.params.id, {
-      include: [Loteinterno],
-    });
 
-    if (!depositoNacional) {
-      return res
-        .status(404)
-        .json({ message: "Depósito nacional no encontrado." });
-    }
-
-    res.json(depositoNacional.lotesinternos);
-  } catch (error) {
-    res.status(500).json({
-      message: "Error al obtener los lotes internos del depósito nacional.",
-    });
-  }
-};*/
 module.exports = {
   listarDepositosNacionales,
   altaDepNac,

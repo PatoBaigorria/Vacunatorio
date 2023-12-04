@@ -34,6 +34,7 @@ const createCentroVac = async (req, res) => {
       longitud,
       latitud,
     });
+    req.flash("success", "Centro de Vacunación creado exitosamente");
     res.redirect("/centrosdevacunacion");
   } catch (error) {
     console.error("Error al insertar datos:", error);
@@ -77,7 +78,8 @@ const deleteCentroDeVacunacion = async (req, res) => {
         idCentroDeVacunacion: req.params.id,
       },
     });
-    res.redirect("/centrosdevacunacion");
+    req.flash('success', 'Centro de Vacunación eliminado exitosamente.');
+    res.json({success: true});
   } catch (error) {
     res
       .status(500)
