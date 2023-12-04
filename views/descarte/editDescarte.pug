@@ -1,41 +1,67 @@
-head
-    title Descarte
-section#formDescarte
-h2 Edite el descarte
-form(action=`/descartes/${descarte.idDescarte}?_method=PUT` method="post")
-    label(for="persona") Seleccione un Agente de Salud:
-    select#personaSelect(name="DNIAgente")
-    each persona in personas 
-        if(persona.DNI === descarte.DNIAgente)
-            option(value=persona.DNI selected)= persona.nombre + ' ' + persona.apellido
-        else
-            option(value=persona.DNI)= persona.nombre + ' ' + persona.apellido
-    br
-    br
-    label(for="num-serie") Seleccione un Nº de Serie Lote Interno:
-    select#numeroDeSerieSelect(name="numeroDeSerie")
-    each loteI in lotesInternos
-        if(loteI.numeroDeSerie === descarte.numeroDeSerie)
-            option(value=loteI.numeroDeSerie selected)= loteI.numeroDeSerie
-        else
-            option(value=loteI.numeroDeSerie)= loteI.numeroDeSerie
-    br
-    br
-    label(for="emp-desc") Empresa Descartante:
-    input(type="text" id="empr-desc" name="empresaDescartante" value=descarte.empresaDescartante required)
-    br
-    br
-    label(for="motivo") Motivo Descarte:
-    input(type="text" id="motivo" name="motivo" value=descarte.motivo required)
-    br
-    br
-    label(for="cant-vac") Cantidad de Vacunas:
-    input(type="number" id="cant-vac" name="cantidadDeVacunas" value=descarte.cantidadDeVacunas required)
-    br
-    br
-    label(for="fecha-desc") Fecha Descarte:
-    input(type="date" id="fecha-desc" name="fechaDeDescarte" value=descarte.fechaDeDescarte required)
-    br
-    br
-    
-    button(type="submit") Guardar
+- var title ='Actualizar Descarte'
+include ..\includes\layout
+block content
+html(lang="es") 
+    head
+        style.
+            #formDescarte {
+                max-width: 600px;
+                margin: auto;
+            }
+            h2 {
+                text-align: center;
+                text-decoration: underline;
+                text-underline-offset: 4px;
+                margin-top: 10px;
+            }
+            label {
+                margin-bottom: 5px;
+            }
+            .readonly-input {
+                color: gray;
+                background-color: #f0f0f0;
+            }
+    body
+        #formDescarte
+            h2.text-center Actualice el Descarte
+            br
+            form(action="/descartes/"+descarte.idDescarte+"?_method=PUT" method="post")
+                .form-group
+                    label.form-label(for="idDescarte") ID Descarte:
+                    input.form-control.readonly-input(type="text" id="idDescarte" name="idDescarte" value=descarte.idDescarte readonly disabled)
+                br
+                .form-group
+                    label.form-label(for="persona") Seleccione un Agente de Salud:
+                    select.form-control#personaSelect(name="DNIAgente")
+                        each persona in personas 
+                            if(persona.DNI === descarte.DNIAgente)
+                                option(value=persona.DNI selected)= persona.nombre + ' ' + persona.apellido
+                            else
+                                option(value=persona.DNI)= persona.nombre + ' ' + persona.apellido
+                br
+                .form-group
+                    label.form-label(for="num-serie") Seleccione un Nº de Serie Lote Interno:
+                    select.form-control#numeroDeSerieSelect(name="numeroDeSerie")
+                        each loteI in lotesInternos
+                            if(loteI.numeroDeSerie === descarte.numeroDeSerie)
+                                option(value=loteI.numeroDeSerie selected)= loteI.numeroDeSerie
+                            else
+                                option(value=loteI.numeroDeSerie)= loteI.numeroDeSerie
+                br
+                .form-group
+                    label.form-label(for="emp-desc") Empresa Descartante:
+                    input.form-control(type="text" id="empr-desc" name="empresaDescartante" value=descarte.empresaDescartante required)
+                br
+                .form-group
+                    label.form-label(for="motivo") Motivo Descarte:
+                    input.form-control(type="text" id="motivo" name="motivo" value=descarte.motivo required)
+                br
+                .form-group
+                    label.form-label(for="cant-vac") Cantidad de Vacunas:
+                    input.form-control(type="number" id="cant-vac" name="cantidadDeVacunas" value=descarte.cantidadDeVacunas required)
+                br
+                .form-group
+                    label.form-label(for="fecha-desc") Fecha Descarte:
+                    input.form-control(type="date" id="fecha-desc" name="fechaDeDescarte" value=descarte.fechaDeDescarte required)
+                br
+                button(type="submit" class="btn btn-primary") Actualizar

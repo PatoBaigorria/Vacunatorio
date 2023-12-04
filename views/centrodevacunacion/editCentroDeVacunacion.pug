@@ -1,13 +1,41 @@
-head
-    title Centro de Vacunacion
-section#formCentroDeVacunacion
-h2 Editar Centro de Vacunación
-form(action="/centrosdevacunacion/"+centroV.idCentroDeVacunacion+"?_method=PUT" method="post")
-      label(for="longitud") Longitud:
-      input(type="text" id="longitud" name="longitud" value=centroV.longitud required)
-      label(for="latitud") Latitud:
-      input(type="text" id="latitud" name="latitud" value=centroV.latitud required)
-      br
-      br
-    
-      button(type="submit") Actualizar
+- var title ='Actualizar Centro de Vacunación'
+include ..\includes\layout
+block content
+html(lang="es") 
+    head
+        style.
+            #formCentroDeVacunacion {
+                max-width: 600px;
+                margin: auto;
+            }
+            h2 {
+                text-align: center;
+                text-decoration: underline;
+                text-underline-offset: 4px;
+                margin-top: 10px;
+            }
+            label {
+                margin-bottom: 5px;
+            }
+            .readonly-input {
+                color: gray;
+                background-color: #f0f0f0;
+            }
+    body
+        #formCentroDeVacunacion
+            h2.text-center Actualice el Centro de Vacunación
+            br
+            form(action="/centrosdevacunacion/"+centroV.idCentroDeVacunacion+"?_method=PUT" method="post")
+                .form-group
+                    label.form-label(for="idCentroDeVacunacion") ID Centro de Vacunación:
+                    input.form-control.readonly-input(type="text" id="idCentroDeVacunacion" name="idCentroDeVacunacion" value=centroV.idCentroDeVacunacion readonly disabled)
+                br
+                .form-group
+                label.form-label(for="longitud") Longitud:
+                input.form-control(type="text" id="longitud" name="longitud" value=centroV.longitud)
+                br
+                .form-group
+                label.form-label(for="latitud") Latitud:
+                input.form-control(type="text" id="latitud" name="latitud" value=centroV.latitud)
+            br
+            button(type="submit" class="btn btn-primary") Actualizar

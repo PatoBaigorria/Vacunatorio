@@ -1,13 +1,42 @@
-head
-    title Deposito Provincial
-section#formDepositoProvincial
-h2 Editar Depósito Provincial
-form(action="/depositosprovinciales/"+depositoP.idDepositoProvincial+"?_method=PUT" method="post")
-      label(for="longitud") Longitud:
-      input(type="text" id="longitud" name="longitud" value=depositoP.longitud required)
-      label(for="latitud") Latitud:
-      input(type="text" id="latitud" name="latitud" value=depositoP.latitud required)
-      br
-      br
-    
-      button(type="submit") Actualizar
+- var title ='Actualizar Depósito Provincial'
+include ..\includes\layout
+block content
+html(lang="es") 
+    head
+       style.
+            #formDepositoProvincial {
+                max-width: 600px;
+                margin: auto;
+            }
+            h2 {
+                text-align: center;
+                text-decoration: underline;
+                text-underline-offset: 4px;
+                margin-top: 10px;
+            }
+            label {
+                margin-bottom: 5px;
+            }
+            .readonly-input {
+                color: gray;
+                background-color: #f0f0f0;
+            }
+
+    body
+        #formDepositoProvincial
+            h2.text-center Actualice el Depósito Provincial
+            br
+            form(action="/depositosprovincialess/"+depositoP.idDepositoProvincial+"?_method=PUT" method="post")
+                .form-group
+                    label.form-label(for="idDepositoProvincial") ID Depósito Provincial:
+                    input.form-control.readonly-input(type="text" id="idDepositoProvincial" name="idDepositoProvincial" value=depositoP.idDepositoProvincial readonly disabled)
+                br
+                .form-group
+                    label.form-label(for="longitud") Longitud:
+                    input.form-control(type="text" id="longitud" name="longitud" value=depositoP.longitud)
+                br
+                .form-group
+                    label.form-label(for="latitud") Latitud:
+                    input.form-control(type="text" id="latitud" name="latitud" value=depositoP.latitud)
+                br
+                button(type="submit" class="btn btn-primary") Actualizar

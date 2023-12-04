@@ -1,110 +1,137 @@
-head
-    title Lote Interno
-section#formLoteInterno
-h2 Actualice el lote interno
-form(action="/lotesinternos/"+loteInterno.numeroDeSerie+"?_method=PUT" method="post")
-    label(for="idLaboratorio") Laboratorio:
-        select#laboratorioSelect(name="idLaboratorio")
-            each lab in laboratorios
-                if loteInterno.idLaboratorio==lab.idLaboratorio
-                    option(value=lab.idLaboratorio selected)=lab.nombreLaboratorio
-                else
-                    option(value=lab.idLaboratorio)=lab.nombreLaboratorio
-
-    label(for="num-lote") Lote Proveedor:
-        select#loteProveedorSelect(name="numeroDeLote")
-            each numLote in lotesProveedores
-                if loteInterno.numeroDeLote==numLote.numeroDeLote
-                    option(value=numLote.numeroDeLote selected)=numLote.numeroDeLote
-                else
-                    option(value=numLote.numeroDeLote)= numLote.numeroDeLote
-    br
-    br
-    label(for="cant-vac") Cantidad de Vacunas:
-    input(type="text" id="cant-vac" name="cantidadDeVacunas" value=loteInterno.cantidadDeVacunas required)
-    br
-    br
-    label(for="id-deponac") Depósito Nacional:
-        select#idDepositoNacional(name="idDepositoNacional")
-            each depN in depositosNacionales
-                if loteInterno.idDepositoNacional==depN.idDepositoNacional && loteInterno.idDepositoNacional != null
-                    option(depN.idDepositoNacional)=depN.idDepositoNacional
-                    option(value="") Ningún depósito
-            if loteInterno.idDepositoNacional != null
-                each depN in depositosNacionales
-                    if loteInterno.idDepositoNacional==depN.idDepositoNacional
-                        break
-                    else
-                        option(depN.idDepositoNacional)=depN.idDepositoNacional
-            else
-                option(value="") Seleccione un depósito nacional
-                each depN in depositosNacionales
-                    option(depN.idDepositoNacional)=depN.idDepositoNacional
-    br
-    br
-    label(for="fecha-lleg-depos-nac") Fecha Llegada Depósito Nacional:
-        if loteInterno.fechaDeLlegadaDepositoNacional != null
-            input(type="date" id="fecha-lleg-depos-nac" name="fechaDeLlegadaDepositoNacional" class="fecha-llegada" value=loteInterno.fechaDeLlegadaDepositoNacional)
-        else
-            input(type="date" id="fecha-lleg-depos-nac" name="fechaDeLlegadaDepositoNacional" class="fecha-llegada")
-    label(for="fecha-salida-depos-nac") Fecha Salida Depósito Nacional:
-        if loteInterno.fechaDeSalidaDepositoNacional != null
-            input(type="date" id="fecha-salida-depos-nac" name="fechaDeSalidaDepositoNacional" class="fecha-salida" value=loteInterno.fechaDeSalidaDepositoNacional)
-        else
-            input(type="date" id="fecha-salida-depos-nac" name="fechaDeSalidaDepositoNacional" class="fecha-salida")
-    br
-    br
-    label(for="id-depprov") Depósito Provincial:
-        select#idDepositoProvincial(name="idDepositoProvincial")
-            each depP in depositosProvinciales
-                if loteInterno.idDepositoProvincial==depP.idDepositoProvincial && loteInterno.idDepositoProvincial != null
-                    option(depP.idDepositoProvincial)=depP.idDepositoProvincial
-                    option(value="") Ningún depósito
-            if loteInterno.idDepositoProvincial != null
-                each depP in depositosProvinciales
-                    if loteInterno.idDepositoProvincial==depP.idDepositoProvincial
-                        break
-                    else
-                        option(depP.idDepositoProvincial)=depP.idDepositoProvincial
-            else
-                option(value="") Seleccione un depósito provincial
-                each depP in depositosProvinciales
-                    option(depP.idDepositoProvincial)=depP.idDepositoProvincial
-
-    br
-    br
-    label(for="fecha-lleg-depos-prov") Fecha Llegada Depósito Provincial:
-    input(type="date" id="fecha-lleg-depos-prov" name="fechaDeLlegadaDepositoProvincial"  value=loteInterno.fechaDeLlegadaDepositoProvincial)
-    label(for="fecha-salida-depos-prov") Fecha Salida Depósito Provincial:
-        if loteInterno.fechaDeSalidaDepositoProvincial != null
-            input(type="date" id="fecha-salida-depos-prov" name="fechaDeSalidaDepositoProvincial" value=loteInterno.fechaDeSalidaDepositoProvincial)
-        else
-            input(type="date" id="fecha-salida-depos-prov" name="fechaDeSalidaDepositoProvincial")
-        br
-    br
-    label(for="id-ctrovac") Centro de Vacunacion:
-        select#idCentroDeVacunacion(name="idCentroDeVacunacion")
-            each ctrosDeVac in centrosDeVacunaciones
-                if loteInterno.idCentroDeVacunacion==ctrosDeVac.idCentroDeVacunacion && loteInterno.idCentroDeVacunacion != null
-                    option(ctrosDeVac.idCentroDeVacunacion)=ctrosDeVac.idCentroDeVacunacion
-                    option(value="") Ningún centro de vacunación
-            if loteInterno.idCentroDeVacunacion != null
-                each ctrosDeVac in centrosDeVacunaciones
-                    if loteInterno.idCentroDeVacunacion==ctrosDeVac.idCentroDeVacunacion
-                        break
-                    else
-                        option(ctrosDeVac.idCentroDeVacunacion)=ctrosDeVac.idCentroDeVacunacion
-            else
-                option(value="") Selecciona un Centro de Vacunación
-                    each cvac in centrosDeVacunaciones
-                        option(value=cvac.idCentroDeVacunacion)= cvac.idCentroDeVacunacion
-    br
-    br           
-    label(for="fecha-lleg-ctro-vac") Fecha Llegada Centro Vacunación:
-        if loteInterno.fechaDeLlegadaCentroDeVacunacion != null
-            input(type="date" id="fecha-lleg-ctro-vac" name="fechaDeLlegadaCentroDeVacunacion" value=loteInterno.fechaDeLlegadaCentroDeVacunacion)
-        else
-            input(type="date" id="fecha-lleg-ctro-vac" name="fechaDeLlegadaCentroDeVacunacion")
-    br
-    br
-    button(type="submit") Actualizar
+- var title ='Actualizar Lote Interno'
+include ..\includes\layout
+block content
+html(lang="es")
+    head
+        style.
+            #formLoteInterno {
+                max-width: 600px;
+                margin: auto;
+            }
+            h2 {
+                text-align: center;
+                text-decoration: underline;
+                text-underline-offset: 4px;
+                margin-top: 10px;
+            }
+            label {
+                margin-bottom: 5px;
+            }
+            .fecha-salida,
+            .fecha-llegada {
+                width: 600px;
+            }
+    body
+        #formLoteInterno
+            h2.text-center Actualice el Lote Interno
+            br
+            form(action="/lotesinternos/"+loteInterno.numeroDeSerie+"?_method=PUT" method="post")
+                .form-group
+                    label.form-label(for="idLaboratorio") Laboratorio:
+                    select.form-control#laboratorioSelect(name="idLaboratorio")
+                        each lab in laboratorios
+                            if loteInterno.idLaboratorio==lab.idLaboratorio
+                                option(value=lab.idLaboratorio selected)=lab.nombreLaboratorio
+                            else
+                                option(value=lab.idLaboratorio)=lab.nombreLaboratorio
+                br
+                .form-group
+                    label.from-label(for="num-lote") Lote Proveedor:
+                    select.form-control#loteProveedorSelect(name="numeroDeLote")
+                        each numLote in lotesProveedores
+                            if loteInterno.numeroDeLote==numLote.numeroDeLote
+                                option(value=numLote.numeroDeLote selected)=numLote.numeroDeLote
+                            else
+                                option(value=numLote.numeroDeLote)= numLote.numeroDeLote
+                br
+                .form-group
+                    label.from-label(for="cant-vac") Cantidad de Vacunas:
+                    input.form-control(type="text" id="cant-vac" name="cantidadDeVacunas" value=loteInterno.cantidadDeVacunas required)
+                br
+                .form-group
+                    label.form-label(for="id-deponac") Depósito Nacional:
+                    select.form-control#idDepositoNacional(name="idDepositoNacional")
+                        each depN in depositosNacionales
+                            if loteInterno.idDepositoNacional==depN.idDepositoNacional && loteInterno.idDepositoNacional != null
+                                option(depN.idDepositoNacional)=depN.idDepositoNacional
+                                option(value="") Ningún depósito
+                        if loteInterno.idDepositoNacional != null
+                            each depN in depositosNacionales
+                                if loteInterno.idDepositoNacional==depN.idDepositoNacional
+                                    break
+                                else
+                                    option(depN.idDepositoNacional)=depN.idDepositoNacional
+                        else
+                            option(value="") Seleccione un depósito nacional
+                            each depN in depositosNacionales
+                                option(depN.idDepositoNacional)=depN.idDepositoNacional
+                br
+                .form-group
+                    label.form-label(for="fecha-lleg-depos-nac") Fecha Llegada Depósito Nacional:
+                        if loteInterno.fechaDeLlegadaDepositoNacional != null
+                            input.form-control(type="date" id="fecha-lleg-depos-nac" name="fechaDeLlegadaDepositoNacional" class="fecha-llegada" value=loteInterno.fechaDeLlegadaDepositoNacional)
+                        else
+                            input.form-control(type="date" id="fecha-lleg-depos-nac" name="fechaDeLlegadaDepositoNacional" class="fecha-llegada")
+                br
+                .form-group    
+                    label.form-label(for="fecha-salida-depos-nac") Fecha Salida Depósito Nacional:
+                        if loteInterno.fechaDeSalidaDepositoNacional != null
+                            input.form-control(type="date" id="fecha-salida-depos-nac" name="fechaDeSalidaDepositoNacional" class="fecha-salida" value=loteInterno.fechaDeSalidaDepositoNacional)
+                        else
+                            input.form-control(type="date" id="fecha-salida-depos-nac" name="fechaDeSalidaDepositoNacional" class="fecha-salida")
+                br
+                .form-group
+                    label.form-label(for="id-depprov") Depósito Provincial:
+                    select.form-control#idDepositoProvincial(name="idDepositoProvincial")
+                        each depP in depositosProvinciales
+                            if loteInterno.idDepositoProvincial==depP.idDepositoProvincial && loteInterno.idDepositoProvincial != null
+                                option(depP.idDepositoProvincial)=depP.idDepositoProvincial
+                                option(value="") Ningún depósito
+                        if loteInterno.idDepositoProvincial != null
+                            each depP in depositosProvinciales
+                                if loteInterno.idDepositoProvincial==depP.idDepositoProvincial
+                                    break
+                                else
+                                    option(depP.idDepositoProvincial)=depP.idDepositoProvincial
+                        else
+                            option(value="") Seleccione un depósito provincial
+                            each depP in depositosProvinciales
+                                option(depP.idDepositoProvincial)=depP.idDepositoProvincial
+                br
+                .form-group
+                    label.form-label(for="fecha-lleg-depos-prov") Fecha Llegada Depósito Provincial:
+                    input.form-control(type="date" id="fecha-lleg-depos-prov" name="fechaDeLlegadaDepositoProvincial"  value=loteInterno.fechaDeLlegadaDepositoProvincial)
+                br
+                .form-group    
+                    label.form-label(for="fecha-salida-depos-prov") Fecha Salida Depósito Provincial:
+                        if loteInterno.fechaDeSalidaDepositoProvincial != null
+                            input.form-control(type="date" id="fecha-salida-depos-prov" name="fechaDeSalidaDepositoProvincial" class="fecha-llegada" value=loteInterno.fechaDeSalidaDepositoProvincial)
+                        else
+                            input.form-control(type="date" id="fecha-salida-depos-prov" name="fechaDeSalidaDepositoProvincial" class="fecha-llegada")
+                br
+                .form-group
+                    label.form-label(for="id-ctrovac") Centro de Vacunacion:
+                    select.form-control#idCentroDeVacunacion(name="idCentroDeVacunacion")
+                        each ctrosDeVac in centrosDeVacunaciones
+                            if loteInterno.idCentroDeVacunacion==ctrosDeVac.idCentroDeVacunacion && loteInterno.idCentroDeVacunacion != null
+                                option(ctrosDeVac.idCentroDeVacunacion)=ctrosDeVac.idCentroDeVacunacion
+                                option(value="") Ningún centro de vacunación
+                        if loteInterno.idCentroDeVacunacion != null
+                            each ctrosDeVac in centrosDeVacunaciones
+                                if loteInterno.idCentroDeVacunacion==ctrosDeVac.idCentroDeVacunacion
+                                    break
+                                else
+                                    option(ctrosDeVac.idCentroDeVacunacion)=ctrosDeVac.idCentroDeVacunacion
+                        else
+                            option(value="") Selecciona un Centro de Vacunación
+                                each cvac in centrosDeVacunaciones
+                                    option(value=cvac.idCentroDeVacunacion)= cvac.idCentroDeVacunacion
+                br
+                .form-group           
+                    label.form-label(for="fecha-lleg-ctro-vac") Fecha Llegada Centro Vacunación:
+                        if loteInterno.fechaDeLlegadaCentroDeVacunacion != null
+                            input.form-control(type="date" id="fecha-lleg-ctro-vac" name="fechaDeLlegadaCentroDeVacunacion" class="fecha-llegada" value=loteInterno.fechaDeLlegadaCentroDeVacunacion)
+                        else
+                            input.form-control(type="date" id="fecha-lleg-ctro-vac" name="fechaDeLlegadaCentroDeVacunacion" class="fecha-llegada")
+                br
+                button(type="submit" class="btn btn-primary") Actualizar

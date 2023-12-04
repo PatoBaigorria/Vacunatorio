@@ -1,43 +1,61 @@
-head
-    title Lote Proveedor
-section#formLoteProveedor
-h2 Ingresar un Lote Proveedor
-form(action=`/lotesproveedores/${loteProveedor.numeroDeLote}?_method=PUT` method="post")
-    label(for="idLaboratorio") Laboratorio:
-        select#laboratorioSelect(name="idLaboratorio")
-            each lab in laboratorios
-                if loteProveedor.idLaboratorio==lab.idLaboratorio
-                    option(value=loteProveedor.idLaboratorio)=lab.nombreLaboratorio
-            each lab in laboratorios
-                if loteProveedor.idLaboratorio==lab.idLaboratorio
-                    break
-                else
-                    option(value=lab.idLaboratorio)=lab.nombreLaboratorio
-    br
-    br
-    label(for="tipo-vac") Tipo de Vacuna:
-    input(type="text" id="tipo-vac" name="tipoDeVacuna" value=loteProveedor.tipoDeVacuna required)
-    br
-    br
-    label(for="nombre-vac") Nombre Comercial de la Vacuna:
-    input(type="text" id="nombre-vac" name="nombreComercial" value=loteProveedor.nombreComercial required)
-    br
-    br
-    label(for="cant-lote-int") Cantidad de Lotes Internos:
-    input(type="text" id="cant-lote-int" name="cantidadDeLotesInternos" value=loteProveedor.cantidadDeLotesInternos required)
-    br
-    br
-    label(for="fecha-fab") Fecha de Fabricación de la Vacuna:
-    input(type="date" id="fecha-fab" name="fechaDeFabricacion" value=loteProveedor.fechaDeFabricacion required)
-    br
-    br
-    label(for="fecha-compra") Fecha de Compra de la Vacuna:
-    input(type="date" id="fecha-compra" name="fechaDeCompra" value=loteProveedor.fechaDeCompra required)
-    br
-    br
-    label(for="fecha-vto") Fecha de Vencimiento de la Vacuna:
-    input(type="date" id="fecha-vto" name="fechaDeVencimiento" value=loteProveedor.fechaDeVencimiento required)
-    br
-    br
-
-    button(type="submit") Actualizar
+- var title ='Actualizar Lote Proveedor'
+include ..\includes\layout
+block content
+html(lang="es")
+    head
+        style.
+            #formLoteProveedor {
+                max-width: 600px;
+                margin: auto;
+            }
+            h2 {
+                text-align: center;
+                text-decoration: underline;
+                text-underline-offset: 4px;
+                margin-top: 10px;
+            }
+            label {
+                margin-bottom: 5px;
+            }
+    body
+        #formLoteProveedor
+            h2.text-center Actualice el Lote Proveedor
+            br
+            form(action="/lotesproveedores/"+loteProveedor.numeroDeLote+"?_method=PUT" method="post")
+                .form-group
+                    label.form-label(for="idLaboratorio") Laboratorio:
+                    select.form-control#laboratorioSelect(name="idLaboratorio")
+                        each lab in laboratorios
+                            if loteProveedor.idLaboratorio==lab.idLaboratorio
+                                option(value=loteProveedor.idLaboratorio)=lab.nombreLaboratorio
+                        each lab in laboratorios
+                            if loteProveedor.idLaboratorio==lab.idLaboratorio
+                                break
+                            else
+                                option(value=lab.idLaboratorio)=lab.nombreLaboratorio
+                br
+                .form-group
+                    label.form-label(for="tipo-vac") Tipo de Vacuna:
+                    input.form-control(type="text" id="tipo-vac" name="tipoDeVacuna" value=loteProveedor.tipoDeVacuna required)
+                br
+                .form-group
+                    label.form-label(for="nombre-vac") Nombre Comercial de la Vacuna:
+                    input.form-control(type="text" id="nombre-vac" name="nombreComercial" value=loteProveedor.nombreComercial required)
+                br
+                .form-group
+                    label.form-label(for="cant-lote-int") Cantidad de Lotes Internos:
+                    input.form-control(type="text" id="cant-lote-int" name="cantidadDeLotesInternos" value=loteProveedor.cantidadDeLotesInternos required)
+                br
+                .form-group
+                    label.form-label(for="fecha-fab") Fecha de Fabricación de la Vacuna:
+                    input.form-control(type="date" id="fecha-fab" name="fechaDeFabricacion" value=loteProveedor.fechaDeFabricacion required)
+                br
+                .form-group
+                    label.form-label(for="fecha-compra") Fecha de Compra de la Vacuna:
+                    input.form-control(type="date" id="fecha-compra" name="fechaDeCompra" value=loteProveedor.fechaDeCompra required)
+                br
+                .form-group
+                    label.form-label(for="fecha-vto") Fecha de Vencimiento de la Vacuna:
+                    input.form-control(type="date" id="fecha-vto" name="fechaDeVencimiento" value=loteProveedor.fechaDeVencimiento required)
+                br
+                button(type="submit" class="btn btn-primary") Actualizar

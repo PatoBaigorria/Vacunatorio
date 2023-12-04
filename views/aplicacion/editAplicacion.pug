@@ -1,42 +1,65 @@
-head
-    title Aplicacion Vacunas
-section#formAplicacion
-h2 Editar Aplicación de Vacunas
-form(action="/aplicaciones/"+aplicacion.idAplicacion+"?_method=PUT" method="post")
-        label(for="DNIPaciente") Seleccione un Paciente:
-        select(name="DNIPaciente" id="DNIPaciente" onchange=`agenteS(${JSON.stringify(agentes)}, ${JSON.stringify(personas)})` required)
-            each persona in personas
-                if(persona.DNI === aplicacion.DNIPaciente)
-                    option(value=persona.DNI selected) #{persona.nombre} #{persona.apellido}
-                else
-                    option(value=persona.DNI) #{persona.nombre} #{persona.apellido}
-        br
-        br
-
-        label(for="DNIAgente") Seleccione un Agente de Salud:
-        select(name="DNIAgente" id="DNIAgente" class="DNIAgente" required)
-            each persona in personas
-                if(persona.DNI === aplicacion.DNIAgente)
-                    option(value=aplicacion.DNIAgente) #{persona.nombre} #{persona.apellido}
-        br
-        br
-        
-        label(for="numeroDeSerie") Seleccione el Lote de Vacunas que se Aplicara al Paciente:
-            select(name="numeroDeSerie" id="numeroDeSerie" required)
-                each lote in lotes
-                    if(lote.numeroDeSerie === aplicacion.numeroDeSerie)
-                        option(value=lote.numeroDeSerie selected) #{lote.numeroDeSerie}
-                    else
-                        option(value=lote.numeroDeSerie) #{lote.numeroDeSerie}
-        br
-        br
-        
-        label(for="fechaDeAplicacion") Fecha de Aplicación:
-        input(type="date" name="fechaDeAplicacion" id="fechaDeAplicacion" value=aplicacion.fechaDeAplicacion required)
-        br
-        br
-
-        button(type="submit") Actualizar
+- var title ='Actualizar Aplicacion de Vacunas'
+include ..\includes\layout
+block content
+html(lang="es")
+    head
+        style.
+            #formAplicacion {
+                max-width: 600px;
+                margin: auto;
+            }
+            h2 {
+                text-align: center;
+                text-decoration: underline;
+                text-underline-offset: 4px;
+                margin-top: 10px;
+            }
+            label {
+                margin-bottom: 5px;
+            }
+            .readonly-input {
+                color: gray;
+                background-color: #f0f0f0;
+            }
+    body
+        #formAplicacion
+            h2.text-center Actualice la Aplicación de Vacunas
+            br
+            form(action="/aplicaciones/"+aplicacion.idAplicacion+"?_method=PUT" method="post")
+                .form-group
+                    label.form-label(for="idAplicacion") ID Aplicación:
+                    input.form-control.readonly-input(type="text" id="idAplicacion" name="idAplicacion" value=aplicacion.idAplicacion readonly disabled)
+                br
+                .form-group
+                    label.form-label(for="DNIPaciente") Seleccione un Paciente:
+                    select.form-control(name="DNIPaciente" id="DNIPaciente" onchange=`agenteS(${JSON.stringify(agentes)}, ${JSON.stringify(personas)})` required)
+                        each persona in personas
+                            if(persona.DNI === aplicacion.DNIPaciente)
+                                option(value=persona.DNI selected) #{persona.nombre} #{persona.apellido}
+                            else
+                                option(value=persona.DNI) #{persona.nombre} #{persona.apellido}
+                br
+                .form-group
+                    label.form-label(for="DNIAgente") Seleccione un Agente de Salud:
+                    select.form-control(name="DNIAgente" id="DNIAgente" class="DNIAgente" required)
+                        each persona in personas
+                            if(persona.DNI === aplicacion.DNIAgente)
+                                option(value=aplicacion.DNIAgente) #{persona.nombre} #{persona.apellido}
+                br
+                .form-group
+                    label.form-label(for="numeroDeSerie") Seleccione el Lote de Vacunas que se Aplicara al Paciente:
+                    select.form-control(name="numeroDeSerie" id="numeroDeSerie" required)
+                        each lote in lotes
+                            if(lote.numeroDeSerie === aplicacion.numeroDeSerie)
+                                option(value=lote.numeroDeSerie selected) #{lote.numeroDeSerie}
+                            else
+                                option(value=lote.numeroDeSerie) #{lote.numeroDeSerie}
+                br
+                .form-group
+                    label.form-label(for="fechaDeAplicacion") Fecha de Aplicación:
+                    input.form-control(type="date" name="fechaDeAplicacion" id="fechaDeAplicacion" value=aplicacion.fechaDeAplicacion required)
+                br
+                button(type="submit" class="btn btn-primary") Actualizar
 
 script.
     function agenteS(agentes, pacientes) {

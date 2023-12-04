@@ -1,31 +1,49 @@
-head
-    title Laboratorio
-section#formLaboratorio
-h2 Editar Laboratorio
-form(action="/laboratorios/"+laboratorio.idLaboratorio+"?_method=PUT" method="post")
-    label(for="nombre") Nombre Laboratorio:
-    input(type="text" id="nombre" name="nombreLaboratorio" value=laboratorio.nombreLaboratorio required)
-    br
-    br
-    label(for="pais") País:
-    input(type="text" id="pais" name="pais" value=laboratorio.pais required)
-    br
-    br
-    label(for="email") Email:
-    input(type="text" id="email" name="email" value=laboratorio.email required)
-    br
-    br
-    label(for="telefono") Teléfono:
-    input(type="text" id="telefono" name="telefono" value=laboratorio.telefono required)
-    br
-    br
-    label(for="longitud") Longitud:
-    input(type="text" id="longitud" name="longitud" value=laboratorio.longitud required)
-    br
-    br
-    label(for="latitud") Latitud:
-    input(type="text" id="latitud" name="latitud" value=laboratorio.latitud required)
-    br
-    br
-
-    button(type="submit") Actualizar
+- var title ='Actualizar Laboratorio'
+include ..\includes\layout
+block content
+html(lang="es") 
+    head
+       style.
+            #formLaboratorio {
+                max-width: 600px;
+                margin: auto;
+            }
+            h2 {
+                text-align: center;
+                text-decoration: underline;
+                text-underline-offset: 4px;
+                margin-top: 10px;
+            }
+            label {
+                margin-bottom: 5px;
+            }
+    body
+        #formLaboratorio
+            h2.text-center Actualice el Laboratorio
+            br
+            form(action="/laboratorios/"+laboratorio.idLaboratorio+"?_method=PUT" method="post")
+                .form-group
+                    label.form-label(for="nombre") Nombre Laboratorio:
+                    input.form-control(type="text" id="nombre" name="nombreLaboratorio" value=laboratorio.nombreLaboratorio required)
+                br
+                .form-group
+                    label.form-label(for="pais") País:
+                    input.form-control(type="text" id="pais" name="pais" value=laboratorio.pais required)
+                br
+                .form-group
+                    label.form-label(for="email") Email:
+                    input.form-control(type="text" id="email" name="email" value=laboratorio.email required)
+                br
+                .form-group
+                    label.form-label(for="telefono") Teléfono:
+                    input.form-control(type="text" id="telefono" name="telefono" value=laboratorio.telefono required)
+                br
+                .form-group
+                    label.form-label(for="longitud") Longitud:
+                    input.form-control(type="text" id="longitud" name="longitud" value=laboratorio.longitud required)
+                br
+                .form-group
+                    label.form-label(for="latitud") Latitud:
+                    input.form-control(type="text" id="latitud" name="latitud" value=laboratorio.latitud required)
+                br
+                button(type="submit" class="btn btn-primary") Actualizar
