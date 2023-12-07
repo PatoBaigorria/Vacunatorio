@@ -1,38 +1,60 @@
-head
-    title Aplicacion Vacunas
-section#formAplicacion
-    h2 Crear Aplicación de Vacunas
-    form(action="/aplicaciones" method="post")
-        label(for="DNIPaciente") Paciente:
-        select(name="DNIPaciente" id="DNIPaciente" onchange=`agenteS(${JSON.stringify(agentes)}, ${JSON.stringify(personas)})` required)
-            option Seleccione un Paciente
-                each persona in personas
-                    option(value=persona.DNI) #{persona.nombre} #{persona.apellido}
-        br
-        br
-        
-        label(for="DNIAgente") Agente de Salud:
-        select(name="DNIAgente" id="DNIAgente" class="DNIAgente" required)
-            option Seleccione un Agente de Salud
-        br
-        br
-        
-        label(for="numeroDeSerie") Lote de Vacunas que se Aplicará al Paciente:
-        select(name="numeroDeSerie" id="numeroDeSerie" required)
-            option Seleccione un Lote
-                each lote in lotes
-                    option(value=lote.numeroDeSerie) #{lote.numeroDeSerie}
-        br
-        br
-        
-        label(for="fechaDeAplicacion") Fecha de Aplicación:
-        input(type="date" name="fechaDeAplicacion" id="fechaDeAplicacion" required)
-        br
-        br
-
-        button(type="submit") Guardar
+- var title ='Crear Aplicación de Vacunas'
+include ..\includes\layout
+block content
+html(lang="es")
+    head
+        style.
+            #formAplicacion {
+                max-width: 600px;
+                margin: auto;
+            }
+            h2 {
+                text-align: center;
+                text-decoration: underline;
+                text-underline-offset: 4px;
+                margin-top: 10px;
+            }
+            label {
+                margin-bottom: 5px;
+            }
+    body
+        #formAplicacion
+            h2.text-center Crear Aplicación de Vacunas
+            if messages.error
+                .alert.alert-danger
+                    = messages.error
+            br
+            form(action="/aplicaciones" method="post")
+                .form-group
+                    label.form-label(for="DNIPaciente") Paciente:
+                    select.form-control(name="DNIPaciente" id="DNIPaciente" onchange=`agenteS(${JSON.stringify(agentes)}, ${JSON.stringify(personas)})` required)
+                        option Seleccione un Paciente
+                            each persona in personas
+                                option(value=persona.DNI) #{persona.nombre} #{persona.apellido}
+                    br
+                .form-group
+                    label.form-label(for="DNIAgente") Agente de Salud:
+                    select.form-control(name="DNIAgente" id="DNIAgente" class="DNIAgente" required)
+                        option Seleccione un Agente de Salud
+                    br
+                .form-group    
+                    label.form-label(for="numeroDeSerie") Lote de Vacunas que se Aplicará al Paciente:
+                    select.form-control(name="numeroDeSerie" id="numeroDeSerie" required)
+                        option Seleccione un Lote
+                            each lote in lotes
+                                option(value=lote.numeroDeSerie) #{lote.numeroDeSerie}
+                    br
+                .form-group
+                    label.form-label(for="fechaDeAplicacion") Fecha de Aplicación:
+                    .input-group.has-validation
+                        input.form-control(type="date" name="fechaDeAplicacion" id="fechaDeAplicacion" required)
+                        #fechaInvalida.invalid-feedback(style="display: none") La fecha de aplicación debe ser igual o mayor a la actual
+                    br
+                button(type="submit" class="btn btn-primary") Guardar
 
 script.
+    const fechaAplicacionPattern = /^(20)\d\d-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$/;
+    
     function agenteS(agentes, pacientes) {
         let paciente = null
         let pacienteSelect = document.getElementById("DNIPaciente").value;
@@ -45,3 +67,43 @@ script.
             }
         }
     }
+    function validarRegex(regex){
+            if(!regex.test($(this).val())){
+                this.addClass('is-invalid');
+                this.removeClass('is-valid');
+            } else {
+                this.addClass('is-valid');
+                this.removeClass('is-invalid');
+            }
+        }
+   $(function () {
+        $('#fechaDeAplicacion').on('keyup', validarRegex.bind($('#fechaDeAplicacion'), fechaAplicacionPattern));
+
+        function validarFechaAplicacion() {
+            const fechaAplicacionValue = $('#fechaDeAplicacion').val();
+            const fechaActual = new Date().toISOString().split('T')[0]; // Obtiene la fecha actual en formato ISO yyyy-mm-dd
+        
+            if (fechaAplicacionPattern.test(fechaAplicacionValue) && fechaAplicacionValue >= fechaActual) {
+                $('#fechaDeAplicacion').addClass('is-valid').removeClass('is-invalid');
+                $('#fechaInvalida').hide();
+                return true;
+            } else {
+                $('#fechaDeAplicacion').addClass('is-invalid').removeClass('is-valid');
+                $('#fechaInvalida').show().text('La fecha debe ser igual o mayor a la actual');
+                return false;
+            }
+        }
+
+        $('#fechaDeAplicacion').change(function() {
+            validarFechaAplicacion();
+        });
+
+        $('#formAplicacion').submit(function(event) {
+            if (!validarFechaAplicacion()) {
+                event.preventDefault();
+            } else {
+            
+            }
+        });
+        
+    });

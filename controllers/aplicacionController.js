@@ -46,17 +46,26 @@ const crearAplicacion = async (req, res) => {
       agentes: agentes,
     });
   } catch (error) {
-    res.status(500).json({ message: "Error al crear la persona.", error: error.message });
+    res.status(500).json({ message: "Error al crear la aplicación.", error: error.message });
   }
 }
 
 // Crear una nueva aplicación
 const createAplicacion = async (req, res) => {
   try {
-    await Aplicacion.create(req.body);
+    const { DNIPaciente, DNIAgente, numeroDeSerie, fechaDeAplicacion } = req.body;
+    await Aplicacion.create({
+      DNIPaciente,
+      DNIAgente,
+      numeroDeSerie,
+      fechaDeAplicacion
+    });
+    req.flash('success', 'Aplicación creada exitosamente.');
     res.redirect("/aplicaciones");
   } catch (error) {
-    res.status(500).json({ message: "Error al crear la aplicación." });
+    console.error(error);
+    req.flash('error', 'Error al crear la aplicación.');
+    res.status(500).redirect("/aplicaciones/crear");
   }
 };
 // Obtener información completa de una aplicación por su ID
@@ -95,11 +104,13 @@ const updateAplicacion = async (req, res) => {
 const deleteAplicacion = async (req, res) => {
   try {
     await Aplicacion.destroy({
-      where: {
+      where: 
+      {
         idAplicacion: req.params.id
-      }
+      },
     });
-    res.redirect("/aplicaciones");
+    req.flash('success', 'Aplicación de Vacuna eliminada exitosamente.');
+    res.json({success:true});
   } catch (error) {
     res.status(500).json({ message: "Error al eliminar la aplicación." });
   }
