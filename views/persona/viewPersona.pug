@@ -1,3 +1,4 @@
+- var title = 'Listado de Personas'
 include ..\includes\layout
 block content
 head
@@ -10,20 +11,20 @@ head
         }
 body
     div.container.my-4
-      div.row
-        div.col-sm-13.col-md-13.col-lg-13.col-xl-13
-            section#viewPersonas
-                h2 Listado de Personas
-                br
-                if messages.success
-                    .alert.alert-success
-                        = messages.success
-                div(style="text-align: left;")
-                    a.btn.btn-primary.btn-lg(href="/personas/alta") Alta
+        div.row
+            div.col-sm-13.col-md-13.col-lg-13.col-xl-13
+                section#viewPersonas
+                    h2 Listado de Personas
                     br
-                    br
-                    div.table.responsive 
-                        table#personas.table.table-striped.table-bordered              
+                    if messages.success
+                        .alert.alert-success
+                            = messages.success
+                    div(style="text-align: left;")
+                        a.btn.btn-primary.btn-lg(href="/personas/alta") Alta
+                        br
+                        br
+                        div.table.responsive 
+                            table#personas.table.table-striped.table-bordered              
 script.
     let pers = !{JSON.stringify(Personas)};
 
@@ -66,11 +67,11 @@ script.
                 }
             ],
             columnDefs: [
-               // {orderable: false, targets:[13]}, // Columna de "Opciones"
-                {searchable: false, targets:[11, 12]},
-                {className: "dt-center", targets: [0, 3, 4, 5, 9, 13]},
-                { width: "7%", targets: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11] },
-                { width: "10%", targets: [13] }
+                // {orderable: false, targets:[13]}, // Columna de "Opciones"
+                    {searchable: false, targets:[11, 12]},
+                    {className: "dt-center", targets: [0, 3, 4, 5, 9, 13]},
+                    { width: "7%", targets: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11] },
+                    { width: "10%", targets: [13] }
             ]
         });
     });
@@ -99,7 +100,7 @@ script.
             } else {window.location.href= "/personas/" + data.DNI}
         })
     }); 
-    
+
     function crearP(){
         window.location.href= "/personas/alta"
     }
