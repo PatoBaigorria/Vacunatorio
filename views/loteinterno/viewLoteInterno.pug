@@ -16,39 +16,16 @@ body
             section#viewLotesInternos
                 h2 Listado de Lotes Internos
                 br
+                if messages.success
+                    .alert.alert-success
+                        = messages.success 
                 div(style="text-align: left;")
                     a.btn.btn-primary.btn-lg(href="/lotesinternos/crear") Crear
                     br
                     br
                     div.table.responsive
                         table#lotesinternos.table.table-striped.table-bordered
-            #mensajeModal.modal.fade(tabindex='-1' aria-labelledby='mensajeModalLabel' aria-hidden='true')
-                .modal-dialog
-                    .modal-content
-                        .modal-header
-                            h5#mensajeModalLabel.modal-title Mensaje
-                            button(type='button' class='btn-close' data-bs-dismiss='modal' aria-label='Close')
-                        .modal-body
-                            p#mensajeTexto
-script.
-  function mostrarMensaje() {
-    const successMessage = obtenerParametroURL('successMessage');
-    const errorMessage = obtenerParametroURL('errorMessage');
-    const mensajeModal = new bootstrap.Modal(document.getElementById('mensajeModal')); // Obtener el modal
 
-    if (successMessage) {
-      // Mostrar mensaje de éxito en el modal
-      document.getElementById('mensajeTexto').innerText = successMessage;
-      mensajeModal.show();
-    } else if (errorMessage) {
-      // Mostrar mensaje de error en el modal
-      document.getElementById('mensajeTexto').innerText = errorMessage;
-      mensajeModal.show();
-    }
-    console.log('El script se está ejecutando correctamente al cargar la página.');
-  }
-
-  window.onload = mostrarMensaje;
 
 script.
     let loteint = !{JSON.stringify(lotesInternos)};
@@ -64,14 +41,14 @@ script.
             columns:[
                 {data: 'numeroDeSerie', title: 'Número de Serie'},
                 {data: 'numeroDeLote', title: 'Número de Lote'},
-                {data: 'Loteproveedor.Laboratorio.nombreLaboratorio', title: 'Laboratorio fabricante'},
+                {data: 'Loteproveedor.Laboratorio.nombreLaboratorio', title: 'Laboratorio Fabricante'},
                 {data: 'cantidadDeVacunas', title: 'Cantidad de Vacunas'},
-                {data: 'fechaDeLlegadaDepositoNacional', title: 'Fecha de Llegada al Deposito Nacional'},
-                {data: 'idDepositoNacional', title: 'ID del Deposito Nacional'},
-                {data: 'fechaDeSalidaDepositoNacional', title: 'Fecha de Salida del Deposito Nacional'},
-                {data: 'fechaDeLlegadaDepositoProvincial', title: 'Fecha de Llegada al Deposito Provincial'},
-                {data: 'idDepositoProvincial', title: 'ID del Deposito Provincial'},
-                {data: 'fechaDeSalidaDepositoProvincial', title: 'Fecha de Salida del Deposito Provincial'},
+                {data: 'fechaDeLlegadaDepositoNacional', title: 'Fecha de Llegada al Depósito Nacional'},
+                {data: 'idDepositoNacional', title: 'ID del Depósito Nacional'},
+                {data: 'fechaDeSalidaDepositoNacional', title: 'Fecha de Salida del Depósito Nacional'},
+                {data: 'fechaDeLlegadaDepositoProvincial', title: 'Fecha de Llegada al Depósito Provincial'},
+                {data: 'idDepositoProvincial', title: 'ID del Depósito Provincial'},
+                {data: 'fechaDeSalidaDepositoProvincial', title: 'Fecha de Salida del Depósito Provincial'},
                 {data: 'fechaDeLlegadaCentroDeVacunacion', title: 'Fecha de Llegada al Centro de Vacunación'},
                 {data: 'idCentroDeVacunacion', title: 'ID del Centro de Vacunación'},
                 {
@@ -85,9 +62,9 @@ script.
             columnDefs: [
                 //{orderable: false, targets:[12]}, // Columna de "Opciones"
                 {searchable: false, targets:[1, 2, 3]},
-                {className: "dt-center", targets: [2, 3, 5, 8, 11]},
-                { width: "7%", targets: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11] },
-                { width: "10%", targets: [12] }
+                {className: "dt-center", targets: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]},
+                { width: "5%", targets: [0, 1, 2, 3, 5, 8, 9, 10, 11, 12] },
+                { width: "15%", targets: [4, 6, 7] }
             ]
         });
     });

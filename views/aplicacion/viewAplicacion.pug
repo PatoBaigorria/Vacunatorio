@@ -15,6 +15,9 @@ body
             section#viewAplicaciones
                 h2 Listado de Aplicaciones
                 br
+                if messages.success
+                    .alert.alert-success
+                        = messages.success 
                 div(style="text-align: left;")
                     a.btn.btn-primary.btn-lg(href="/aplicaciones/crear") Crear
                     br

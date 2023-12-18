@@ -53,6 +53,8 @@ html(lang="es")
                     #fechaInvalida.invalid-feedback(style="display: none") La fecha de llegada debe ser mayor o igual a la de salida 
                 br                
                 button(type="submit" class="btn btn-primary") Guardar
+                | &nbsp;&nbsp;&nbsp;&nbsp;
+                button(type="button" class="btn btn-primary" onclick="window.history.back()") Volver
     script.
             $(function () {
                 const fechaSalidaPattern = /^(20)\d\d-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$/;

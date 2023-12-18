@@ -97,8 +97,10 @@ const createLoteInterno = async (req, res) => {
       fechaDeLlegadaCentroDeVacunacion,
       idCentroDeVacunacion
     });
+    req.flash('success', 'Lote Interno creado exitosamente.');
     res.redirect("/lotesinternos");
   } catch (error) {
+    req.flash('error', 'Error al crear el lote interno.');
     res.status(500).json({
       message: "Error al crear el lote interno. " + error.message
     });
@@ -190,95 +192,12 @@ const deleteLoteInterno = async (req, res) => {
         numeroDeSerie: req.params.id
       },
     });
-    res.redirect("/lotesinternos?successMessage=Lote interno eliminado correctamente");
+    req.flash('success', 'Lote Interno eliminado exitosamente.');
+    res.json({success:true});
   } catch (error) {
-    res.redirect("/lotesinternos?errorMessage=Error al eliminar el lote interno: " + error.message);
+    res.status(500).json({ message: "Error al eliminar el lote interno." });
   }
 };
-
-// Obtener el lote proveedor asociado a un lote interno por su número de serie
-/*const getLoteProveedorByLoteInternoSerie = async (req, res) => {
-  try {
-    const loteInterno = await LoteInterno.findByPk(req.params.numeroDeSerie, {
-      include: [LoteProveedor],
-    });
-
-    if (!loteInterno) {
-      return res.status(404).json({
-        message: "Lote interno no encontrado."
-      });
-    }
-
-    res.json(loteInterno.loteproveedor);
-  } catch (error) {
-    res.status(500).json({
-      message: "Error al obtener el lote proveedor asociado al lote interno.",
-    });
-  }
-};
-
-// Obtener el centro de vacunación asociado a un lote interno por su número de serie
-const getCentroDeVacunacionByLoteInternoSerie = async (req, res) => {
-  try {
-    const loteInterno = await LoteInterno.findByPk(req.params.numeroDeSerie, {
-      include: [CentroDeVacunacion],
-    });
-
-    if (!loteInterno) {
-      return res.status(404).json({
-        message: "Lote interno no encontrado."
-      });
-    }
-
-    res.json(loteInterno.centrodevacunacion);
-  } catch (error) {
-    res.status(500).json({
-      message: "Error al obtener el centro de vacunación asociado al lote interno.",
-    });
-  }
-};
-
-// Obtener las aplicaciones asociadas a un lote interno por su número de serie
-const getAplicacionesByLoteInternoSerie = async (req, res) => {
-  try {
-    const loteInterno = await LoteInterno.findByPk(req.params.numeroDeSerie, {
-      include: [Aplicacion],
-    });
-
-    if (!loteInterno) {
-      return res.status(404).json({
-        message: "Lote interno no encontrado."
-      });
-    }
-
-    res.json(loteInterno.aplicacions);
-  } catch (error) {
-    res.status(500).json({
-      message: "Error al obtener las aplicaciones asociadas al lote interno.",
-    });
-  }
-};
-
-// Obtener los descartes asociados a un lote interno por su número de serie
-const getDescartesByLoteInternoSerie = async (req, res) => {
-  try {
-    const loteInterno = await LoteInterno.findByPk(req.params.numeroDeSerie, {
-      include: [Descarte],
-    });
-
-    if (!loteInterno) {
-      return res.status(404).json({
-        message: "Lote interno no encontrado."
-      });
-    }
-
-    res.json(loteInterno.Descarte);
-  } catch (error) {
-    res.status(500).json({
-      message: "Error al obtener los descartes asociados al lote interno.",
-    });
-  }
-};*/
 
 module.exports = {
   listarLotesInternos,

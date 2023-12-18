@@ -15,15 +15,17 @@ body
             section#viewDescarte
                 h2 Listado de Descartes
                 br
+                if messages.success
+                    .alert.alert-success
+                        = messages.success
                 div(style="text-align: left;")
-                    a.btn.btn-primary.btn-lg(href="/descartes/alta") Crear
+                    a.btn.btn-primary.btn-lg(href="/descartes/crear") Crear
                     br
                     br
                     div.table.responsive
                         table#descartes.table.table-striped.table-bordered
 script.
-    let desc = !{JSON.stringify(Descartes)};
-    //let agentes = Persona.foreach(persona => {persona.ocupacion == 'agente de salud'});
+    let desc = !{JSON.stringify(descartes)};
     let desctab
     $(document).ready(function(){
         desctab = $('#descartes').DataTable({
@@ -69,3 +71,6 @@ script.
                 } else {window.location.href= "/descartes/" + data.idDescarte}
         })
     });
+    function crear(){
+        window.location.href= "/descartes/crear"
+    }

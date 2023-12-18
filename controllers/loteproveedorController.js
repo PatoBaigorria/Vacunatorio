@@ -4,7 +4,7 @@ const {
 } = require("../models/relaciones");
 
 // Obtener todos los lotes proveedores
-const getAllLotesProveedores = async (req, res) => {
+const listarLotesProveedores = async (req, res) => {
   try {
     const lotesProveedores = await LoteProveedor.findAll(
       { include: [{ model: Laboratorio, attributes: ['nombreLaboratorio', 'pais', 'email', 'telefono', 'longitud', 'latitud'] }] }
@@ -18,7 +18,7 @@ const getAllLotesProveedores = async (req, res) => {
   }
 };
 
-const altaLoteProveedor = async (req, res) => {
+const crearLoteProveedor = async (req, res) => {
   try {
     const laboratorios = await Laboratorio.findAll();
     res.render("loteproveedor/formLoteProveedor", { laboratorios: laboratorios });
@@ -43,15 +43,17 @@ const createLoteProveedor = async (req, res) => {
       fechaDeVencimiento,
       fechaDeCompra
     });
+    req.flash('success', 'Lote Proveedor creado exitosamente.');
     res.redirect("/lotesproveedores");
   } catch (error) {
+    req.flash('error', 'Error al crear el lote proveedor.');
     res.status(500).json({
-      message: "Error al crear el lote de proveedor."
+      message: "Error al crear el lote de proveedor." + error.message
     });
   }
 };
 
-const getLoteProveedorById = async (req, res) => {
+const editarLoteProveedor = async (req, res) => {
   try {
     const loteProveedor = await LoteProveedor.findByPk(req.params.id);
     const laboratorios = await Laboratorio.findAll();
@@ -87,64 +89,18 @@ const deleteLoteProveedor = async (req, res) => {
         numeroDeLote: req.params.id,
       }
     });
-    res.json({
-      message: "Lote proveedor eliminado correctamente."
-    });
+    req.flash('success', 'Lote Proveedor eliminado exitosamente.');
+    res.json({success:true});
   } catch (error) {
-    res.status(500).json({
-      message: "Error al eliminar el lote proveedor."
-    });
+    res.status(500).json({ message: "Error al eliminar el lote proveedor." });
   }
 };
-
-/*
-// Obtener el laboratorio asociado a un lote proveedor por su ID
-const getLaboratorioByLoteProveedorId = async (req, res) => {
-  try {
-    const loteProveedor = await Loteproveedor.findByPk(req.params.id, {
-      include: [Laboratorio],
-    });
-
-    if (!loteProveedor) {
-      return res.status(404).json({
-        message: "Lote proveedor no encontrado."
-      });
-    }
-
-    res.json(loteProveedor.laboratorio);
-  } catch (error) {
-    res.status(500).json({
-      message: "Error al obtener el laboratorio asociado al lote proveedor.",
-    });
-  }
-};
-
-// Obtener los lotes internos asociados a un lote proveedor por su ID
-const getLotesInternosByLoteProveedorId = async (req, res) => {
-  try {
-    const loteProveedor = await Loteproveedor.findByPk(req.params.id, {
-      include: [Loteinterno],
-    });
-
-    if (!loteProveedor) {
-      return res.status(404).json({
-        message: "Lote proveedor no encontrado."
-      });
-    }
-
-    res.json(loteProveedor.loteinternos);
-  } catch (error) {
-    res.status(500).json({
-      message: "Error al obtener los lotes internos del lote proveedor.",
-    });
-  }
-};*/
 
 module.exports = {
-  getAllLotesProveedores,
+  listarLotesProveedores,
   createLoteProveedor,
-  altaLoteProveedor,
+  crearLoteProveedor,
   updateLoteProveedor,
   deleteLoteProveedor,
-  getLoteProveedorById
+  editarLoteProveedor
 };

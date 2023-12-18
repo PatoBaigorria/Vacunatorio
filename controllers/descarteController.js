@@ -1,9 +1,9 @@
 const { Descarte, AgenteDeSalud, LoteInterno, Persona } = require("../models/relaciones");
 
 // Obtener todos los descartes
-const getAllDescartes = async (req, res) => {
+const listarDescartes = async (req, res) => {
   try {
-    const Descartes = await Descarte.findAll(
+    const descartes = await Descarte.findAll(
       {
         include: [{
           model: AgenteDeSalud,
@@ -16,29 +16,47 @@ const getAllDescartes = async (req, res) => {
         ]
       }
     );
-    res.render("descarte/viewDescarte", { Descartes: Descartes });
+    res.render("descarte/viewDescarte", { descartes: descartes });
   } catch (error) {
     res.status(500).json({ message: "Error al obtener los descartes. " + error.message });
   }
 };
 
-const altaDescartes = async (req, res) => {
-  const personas = await Persona.findAll();
-  const lotesInternos = await LoteInterno.findAll();
-  res.render("descarte/formDescarte", { personas: personas, lotesInternos: lotesInternos });
+const crearDescarte = async (req, res) => {
+  try {
+    const personas = await Persona.findAll();
+    const lotesInternos = await LoteInterno.findAll();
+    res.render("descarte/formDescarte", { 
+      personas: personas, 
+      lotesInternos: lotesInternos 
+    });
+  } catch (error) {
+    res.status(500).json({ message: "Error al obtener los descartes. " + error.message });
+  }
 };
 
 // Crear un nuevo descarte
 const createDescarte = async (req, res) => {
   try {
-    const nuevoDescarte = await Descarte.create(req.body);
-    res.redirect('/descartes')
+    const { DNIAgente, numeroDeSerie, empresaDescartante, motivo, cantidadDeVacunas, fechaDeDescarte } = req.body; 
+    await Descarte.create({
+      DNIAgente,
+      numeroDeSerie,
+      empresaDescartante,
+      motivo,
+      cantidadDeVacunas,
+      fechaDeDescarte
+    });
+    req.flash('success', 'Descarte creado exitosamente.');
+    res.redirect('/descartes');
   } catch (error) {
+    console.error(error);
+    req.flash('error', 'Error al crear el descarte.');
     res.status(500).json({ message: "Error al crear el descarte." });
   }
 };
 
-const editDescarteById = async (req, res) => {
+const editarDescarte = async (req, res) => {
   try {
     const descarte = await Descarte.findByPk(req.params.id);
     const personas = await Persona.findAll();
@@ -64,20 +82,24 @@ const updateDescarte = async (req, res) => {
 // Eliminar un descarte por su ID
 const deleteDescarte = async (req, res) => {
   try {
-    await Descarte.destroy({ where: { idDescarte: req.params.id } });
-    res.json({ message: "Descarte eliminado correctamente." });
+    await Descarte.destroy({ 
+      where: 
+      { 
+        idDescarte: req.params.id 
+      },
+    });
+    req.flash('success', 'Descarte de Vacuna eliminada exitosamente.');
+    res.json({ success: true });
   } catch (error) {
     res.status(500).json({ message: "Error al eliminar el descarte." });
   }
 };
 
-// Obtener el agente de salud asociado a un descarte por su ID
-
 module.exports = {
-  getAllDescartes,
-  altaDescartes,
-  editDescarteById,
+  listarDescartes,
+  crearDescarte,
   createDescarte,
+  editarDescarte,
   updateDescarte,
   deleteDescarte,
 };

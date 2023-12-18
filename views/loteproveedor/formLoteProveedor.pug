@@ -1,38 +1,172 @@
-head
-    title Lote Proveedor
-section#formLoteProveedor
-h2 Ingresar un Lote Proveedor
-form(action="/lotesproveedores" method="post")
-    label(for="idLaboratorio") Laboratorio:
-    select#laboratorioSelect(name="idLaboratorio")
-        option(value="") Selecciona un Laboratorio
-            each lab in laboratorios
-                option(value=lab.idLaboratorio)= lab.nombreLaboratorio
-    br
-    br
-    label(for="tipo-vac") Tipo de Vacuna:
-    input(type="text" id="tipo-vac" name="tipoDeVacuna" required)
-    br
-    br
-    label(for="nombre-vac") Nombre Comercial de la Vacuna:
-    input(type="text" id="nombre-vac" name="nombreComercial" required)
-    br
-    br
-    label(for="cant-lote-int") Cantidad de Lotes Internos:
-    input(type="text" id="cant-lote-int" name="cantidadDeLotesInternos" required)
-    br
-    br
-    label(for="fecha-fab") Fecha de Fabricación de la Vacuna:
-    input(type="date" id="fecha-fab" name="fechaDeFabricacion" required)
-    br
-    br
-    label(for="fecha-compra") Fecha de Compra de la Vacuna:
-    input(type="date" id="fecha-compra" name="fechaDeCompra" required)
-    br
-    br
-    label(for="fecha-vto") Fecha de Vencimiento de la Vacuna:
-    input(type="date" id="fecha-vto" name="fechaDeVencimiento" required)
-    br
-    br
+- var title ='Crear Lotes Proveedores';
+include ..\includes\layout
+block content
+html(lang="es")
+    head
+        style.
+            #formLoteProveedor {
+                max-width: 600px;
+                margin: auto;
+            }
+            h2 {
+                text-align: center;
+                text-decoration: underline;
+                text-underline-offset: 4px;
+                margin-top: 10px;
+            }
+            label {
+                margin-bottom: 5px;
+            }
+    body
+        #formLoteProveedor
+            h2.text-center Crear un Lote Proveedor
+            if messages.error
+                .alert.alert-danger
+                    = messages.error
+            br
+            form(action="/lotesproveedores" method="post")
+                .form-group
+                    label.form-label(for="idLaboratorio") Laboratorio:
+                    select.form-control#laboratorioSelect(name="idLaboratorio")
+                        option(value="") Selecciona un Laboratorio
+                            each lab in laboratorios
+                                option(value=lab.idLaboratorio)= lab.nombreLaboratorio
+                    br
+                .form-group
+                    label.form-label(for="tipo-vac") Tipo de Vacuna:
+                    .input-group.has-validation
+                        input.form-control(type="text" id="tipo-vac" name="tipoDeVacuna" required)
+                        .invalid-feedback(id="tipoVacInvalido") Ingrese solo letras
+                    br
+                .form-group
+                    label.form-label(for="nombre-vac") Nombre Comercial de la Vacuna:
+                    .input-group.has-validation
+                        input.form-control(type="text" id="nombre-vac" name="nombreComercial" required)
+                        .invalid-feedback(id="nombInvalido") Ingrese solo letras
+                    br
+                .form-group
+                    label.form-label(for="cant-lote-int") Cantidad de Lotes Internos:
+                    .input-group.has-validation
+                        input.form-control(type="text" id="cant-lote-int" name="cantidadDeLotesInternos" required)
+                        .invalid-feedback(id="cantLotesInvalido") Ingrese solo números positivos y mayor a cero
+                    br
+                .form-group
+                    label.form-label(for="fecha-fab") Fecha de Fabricación de la Vacuna:
+                    .input-group.has-validation
+                        input.form-control(type="date" id="fecha-fab" name="fechaDeFabricacion" required)
+                        #fechaInvalida.invalid-feedback(style="display: none") Ingrese una fecha válida a partir del año 2020
+                    br
+                .form-group
+                    label.form-label(for="fecha-compra") Fecha de Compra de la Vacuna:
+                    .input-group.has-validation
+                        input.form-control(type="date" id="fecha-compra" name="fechaDeCompra" required)
+                        #fechaInvalidaCompra.invalid-feedback(style="display: none") La fecha de compra debe ser mayor a la fecha de fabricación
+                    br
+                .form-group
+                    label.form-label(for="fecha-vto") Fecha de Vencimiento de la Vacuna:
+                    .input-group.has-validation
+                        input.form-control(type="date" id="fecha-vto" name="fechaDeVencimiento" required)
+                        #fechaInvalidaVto.invalid-feedback(style="display: none") Ingrese una fecha mayor a la fecha de compra
+                    br
+        
+                button(type="submit" class="btn btn-primary") Guardar
+                | &nbsp;&nbsp;&nbsp;&nbsp;
+                button(type="button" class="btn btn-primary" onclick="window.history.back()") Volver
+    script.
+        const tipoVacuna = /^[A-Za-záéíóúüñÁÉÍÓÚÜÑ\s]{1,30}$/;
+        const nombreVacuna = /^[A-Za-záéíóúüñÁÉÍÓÚÜÑ\s]{1,30}$/;
+        const cantLotesInt = /^(?!0+$)[0-9]+$/;
+        
 
-    button(type="submit") Guardar
+        function validarRegex(regex){
+            if(!regex.test($(this).val())){
+                this.addClass('is-invalid');
+                this.removeClass('is-valid');
+            } else {
+                this.addClass('is-valid');
+                this.removeClass('is-invalid');
+            }
+        }
+
+        $(function (){
+            const fechaFab = /^(20\d{2})-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$/;
+            const fechaCom = /^(20\d{2})-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$/;
+            const fechaVto = /^(20\d{2})-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$/;
+            $('#tipo-vac').on('keyup', validarRegex.bind($('#tipo-vac'), tipoVacuna));
+            $('#nombre-vac').on('keyup', validarRegex.bind($('#nombre-vac'), nombreVacuna));
+            $('#cant-lote-int').on('keyup', validarRegex.bind($('#cant-lote-int'), cantLotesInt));
+            
+            $('#fecha-fab').on('keyup', function() {
+            const fechaFabValue = new Date($(this).val());
+            const fechaInvalidaMsg = $('#fechaInvalida');
+
+            if (fechaFabValue.getFullYear() >= 2020) {
+                $('#fecha-fab').addClass('is-valid');
+                fechaInvalidaMsg.hide();
+            } else {
+                $('#fecha-fab').removeClass('is-valid');
+                fechaInvalidaMsg.show().text('Ingrese una fecha válida a partir del año 2020');
+            }
+
+            // Aquí puedes realizar otras acciones o lógica relacionada con la fecha de fabricación si es necesario
+        });
+
+            function validarFechaCompra() {
+                const fechaFabValue = new Date($('#fecha-fab').val());
+                const fechaComValue = new Date($('#fecha-compra').val());
+                const fechaInvalidaMsg = $('#fechaInvalidaCompra');
+
+                if (fechaComValue >= fechaFabValue) {
+                    $('#fecha-compra').addClass('is-valid').removeClass('is-invalid');
+                    fechaInvalidaMsg.hide();
+                    return true;
+                } else {
+                    $('#fecha-compra').addClass('is-invalid').removeClass('is-valid');
+                    fechaInvalidaMsg.show().text('La fecha de compra debe ser mayor a la fecha de fabricación');
+                    return false;
+                }
+            }
+
+            function validarFechaVto() {
+                const fechaComValue = new Date($('#fecha-compra').val());
+                const fechaVtoValue = new Date($('#fecha-vto').val());
+                const fechaInvalidaMsg = $('#fechaInvalidaVto');
+
+                if (fechaVtoValue > fechaComValue) {
+                    $('#fecha-vto').addClass('is-valid').removeClass('is-invalid');
+                    fechaInvalidaMsg.hide();
+                    return true;
+                } else {
+                    $('#fecha-vto').addClass('is-invalid').removeClass('is-valid');
+                    fechaInvalidaMsg.show().text('La fecha de vencimiento debe ser mayor a la fecha de compra');
+                    return false;
+                }
+            }
+
+            // Validación en tiempo real al escribir en cada campo de fecha
+            
+            $('#fecha-compra').on('keyup', function() {
+                validarFechaCompra();    
+            });
+
+            $('#fecha-vto').on('keyup', function() {
+                validarFechaVto();
+            });
+
+            // Validación al enviar el formulario
+            $('#formLoteProveedor').submit(function(event) {
+                event.preventDefault(); // Evitar el envío automático del formulario
+
+                const fechaFabValue = new Date($('#fecha-fab').val());
+                const fechaComValue = new Date($('#fecha-compra').val());
+                const fechaVtoValue = new Date($('#fecha-vto').val());
+                const fechaInvalidaMsg = $('#fechaInvalida');
+
+                if (fechaComValue >= fechaFabValue && fechaVtoValue > fechaComValue) {
+                    event.target.submit(); 
+                } else {
+                    fechaInvalidaMsg.show().text('Las fechas no son válidas');
+                }
+            });
+
+        });

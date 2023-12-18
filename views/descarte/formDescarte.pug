@@ -1,38 +1,124 @@
-head
-    title Descarte
-section#formDescarte
-h2 Ingresar un Descarte
-form(action="/descartes/" method="post")
-      label(for="persona") Seleccione un Agente de Salud existente:
-      select#personaSelect(name="DNIAgente")
-        option(value="") Seleccione un agente de salud para ingresar su matricula:
-            each persona in personas
-                if(persona.ocupacion === "agente de salud")
-                    option(value=persona.DNI)= persona.nombre + ' ' + persona.apellido
-      br
-      br
-      label(for="num-serie") Nº de Serie Lote Interno:
-      select#numeroDeSerieSelect(name="numeroDeSerie")
-            option(value="") Selecciona un Lote Interno
-                each loteI in lotesInternos
-                    option(value=loteI.numeroDeSerie)= loteI.numeroDeSerie
-      br
-      br
-      label(for="emp-desc") Empresa Descartante:
-      input(type="text" id="empr-desc" name="empresaDescartante" required)
-      br
-      br
-      label(for="motivo") Motivo Descarte:
-      input(type="text" id="motivo" name="motivo" required)
-      br
-      br
-      label(for="cant-vac") Cantidad de Vacunas:
-      input(type="number" id="cant-vac" name="cantidadDeVacunas" required)
-      br
-      br
-      label(for="fecha-desc") Fecha Descarte:
-      input(type="date" id="fecha-desc" name="fechaDeDescarte" required)
-      br
-      br
-      
-      button(type="submit") Guardar
+- var title ='Crear Descarte de Vacunas'
+include ..\includes\layout
+block content
+html(lang="es")
+    head
+        style.
+            #formDescarte {
+                max-width: 600px;
+                margin: auto;
+            }
+            h2 {
+                text-align: center;
+                text-decoration: underline;
+                text-underline-offset: 4px;
+                margin-top: 10px;
+            }
+            label {
+                margin-bottom: 5px;
+            }
+    body
+        #formDescarte
+            h2.text-center Crear un Descarte
+            if messages.error
+                .alert.alert-danger
+                    = messages.error
+            br
+            form(action="/descartes" method="post")
+                .form-group
+                    label.form-label(for="persona") Seleccione un Agente de Salud Existente:
+                    select.form-control#personaSelect(name="DNIAgente")
+                        option(value="") Seleccione un Agente de Salud
+                            each persona in personas
+                                if(persona.ocupacion === "agente de salud")
+                                    option(value=persona.DNI)= persona.nombre + ' ' + persona.apellido
+                    br
+                .form-group
+                    label.form-label(for="num-serie") Nº de Serie Lote Interno:
+                    .input-group.has-validation
+                    select.form-control#numeroDeSerieSelect(name="numeroDeSerie")
+                        option(value="") Selecciona un Lote Interno
+                            each loteI in lotesInternos
+                                option(value=loteI.numeroDeSerie)= loteI.numeroDeSerie
+                    br
+                .form-group
+                    label.form-label(for="emp-desc") Empresa Descartante:
+                    select.form-control(name="emp-desc" id="emp-desc" required)
+                        option Seleccione una Empresa
+                        option(value="Veolia") Veolia
+                        option(value="Clean Harbors") Clean Harbors
+                        option(value="Waste Management") Waste Management
+                        option(value="Stericycle") Stericycle
+                    br
+                .form-group
+                    label.form-label(for="motivo") Motivo Descarte:
+                    select.form-control(name="motivo" id="motivo" required)
+                        option Seleccione un Motivo
+                        option(value="Vencida") Vencida
+                        option(value="Rotura") Rotura
+                        option(value="Cadena Perdida de Frio") Cadena Pérdida de Frío
+                        option(value="Contaminacion") Contaminación
+                    br
+                .form-group
+                    label.form-label(for="cant-vac") Cantidad de Vacunas:
+                    .input-group.has-validation
+                        input.form-control(type="number" id="cant-vac" name="cantidadDeVacunas" required)
+                        .invalid-feedback(id="cantVacunasInvalido") Ingrese solo números positivos y mayor a cero
+                    br
+                .form-group
+                    label.form-label(for="fecha-desc") Fecha Descarte:
+                    .input-group.has-validation
+                        input.form-control(type="date" id="fecha-desc" name="fechaDeDescarte" required)
+                        #fechaInvalida.invalid-feedback(style="display: none") La fecha de descarte debe ser igual o mayor a la actual
+                    br
+                button(type="submit" class="btn btn-primary") Guardar
+                | &nbsp;&nbsp;&nbsp;&nbsp;
+                button(type="button" class="btn btn-primary" onclick="window.history.back()") Volver
+script.
+    const fechaDescartePattern = /^(20)\d\d-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$/;
+    const cantVacunas = /^(?!0+$)[0-9]+$/;
+    
+
+    function validarRegex(regex){
+            if(!regex.test($(this).val())){
+                this.addClass('is-invalid');
+                this.removeClass('is-valid');
+            } else {
+                this.addClass('is-valid');
+                this.removeClass('is-invalid');
+            }
+    }
+
+    $(function () {
+        
+        $('#cant-vac').on('keyup', validarRegex.bind($('#cant-vac'), cantVacunas));
+        $('#fecha-desc').on('keyup', validarRegex.bind($('#fecha-desc'), fechaDescartePattern));
+        
+        function validarFechaDescarte() {
+            const fechaDescarteValue = $('#fecha-desc').val();
+            const fechaActual = new Date().toISOString().split('T')[0]; // Obtiene la fecha actual en formato ISO yyyy-mm-dd
+        
+            if (fechaDescartePattern.test(fechaDescarteValue) && fechaDescarteValue >= fechaActual) {
+                $('#fecha-desc').addClass('is-valid').removeClass('is-invalid');
+                $('#fechaInvalida').hide();
+                return true;
+            } else {
+                $('#fecha-desc').addClass('is-invalid').removeClass('is-valid');
+                $('#fechaInvalida').show().text('La fecha debe ser igual o mayor a la actual');
+                return false;
+            }
+        }
+
+        $('#fecha-desc').change(function() {
+            validarFechaDescarte();
+        });
+
+        $('#formDescarte').submit(function(event) {
+            if (!validarFechaDescarte()) {
+                event.preventDefault();
+            } else {
+
+            }
+        });
+    });
+    

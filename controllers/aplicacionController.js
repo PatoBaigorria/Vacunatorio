@@ -65,10 +65,10 @@ const createAplicacion = async (req, res) => {
   } catch (error) {
     console.error(error);
     req.flash('error', 'Error al crear la aplicación.');
-    res.status(500).redirect("/aplicaciones/crear");
+    res.status(500).json({ message: "Error al crear la aplicación." });
   }
 };
-// Obtener información completa de una aplicación por su ID
+
 const editarAplicacion = async (req, res) => {
   try {
     const aplicacion = await Aplicacion.findByPk(req.params.id);
