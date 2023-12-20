@@ -28,7 +28,7 @@ html(lang="es")
             form(action="/lotesinternos/"+loteInterno.numeroDeSerie+"?_method=PUT" method="post")
                 .form-group
                     label.form-label(for="idLaboratorio") Laboratorio:
-                    select.form-control#laboratorioSelect(name="idLaboratorio")
+                    select.form-select#laboratorioSelect(name="idLaboratorio")
                         each lab in laboratorios
                             if loteInterno.idLaboratorio==lab.idLaboratorio
                                 option(value=lab.idLaboratorio selected)=lab.nombreLaboratorio
@@ -37,7 +37,7 @@ html(lang="es")
                 br
                 .form-group
                     label.from-label(for="num-lote") Lote Proveedor:
-                    select.form-control#loteProveedorSelect(name="numeroDeLote")
+                    select.form-select#loteProveedorSelect(name="numeroDeLote")
                         each numLote in lotesProveedores
                             if loteInterno.numeroDeLote==numLote.numeroDeLote
                                 option(value=numLote.numeroDeLote selected)=numLote.numeroDeLote
@@ -50,7 +50,7 @@ html(lang="es")
                 br
                 .form-group
                     label.form-label(for="id-deponac") Depósito Nacional:
-                    select.form-control#idDepositoNacional(name="idDepositoNacional")
+                    select.form-select#idDepositoNacional(name="idDepositoNacional")
                         each depN in depositosNacionales
                             if loteInterno.idDepositoNacional==depN.idDepositoNacional && loteInterno.idDepositoNacional != null
                                 option(depN.idDepositoNacional)=depN.idDepositoNacional
@@ -82,7 +82,7 @@ html(lang="es")
                 br
                 .form-group
                     label.form-label(for="id-depprov") Depósito Provincial:
-                    select.form-control#idDepositoProvincial(name="idDepositoProvincial")
+                    select.form-select#idDepositoProvincial(name="idDepositoProvincial")
                         each depP in depositosProvinciales
                             if loteInterno.idDepositoProvincial==depP.idDepositoProvincial && loteInterno.idDepositoProvincial != null
                                 option(depP.idDepositoProvincial)=depP.idDepositoProvincial
@@ -111,7 +111,7 @@ html(lang="es")
                 br
                 .form-group
                     label.form-label(for="id-ctrovac") Centro de Vacunacion:
-                    select.form-control#idCentroDeVacunacion(name="idCentroDeVacunacion")
+                    select.form-select#idCentroDeVacunacion(name="idCentroDeVacunacion")
                         each ctrosDeVac in centrosDeVacunaciones
                             if loteInterno.idCentroDeVacunacion==ctrosDeVac.idCentroDeVacunacion && loteInterno.idCentroDeVacunacion != null
                                 option(ctrosDeVac.idCentroDeVacunacion)=ctrosDeVac.idCentroDeVacunacion

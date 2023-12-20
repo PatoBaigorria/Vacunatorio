@@ -37,7 +37,7 @@ html(lang="es")
                 br
                 .form-group
                     label.form-label(for="num-serie") Nº de Serie Lote Interno:
-                    select.form-control#numeroDeSerieSelect(name="numeroDeSerie")
+                    select.form-select#numeroDeSerieSelect(name="numeroDeSerie")
                             each numSerie in lotesInternos
                                 if traslado.numeroDeSerie==numSerie.numeroDeSerie
                                     option(value=numSerie.numeroDeSerie)=numSerie.numeroDeSerie
@@ -49,7 +49,7 @@ html(lang="es")
                 br
                 .form-group
                     label.form-label(for="id-ctrovac") Centro de Vacunacion:
-                    select.form-control#idCentroDeVacunacion(name="idCentroDeVacunacion")
+                    select.form-select#idCentroDeVacunacion(name="idCentroDeVacunacion")
                         each cvac in centrosDeVacunacion
                             if traslado.idCentroDeVacunacion==cvac.idCentroDeVacunacion && traslado.idCentroDeVacunacion != null
                                 option(cvac.idCentroDeVacunacion)= cvac.idCentroDeVacunacion

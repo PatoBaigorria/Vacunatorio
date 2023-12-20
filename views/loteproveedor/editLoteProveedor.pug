@@ -24,7 +24,7 @@ html(lang="es")
             form(action="/lotesproveedores/"+loteProveedor.numeroDeLote+"?_method=PUT" method="post")
                 .form-group
                     label.form-label(for="idLaboratorio") Laboratorio:
-                    select.form-select#laboratorioSelect(name="idLaboratorio")
+                    select.form-select#laboratorioSelect(name="idLaboratorio" required)
                         each lab in laboratorios
                             if loteProveedor.idLaboratorio==lab.idLaboratorio
                                 option(value=loteProveedor.idLaboratorio)=lab.nombreLaboratorio
@@ -36,7 +36,7 @@ html(lang="es")
                 br
                 .form-group
                     label.form-label(for="tipo-vac") Tipo de Vacuna:
-                    select.form-select#tipoDeVacunaSelect(name="tipoDeVacuna")
+                    select.form-select#tipoDeVacunaSelect(name="tipoDeVacuna" required)
                         each vac in vacunas
                             if (vac === loteProveedor.tipoDeVacuna)
                                 option(value=vac selected)= vac
@@ -45,7 +45,7 @@ html(lang="es")
                 br
                 .form-group
                     label.form-label(for="nombre-vac") Nombre Comercial de la Vacuna:
-                    select.form-select#nombreComercialSelect(name="nombreComercial")
+                    select.form-select#nombreComercialSelect(name="nombreComercial" required)
                         each nomb in nombComercial
                             if (nomb === loteProveedor.nombreComercial)
                                 option(value=nomb selected)= nomb

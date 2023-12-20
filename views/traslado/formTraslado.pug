@@ -26,26 +26,26 @@ html(lang="es")
             br
             form(action="/traslados" method="post")
                 .form-group
-                    label(for="num-serie") Nº de Serie Lote Interno:
-                    .input-group.has-validation
-                        select.form-control#numeroDeSerieSelect(name="numeroDeSerie")
-                            option(value="") Selecciona un Lote Interno
-                                each loteI in lotesInternos
-                                    option(value=loteI.numeroDeSerie)= loteI.numeroDeSerie
-                       
+                    label.form-label(for="num-serie") Nº de Serie Lote Interno:
+                    select.form-select#numeroDeSerieSelect(name="numeroDeSerie" required)
+                        option(value="") Seleccione un Lote Interno
+                            each loteI in lotesInternos
+                                option(value=loteI.numeroDeSerie)= loteI.numeroDeSerie
+                    #numSerieInvalido.invalid-feedback
+                    br   
                 .form-group
-                    label(for="id-ctrovac") Centro de Vacunación:
-                    .input-group.has-validation
-                        select.form-control#idCentroDeVacunacion(name="idCentroDeVacunacion")
-                            option(value="") Selecciona un Centro de Vacunación
-                                each cvac in centrosDeVacunacion
-                                    option(value=cvac.idCentroDeVacunacion)= cvac.idCentroDeVacunacion
-                       
+                    label.form-label(for="id-ctrovac") Centro de Vacunación:
+                    select.form-select#idCentroDeVacunacion(name="idCentroDeVacunacion" required)
+                        option(value="") Seleccione un Centro de Vacunación
+                            each cvac in centrosDeVacunacion
+                                option(value=cvac.idCentroDeVacunacion)= cvac.idCentroDeVacunacion
+                    #idCentroInvalido.invalid-feedback
+                    br
                 .form-group
                     label.form-label(for="fecha-sal-trasl") Fecha Salida de Traslado:
                     .input-group.has-validation
                         input.form-control(type="date" id="fecha-sal-trasl" name="fechaDeSalida")
-                        
+                    br    
                 .form-group
                     label.form-label(for="fecha-lleg-trasl") Fecha Llegada de Traslado en Destino:
                     .input-group.has-validation
@@ -60,23 +60,72 @@ html(lang="es")
                 const fechaSalidaPattern = /^(20)\d\d-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$/;
                 const fechaLlegadaPattern = /^(20)\d\d-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$/;
 
+                $('#numeroDeSerieSelect').on('change', function () {
+                        validarTraslados();
+                    });
+
+                $('#idCentroDeVacunacion').on('change', function () {
+                    validarTraslados();
+                });
+
+                function validarTraslados(){
+                    const valorSeleccionadoLoteI = $('#numeroDeSerieSelect').val();
+                    const valorSeleccionadoCentroV = $('#idCentroDeVacunacion').val();
+                    const numSerieInvalidoMsg = $('#numSerieInvalido');
+                    const idCentroInvalidoMsg = $('#idCentroInvalido');
+                    let validacionLoteI = true;
+                    let validacionidCentro = true;
+
+                    if (valorSeleccionadoLoteI === '') {
+                        $('#numeroDeSerieSelect').addClass('is-invalid').removeClass('is-valid');
+                        numSerieInvalidoMsg.show().text('Debe seleccionar un Lote Interno');
+                        validacionLoteI = false;
+                    } else {
+                        $('#numeroDeSerieSelect').addClass('is-valid').removeClass('is-invalid');
+                        numSerieInvalidoMsg.hide();
+                    }
+                    
+                    if (valorSeleccionadoCentroV === '') {
+                        $('#idCentroDeVacunacion').addClass('is-invalid').removeClass('is-valid');
+                        idCentroInvalidoMsg.show().text('Debe seleccionar un Centro de Vacunación');
+                        validacionidCentro = false;
+                    } else {
+                        $('#idCentroDeVacunacion').addClass('is-valid').removeClass('is-invalid');
+                        idCentroInvalidoMsg.hide();     
+                    }
+                    return validacionLoteI && validacionidCentro;
+                }
+
+                $('#fecha-sal-trasl').on('change', function () {
+                    validarFechaSalida();
+                });
+
+                $('#fecha-lleg-trasl').on('change', function () {
+                    validarFechaLlegada();
+                });
+
                 function validarFechaSalida() {
-                    const fechaSalida = new Date($('#fecha-sal-trasl').val());
-                    if (fechaSalidaPattern.test($('#fecha-sal-trasl').val()) && fechaSalida <= new Date()) {
+                    const fechaSalidaValue = new Date($('#fecha-sal-trasl').val());
+                    const fechaInvalidaMsg = $('#fechaInvalida');
+
+                    if (fechaSalidaValue <= new Date()) {
                         $('#fecha-sal-trasl').addClass('is-valid').removeClass('is-invalid');
+                        fechaInvalidaMsg.hide();
+                        return true;
                     } else {
                         $('#fecha-sal-trasl').addClass('is-invalid').removeClass('is-valid');
+                        fechaInvalidaMsg.show().text('La fecha de salida debe ser menor o igual a la actual');
+                        return false;
                     }
                 }
 
+                    
                 function validarFechaLlegada() {
-                    const fechaSalida = new Date($('#fecha-sal-trasl').val());
-                    const fechaLlegada = new Date($('#fecha-lleg-trasl').val());
+                    const fechaSalidaValue = new Date($('#fecha-sal-trasl').val());
+                    const fechaLlegadaValue = new Date($('#fecha-lleg-trasl').val());
                     const fechaInvalidaMsg = $('#fechaInvalida');
-                    if (
-                        fechaLlegadaPattern.test($('#fecha-lleg-trasl').val()) &&
-                        fechaLlegada >= fechaSalida
-                    ) {
+
+                    if (fechaLlegadaValue >= fechaSalidaValue) {
                         $('#fecha-lleg-trasl').addClass('is-valid').removeClass('is-invalid');
                         fechaInvalidaMsg.hide();
                         return true;
@@ -88,10 +137,22 @@ html(lang="es")
                 }
 
                 $('#formTraslado').submit(function (event) {
-                    if (!validarFechaLlegada()) {
-                        event.preventDefault();
+                    event.preventDefault();
+
+                    const comboValido = validarTraslados();
+                    if (comboValido){
+                        const fechaSalidaValue = new Date($('#fecha-sal-trasl').val());
+                        const fechaLlegadaValue = new Date($('#fecha-lleg-trasl').val());
+                        const fechaInvalidaMsg = $('#fechaInvalida');
+
+                        if (fechaLlegadaValue >= fechaSalidaValue) {
+                            event.target.submit();
+                        } else {
+                            fechaInvalidaMsg.show().text('La fecha de llegada debe ser mayor o igual a la de salida');
+                        }
                     } else {
-                       
+                        
                     }
+                   
                 });
             });

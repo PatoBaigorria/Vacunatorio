@@ -32,7 +32,7 @@ html(lang="es")
                 br
                 .form-group
                     label.form-label(for="persona") Seleccione un Agente de Salud:
-                    select.form-control#personaSelect(name="DNIAgente")
+                    select.form-select#personaSelect(name="DNIAgente")
                         each persona in personas 
                             if(persona.DNI === descarte.DNIAgente)
                                 option(value=persona.DNI selected)= persona.nombre + ' ' + persona.apellido
@@ -41,7 +41,7 @@ html(lang="es")
                 br
                 .form-group
                     label.form-label(for="num-serie") Seleccione un Nº de Serie Lote Interno:
-                    select.form-control#numeroDeSerieSelect(name="numeroDeSerie")
+                    select.form-select#numeroDeSerieSelect(name="numeroDeSerie")
                         each loteI in lotesInternos
                             if(loteI.numeroDeSerie === descarte.numeroDeSerie)
                                 option(value=loteI.numeroDeSerie selected)= loteI.numeroDeSerie
@@ -50,7 +50,7 @@ html(lang="es")
                 br
                 .form-group
                     label.form-label(for="emp-desc") Empresa Descartante:
-                    select.form-control#empresaDescartanteSelect(name="empresaDescartante")
+                    select.form-select#empresaDescartanteSelect(name="empresaDescartante")
                         each emp in empresas
                             if(emp === descarte.empresaDescartante)
                                 option(value=emp selected)= emp
@@ -59,7 +59,7 @@ html(lang="es")
                 br
                 .form-group
                     label.form-label(for="motivo") Motivo Descarte:
-                    select.form-control#motivoSelect(name="motivo")
+                    select.form-select#motivoSelect(name="motivo")
                         each motivo in motivos
                             if(motivo === descarte.motivo)
                                 option(value=motivo selected)= motivo

@@ -32,7 +32,7 @@ html(lang="es")
                 br
                 .form-group
                     label.form-label(for="DNIPaciente") Seleccione un Paciente:
-                    select.form-control(name="DNIPaciente" id="DNIPaciente" onchange=`agenteS(${JSON.stringify(agentes)}, ${JSON.stringify(personas)})` required)
+                    select.form-select(name="DNIPaciente" id="DNIPaciente" onchange=`agenteS(${JSON.stringify(agentes)}, ${JSON.stringify(personas)})` required)
                         each persona in personas
                             if(persona.DNI === aplicacion.DNIPaciente)
                                 option(value=persona.DNI selected) #{persona.nombre} #{persona.apellido}
@@ -41,14 +41,14 @@ html(lang="es")
                 br
                 .form-group
                     label.form-label(for="DNIAgente") Seleccione un Agente de Salud:
-                    select.form-control(name="DNIAgente" id="DNIAgente" class="DNIAgente" required)
+                    select.form-select(name="DNIAgente" id="DNIAgente" class="DNIAgente" required)
                         each persona in personas
                             if(persona.DNI === aplicacion.DNIAgente)
                                 option(value=aplicacion.DNIAgente) #{persona.nombre} #{persona.apellido}
                 br
                 .form-group
                     label.form-label(for="numeroDeSerie") Seleccione el Lote de Vacunas que se Aplicara al Paciente:
-                    select.form-control(name="numeroDeSerie" id="numeroDeSerie" required)
+                    select.form-select(name="numeroDeSerie" id="numeroDeSerie" required)
                         each lote in lotes
                             if(lote.numeroDeSerie === aplicacion.numeroDeSerie)
                                 option(value=lote.numeroDeSerie selected) #{lote.numeroDeSerie}

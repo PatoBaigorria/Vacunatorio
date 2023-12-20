@@ -26,39 +26,42 @@ html(lang="es")
             br
             form(action="/descartes" method="post")
                 .form-group
-                    label.form-label(for="persona") Seleccione un Agente de Salud Existente:
-                    select.form-control#personaSelect(name="DNIAgente")
+                    label.form-label(for="DNIAgente") Seleccione un Agente de Salud Existente:
+                    select.form-select(name="DNIAgente" id="DNIAgente" required)
                         option(value="") Seleccione un Agente de Salud
                             each persona in personas
                                 if(persona.ocupacion === "agente de salud")
                                     option(value=persona.DNI)= persona.nombre + ' ' + persona.apellido
-                    br
+                #agenteInvalido.invalid-feedback    
+                br
                 .form-group
-                    label.form-label(for="num-serie") Nº de Serie Lote Interno:
-                    .input-group.has-validation
-                    select.form-control#numeroDeSerieSelect(name="numeroDeSerie")
+                    label.form-label(for="numeroDeSerie") Nº de Serie Lote Interno:
+                    select.form-select(name="numeroDeSerie" id="numeroDeSerie" required)
                         option(value="") Selecciona un Lote Interno
                             each loteI in lotesInternos
                                 option(value=loteI.numeroDeSerie)= loteI.numeroDeSerie
-                    br
+                #numSerieInvalido.invalid-feedback    
+                br
                 .form-group
-                    label.form-label(for="emp-desc") Empresa Descartante:
-                    select.form-control(name="empresaDescartante" id="emp-desc" required)
-                        option Seleccione una Empresa
+                    label.form-label(for="empresaDescartante") Empresa Descartante:
+                    select.form-select(name="empresaDescartante" id="empresaDescartante" required)
+                        option(value="") Seleccione una Empresa
                         option(value="Veolia") Veolia
                         option(value="Clean Harbors") Clean Harbors
                         option(value="Waste Management") Waste Management
                         option(value="Stericycle") Stericycle
-                    br
+                #empDescartanteInvalido.invalid-feedback    
+                br
                 .form-group
                     label.form-label(for="motivo") Motivo Descarte:
-                    select.form-control(name="motivo" id="motivo" required)
-                        option Seleccione un Motivo
+                    select.form-select(name="motivo" id="motivo" required)
+                        option(value="") Seleccione un Motivo
                         option(value="Vencida") Vencida
                         option(value="Rotura") Rotura
                         option(value="Cadena Pérdida de Frío") Cadena Pérdida de Frío
                         option(value="Contaminación") Contaminación
-                    br
+                #motivoInvalido.invalid-feedback    
+                br
                 .form-group
                     label.form-label(for="cant-vac") Cantidad de Vacunas:
                     .input-group.has-validation
@@ -66,17 +69,17 @@ html(lang="es")
                         .invalid-feedback(id="cantVacunasInvalido") Ingrese solo números positivos y mayor a cero
                     br
                 .form-group
-                    label.form-label(for="fecha-desc") Fecha Descarte:
+                    label.form-label(for="fechaDeDescarte") Fecha Descarte:
                     .input-group.has-validation
-                        input.form-control(type="date" id="fecha-desc" name="fechaDeDescarte" required)
-                        #fechaInvalida.invalid-feedback(style="display: none") La fecha de descarte debe ser igual o menor a la actual
+                        input.form-control(type="date" id="fechaDeDescarte" name="fechaDeDescarte" required)
+                        #fechaInvalida.invalid-feedback(style="display: none")
                     br
                 button(type="submit" class="btn btn-primary") Guardar
                 | &nbsp;&nbsp;&nbsp;&nbsp;
                 button(type="button" class="btn btn-primary" onclick="window.history.back()") Volver
 script.
     const cantVacunas = /^(?!0+$)[0-9]+$/;
-    
+    const fechaDescartePattern = /^(20)\d\d-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$/;
 
     function validarRegex(regex){
             if(!regex.test($(this).val())){
@@ -89,35 +92,113 @@ script.
     }
 
     $(function () {
-        const fechaDescartePattern = /^(20)\d\d-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$/;
+        
         $('#cant-vac').on('keyup', validarRegex.bind($('#cant-vac'), cantVacunas));
         
+        $('#DNIAgente').on('change', function(){
+            validarDescarte();
+        });
+
+        $('#numeroDeSerie').on('change', function(){
+            validarDescarte();
+        });
+
+        $('#empresaDescartante').on('change', function(){
+            validarDescarte();
+        });
+
+        $('#motivo').on('change', function(){
+            validarDescarte();
+        });
+    
+        function validarDescarte() {
+            const valorSeleccionadoAgente = $('#DNIAgente').val();
+            const valorSeleccionadoNumSerie = $('#numeroDeSerie').val();
+            const valorSeleccionadoEmpDescartante = $('#empresaDescartante').val();
+            const valorSeleccionadoMotivo = $('#motivo').val();
+            const agenteInvalidoMsg = $('#agenteInvalido');
+            const numSerieInvalidoMsg = $('#numSerieInvalido');
+            const empDescartanteInvalidoMsg = $('#empDescartanteInvalido');
+            const motivoInvalidoMsg = $('#motivoInvalido');
+            let validacionAgente = true;
+            let validacionNumSerie = true;
+            let validacionEmpDescartante = true;
+            let validacionMotivo = true;
+
+            if (valorSeleccionadoAgente === '') {
+                $('#DNIAgente').addClass('is-invalid').removeClass('is-valid');
+                agenteInvalidoMsg.show().text('Debe seleccionar un Agente de Salud');
+                validacionAgente = false;
+            } else {
+                $('#DNIAgente').addClass('is-valid').removeClass('is-invalid');
+                agenteInvalidoMsg.hide();
+            }
+
+            if (valorSeleccionadoNumSerie === '') {
+                $('#numeroDeSerie').addClass('is-invalid').removeClass('is-valid');
+                numSerieInvalidoMsg.show().text('Debe seleccionar un Lote');
+                validacionNumSerie = false;
+            } else {
+                $('#numeroDeSerie').addClass('is-valid').removeClass('is-invalid');
+                numSerieInvalidoMsg.hide();
+            }
+
+            if (valorSeleccionadoEmpDescartante === '') {
+                $('#empresaDescartante').addClass('is-invalid').removeClass('is-valid');
+                empDescartanteInvalidoMsg.show().text('Debe seleccionar una Empresa');
+                validacionEmpDescartante = false;
+            } else {
+                $('#empresaDescartante').addClass('is-valid').removeClass('is-invalid');
+                empDescartanteInvalidoMsg.hide();
+            }
+
+            if (valorSeleccionadoMotivo === '') {
+                $('#motivo').addClass('is-invalid').removeClass('is-valid');
+                motivoInvalidoMsg.show().text('Debe seleccionar un Motivo');
+                validacionMotivo = false;
+            } else {
+                $('#motivo').addClass('is-valid').removeClass('is-invalid');
+                motivoInvalidoMsg.hide();
+            }
+            return validacionAgente && validacionNumSerie && validacionEmpDescartante && validacionMotivo;
+        }
+
+        $('#fechaDeDescarte').on('change', function() {
+            validarFechaDescarte();
+        });
         
         function validarFechaDescarte() {
-            const fechaDescarteValue = $('#fecha-desc').val();
+            const fechaDescarteValue = $('#fechaDeDescarte').val();
             const fechaActual = new Date().toISOString().split('T')[0]; // Obtiene la fecha actual en formato ISO yyyy-mm-dd
             const fechaInvalidaMsg = $('#fechaInvalida');
         
             if (fechaDescarteValue <= fechaActual) {
-                $('#fecha-desc').addClass('is-valid').removeClass('is-invalid');
-                fechaInvalidaMsg.hide();
+                $('#fechaDeDescarte').addClass('is-valid').removeClass('is-invalid');
+                $('#fechaInvalida').hide();
                 return true;
             } else {
-                $('#fecha-desc').addClass('is-invalid').removeClass('is-valid');
-                fechaInvalidaMsg.show().text('La fecha debe ser igual o menor a la actual');
+                $('#fechaDeDescarte').addClass('is-invalid').removeClass('is-valid');
+                $('#fechaInvalida').show().text('La fecha debe ser menor o igual a la fecha actual');
                 return false;
             }
         }
 
-        $('#fecha-desc').on('keyup', function() {
-            validarFechaDescarte();
-        });
-
         $('#formDescarte').submit(function(event) {
-            if (!validarFechaDescarte()) {
-                event.preventDefault();
-            } else {
+            event.preventDefault();
 
+            const comboValido = validarDescarte();
+            if (comboValido){
+                const fechaDescarteValue = $('#fechaDeDescarte').val();
+                const fechaActual = new Date().toISOString().split('T')[0]; // Obtiene la fecha actual en formato ISO yyyy-mm-dd
+                const fechaInvalidaMsg = $('#fechaInvalida');
+
+                if (fechaDescarteValue <= fechaActual) {
+                    event.target.submit();
+                } else {
+                   fechaInvalidaMsg.show().text('La fecha debe ser menor o igual a la fecha actual');
+                }
+            } else {
+                
             }
         });
     });

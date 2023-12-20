@@ -28,7 +28,7 @@ html(lang="es")
                 .form-group
                     label.form-label(for="idLaboratorio") Laboratorio:
                     select.form-select#laboratorioSelect(name="idLaboratorio" required)
-                        option(value="") Selecciona un Laboratorio
+                        option(value="") Seleccione un Laboratorio
                             each lab in laboratorios
                                 option(value=lab.idLaboratorio)= lab.nombreLaboratorio
                     br
@@ -113,8 +113,8 @@ html(lang="es")
             const fechaFab = /^(20\d{2})-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$/;
             const fechaCom = /^(20\d{2})-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$/;
             const fechaVto = /^(20\d{2})-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$/;
-            $('#cant-lote-int').on('keyup', validarRegex.bind($('#cant-lote-int'), cantLotesInt));
             
+            $('#cant-lote-int').on('keyup', validarRegex.bind($('#cant-lote-int'), cantLotesInt));
             $('#fecha-fab').on('keyup', function() {
             const fechaFabValue = new Date($(this).val());
             const fechaActual = new Date();
