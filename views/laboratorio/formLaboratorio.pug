@@ -26,11 +26,11 @@ html(lang="es")
             br
             form(action="/laboratorios" method="post")
                 .form-group
-                    label.form-label(for="nombre") Nombre Laboratorio:
-                    .input-group.has-validation
-                        input.form-control(type="text" id="nombre" name="nombreLaboratorio" required)
-                        .invalid-feedback(id="nombreInvalido") Ingrese solo letras
-                        .invalid-feedback.none(id="nombreExiste") Laboratorio Existente
+                    label.form-label(for="idLaboratorio") Nombre Laboratorio:
+                    select.form-control#laboratorioSelect(name="idLaboratorio")
+                        option(value="") Selecciona un Laboratorio
+                            each lab in laboratorios
+                                option(value=lab.idLaboratorio)= lab.nombreLaboratorio
                 .form-group
                     label.form-label(for="pais") País:
                     .input-group.has-validation

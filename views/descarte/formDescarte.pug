@@ -43,7 +43,7 @@ html(lang="es")
                     br
                 .form-group
                     label.form-label(for="emp-desc") Empresa Descartante:
-                    select.form-control(name="emp-desc" id="emp-desc" required)
+                    select.form-control(name="empresaDescartante" id="emp-desc" required)
                         option Seleccione una Empresa
                         option(value="Veolia") Veolia
                         option(value="Clean Harbors") Clean Harbors
@@ -56,8 +56,8 @@ html(lang="es")
                         option Seleccione un Motivo
                         option(value="Vencida") Vencida
                         option(value="Rotura") Rotura
-                        option(value="Cadena Perdida de Frio") Cadena Pérdida de Frío
-                        option(value="Contaminacion") Contaminación
+                        option(value="Cadena Pérdida de Frío") Cadena Pérdida de Frío
+                        option(value="Contaminación") Contaminación
                     br
                 .form-group
                     label.form-label(for="cant-vac") Cantidad de Vacunas:
@@ -69,13 +69,12 @@ html(lang="es")
                     label.form-label(for="fecha-desc") Fecha Descarte:
                     .input-group.has-validation
                         input.form-control(type="date" id="fecha-desc" name="fechaDeDescarte" required)
-                        #fechaInvalida.invalid-feedback(style="display: none") La fecha de descarte debe ser igual o mayor a la actual
+                        #fechaInvalida.invalid-feedback(style="display: none") La fecha de descarte debe ser igual o menor a la actual
                     br
                 button(type="submit" class="btn btn-primary") Guardar
                 | &nbsp;&nbsp;&nbsp;&nbsp;
                 button(type="button" class="btn btn-primary" onclick="window.history.back()") Volver
 script.
-    const fechaDescartePattern = /^(20)\d\d-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$/;
     const cantVacunas = /^(?!0+$)[0-9]+$/;
     
 
@@ -90,26 +89,27 @@ script.
     }
 
     $(function () {
-        
+        const fechaDescartePattern = /^(20)\d\d-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$/;
         $('#cant-vac').on('keyup', validarRegex.bind($('#cant-vac'), cantVacunas));
-        $('#fecha-desc').on('keyup', validarRegex.bind($('#fecha-desc'), fechaDescartePattern));
+        
         
         function validarFechaDescarte() {
             const fechaDescarteValue = $('#fecha-desc').val();
             const fechaActual = new Date().toISOString().split('T')[0]; // Obtiene la fecha actual en formato ISO yyyy-mm-dd
+            const fechaInvalidaMsg = $('#fechaInvalida');
         
-            if (fechaDescartePattern.test(fechaDescarteValue) && fechaDescarteValue >= fechaActual) {
+            if (fechaDescarteValue <= fechaActual) {
                 $('#fecha-desc').addClass('is-valid').removeClass('is-invalid');
-                $('#fechaInvalida').hide();
+                fechaInvalidaMsg.hide();
                 return true;
             } else {
                 $('#fecha-desc').addClass('is-invalid').removeClass('is-valid');
-                $('#fechaInvalida').show().text('La fecha debe ser igual o mayor a la actual');
+                fechaInvalidaMsg.show().text('La fecha debe ser igual o menor a la actual');
                 return false;
             }
         }
 
-        $('#fecha-desc').change(function() {
+        $('#fecha-desc').on('keyup', function() {
             validarFechaDescarte();
         });
 

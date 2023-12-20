@@ -57,7 +57,11 @@ const editarLoteProveedor = async (req, res) => {
   try {
     const loteProveedor = await LoteProveedor.findByPk(req.params.id);
     const laboratorios = await Laboratorio.findAll();
-    res.render("loteproveedor/editLoteProveedor", { loteProveedor: loteProveedor, laboratorios: laboratorios });
+    const vacunas = ['Tuberculosis', 'Meningitis-Neumonía', 'Difteria-Tétanos-Hepatitis B', 'Antipoliomelítica', 
+    'Sarampión-Rubéola-Paperas', 'Rotavirus', 'Meningococo', 'Antigripal', 'Hepatitis A', 'Varicela', 'HPV']
+    const nombComercial = ['BCG', 'Neumococo Conjugada', 'Quíntuple', 'IPV', 'Triple Viral', 'Triple Bacteriana Celular',
+    'Triple Bacteriana Acelular', 'Influenzae b', 'Doble Bacteriana', 'Virus Papiloma Humano'] 
+    res.render("loteproveedor/editLoteProveedor", { loteProveedor: loteProveedor, laboratorios: laboratorios, vacunas: vacunas, nombComercial: nombComercial });
   } catch (error) {
     res.status(500).json({
       message: "Error al obtener el lote proveedor.",

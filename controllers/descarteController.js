@@ -61,7 +61,9 @@ const editarDescarte = async (req, res) => {
     const descarte = await Descarte.findByPk(req.params.id);
     const personas = await Persona.findAll();
     const lotesInternos = await LoteInterno.findAll();
-    res.render("descarte/editDescarte", { descarte: descarte, personas: personas, lotesInternos: lotesInternos });
+    const empresas = ['Veolia', 'Clean Harbors', 'Waste Management', 'Stericycle']
+    const motivos = ['Vencida', 'Rotura', 'Cadena Pérdida de Frío', 'Contaminación']
+    res.render("descarte/editDescarte", { descarte: descarte, personas: personas, lotesInternos: lotesInternos, motivos: motivos, empresas: empresas });
   } catch (error) {
     res.status(500).json({ message: "Error al obtener el descarte." });
   }

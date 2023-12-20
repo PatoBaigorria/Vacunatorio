@@ -72,8 +72,8 @@ const createLaboratorio = async (req, res) => {
 
 const editLaboratorio = async (req, res) => {
   try {
-    const laboratorio = await Laboratorio.findByPk(req.params.id);
-    res.render("laboratorio/editLaboratorio", { laboratorio: laboratorio });
+    const laboratorios = await Laboratorio.findAll();
+    res.render("laboratorio/editLaboratorio", { laboratorios: laboratorios });
   } catch (error) {
     res.status(500).json({
       message: "Error al obtener el laboratorio.",

@@ -27,23 +27,46 @@ html(lang="es")
             form(action="/lotesproveedores" method="post")
                 .form-group
                     label.form-label(for="idLaboratorio") Laboratorio:
-                    select.form-control#laboratorioSelect(name="idLaboratorio")
+                    select.form-select#laboratorioSelect(name="idLaboratorio" required)
                         option(value="") Selecciona un Laboratorio
                             each lab in laboratorios
                                 option(value=lab.idLaboratorio)= lab.nombreLaboratorio
                     br
                 .form-group
                     label.form-label(for="tipo-vac") Tipo de Vacuna:
-                    .input-group.has-validation
-                        input.form-control(type="text" id="tipo-vac" name="tipoDeVacuna" required)
-                        .invalid-feedback(id="tipoVacInvalido") Ingrese solo letras
-                    br
+                    select.form-select#tipo-vac(name="tipoDeVacuna" required)
+                        option(value="") Seleccione un Tipo de Vacuna
+                        option(value="Tuberculosis") Tuberculosis
+                        option(value="Meningitis-Neumonía") Meningitis-Neumonía
+                        option(value="Difteria-Tétanos-Hepatitis B") Difteria-Tétanos-Hepatitis B
+                        option(value="Antipoliomelítica") Stericycle
+                        option(value="Sarampión-Rubéola-Paperas") Sarampión-Rubéola-Paperas
+                        option(value="Rotavirus") Rotavirus
+                        option(value="Meningococo") Meningococo
+                        option(value="Antigripal") Antigripal
+                        option(value="Hepatitis A") Hepatitis A
+                        option(value="Varicela") Varicela
+                        option(value="HPV") HPV  
+                #tipoInvalido.invalid-feedback
+                br
+                    
                 .form-group
                     label.form-label(for="nombre-vac") Nombre Comercial de la Vacuna:
-                    .input-group.has-validation
-                        input.form-control(type="text" id="nombre-vac" name="nombreComercial" required)
-                        .invalid-feedback(id="nombInvalido") Ingrese solo letras
-                    br
+                    select.form-select#nombre-vac(name="nombreComercial" required)
+                        option(value="") Seleccione un Nombre Comercial de la Vacuna
+                        option(value="BCG") BCG
+                        option(value="Neumococo Conjugada") Neumococo Conjugada
+                        option(value="Quíntuple") Quíntuple
+                        option(value="IPV") IPV
+                        option(value="Triple Viral") Triple Viral
+                        option(value="Triple Bacteriana Celular") Triple Bacteriana Celular
+                        option(value="Triple Bacteriana Acelular") Triple Bacteriana Acelular
+                        option(value="Influenzae b") Influenzae b
+                        option(value="Doble Bacteriana") Doble Bacteriana
+                        option(value="Virus Papiloma Humano") Virus Papiloma Humano
+                #nombreInvalido.invalid-feedback
+                br
+                   
                 .form-group
                     label.form-label(for="cant-lote-int") Cantidad de Lotes Internos:
                     .input-group.has-validation
@@ -54,27 +77,25 @@ html(lang="es")
                     label.form-label(for="fecha-fab") Fecha de Fabricación de la Vacuna:
                     .input-group.has-validation
                         input.form-control(type="date" id="fecha-fab" name="fechaDeFabricacion" required)
-                        #fechaInvalida.invalid-feedback(style="display: none") Ingrese una fecha válida a partir del año 2020
+                        #fechaInvalida.invalid-feedback(style="display: none") 
                     br
                 .form-group
                     label.form-label(for="fecha-compra") Fecha de Compra de la Vacuna:
                     .input-group.has-validation
                         input.form-control(type="date" id="fecha-compra" name="fechaDeCompra" required)
-                        #fechaInvalidaCompra.invalid-feedback(style="display: none") La fecha de compra debe ser mayor a la fecha de fabricación
+                        #fechaInvalidaCompra.invalid-feedback(style="display: none")
                     br
                 .form-group
                     label.form-label(for="fecha-vto") Fecha de Vencimiento de la Vacuna:
                     .input-group.has-validation
                         input.form-control(type="date" id="fecha-vto" name="fechaDeVencimiento" required)
-                        #fechaInvalidaVto.invalid-feedback(style="display: none") Ingrese una fecha mayor a la fecha de compra
+                        #fechaInvalidaVto.invalid-feedback(style="display: none")
                     br
         
                 button(type="submit" class="btn btn-primary") Guardar
                 | &nbsp;&nbsp;&nbsp;&nbsp;
                 button(type="button" class="btn btn-primary" onclick="window.history.back()") Volver
     script.
-        const tipoVacuna = /^[A-Za-záéíóúüñÁÉÍÓÚÜÑ\s]{1,30}$/;
-        const nombreVacuna = /^[A-Za-záéíóúüñÁÉÍÓÚÜÑ\s]{1,30}$/;
         const cantLotesInt = /^(?!0+$)[0-9]+$/;
         
 
@@ -92,24 +113,73 @@ html(lang="es")
             const fechaFab = /^(20\d{2})-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$/;
             const fechaCom = /^(20\d{2})-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$/;
             const fechaVto = /^(20\d{2})-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$/;
-            $('#tipo-vac').on('keyup', validarRegex.bind($('#tipo-vac'), tipoVacuna));
-            $('#nombre-vac').on('keyup', validarRegex.bind($('#nombre-vac'), nombreVacuna));
             $('#cant-lote-int').on('keyup', validarRegex.bind($('#cant-lote-int'), cantLotesInt));
             
             $('#fecha-fab').on('keyup', function() {
             const fechaFabValue = new Date($(this).val());
+            const fechaActual = new Date();
             const fechaInvalidaMsg = $('#fechaInvalida');
 
-            if (fechaFabValue.getFullYear() >= 2020) {
+            if (fechaFabValue.getFullYear() >= 2020 && fechaFabValue <= fechaActual) {
                 $('#fecha-fab').addClass('is-valid');
                 fechaInvalidaMsg.hide();
             } else {
                 $('#fecha-fab').removeClass('is-valid');
-                fechaInvalidaMsg.show().text('Ingrese una fecha válida a partir del año 2020');
+                fechaInvalidaMsg.show().text('Ingrese una fecha válida a partir del año 2020 y menor que la fecha actual');
             }
-
-            // Aquí puedes realizar otras acciones o lógica relacionada con la fecha de fabricación si es necesario
         });
+            $('#tipo-vac').on('change', function() {
+                validarVacunas();
+            });
+
+            $('#nombre-vac').on('change', function() {
+                validarVacunas();
+            });
+
+            $('#laboratorioSelect').on('change', function() {
+                validarVacunas();
+            });
+
+            function validarVacunas(){
+                 
+                const valorSeleccionadoTipo = $('#tipo-vac').val();
+                const valorSeleccionadoNombre = $('#nombre-vac').val();
+                const valorSeleccionadoLaboratorio = $('#laboratorioSelect').val();
+                const tipoInvalidoMsg = $('#tipoInvalido');
+                const nombreInvalidoMsg = $('#nombreInvalido');
+                const laboratorioInvalidoMsg = $('#laboratorioInvalido');
+                let validacionTipo = true;
+                let validacionNombre = true;
+                let validacionLaboratorio = true;
+
+                if (valorSeleccionadoTipo === '') {
+                    $('#tipo-vac').addClass('is-invalid').removeClass('is-valid');
+                    tipoInvalidoMsg.show().text('Selecciona un Tipo de Vacuna válido.');
+                    validacionTipo = false;
+                } else {
+                    $('#tipo-vac').addClass('is-valid').removeClass('is-invalid');
+                    tipoInvalidoMsg.hide();
+                }
+
+                if (valorSeleccionadoNombre === '') {
+                    $('#nombre-vac').addClass('is-invalid').removeClass('is-valid');
+                    nombreInvalidoMsg.show().text('Selecciona un Nombre Comercial de Vacuna válido.');
+                    validacionNombre = false;
+                } else {
+                    $('#nombre-vac').addClass('is-valid').removeClass('is-invalid');
+                    nombreInvalidoMsg.hide();
+                }
+                if (valorSeleccionadoLaboratorio === '') {
+                    $('#laboratorioSelect').addClass('is-invalid').removeClass('is-valid');
+                    laboratorioInvalidoMsg.show().text('Selecciona un Laboratorio válido.');
+                    validacionLaboratorio = false;
+                } else {
+                    $('#laboratorioSelect').addClass('is-valid').removeClass('is-invalid');
+                    laboratorioInvalidoMsg.hide();
+                }
+                return validacionTipo && validacionNombre && validacionLaboratorio;
+                
+            }
 
             function validarFechaCompra() {
                 const fechaFabValue = new Date($('#fecha-fab').val());
@@ -122,7 +192,7 @@ html(lang="es")
                     return true;
                 } else {
                     $('#fecha-compra').addClass('is-invalid').removeClass('is-valid');
-                    fechaInvalidaMsg.show().text('La fecha de compra debe ser mayor a la fecha de fabricación');
+                    fechaInvalidaMsg.show().text('La fecha de compra debe ser mayor o igual a la fecha de fabricación');
                     return false;
                 }
             }
@@ -145,6 +215,7 @@ html(lang="es")
 
             // Validación en tiempo real al escribir en cada campo de fecha
             
+
             $('#fecha-compra').on('keyup', function() {
                 validarFechaCompra();    
             });
@@ -157,15 +228,20 @@ html(lang="es")
             $('#formLoteProveedor').submit(function(event) {
                 event.preventDefault(); // Evitar el envío automático del formulario
 
-                const fechaFabValue = new Date($('#fecha-fab').val());
-                const fechaComValue = new Date($('#fecha-compra').val());
-                const fechaVtoValue = new Date($('#fecha-vto').val());
-                const fechaInvalidaMsg = $('#fechaInvalida');
+                const comboValido = validarVacunas();
+                if (comboValido){
+                    const fechaFabValue = new Date($('#fecha-fab').val());
+                    const fechaComValue = new Date($('#fecha-compra').val());
+                    const fechaVtoValue = new Date($('#fecha-vto').val());
+                    const fechaInvalidaMsg = $('#fechaInvalida');
 
-                if (fechaComValue >= fechaFabValue && fechaVtoValue > fechaComValue) {
-                    event.target.submit(); 
+                    if (fechaComValue >= fechaFabValue && fechaVtoValue > fechaComValue) {
+                        event.target.submit(); 
+                    } else {
+                        fechaInvalidaMsg.show().text('Las fechas no son válidas');
+                    }
                 } else {
-                    fechaInvalidaMsg.show().text('Las fechas no son válidas');
+                    console.log('Error: El tipo de vacuna no ha sido seleccionado.');
                 }
             });
 

@@ -50,12 +50,21 @@ html(lang="es")
                 br
                 .form-group
                     label.form-label(for="emp-desc") Empresa Descartante:
-                    input.form-control(type="text" id="empr-desc" name="empresaDescartante" value=descarte.empresaDescartante required)
+                    select.form-control#empresaDescartanteSelect(name="empresaDescartante")
+                        each emp in empresas
+                            if(emp === descarte.empresaDescartante)
+                                option(value=emp selected)= emp
+                            else
+                                option(value=emp)= emp
                 br
                 .form-group
                     label.form-label(for="motivo") Motivo Descarte:
-                    input.form-control(type="text" id="motivo" name="motivo" value=descarte.motivo required)
-                br
+                    select.form-control#motivoSelect(name="motivo")
+                        each motivo in motivos
+                            if(motivo === descarte.motivo)
+                                option(value=motivo selected)= motivo
+                            else
+                                option(value=motivo)= motivo
                 .form-group
                     label.form-label(for="cant-vac") Cantidad de Vacunas:
                     input.form-control(type="number" id="cant-vac" name="cantidadDeVacunas" value=descarte.cantidadDeVacunas required)

@@ -23,8 +23,16 @@ html(lang="es")
             br
             form(action="/laboratorios/"+laboratorio.idLaboratorio+"?_method=PUT" method="post")
                 .form-group
-                    label.form-label(for="nombre") Nombre Laboratorio:
-                    input.form-control(type="text" id="nombre" name="nombreLaboratorio" value=laboratorio.nombreLaboratorio required)
+                    label.form-label(for="nombreLaboratorio") Nombre Laboratorio:
+                    select.form-control#laboratorioSelect(name="nombreLaboratorio")
+                        each lab in laboratorios
+                            if laboratorio.idLaboratorio==lab.idLaboratorio
+                                option(value=laboratorio.idLaboratorio selected)= lab.nombreLaboratorio
+                        each lab in laboratorios
+                            if laboratorio.idLaboratorio==lab.idLaboratorio
+                                break
+                            else
+                                option(value=lab.idLaboratorio)= lab.nombreLaboratorio
                 br
                 .form-group
                     label.form-label(for="pais") País:
