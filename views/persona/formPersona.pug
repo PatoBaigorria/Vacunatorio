@@ -40,90 +40,90 @@ block content
               .invalid-feedback.d-none(id="dniExiste") El DNI ingresado ya existe en la BD
               .invalid-feedback.d-none(id="dniInvalido") El DNI ingresado no es valido
               .invalid-feedback.d-none(id="dniVacio") El campo no puede estar vacío
-        .form-group
-          label.form-label(for="nombre") Nombre:
-          .input-group.has-validation
-            input.form-control(type="text" id="nombre" name="nombre" required)
-            .invalid-feedback.d-none(id="nombreInvalido") El nombre no puede contener más de treinta caracteres
-            .invalid-feedback.d-none(id="nombreNumeros") El nombre no puede contener números
-            .invalid-feedback.d-none(id="nombreVacio") El campo no puede estar vacío
-        .form-group
-          label.form-label(for="apellido") Apellido:
-          .input-group.has-validation
-            input.form-control(type="text" id="apellido" name="apellido" required)
-            .invalid-feedback.d-none(id="apellidoInvalido") El apellido no puede contener más de treinta caracteres
-            .invalid-feedback.d-none(id="apellidoNumeros") El apellido no puede contener números
-            .invalid-feedback.d-none(id="apellidoVacio") El campo no puede estar vacío
-        .form-group
-          label.form-label(for="email") Email:
-          .input-group.has-validation
-            input.form-control(type="email" id="email" name="email" required)
-            .invalid-feedback.d-none(id="emailInvalido") El email no es valido
-            .invalid-feedback.d-none(id="emailVacio") El campo no puede estar vacío
-        .form-group
-          label.form-label(for="fechaDeNacimiento") Fecha de Nacimiento:
-          .input-group.has-validation
-            input.form-control(type="date" id="fechaDeNacimiento" name="fechaDeNacimiento" required)
-            .invalid-feedback.d-none(id="fechaDeNacimientoVacia") El campo no puede estar vacío
-            .invalid-feedback.d-none(id="fechaDeNacimientoAntigua") La fecha ingresada debe ser posterior a 1923
-            .invalid-feedback.d-none(id="fechaDeNacimientoSuperior") La fecha de nacimiento es superior a la actual
-            .invalid-feedback.d-none(id="fechaDeNacimientoAgente") La fecha de nacimiento debe superior cuando se trata de un agente de salud
-        .form-group
-          label(for="ocupacion") Ocupación:
-          select(class="form-control" name="ocupacion" id="ocupacion" required)
-            option(disabled selected hidden value="") Selecciona una Ocupacion:
-            option(value="agente de salud") Agente de Salud
-            option(value="otro") Otro
-        .form-group.d-none#matriculaDiv
-          label.form-label(for="matricula" id="matriculaLabel") Matrícula:
-          .input-group.has-validation
-            input.form-control(type="number" id="matricula" name="matricula")
-            .invalid-feedback.d-none(id="matriculaVacio") El campo no puede estar vacío
-            .invalid-feedback.d-none(id="matriculaInvalido") La matrícula no es valida
-            .invalid-feedback.d-none(id="matriculaExiste") La matrícula ya existe
-        .form-group
-          label(for="genero") Género:
-          select.form-control(name="genero" id="genero" required)
-            option(disabled selected hidden value="") Seleccione un género
-            option(value="Masculino") Masculino
-            option(value="Femenino") Femenino
-            option(value="Otro") Otro
-        .form-group
-          label.form-label(for="celular1") Celular 1:
-          .input-group.has-validation
-            input.form-control(type="tel" id="celular1" name="celular1" title="Debe contener un máximo de 10 digitos")
-            .invalid-feedback.d-none(id="celular1Invalido") El celular debe contener 10 digitos sin espacios ni guiones
-            .invalid-feedback.d-none(id="celular1Letras") El celular no puede contener letras, espacios ni guiones
-        .form-group
-          label.form-label(for="celular2") Celular 2:
-          .input-group.has-validation
-            input.form-control(type="tel" id="celular2" name="celular2" title="Debe contener un máximo de 10 digitos")
-            .invalid-feedback.d-none(id="celular1Invalido") El celular debe contener 10 digitos sin espacios ni guiones
-            .invalid-feedback.d-none(id="celular1Letras") El celular no puede contener letras, espacios ni guiones
-        .form-group
-          label.form-label(for="patologiaBase") Patologia Base:
-          select.form-control(name="patologiaBase" id="patologiaBase" required)
-            option(disabled selected hidden value="") Selecciona una patologia base:
-            option(value="ninguna") Ninguna
-            option(value="obesidad") Obesidad
-            option(value="diabetes") Diabetes
-            option(value="enfermedad respiratorio cronica") Enfermedad respiratoria crónica
-            option(value="enfermedad cardiaca cronica") Enfermedad cardiaca crónica
-            option(value="inmunodeficiencia congénita o adquirida") Inmunodeficiencia congénita o adquirida
-            option(value="enfermedad oncohematologica") Enfermedad oncohematológica
-            option(value="trasplante de organo solido o de medula osea") Trasplante de órgano sólido o de médula ósea
-            option(value="insuficiencia renal cronica") Insuficiencia renal crónica
-            option(value="otro") Otro
-        .form-group
-          label.form-label(for="ubicacion") Seleccione ubicación en el mapa:
-          #map
-        .form-group
-          label.form-label(for="longitud") Longitud:
-          input.form-control(type="text" id="longitud" name="longitud" readonly)
-        .form-group
-          label.form-label(for="latitud") Latitud:
-          input.form-control(type="text" id="latitud" name="latitud" readonly)
-        button(type="submit" class="btn btn-primary") Guardar
+          .form-group
+            label.form-label(for="nombre") Nombre:
+            .input-group.has-validation
+              input.form-control(type="text" id="nombre" name="nombre" required)
+              .invalid-feedback.d-none(id="nombreInvalido") El nombre no puede contener más de treinta caracteres
+              .invalid-feedback.d-none(id="nombreNumeros") El nombre no puede contener números
+              .invalid-feedback.d-none(id="nombreVacio") El campo no puede estar vacío
+          .form-group
+            label.form-label(for="apellido") Apellido:
+            .input-group.has-validation
+              input.form-control(type="text" id="apellido" name="apellido" required)
+              .invalid-feedback.d-none(id="apellidoInvalido") El apellido no puede contener más de treinta caracteres
+              .invalid-feedback.d-none(id="apellidoNumeros") El apellido no puede contener números
+              .invalid-feedback.d-none(id="apellidoVacio") El campo no puede estar vacío
+          .form-group
+            label.form-label(for="email") Email:
+            .input-group.has-validation
+              input.form-control(type="email" id="email" name="email" required)
+              .invalid-feedback.d-none(id="emailInvalido") El email no es valido
+              .invalid-feedback.d-none(id="emailVacio") El campo no puede estar vacío
+          .form-group
+            label.form-label(for="fechaDeNacimiento") Fecha de Nacimiento:
+            .input-group.has-validation
+              input.form-control(type="date" id="fechaDeNacimiento" name="fechaDeNacimiento" required)
+              .invalid-feedback.d-none(id="fechaDeNacimientoVacia") El campo no puede estar vacío
+              .invalid-feedback.d-none(id="fechaDeNacimientoAntigua") La fecha ingresada debe ser posterior a 1923
+              .invalid-feedback.d-none(id="fechaDeNacimientoSuperior") La fecha de nacimiento es superior a la actual
+              .invalid-feedback.d-none(id="fechaDeNacimientoAgente") La fecha de nacimiento debe superior cuando se trata de un agente de salud
+          .form-group
+            label(for="ocupacion") Ocupación:
+            select(class="form-control" name="ocupacion" id="ocupacion" required)
+              option(disabled selected hidden value="") Selecciona una Ocupacion:
+              option(value="agente de salud") Agente de Salud
+              option(value="otro") Otro
+          .form-group.d-none#matriculaDiv
+            label.form-label(for="matricula" id="matriculaLabel") Matrícula:
+            .input-group.has-validation
+              input.form-control(type="number" id="matricula" name="matricula")
+              .invalid-feedback.d-none(id="matriculaVacio") El campo no puede estar vacío
+              .invalid-feedback.d-none(id="matriculaInvalido") La matrícula no es valida
+              .invalid-feedback.d-none(id="matriculaExiste") La matrícula ya existe
+          .form-group
+            label(for="genero") Género:
+            select.form-control(name="genero" id="genero" required)
+              option(disabled selected hidden value="") Seleccione un género
+              option(value="Masculino") Masculino
+              option(value="Femenino") Femenino
+              option(value="Otro") Otro
+          .form-group
+            label.form-label(for="celular1") Celular 1:
+            .input-group.has-validation
+              input.form-control(type="tel" id="celular1" name="celular1" title="Debe contener un máximo de 10 digitos")
+              .invalid-feedback.d-none(id="celular1Invalido") El celular debe contener 10 digitos sin espacios ni guiones
+              .invalid-feedback.d-none(id="celular1Letras") El celular no puede contener letras, espacios ni guiones
+          .form-group
+            label.form-label(for="celular2") Celular 2:
+            .input-group.has-validation
+              input.form-control(type="tel" id="celular2" name="celular2" title="Debe contener un máximo de 10 digitos")
+              .invalid-feedback.d-none(id="celular1Invalido") El celular debe contener 10 digitos sin espacios ni guiones
+              .invalid-feedback.d-none(id="celular1Letras") El celular no puede contener letras, espacios ni guiones
+          .form-group
+            label.form-label(for="patologiaBase") Patologia Base:
+            select.form-control(name="patologiaBase" id="patologiaBase" required)
+              option(disabled selected hidden value="") Selecciona una patologia base:
+              option(value="ninguna") Ninguna
+              option(value="obesidad") Obesidad
+              option(value="diabetes") Diabetes
+              option(value="enfermedad respiratorio cronica") Enfermedad respiratoria crónica
+              option(value="enfermedad cardiaca cronica") Enfermedad cardiaca crónica
+              option(value="inmunodeficiencia congénita o adquirida") Inmunodeficiencia congénita o adquirida
+              option(value="enfermedad oncohematologica") Enfermedad oncohematológica
+              option(value="trasplante de organo solido o de medula osea") Trasplante de órgano sólido o de médula ósea
+              option(value="insuficiencia renal cronica") Insuficiencia renal crónica
+              option(value="otro") Otro
+          .form-group
+            label.form-label(for="ubicacion") Seleccione ubicación en el mapa:
+            #map
+          .form-group
+            label.form-label(for="longitud") Longitud:
+            input.form-control(type="text" id="longitud" name="longitud" readonly)
+          .form-group
+            label.form-label(for="latitud") Latitud:
+            input.form-control(type="text" id="latitud" name="latitud" readonly)
+          button(type="submit" class="btn btn-primary") Dar de alta
 
   script.
     // Obtener fechas una vez que el DOM está listo
@@ -297,23 +297,21 @@ block content
 
       // Función para validar todos los campos antes de enviar el formulario  4x
       function validarFormulario() {
-        var inputs = $('#formPersona input, #formPersona select');
-
+        var inputs = $('#formPersona input:visible, #formPersona select:visible');
+        let valid = true;
         inputs.each(function () {
           var input = $(this);
-          console.log('Campo: ', input.attr('id'));
-          console.log('Tiene invalid: ', (!input.hasClass('is-valid')))
-          console.log('Tiene d-none: ', input.hasClass('d-none'))
-          console.log('¿Está matricula oculta? ', input.hasClass('d-none') && input.attr('id') === 'matriculaDiv')
-          if((!input.hasClass('is-valid')) || (input.hasClass('d-none') && input.attr('id') === 'matriculaDiv')) {
+          //console.log('Campo: ', input.attr('id'));
+          //console.log('Tiene invalid: ', (!input.hasClass('is-valid')))
+          //console.log('Tiene d-none: ', input.hasClass('d-none'))
+          //console.log('¿Está matricula oculta? ', input.hasClass('d-none') && input.attr('id') === 'matriculaDiv')
+          /*if((input.attr('id') !== 'longitud' && input.attr('id') !== 'latitud') && (!input.hasClass('is-valid')) || (input.hasClass('d-none') && input.attr('id') === 'matriculaDiv')) {
             console.log('---------------------------------------------------')
             console.log('Campo no valido:', input.attr('id'));
             console.log('---------------------------------------------------')
-          }
-          if ((!input.hasClass('is-valid')) || (input.attr('id') === 'matriculaDiv' && !(input.hasClass('d-none')))) {
-            alert('Por favor, complete todos los campos correctamente.');
-            return false;
-
+          }*/
+          if ((input.attr('id') !== 'longitud' && input.attr('id') !== 'latitud') && (!input.hasClass('is-valid')) || (input.attr('id') === 'matriculaDiv' && !(input.hasClass('d-none')))) {
+            valid = false;
             /*if(input.attr('id') === 'ocupacion'){
               if(input.val() === ''){
                 formValido = false
@@ -324,7 +322,10 @@ block content
             //return false; // Sale del bucle tan pronto como encuentra un campo no válido
           }
         });
-        return true;
+        if(!valid) {
+          alert('Por favor, complete todos los campos correctamente.');
+        }
+        return valid;
       }
 
       function mostrarMatricula(campo){
@@ -384,11 +385,16 @@ block content
         actualizarCoordenadas({ lng: lng, lat: lat });
       });
       // Asociar el evento submit al formulario
-      $('#formPersona input').on('keypress submit', function (event) {
+      $('#formPersona input').on('keypress submit', function () {
         if (event.which === 13) {
-          event.preventDefault();
-          validarFormulario();
+          console.log("Formulario enviado");
+          console.log(validarFormulario());
           // Puedes agregar lógica adicional aquí si es necesario
         }
+      });
+      $('#formPersona').on('submit', function () {
+        // Retorna el resultado de la función validarFormulario
+        console.log("Formulario enviado");
+        console.log(validarFormulario());
       });
     });
