@@ -27,32 +27,35 @@ html(lang="es")
             form(action="/lotesinternos" method="post")
                 .form-group
                     label.form-label(for="idLaboratorio") Laboratorio:
-                    select.form-control#laboratorioSelect(name="idLaboratorio")
+                    select.form-select#laboratorioSelect(name="idLaboratorio")
                         option(value="") Selecciona un Laboratorio
                             each lab in laboratorios
                                 option(value=lab.idLaboratorio)= lab.nombreLaboratorio
-                    br
+                #laboratorioInvalido.invalid-feedback    
+                br
                 .form-group
                     label.form-label(for="num-lote") Lote Proveedor:
-                    select.form-control#loteProveedorSelect(name="numeroDeLote")
+                    select.form-select#loteProveedorSelect(name="numeroDeLote")
                         option(value="") Selecciona un Lote Proveedor
                             each numLote in lotesProveedores
                                 option(value=numLote.numeroDeLote)= numLote.numeroDeLote
+                #loteInvalido.invalid-feedback
                     br
                 .form-group
                     label.form-label(for="cant-vac") Cantidad de Vacunas:
                     .input-group.has-validation
                         input.form-control(type="text" id="cant-vac" name="cantidadDeVacunas" required)
-                        .invalid-feedback(id="cantInvalido") Ingrese solo números positivos
+                        .invalid-feedback(id="cantInvalido") Ingrese solo números positivos y mayor a cero
                     br
                 .form-group
                     label.form-label(for="id-deponac") Depósito Nacional:
-                    select.form-control#idDepositoNacional(name="idDepositoNacional")
+                    select.form-select#idDepositoNacional(name="idDepositoNacional")
                         option(value="") Selecciona un Depósito Nacional
                             each depnac in depositosNacionales
                                 option(value=depnac.idDepositoNacional)= depnac.idDepositoNacional
                             //option(value="null") Ningún deposito
-                    br
+                #depNacInvalido.invalid-feedback    
+                br
                 .form-group
                     label.form-label(for="fecha-lleg-depos-nac") Fecha Llegada Depósito Nacional:
                     .input-group.has-validation
@@ -65,7 +68,7 @@ html(lang="es")
                     br
                 .form-group
                     label.form-label(for="id-depprov") Depósito Provincial:
-                    select.form-control#idDepositoProvincial(name="idDepositoProvincial")
+                    select.form-select#idDepositoProvincial(name="idDepositoProvincial")
                         option(value="") Selecciona un Depósito Provincial
                             each dprov in depositosProvinciales
                                 option(value=dprov.idDepositoProvincial)= dprov.idDepositoProvincial
@@ -83,11 +86,11 @@ html(lang="es")
                     br
                 .form-group
                     label.form-label(for="id-ctrovac") Centro de Vacunación:
-                    select.form-control#idCentroDeVacunacion(name="idCentroDeVacunacion")
+                    select.form-select#idCentroDeVacunacion(name="idCentroDeVacunacion")
                         option(value="") Selecciona un Centro de Vacunación
                             each cvac in centrosDeVacunaciones
                                 option(value=cvac.idCentroDeVacunacion)= cvac.idCentroDeVacunacion
-                            //option(value="null") Ningún centro
+                            //option(value="null") Ningún centro  
                     br
                 .form-group           
                     label.fomr-label(for="fecha-lleg-ctro-vac") Fecha Llegada Centro Vacunación:
@@ -117,10 +120,82 @@ html(lang="es")
         
         $(function (){
             $('#cant-vac').on('keyup', validarRegex.bind($('#cant-vac'), cantVacunas));
-            $('#fecha-lleg-depos-nac').on('keyup', validarRegex.bind($('#fecha-lleg-depos-nac'), fechaDepNacLleg));
-            $('#fecha-salida-depos-nac').on('keyup', validarRegex.bind($('#fecha-salida-depos-nac'), fechaDepNacSal));
-            $('#fecha-lleg-depos-prov').on('keyup', validarRegex.bind($('#fecha-lleg-depos-prov'), fechaDepProvLleg));
-            $('#fecha-salida-depos-prov').on('keyup', validarRegex.bind($('#fecha-salida-depos-prov'), fechaDepProvSal));
-            $('#fecha-lleg-ctro-vac').on('keyup', validarRegex.bind($('#fecha-lleg-ctro-vac'), fechaCtroVacLleg));
+            $('#laboratorioSelect').on('change', function(){
+                validarLote();
+            });
+            $('#loteProveedorSelect').on('change', function(){
+                validarLote();
+            });
+            $('#idDepositoNacional').on('change', function(){
+                validarLote();
+            });
+            $('#idDepositoProvincial').on('change', function(){
+                validarLote();
+            });
+            $('#idCentroDeVacunacion').on('change', function(){
+                validarLote();
+            });
+            
+            function validarLote() {
+                const valorSeleccionadoLaboratorio = $('#laboratorioSelect').val();
+                const valorSeleccionadoLoteProveedor= $('#loteProveedorSelect').val();
+                const valorSeleccionadoDepNacional = $('#idDepositoNacional').val();
+                const valorSeleccionadoDepProv = $('#idDepositoProvincial').val();
+                const valorSeleccionadoCtroVac = $('#idCentroDeVacunacion').val();
+                const laboratorioInvalidoMsg = $('#laboratorioInvalido');
+                const loteInvalidoMsg = $('#loteInvalido');
+                const depNacInvalidoMsg = $('#depNacInvalido');
+                let validacionLaboratorio = true;
+                let validacionLoteProveedor = true;
+                let validacionDepNac = true;
+                
+
+                if (valorSeleccionadoLaboratorio === '') {
+                    $('#laboratorioSelect').addClass('is-invalid').removeClass('is-valid');
+                    laboratorioInvalidoMsg.show().text('Debe seleccionar un Laboratorio');
+                    validacionLaboratorio = false;
+                } else {
+                    $('#laboratorioSelect').addClass('is-valid').removeClass('is-invalid');
+                    laboratorioInvalidoMsg.hide();
+                }
+
+                if (valorSeleccionadoLoteProveedor === '') {
+                    $('#loteProveedorSelect').addClass('is-invalid').removeClass('is-valid');
+                    loteInvalidoMsg.show().text('Debe seleccionar un Lote');
+                    validacionLoteProveedor = false;
+                } else {
+                    $('#loteProveedorSelect').addClass('is-valid').removeClass('is-invalid');
+                    loteInvalidoMsg.hide();
+                }
+
+                if (valorSeleccionadoDepNacional === '') {
+                    $('#idDepositoNacional').addClass('is-invalid').removeClass('is-valid');
+                    depNacInvalidoMsg.show().text('Debe seleccionar un Deposito Nacional');
+                    validacionDepNac = false;
+                } else {
+                    $('#idDepositoNacional').addClass('is-valid').removeClass('is-invalid');
+                    depNacInvalidoMsg.hide();
+                }
+
+                if (valorSeleccionadoDepProv !== '') {
+                    $('#idDepositoProvincial').addClass('is-valid').removeClass('is-invalid');
+                } else {
+                    $('#idDepositoProvincial').removeClass('is-invalid is-valid');
+                }   
+
+                if (valorSeleccionadoCtroVac !== '') {
+                    $('#idCentroDeVacunacion').addClass('is-valid').removeClass('is-invalid');
+                } else {
+                    $('#idCentroDeVacunacion').removeClass('is-invalid is-valid');
+                }
+                return validacionLaboratorio && validacionLoteProveedor && validacionDepNac;
+            }
+
+            $('#formLoteInterno').submit(function(event){
+                event.preventDefault();
+                if(validarLote()){
+                    this.submit();
+                }
+            });
            
         });
