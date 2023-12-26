@@ -28,14 +28,14 @@ html(lang="es")
                 .form-group
                     label.form-label(for="idLaboratorio") Laboratorio:
                     select.form-select#laboratorioSelect(name="idLaboratorio" required)
-                        option(value="") Seleccione un Laboratorio
+                        option(selected hidden value="") Seleccione un Laboratorio
                             each lab in laboratorios
                                 option(value=lab.idLaboratorio)= lab.nombreLaboratorio
                     br
                 .form-group
                     label.form-label(for="tipo-vac") Tipo de Vacuna:
                     select.form-select#tipo-vac(name="tipoDeVacuna" required)
-                        option(value="") Seleccione un Tipo de Vacuna
+                        option(selected hidden value="") Seleccione un Tipo de Vacuna
                         option(value="Tuberculosis") Tuberculosis
                         option(value="Meningitis-Neumonía") Meningitis-Neumonía
                         option(value="Difteria-Tétanos-Hepatitis B") Difteria-Tétanos-Hepatitis B
@@ -49,11 +49,11 @@ html(lang="es")
                         option(value="HPV") HPV  
                 #tipoInvalido.invalid-feedback
                 br
-                    
+
                 .form-group
                     label.form-label(for="nombre-vac") Nombre Comercial de la Vacuna:
                     select.form-select#nombre-vac(name="nombreComercial" required)
-                        option(value="") Seleccione un Nombre Comercial de la Vacuna
+                        option(selected hidden value="") Seleccione un Nombre Comercial de la Vacuna
                         option(value="BCG") BCG
                         option(value="Neumococo Conjugada") Neumococo Conjugada
                         option(value="Quíntuple") Quíntuple
@@ -66,7 +66,7 @@ html(lang="es")
                         option(value="Virus Papiloma Humano") Virus Papiloma Humano
                 #nombreInvalido.invalid-feedback
                 br
-                   
+
                 .form-group
                     label.form-label(for="cant-lote-int") Cantidad de Lotes Internos:
                     .input-group.has-validation
@@ -91,13 +91,13 @@ html(lang="es")
                         input.form-control(type="date" id="fecha-vto" name="fechaDeVencimiento" required)
                         #fechaInvalidaVto.invalid-feedback(style="display: none")
                     br
-        
+
                 button(type="submit" class="btn btn-primary") Guardar
                 | &nbsp;&nbsp;&nbsp;&nbsp;
                 button(type="button" class="btn btn-primary" onclick="window.history.back()") Volver
     script.
         const cantLotesInt = /^(?!0+$)[0-9]+$/;
-        
+
 
         function validarRegex(regex){
             if(!regex.test($(this).val())){
@@ -113,7 +113,7 @@ html(lang="es")
             const fechaFab = /^(20\d{2})-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$/;
             const fechaCom = /^(20\d{2})-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$/;
             const fechaVto = /^(20\d{2})-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$/;
-            
+
             $('#cant-lote-int').on('keyup', validarRegex.bind($('#cant-lote-int'), cantLotesInt));
             $('#fecha-fab').on('keyup', function() {
             const fechaFabValue = new Date($(this).val());
@@ -141,7 +141,7 @@ html(lang="es")
             });
 
             function validarVacunas(){
-                 
+
                 const valorSeleccionadoTipo = $('#tipo-vac').val();
                 const valorSeleccionadoNombre = $('#nombre-vac').val();
                 const valorSeleccionadoLaboratorio = $('#laboratorioSelect').val();
@@ -178,7 +178,7 @@ html(lang="es")
                     laboratorioInvalidoMsg.hide();
                 }
                 return validacionTipo && validacionNombre && validacionLaboratorio;
-                
+
             }
 
             function validarFechaCompra() {
@@ -214,7 +214,7 @@ html(lang="es")
             }
 
             // Validación en tiempo real al escribir en cada campo de fecha
-            
+
 
             $('#fecha-compra').on('keyup', function() {
                 validarFechaCompra();    

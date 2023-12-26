@@ -1,78 +1,78 @@
 - var title ='Crear Aplicación de Vacunas'
 include ..\includes\layout
 block content
-html(lang="es")
-    head
-        style.
-            #formAplicacion {
-                max-width: 600px;
-                margin: auto;
-            }
-            h2 {
-                text-align: center;
-                text-decoration: underline;
-                text-underline-offset: 4px;
-                margin-top: 10px;
-            }
-            label {
-                margin-bottom: 5px;
-            }
-    body
-        #formAplicacion
-            h2.text-center Crear Aplicación de Vacunas
-            if messages.error
-                .alert.alert-danger
-                    = messages.error
-            br
-            form(action="/aplicaciones" method="post")
-                .form-group
-                    label.form-label(for="DNIPaciente") Paciente:
-                    select.form-select(name="DNIPaciente" id="DNIPaciente" onchange=`agenteS(${JSON.stringify(agentes)}, ${JSON.stringify(personas)})` required)
-                        option(value="") Seleccione un Paciente
-                            each persona in personas
-                                option(value=persona.DNI) #{persona.nombre} #{persona.apellido}
-                #DNIPacienteInvalido.invalid-feedback    
+    html(lang="es")
+        head
+            style.
+                #formAplicacion {
+                    max-width: 600px;
+                    margin: auto;
+                }
+                h2 {
+                    text-align: center;
+                    text-decoration: underline;
+                    text-underline-offset: 4px;
+                    margin-top: 10px;
+                }
+                label {
+                    margin-bottom: 5px;
+                }
+        body
+            #formAplicacion
+                h2.text-center Crear Aplicación de Vacunas
+                if messages.error
+                    .alert.alert-danger
+                        = messages.error
                 br
-                .form-group
-                    label.form-label(for="DNIAgente") Agente de Salud:
-                    select.form-select(name="DNIAgente" id="DNIAgente" class="DNIAgente" required)
-                        option(value="") Seleccione un Agente de Salud
-                #DNIAgenteInvalido.invalid-feedback    
-                br
-                .form-group    
-                    label.form-label(for="numeroDeSerie") Lote de Vacunas que se Aplicará al Paciente:
-                    select.form-select(name="numeroDeSerie" id="numeroDeSerie" required)
-                        option(value="") Seleccione un Lote
-                            each lote in lotes
-                                option(value=lote.numeroDeSerie) #{lote.numeroDeSerie}
-                #loteInvalido.invalid-feedback    
-                br
-                .form-group
-                    label.form-label(for="fechaDeAplicacion") Fecha de Aplicación:
-                    .input-group.has-validation
-                        input.form-control(type="date" name="fechaDeAplicacion" id="fechaDeAplicacion" required)
-                        #fechaInvalida.invalid-feedback(style="display: none") La fecha de aplicación debe ser igual o mayor a la actual
+                form(action="/aplicaciones" method="post")
+                    .form-group
+                        label.form-label(for="DNIPaciente") Paciente:
+                        select.form-select(name="DNIPaciente" id="DNIPaciente" onchange=`agenteS(${JSON.stringify(agentes)}, ${JSON.stringify(personas)})` required)
+                            option(value="") Seleccione un Paciente
+                                each persona in personas
+                                    option(value=persona.DNI) #{persona.nombre} #{persona.apellido}
+                    #DNIPacienteInvalido.invalid-feedback    
                     br
-                button(type="submit" class="btn btn-primary") Guardar
-                | &nbsp;&nbsp;&nbsp;&nbsp;
-                button(type="button" class="btn btn-primary" onclick="window.history.back()") Volver
+                    .form-group
+                        label.form-label(for="DNIAgente") Agente de Salud:
+                        select.form-select(name="DNIAgente" id="DNIAgente" class="DNIAgente" required)
+                            option(value="") Seleccione un Agente de Salud
+                    #DNIAgenteInvalido.invalid-feedback    
+                    br
+                    .form-group    
+                        label.form-label(for="numeroDeSerie") Lote de Vacunas que se Aplicará al Paciente:
+                        select.form-select(name="numeroDeSerie" id="numeroDeSerie" required)
+                            option(value="") Seleccione un Lote
+                                each lote in lotes
+                                    option(value=lote.numeroDeSerie) #{lote.numeroDeSerie}
+                    #loteInvalido.invalid-feedback    
+                    br
+                    .form-group
+                        label.form-label(for="fechaDeAplicacion") Fecha de Aplicación:
+                        .input-group.has-validation
+                            input.form-control(type="date" name="fechaDeAplicacion" id="fechaDeAplicacion" required)
+                            #fechaInvalida.invalid-feedback(style="display: none") La fecha de aplicación debe ser igual o mayor a la actual
+                        br
+                    button(type="submit" class="btn btn-primary") Guardar
+                    | &nbsp;&nbsp;&nbsp;&nbsp;
+                    button(type="button" class="btn btn-primary" onclick="window.history.back()") Volver
 
-script.
-    const fechaAplicacionPattern = /^(20)\d\d-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$/;
-    
-    function agenteS(agentes, pacientes) {
-        let paciente = null
-        let pacienteSelect = document.getElementById("DNIPaciente").value;
-        let agenteSelect = document.getElementById("DNIAgente");
-        agenteSelect.innerHTML = "";  // Limpiar el contenido actual
-        for (let i = 0; i < agentes.length; i++) {
-            if (agentes[i].DNI != pacienteSelect) {
-                paciente = pacientes.filter(paciente => paciente.DNI===agentes[i].DNI);
-                agenteSelect.innerHTML += `<option value=${paciente[0].DNI}>${paciente[0].nombre} ${paciente[0].apellido}</option>`;
+    script.
+        const fechaAplicacionPattern = /^(20)\d\d-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$/;
+
+        function agenteS(agentes, pacientes) {
+            let paciente = null
+            let pacienteSelect = document.getElementById("DNIPaciente").value;
+            let agenteSelect = document.getElementById("DNIAgente");
+            agenteSelect.innerHTML = "";  // Limpiar el contenido actual
+            for (let i = 0; i < agentes.length; i++) {
+                if (agentes[i].DNI != pacienteSelect) {
+                    paciente = pacientes.filter(paciente => paciente.DNI===agentes[i].DNI);
+                    agenteSelect.innerHTML += `<option value=${paciente[0].DNI}>${paciente[0].nombre} ${paciente[0].apellido}</option>`;
+                }
             }
         }
-    }
-    function validarRegex(regex){
+        function validarRegex(regex){
             if(!regex.test($(this).val())){
                 this.addClass('is-invalid');
                 this.removeClass('is-valid');
@@ -80,97 +80,93 @@ script.
                 this.addClass('is-valid');
                 this.removeClass('is-invalid');
             }
-        }
-   $(function () {
+            }
+        $(function () {
 
-        $('#DNIPaciente').on('change', function() {
-            validarAplicacion();
-        });
-        $('#DNIAgente').on('change', function() {
-            validarAplicacion();
-        });
-        $('#numeroDeSerie').on('change', function() {
-            validarAplicacion();
-        });
+            $('#DNIPaciente').on('change', function() {
+                validarAplicacion();
+            });
+            $('#DNIAgente').on('change', function() {
+                validarAplicacion();
+            });
+            $('#numeroDeSerie').on('change', function() {
+                validarAplicacion();
+            });
 
-        function validarAplicacion(){
-            const valorSeleccionadoPaciente = $('#DNIPaciente').val();
-            const valorSeleccionadoAgente = $('#DNIAgente').val();
-            const valorSeleccionadoLote = $('#numeroDeSerie').val();
-            const pacienteInvalidoMsg = $('#pacienteInvalido');
-            const agenteInvalidoMsg = $('#agenteInvalido');
-            const loteInvalidoMsg = $('#loteInvalido');
-            let validacionPaciente = true;
-            let validacionAgente = true;
-            let validacionLote = true;
+            function validarAplicacion(){
+                const valorSeleccionadoPaciente = $('#DNIPaciente').val();
+                const valorSeleccionadoAgente = $('#DNIAgente').val();
+                const valorSeleccionadoLote = $('#numeroDeSerie').val();
+                const pacienteInvalidoMsg = $('#pacienteInvalido');
+                const agenteInvalidoMsg = $('#agenteInvalido');
+                const loteInvalidoMsg = $('#loteInvalido');
+                let validacionPaciente = true;
+                let validacionAgente = true;
+                let validacionLote = true;
 
-            if (valorSeleccionadoPaciente === '') {
-                $('#DNIPaciente').addClass('is-invalid').removeClass('is-valid');
-                pacienteInvalidoMsg.show().text('Debe seleccionar un Paciente');
-                validacionPaciente = false;
-            } else {
-                $('#DNIPaciente').addClass('is-valid').removeClass('is-invalid');
-                pacienteInvalidoMsg.hide();
+                if (valorSeleccionadoPaciente === '') {
+                    $('#DNIPaciente').addClass('is-invalid').removeClass('is-valid');
+                    pacienteInvalidoMsg.show().text('Debe seleccionar un Paciente');
+                    validacionPaciente = false;
+                } else {
+                    $('#DNIPaciente').addClass('is-valid').removeClass('is-invalid');
+                    pacienteInvalidoMsg.hide();
+                }
+
+                if (valorSeleccionadoAgente === '') {
+                    $('#DNIAgente').addClass('is-invalid').removeClass('is-valid');
+                    agenteInvalidoMsg.show().text('Debe seleccionar un Agente de Salud');
+                    validacionAgente = false;
+                } else {
+                    $('#DNIAgente').addClass('is-valid').removeClass('is-invalid');
+                    agenteInvalidoMsg.hide();
+                }
+
+                if (valorSeleccionadoLote === '') {
+                    $('#numeroDeSerie').addClass('is-invalid').removeClass('is-valid');
+                    loteInvalidoMsg.show().text('Debe seleccionar un Lote');
+                    validacionLote = false;
+                } else {
+                    $('#numeroDeSerie').addClass('is-valid').removeClass('is-invalid');
+                    loteInvalidoMsg.hide();
+                }
+                return validacionPaciente && validacionAgente && validacionLote;
             }
 
-            if (valorSeleccionadoAgente === '') {
-                $('#DNIAgente').addClass('is-invalid').removeClass('is-valid');
-                agenteInvalidoMsg.show().text('Debe seleccionar un Agente de Salud');
-                validacionAgente = false;
-            } else {
-                $('#DNIAgente').addClass('is-valid').removeClass('is-invalid');
-                agenteInvalidoMsg.hide();
-            }
+            $('#fechaDeAplicacion').on('change', function() {
+                validarFechaAplicacion();
+            });
 
-            if (valorSeleccionadoLote === '') {
-                $('#numeroDeSerie').addClass('is-invalid').removeClass('is-valid');
-                loteInvalidoMsg.show().text('Debe seleccionar un Lote');
-                validacionLote = false;
-            } else {
-                $('#numeroDeSerie').addClass('is-valid').removeClass('is-invalid');
-                loteInvalidoMsg.hide();
-            }
-            return validacionPaciente && validacionAgente && validacionLote;
-        }
-
-        $('#fechaDeAplicacion').on('change', function() {
-            validarFechaAplicacion();
-        });
-
-        function validarFechaAplicacion() {
-            const fechaAplicacionValue = $('#fechaDeAplicacion').val();
-            const fechaActual = new Date().toISOString().split('T')[0]; // Obtiene la fecha actual en formato ISO yyyy-mm-dd
-            const fechaInvalidaMsg = $('#fechaInvalida');
-        
-            if (fechaAplicacionValue <= fechaActual) {
-                $('#fechaDeAplicacion').addClass('is-valid').removeClass('is-invalid');
-                $('#fechaInvalida').hide();
-                return true;
-            } else {
-                $('#fechaDeAplicacion').addClass('is-invalid').removeClass('is-valid');
-                $('#fechaInvalida').show().text('La fecha debe ser menor o igual a la fecha actual');
-                return false;
-            }
-        }
-
-        $('#formAplicacion').submit(function(event) {
-            event.preventDefault();
-
-            const comboValido = validarAplicacion();
-            if (comboValido){
+            function validarFechaAplicacion() {
                 const fechaAplicacionValue = $('#fechaDeAplicacion').val();
                 const fechaActual = new Date().toISOString().split('T')[0]; // Obtiene la fecha actual en formato ISO yyyy-mm-dd
                 const fechaInvalidaMsg = $('#fechaInvalida');
 
                 if (fechaAplicacionValue <= fechaActual) {
-                    event.target.submit();
+                    $('#fechaDeAplicacion').addClass('is-valid').removeClass('is-invalid');
+                    $('#fechaInvalida').hide();
+                    return true;
                 } else {
-                   fechaInvalidaMsg.show().text('La fecha debe ser menor o igual a la fecha actual');
+                    $('#fechaDeAplicacion').addClass('is-invalid').removeClass('is-valid');
+                    $('#fechaInvalida').show().text('La fecha debe ser menor o igual a la fecha actual');
+                    return false;
                 }
-            } else {
-                
             }
-            
+
+            $('#formAplicacion').submit(function(event) {
+                event.preventDefault();
+
+                const comboValido = validarAplicacion();
+                if (comboValido){
+                    const fechaAplicacionValue = $('#fechaDeAplicacion').val();
+                    const fechaActual = new Date().toISOString().split('T')[0]; // Obtiene la fecha actual en formato ISO yyyy-mm-dd
+                    const fechaInvalidaMsg = $('#fechaInvalida');
+
+                    if (fechaAplicacionValue <= fechaActual) {
+                        event.target.submit();
+                    } else {
+                        fechaInvalidaMsg.show().text('La fecha debe ser menor o igual a la fecha actual');
+                    }
+                }
+            });
         });
-        
-    });

@@ -1,9 +1,9 @@
-- var title ='Actualizar Laboratorio'
+- var title ='Actualización de Laboratorio'
 include ..\includes\layout
 block content
-html(lang="es") 
+html(lang="es")    
     head
-       style.
+        style.
             #formLaboratorio {
                 max-width: 600px;
                 margin: auto;
@@ -19,41 +19,129 @@ html(lang="es")
             }
     body
         #formLaboratorio
-            h2.text-center Actualice el Laboratorio
+            h2.text-center Actualizar Laboratorio
+            if messages.error
+                .alert.alert-danger
+                    = messages.error
             br
             form(action="/laboratorios/"+laboratorio.idLaboratorio+"?_method=PUT" method="post")
                 .form-group
-                    label.form-label(for="nombreLaboratorio") Nombre Laboratorio:
-                    select.form-control#laboratorioSelect(name="nombreLaboratorio")
-                        each lab in laboratorios
-                            if laboratorio.idLaboratorio==lab.idLaboratorio
-                                option(value=laboratorio.idLaboratorio selected)= lab.nombreLaboratorio
-                        each lab in laboratorios
-                            if laboratorio.idLaboratorio==lab.idLaboratorio
-                                break
-                            else
-                                option(value=lab.idLaboratorio)= lab.nombreLaboratorio
-                br
+                    label.form-label(for="nombre") Nombre de laboratorio:
+                    .input-group.has-validation
+                        input.form-control(type="text" id="nombre" name="nombre" value=laboratorio.nombreLaboratorio required)
+                        .invalid-feedback(id="nombreInvalido") Ingrese solo letras
                 .form-group
                     label.form-label(for="pais") País:
-                    input.form-control(type="text" id="pais" name="pais" value=laboratorio.pais required)
-                br
+                    .input-group.has-validation
+                        input.form-control(type="text" id="pais" name="pais" value=laboratorio.pais required)
+                        .invalid-feedback(id="paisInvalido") Ingrese solo letras
                 .form-group
                     label.form-label(for="email") Email:
-                    input.form-control(type="text" id="email" name="email" value=laboratorio.email required)
-                br
+                    .input-group.has-validation
+                        input.form-control(type="text" id="email" name="email" value=laboratorio.email required)
                 .form-group
                     label.form-label(for="telefono") Teléfono:
-                    input.form-control(type="text" id="telefono" name="telefono" value=laboratorio.telefono required)
-                br
+                    .input-group.has-validation
+                        input.form-control(type="text" id="telefono" name="telefono" value=laboratorio.telefono required)
+                        .invalid-feedback(id="telefonoInvalido") Ingrese solo diez dígitos
+                        .invalid-feedback(id="telefonoLetra") Ingrese solo números
+                        .invalid-feedback(id="telefonoVacio") El campo no puede estar vacío
                 .form-group
                     label.form-label(for="longitud") Longitud:
-                    input.form-control(type="text" id="longitud" name="longitud" value=laboratorio.longitud required)
-                br
+                    .input-group.has-validation
+                        input.form-control(type="text" id="longitud" value=laboratorio.longitud name="longitud")
+                        .invalid-feedback(id="longInvalido") Ingrese solo números
                 .form-group
                     label.form-label(for="latitud") Latitud:
-                    input.form-control(type="text" id="latitud" name="latitud" value=laboratorio.latitud required)
-                br
+                    .input-group.has-validation
+                        input.form-control(type="text" id="latitud" value=laboratorio.latitud name="latitud")
+                        .invalid-feedback(id="latInvalido") Ingrese solo números
+                    br
                 button(type="submit" class="btn btn-primary") Actualizar
                 | &nbsp;&nbsp;&nbsp;&nbsp;
                 button(type="button" class="btn btn-primary" onclick="window.history.back()") Volver
+    script.
+        const namePattern = /^[A-Za-záéíóúüñÁÉÍÓÚÜÑ\s]{1,30}$/;
+        const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        const telefonoPattern = /^[0-9]{1,}$/;
+        const longitudPattern = /^[-+]?([1-8]?\d(\.\d+)?|90(\.0+)?)$/;
+        const latitudPattern = /^[-+]?([1-8]?\d(\.\d+)?|90(\.0+)?)$/;
+
+        function mostrarError(input, valid) {
+            input.addClass('is-invalid').removeClass('is-valid').addClass();
+            input.next('.invalid-feedback').removeClass('d-none');
+            if (valid) $('#' + input.attr('id') + valid).removeClass('d-none');
+        }
+
+        function quitarError(input) {
+            input.addClass('is-valid').removeClass('is-invalid');
+            input.next('.invalid-feedback').addClass('d-none');
+        }
+
+        function validarTelefono() {
+            if ($('#telefono').val().trim() !== '') {
+                if(!telefonoPattern.test($('#telefono').val().trim())){
+                    mostrarError($('#telefono'), 'Letra')
+                    $('#' + $('#telefono').attr('id') + 'Letra').removeClass('d-none');
+                    $('#' + $('#telefono').attr('id') + 'Invalido').addClass('d-none');
+                    $('#' + $('#telefono').attr('id') + 'Vacio').addClass('d-none');
+                } else if($('#telefono').val().length !== 10) {
+                    mostrarError($('#telefono'), 'Invalido')
+                    $('#' + $('#telefono').attr('id') + 'Invalido').removeClass('d-none');
+                    $('#' + $('#telefono').attr('id') + 'Letra').addClass('d-none');
+                    $('#' + $('#telefono').attr('id') + 'Vacio').addClass('d-none');
+                } else {
+                    quitarError($('#telefono'));
+                    $('#' + $('#telefono').attr('id') + 'Vacio').addClass('d-none');
+                    $('#' + $('#telefono').attr('id') + 'Letra').addClass('d-none');
+                    $('#' + $('#telefono').attr('id') + 'Invalido').addClass('d-none');
+                }
+            } else {
+                mostrarError($('#telefono'), 'Vacio');
+                $('#' + $('#telefono').attr('id') + 'Vacio').removeClass('d-none');
+                $('#' + $('#telefono').attr('id') + 'Letra').addClass('d-none');
+                $('#' + $('#telefono').attr('id') + 'Invalido').addClass('d-none');
+            }
+        }
+
+
+        function validarRegex(regex){
+            if(!regex.test($(this).val())){
+                this.addClass('is-invalid');
+                this.removeClass('is-valid');
+            } else {
+                this.addClass('is-valid');
+                this.removeClass('is-invalid');
+            }
+        }
+
+        function validarExistente(endpoint){
+            $.post(endpoint, {data:this.val()},  res=>{
+                if(res.existe || !res.valido){
+                    $('#'+endpoint).addClass('is-invalid').removeClass('is-valid');
+                    if (res.existe){
+                        $('#'+endpoint+'Existe').addClass("is-invalid").removeClass("d-none")
+                    } else if (!res.valido){
+                        $('#'+endpoint+'Invalido').addClass("is-invalid").removeClass("d-none")
+                    }
+                } else {
+                    $('#'+endpoint).addClass('is-valid').removeClass('is-invalid');
+                    $('#'+endpoint+'Invalido').addClass("d-none").removeClass("is-invalid")
+                    $('#'+endpoint+'Existe').addClass("d-none").removeClass("is-invalid")
+                }
+            })
+        }
+
+        $(function (){
+
+            $('#nombre').on('keyup', validarExistente.bind($('#nombre'), 'nombre'));
+            $('#nombre').on('keyup', validarRegex.bind($('#nombre'), namePattern));
+            $('#pais').on('keyup', validarRegex.bind($('#pais'), namePattern));
+            $('#email').on('keyup', validarRegex.bind($('#email'), emailPattern));
+            //$('#telefono').on('keyup', validarRegex.bind($('#telefono'), telefonoPattern));
+            $('#telefono').on('keyup', function() {
+                validarTelefono();
+            });
+            $('#longitud').on('keyup', validarRegex.bind($('#longitud'), longitudPattern));
+            $('#latitud').on('keyup', validarRegex.bind($('#latitud'), latitudPattern));
+        });

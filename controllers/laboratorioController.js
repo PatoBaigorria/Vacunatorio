@@ -3,13 +3,13 @@ const { Laboratorio } = require("../models/relaciones");
 const nombre = async (req, res) => {
   try {
     const nombreRegex = /^[A-Za-záéíóúüñÁÉÍÓÚÜÑ\s]{1,30}$/;
-    if (nombreRegex.test(req.body.data)){
-      const respuesta = await Laboratorio.findOne({raw:true, where: {nombreLaboratorio: req.body.data}});
+    if (nombreRegex.test(req.body.data)) {
+      const respuesta = await Laboratorio.findOne({ raw: true, where: { nombreLaboratorio: req.body.data } });
       console.log(respuesta);
-      res.json({valido: true, existe: !!respuesta});
-      
+      res.json({ valido: true, existe: !!respuesta });
+
     } else {
-      res.json({valido: false, existe: false});
+      res.json({ valido: false, existe: false });
     }
   } catch (error) {
     res.status(500).json({ message: "Error al comprobar el Nombre de Laboratorio." });
@@ -23,10 +23,10 @@ const listarLaboratorios = async (req, res) => {
     let laboratorios = await Laboratorio.findAll({
       raw: true
     });
-    
-    res.render("laboratorio/viewLaboratorio", { laboratorios: laboratorios});
+
+    res.render("laboratorio/viewLaboratorio", { laboratorios: laboratorios });
   } catch (error) {
-    res.status(500).json({message: "Error al obtener los laboratorios.",});
+    res.status(500).json({ message: "Error al obtener los laboratorios.", });
   }
 };
 // Muestra formulario de creacion de Laboratorio
@@ -72,8 +72,8 @@ const createLaboratorio = async (req, res) => {
 
 const editLaboratorio = async (req, res) => {
   try {
-    const laboratorios = await Laboratorio.findAll();
-    res.render("laboratorio/editLaboratorio", { laboratorios: laboratorios });
+    const laboratorio = await Laboratorio.findByPk(req.params.id);
+    res.render("laboratorio/editLaboratorio", { laboratorio: laboratorio });
   } catch (error) {
     res.status(500).json({
       message: "Error al obtener el laboratorio.",
@@ -107,8 +107,8 @@ const deleteLaboratorio = async (req, res) => {
       },
     });
     req.flash('success', 'Laboratorio eliminado exitosamente.');
-    res.json({success:true});
-  
+    res.json({ success: true });
+
   } catch (error) {
     res.status(500).json({
       message: "Error al eliminar el laboratorio.",

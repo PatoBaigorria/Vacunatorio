@@ -33,11 +33,12 @@ html(lang="es")
                 .form-group
                     label.form-label(for="persona") Seleccione un Agente de Salud:
                     select.form-select#personaSelect(name="DNIAgente")
-                        each persona in personas 
-                            if(persona.DNI === descarte.DNIAgente)
-                                option(value=persona.DNI selected)= persona.nombre + ' ' + persona.apellido
-                            else
-                                option(value=persona.DNI)= persona.nombre + ' ' + persona.apellido
+                        each persona in personas
+                            if(persona.ocupacion === 'agente de salud')
+                                if(persona.DNI === descarte.DNIAgente)
+                                    option(value=persona.DNI selected)= persona.nombre + ' ' + persona.apellido
+                                else
+                                    option(value=persona.DNI)= persona.nombre + ' ' + persona.apellido
                 br
                 .form-group
                     label.form-label(for="num-serie") Seleccione un Nº de Serie Lote Interno:

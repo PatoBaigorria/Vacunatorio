@@ -123,7 +123,10 @@ block content
           .form-group
             label.form-label(for="latitud") Latitud:
             input.form-control(type="text" id="latitud" name="latitud" readonly)
+            br
           button(type="submit" class="btn btn-primary") Dar de alta
+          | &nbsp;&nbsp;&nbsp;&nbsp;
+          button(type="button" class="btn btn-primary" onclick="window.history.back()") Volver
 
   script.
     // Obtener fechas una vez que el DOM está listo
