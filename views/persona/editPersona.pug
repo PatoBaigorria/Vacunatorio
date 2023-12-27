@@ -36,7 +36,7 @@ block content
           .form-group
             label.form-label(for="dni") DNI:
             .input-group
-              input.form-control(type="text" id="dni" name="DNI" value=persona.DNI readonly)
+              input.form-control(type="text" id="dni" name="DNI" value=persona.DNI disabled)
           .form-group
             label.form-label(for="nombre") Nombre:
             .input-group.has-validation
@@ -68,7 +68,7 @@ block content
           .form-group
             label(for="ocupacion") Ocupación:
             if(persona.ocupacion=="agente de salud")
-              select(class="form-control" name="ocupacion" id="ocupacion" required)
+              select.form-select(name="ocupacion" id="ocupacion" required)
                 option(value="agente de salud" selected) Agente de Salud
                 option(value="otro") Otro
               .form-group.d-inline#matriculaDiv
@@ -79,7 +79,7 @@ block content
                   .invalid-feedback.d-none(id="matriculaInvalido") La matrícula no es valida
                   .invalid-feedback.d-none(id="matriculaExiste") La matrícula ya existe
             else 
-              select(class="form-control" name="ocupacion" id="ocupacion" required)
+              select.form-select(name="ocupacion" id="ocupacion" required)
                 option(value="agente de salud") Agente de Salud
                 option(value="otro" selected) Otro
               .form-group.d-none#matriculaDiv
@@ -90,7 +90,7 @@ block content
                   .invalid-feedback.d-none(id="matriculaInvalido") La matrícula no es valida
           .form-group
             label.form-label(for="genero") Género:
-            select.form-control(name="genero" id="genero" required)
+            select.form-select(name="genero" id="genero" required)
               option(value="Masculino" selected=persona.genero === 'Masculino') Masculino
               option(value="Femenino" selected=persona.genero === 'Femenino') Femenino
               option(value="Otro" selected=persona.genero === 'Otro') Otro
@@ -108,7 +108,7 @@ block content
               .invalid-feedback.d-none(id="celular2Letras") El celular no puede contener letras, espacios ni guiones
           .form-group
             label.form-label(for="patologiaBase") Patologia Base:
-            select.form-control(name="patologiaBase" id="patologiaBase" required)
+            select.form-select(name="patologiaBase" id="patologiaBase" required)
               option(value="ninguna" selected=patologiabase.patologiaBase === 'ninguna') Ninguna
               option(value="obesidad" selected=patologiabase.patologiaBase === 'obesidad') Obesidad
               option(value="diabetes" selected=patologiabase.patologiaBase === 'diabetes') Diabetes
@@ -362,6 +362,11 @@ block content
       $('#celular1, #celular2').on('keyup focusout', function() {
         validarCelular($(this), cellPattern);
       });
+
+      $('#longitud, #latitud').on('focusout', function() {
+        $(this).addClass('is-valid').removeClass('is-invalid');
+      });
+
       $('#map').on('dragend', function(event) {
         quitarError($('#map'));
         quitarError($('#longitud'));
@@ -370,17 +375,10 @@ block content
         var lat = event.target.getCenter().lat.toFixed(6);
         actualizarCoordenadas({ lng: lng, lat: lat });
       });
-      $('#dni').trigger('focusout');
-      $('#nombre').trigger('focusout');
-      $('#apellido').trigger('focusout');
-      $('#email').trigger('focusout');
-      $('#fechaDeNacimiento').trigger('focusout');
-      $('#ocupacion').trigger('change');
-      $('#genero').trigger('change');
-      $('#matricula').trigger('focusout');
-      $('#celular1').trigger('focusout');
-      $('#celular2').trigger('focusout');
-      $('#patologiaBase').trigger('change');
+      
+      $('#dni, #nombre, #apellido, #email, #fechaDeNacimiento, #matricula, #celular1, #celular2, #longitud, #latitud').trigger('focusout');
+      $('#ocupacion, #genero, #patologiaBase').trigger('change');
+
       // Asociar el evento submit al formulario
       $('#formPersona input').on('keypress submit', function () {
         if (event.which === 13) {
