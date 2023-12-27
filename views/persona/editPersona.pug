@@ -202,6 +202,8 @@ block content
               mostrarError(campo, valid2);
               $('#' + campo.attr('id') + valid2).removeClass('d-none');
               $('#' + campo.attr('id') + valid1).addClass('d-none');
+            } else if(campo ){
+
             }
           });
         } else {
@@ -356,7 +358,7 @@ block content
       });
 
       $('#matricula').on('keyup focusout', function () {
-        validarCampo($(this), 'matricula', cellPattern, 'Vacio', 'Invalido', '');
+        validarCampo($(this), 'matricula', cellPattern, 'Vacio', 'Invalido', 'Existe');
       });
 
       $('#celular1, #celular2').on('keyup focusout', function() {
@@ -375,7 +377,7 @@ block content
         var lat = event.target.getCenter().lat.toFixed(6);
         actualizarCoordenadas({ lng: lng, lat: lat });
       });
-      
+
       $('#dni, #nombre, #apellido, #email, #fechaDeNacimiento, #matricula, #celular1, #celular2, #longitud, #latitud').trigger('focusout');
       $('#ocupacion, #genero, #patologiaBase').trigger('change');
 

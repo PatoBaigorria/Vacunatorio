@@ -9,6 +9,26 @@ head
             text-decoration: underline;
             text-underline-offset: 4px; /* Ajusta el espacio entre el texto y el subrayado */
         }
+
+        .flash-message {
+            display: none;
+            opacity: 1;
+            transition: opacity 1s ease-out;
+        }
+
+        .fade-in {
+            display: block;
+            animation: fadeOut 3s 1s; /* fadeIn dura 3 segundos, fadeOut comienza después de 3 segundos y dura 2 segundos */
+        }
+
+        @keyframes fadeOut {
+            from {
+                opacity: 1;
+            }
+            to {
+                opacity: 0;
+            }
+        }
 body
     div.container.my-4
         div.row
@@ -17,14 +37,15 @@ body
                     h2 Listado de Personas
                     br
                     if messages.success
-                        .alert.alert-success
+                        .alert.alert-success.flash-message.fade-in
                             = messages.success
                     div(style="text-align: left;")
                         a.btn.btn-primary.btn-lg(href="/personas/alta") Alta
                         br
                         br
                         div.table.responsive 
-                            table#personas.table.table-striped.table-bordered              
+                            table#personas.table.table-striped.table-bordered
+
 script.
     let pers = !{JSON.stringify(Personas)};
 
@@ -47,7 +68,7 @@ script.
                 {data: 'genero', title: 'Género'},
                 {data: 'Telefono.celular1', title: 'Celular 1', createdCell: agregarMensajeSiVacio },
                 {data: 'Telefono.celular2', title: 'Celular 2', createdCell: agregarMensajeSiVacio },
-                {data: 'Patologiabases.patologiaBase', title: 'Patología Base'},
+                //{data: 'Patologiabases.patologiaBase', title: 'Patología Base'},
                 {data: 'Patologiabases', title: 'Patología Base', render: function (data) {
                     let patologias = '';
                     for (let i = 0; i < data.length; i++) {
@@ -85,6 +106,12 @@ script.
     });
 
     $(document).ready(function() {
+        $('.flash-message').addClass('fade-in');
+        // Configurar un temporizador para ocultar el mensaje después de cierto tiempo
+        setTimeout(function() {
+            $('.flash-message').removeClass('fade-in');
+        }, 3000);
+
         perstab.on('click', 'button', function (f) {
             let data = perstab.row(f.target.closest('tr')).data();
             if ($(event.target).hasClass('fa-trash-can')) {
