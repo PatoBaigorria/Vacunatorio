@@ -9,8 +9,18 @@ const listarLotesProveedores = async (req, res) => {
     const lotesProveedores = await LoteProveedor.findAll(
       { include: [{ model: Laboratorio, attributes: ['nombreLaboratorio', 'pais', 'email', 'telefono', 'longitud', 'latitud'] }] }
     );
-    //const laboratorios = await Laboratorio.findAll();
-    res.render("loteproveedor/viewLoteProveedor", { lotesProveedores: lotesProveedores });
+
+    const successMessages = req.flash('success');
+    const errorMessages = req.flash('error');
+    
+    res.render("loteproveedor/viewLoteProveedor", { 
+      lotesProveedores: lotesProveedores, 
+      messages: { 
+        success: successMessages, 
+        error: errorMessages
+    }
+   });
+     
   } catch (error) {
     res.status(500).json({
       message: "Error al obtener los lotes proveedores."
@@ -77,6 +87,7 @@ const updateLoteProveedor = async (req, res) => {
         numeroDeLote: req.params.id
       },
     });
+    req.flash('success', 'Lote Proveedor actualizado exitosamente.');
     res.redirect("/lotesproveedores");
   } catch (error) {
     res.status(500).json({

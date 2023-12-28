@@ -8,6 +8,13 @@ head
             text-decoration: underline;
             text-underline-offset: 4px; /* Ajusta el espacio entre el texto y el subrayado */
         }
+        .alert-message {
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                z-index: 1000;
+                display: none; /* Ocultar inicialmente */
+            }
 body
     div.container.my-4
         div.row
@@ -15,9 +22,10 @@ body
                 section#viewLotesProveedores
                     h2 Listado de Lotes Proveedores
                     br
-                    if messages.success
-                        .alert.alert-success
-                            = messages.success 
+                    if messages.success.length
+                        .alert-message#flashMessage.alert.alert-success
+                            each message in messages.success // Recorre los mensajes
+                                = message
                     div(style="text-align: left;")
                         a.btn.btn-primary.btn-lg(href="/lotesproveedores/crear") Crear
                         br
@@ -79,7 +87,29 @@ script.
             }
         });
     })
+    
+    $(document).ready(function() {
+        let successMessages = !{JSON.stringify(messages.success)};
+        
+        if (successMessages.length > 0) {
+            let flashElement = $('<div>').addClass('alert alert-success alert-message');
+            successMessages.forEach(function(message) {
+                flashElement.append($('<p>').text(message));
+            });
+            $('.container').prepend(flashElement); // Agrega los mensajes al principio del contenedor
+            flashElement.fadeIn('slow', function() {
+                setTimeout(function(){
+                    flashElement.fadeOut('slow');
+                }, 5000);
+            });
+        } else {
+            // Si no hay mensajes, oculta el elemento flash (por si estaba mostrándose anteriormente)
+            $('.alert-message').fadeOut('slow');
+        }
+    });
+
     function crear(){
         window.location.href= "/lotesproveedores/crear"
     }
+    
 

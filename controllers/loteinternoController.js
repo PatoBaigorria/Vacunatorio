@@ -176,6 +176,7 @@ const updateLoteInterno = async (req, res) => {
         numeroDeSerie: req.params.id
       },
     });
+    req.flash('success', 'Lote Interno actualizado exitosamente.');
     res.redirect("/lotesinternos");
   } catch (error) {
     res.status(500).json({

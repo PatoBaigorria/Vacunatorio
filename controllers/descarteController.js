@@ -75,6 +75,7 @@ const updateDescarte = async (req, res) => {
     const descarteActualizado = await Descarte.update(req.body, {
       where: { idDescarte: req.params.id },
     });
+    req.flash('success', 'Descarte de Vacunas actualizado exitosamente.');
     res.redirect('/descartes');
   } catch (error) {
     res.status(500).json({ message: "Error al actualizar el descarte. " + error.message });

@@ -94,6 +94,7 @@ const updateAplicacion = async (req, res) => {
     Aplicacion.update(req.body, {
       where: { idAplicacion: req.params.id },
     });
+    req.flash('success', 'Aplicación de Vacuna actualizada exitosamente.');
     res.redirect('/aplicaciones');
   } catch (error) {
     res.status(500).json({ message: "Error al actualizar la aplicación. " + error.message });

@@ -61,6 +61,7 @@ const updateCentroDeVacunacion = async (req, res) => {
         where: { idCentroDeVacunacion: req.params.id, },
       }
     );
+    req.flash('success', 'Centro de Vacunación actualizado exitosamente.');
     res.redirect("/centrosdevacunacion");
   } catch (error) {
     res

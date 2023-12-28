@@ -90,6 +90,7 @@ const updateLaboratorio = async (req, res) => {
       },
     });
     console.log("Se actualizo!!!!");
+    req.flash('success', 'Laboratorio actualizado exitosamente.');
     res.redirect("/laboratorios");
   } catch (error) {
     res.status(500).json({

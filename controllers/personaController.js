@@ -263,6 +263,7 @@ const updatePersona = async (req, res) => {
         }
       );
     }
+    req.flash('success', 'Persona actualizada exitosamente.');
     res.redirect("/personas");
   } catch (error) {
     res.status(500).json({ message: "Error al actualizar la persona.", error: error.message });

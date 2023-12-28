@@ -86,6 +86,7 @@ const updateTraslado = async (req, res) => {
         idTraslado: req.params.id
       },
     });
+    req.flash('success', 'Traslado de Vacuna actualizado exitosamente.');
     res.redirect("/traslados");
   } catch (error) {
     res.status(500).json({

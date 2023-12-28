@@ -61,6 +61,7 @@ const updateDepositoProvincial = async (req, res) => {
         where: { idDepositoProvincial: req.params.id, },
       }
     );
+    req.flash('success', 'Depósito Provincial actualizado exitosamente.');
     res.redirect("/depositosprovinciales");
   } catch (error) {
     res

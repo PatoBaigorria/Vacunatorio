@@ -62,7 +62,7 @@ html(lang="es")
                                 else
                                     option(depN.idDepositoNacional)=depN.idDepositoNacional
                         else
-                            option(value="") Seleccione un depósito nacional
+                            option(selected hidden value="") Seleccione un depósito nacional
                             each depN in depositosNacionales
                                 option(depN.idDepositoNacional)=depN.idDepositoNacional
                 br
@@ -94,7 +94,7 @@ html(lang="es")
                                 else
                                     option(depP.idDepositoProvincial)=depP.idDepositoProvincial
                         else
-                            option(value="") Seleccione un depósito provincial
+                            option(selected hidden value="") Seleccione un depósito provincial
                             each depP in depositosProvinciales
                                 option(depP.idDepositoProvincial)=depP.idDepositoProvincial
                 br
@@ -123,7 +123,7 @@ html(lang="es")
                                 else
                                     option(ctrosDeVac.idCentroDeVacunacion)=ctrosDeVac.idCentroDeVacunacion
                         else
-                            option(value="") Selecciona un Centro de Vacunación
+                            option(selected hidden value="") Selecciona un Centro de Vacunación
                                 each cvac in centrosDeVacunaciones
                                     option(value=cvac.idCentroDeVacunacion)= cvac.idCentroDeVacunacion
                 br

@@ -62,6 +62,7 @@ const updateDepositoNacional = async (req, res) => {
         where: { idDepositoNacional: req.params.id, },
       }
     );
+    req.flash('success', 'Depósito Nacional actualizado exitosamente.');
     res.redirect("/depositosnacionales");
   } catch (error) {
     res
