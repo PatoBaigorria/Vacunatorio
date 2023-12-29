@@ -2,399 +2,414 @@
 - var title ='Actualización de Persona'
 include ..\includes\layout
 block content
-  html(lang="es")
-    head
-      link(rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="")
-      script(src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin="")
-      style.
-        #formPersona {
-          max-width: 600px;
-          margin: auto;
-        }
-        h2 {
-          text-align: center;
-          text-decoration: underline;
-          text-underline-offset: 4px;
-          margin-top: 10px;
-        }
-        label {
-          margin-top: 5px;
-          margin-bottom: 5px;
-        }
-        #map {
-          height: 300px;
-          width: 100%;
-          border: 1px solid #000;
-        }
-    body
-      #formPersona
-        h2.text-center Actualice los datos de la persona
-        if messages.error
-          .alert.alert-danger
-            = messages.error
-        form(action="/personas/"+persona.DNI+"?_method=PUT" method="post")
-          .form-group
-            label.form-label(for="dni") DNI:
-            .input-group
-              input.form-control(type="text" id="dni" name="DNI" value=persona.DNI disabled)
-          .form-group
-            label.form-label(for="nombre") Nombre:
-            .input-group.has-validation
-              input.form-control(type="text" id="nombre" name="nombre" value=persona.nombre required)
-              .invalid-feedback.d-none(id="nombreInvalido") El nombre no puede contener más de treinta caracteres
-              .invalid-feedback.d-none(id="nombreNumeros") El nombre no puede contener números
-              .invalid-feedback.d-none(id="nombreVacio") El campo no puede estar vacío
-          .form-group
-            label.form-label(for="apellido") Apellido:
-            .input-group.has-validation
-              input.form-control(type="text" id="apellido" name="apellido" value=persona.apellido required)
-              .invalid-feedback.d-none(id="apellidoInvalido") El apellido no puede contener más de treinta caracteres
-              .invalid-feedback.d-none(id="apellidoNumeros") El apellido no puede contener números
-              .invalid-feedback.d-none(id="apellidoVacio") El campo no puede estar vacío
-          .form-group
-            label.form-label(for="email") Email:
-            .input-group.has-validation
-              input.form-control(type="email" id="email" name="email" value=persona.email required)
-              .invalid-feedback.d-none(id="emailInvalido") El email no es valido
-              .invalid-feedback.d-none(id="emailVacio") El campo no puede estar vacío
-          .form-group
-            label.form-label(for="fechaDeNacimiento") Fecha de Nacimiento:
-            .input-group.has-validation
-              input.form-control(type="date" id="fechaDeNacimiento" name="fechaDeNacimiento" value=persona.fechaDeNacimiento required)
-              .invalid-feedback.d-none(id="fechaDeNacimientoVacia") El campo no puede estar vacío
-              .invalid-feedback.d-none(id="fechaDeNacimientoAntigua") La fecha ingresada debe ser posterior a 1923
-              .invalid-feedback.d-none(id="fechaDeNacimientoSuperior") La fecha de nacimiento es superior a la actual
-              .invalid-feedback.d-none(id="fechaDeNacimientoAgente") La fecha de nacimiento debe superior cuando se trata de un agente de salud
-          .form-group
-            label(for="ocupacion") Ocupación:
-            if(persona.ocupacion=="agente de salud")
-              select.form-select(name="ocupacion" id="ocupacion" required)
-                option(value="agente de salud" selected) Agente de Salud
-                option(value="otro") Otro
-              .form-group.d-inline#matriculaDiv
-                label.form-label(for="matricula" id="matriculaLabel") Matrícula:
-                .input-group.has-validation
-                  input.form-control(type="number" id="matricula" name="matricula" value=agentedesalud.matricula)
-                  .invalid-feedback.d-none(id="matriculaVacio") El campo no puede estar vacío
-                  .invalid-feedback.d-none(id="matriculaInvalido") La matrícula no es valida
-                  .invalid-feedback.d-none(id="matriculaExiste") La matrícula ya existe
-            else 
-              select.form-select(name="ocupacion" id="ocupacion" required)
-                option(value="agente de salud") Agente de Salud
-                option(value="otro" selected) Otro
-              .form-group.d-none#matriculaDiv
-                label.form-label(for="matricula" id="matriculaLabel") Matrícula:
-                .input-group.has-validation
-                  input.form-control(type="number" id="matricula" name="matricula")
-                  .invalid-feedback.d-none(id="matriculaVacio") El campo no puede estar vacío
-                  .invalid-feedback.d-none(id="matriculaInvalido") La matrícula no es valida
-          .form-group
-            label.form-label(for="genero") Género:
-            select.form-select(name="genero" id="genero" required)
-              option(value="Masculino" selected=persona.genero === 'Masculino') Masculino
-              option(value="Femenino" selected=persona.genero === 'Femenino') Femenino
-              option(value="Otro" selected=persona.genero === 'Otro') Otro
-          .form-group
-            label.form-label(for="celular1") Celular 1:
-            .input-group.has-validation
-              input.form-control(type="tel" id="celular1" name="celular1" title="Debe contener un máximo de 10 digitos" value=telefono.celular1)
-              .invalid-feedback.d-none(id="celular1Invalido") El celular debe contener 10 digitos sin espacios ni guiones
-              .invalid-feedback.d-none(id="celular1Letras") El celular no puede contener letras, espacios ni guiones
-          .form-group
-            label.form-label(for="celular2") Celular 2:
-            .input-group.has-validation
-              input.form-control(type="tel" id="celular2" name="celular2" title="Debe contener un máximo de 10 digitos" value=telefono.celular2)
-              .invalid-feedback.d-none(id="celular2Invalido") El celular debe contener 10 digitos sin espacios ni guiones
-              .invalid-feedback.d-none(id="celular2Letras") El celular no puede contener letras, espacios ni guiones
-          .form-group
-            label.form-label(for="patologiaBase") Patologia Base:
-            select.form-select(name="patologiaBase" id="patologiaBase" required)
-              option(value="ninguna" selected=patologiabase.patologiaBase === 'ninguna') Ninguna
-              option(value="obesidad" selected=patologiabase.patologiaBase === 'obesidad') Obesidad
-              option(value="diabetes" selected=patologiabase.patologiaBase === 'diabetes') Diabetes
-              option(value="enfermedad respiratorio cronica" selected=patologiabase.patologiaBase === 'enfermedad respiratorio cronica') Enfermedad respiratoria crónica
-              option(value="enfermedad cardiaca cronica" selected=patologiabase.patologiaBase === 'enfermedad cardiaca cronica') Enfermedad cardiaca crónica
-              option(value="inmunodeficiencia congenita o adquirida" selected=patologiabase.patologiaBase === 'inmunodeficiencia congenita o adquirida') Inmunodeficiencia congénita o adquirida
-              option(value="enfermedad oncohematologica" selected=patologiabase.patologiaBase === 'enfermedad oncohematologica') Enfermedad oncohematológica
-              option(value="trasplante de organo solido o de medula osea" selected=patologiabase.patologiaBase === 'trasplante de organo solido o de medula osea') Trasplante de órgano sólido o de médula ósea
-              option(value="insuficiencia renal cronica" selected=patologiabase.patologiaBase === 'insuficiencia renal cronica') Insuficiencia renal crónica
-              option(value="otro" selected=patologiabase.patologiaBase === 'otro') Otro
-          .form-group
-            label.form-label(for="ubicacion") Seleccione ubicación en el mapa:
-            #map
-          .form-group
-            label.form-label(for="longitud") Longitud:
-            input.form-control(type="text" id="longitud" name="longitud" readonly value=persona.longitud)
-          .form-group
-            label.form-label(for="latitud") Latitud:
-            input.form-control(type="text" id="latitud" name="latitud" readonly value=persona.latitud)
-          br
-          button(type="submit" class="btn btn-primary") Actualizar
-          | &nbsp;&nbsp;&nbsp;&nbsp;
-          button(type="button" class="btn btn-primary" onclick="window.history.back()") Volver
+    html(lang="es")
+        head
+            link(rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="")
+            script(src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin="")
+            style.
+                #formPersona {
+                    max-width: 600px;
+                    margin: auto;
+                }
+                h2 {
+                    text-align: center;
+                    text-decoration: underline;
+                    text-underline-offset: 4px;
+                    margin-top: 10px;
+                }
+                label {
+                    margin-top: 5px;
+                    margin-bottom: 5px;
+                }
+                #map {
+                    height: 300px;
+                    width: 100%;
+                    border: 1px solid #000;
+                }
+        body
+            #formPersona
+                h2.text-center Actualice los datos de la persona
+                if messages.error
+                    .alert.alert-danger
+                        = messages.error
+                form(action="/personas/"+persona.DNI+"?_method=PUT" method="post")
+                    .form-group
+                        label.form-label(for="dni") DNI:
+                        .input-group
+                            input.form-control(type="text" id="dni" name="DNI" value=persona.DNI disabled)
+                    .form-group
+                        label.form-label(for="nombre") Nombre:
+                        .input-group.has-validation
+                            input.form-control(type="text" id="nombre" name="nombre" value=persona.nombre required)
+                            .invalid-feedback.d-none(id="nombreInvalido") El nombre no puede contener más de treinta caracteres
+                            .invalid-feedback.d-none(id="nombreNumeros") El nombre no puede contener números
+                            .invalid-feedback.d-none(id="nombreVacio") El campo no puede estar vacío
+                    .form-group
+                        label.form-label(for="apellido") Apellido:
+                        .input-group.has-validation
+                            input.form-control(type="text" id="apellido" name="apellido" value=persona.apellido required)
+                            .invalid-feedback.d-none(id="apellidoInvalido") El apellido no puede contener más de treinta caracteres
+                            .invalid-feedback.d-none(id="apellidoNumeros") El apellido no puede contener números
+                            .invalid-feedback.d-none(id="apellidoVacio") El campo no puede estar vacío
+                    .form-group
+                        label.form-label(for="email") Email:
+                        .input-group.has-validation
+                            input.form-control(type="email" id="email" name="email" value=persona.email required)
+                            .invalid-feedback.d-none(id="emailInvalido") El email no es valido
+                            .invalid-feedback.d-none(id="emailVacio") El campo no puede estar vacío
+                    .form-group
+                        label.form-label(for="fechaDeNacimiento") Fecha de Nacimiento:
+                        .input-group.has-validation
+                            input.form-control(type="date" id="fechaDeNacimiento" name="fechaDeNacimiento" value=persona.fechaDeNacimiento required)
+                            .invalid-feedback.d-none(id="fechaDeNacimientoVacia") El campo no puede estar vacío
+                            .invalid-feedback.d-none(id="fechaDeNacimientoAntigua") La fecha ingresada debe ser posterior a 1923
+                            .invalid-feedback.d-none(id="fechaDeNacimientoSuperior") La fecha de nacimiento es superior a la actual
+                            .invalid-feedback.d-none(id="fechaDeNacimientoAgente") La fecha de nacimiento debe superior cuando se trata de un agente de salud
+                    .form-group
+                        label(for="ocupacion") Ocupación:
+                        if(persona.ocupacion=="agente de salud")
+                            select.form-select(name="ocupacion" id="ocupacion" required)
+                                option(value="agente de salud" selected) Agente de Salud
+                                option(value="otro") Otro
+                            .form-group.d-inline#matriculaDiv
+                                label.form-label(for="matricula" id="matriculaLabel") Matrícula:
+                                .input-group.has-validation
+                                    input.form-control(type="number" id="matricula" name="matricula" value=agentedesalud.matricula)
+                                    .invalid-feedback.d-none(id="matriculaVacio") El campo no puede estar vacío
+                                    .invalid-feedback.d-none(id="matriculaInvalido") La matrícula no es valida
+                                    .invalid-feedback.d-none(id="matriculaExiste") La matrícula ya existe
+                        else 
+                            select.form-select(name="ocupacion" id="ocupacion" required)
+                                option(value="agente de salud") Agente de Salud
+                                option(value="otro" selected) Otro
+                            .form-group.d-none#matriculaDiv
+                                label.form-label(for="matricula" id="matriculaLabel") Matrícula:
+                                .input-group.has-validation
+                                    input.form-control(type="number" id="matricula" name="matricula")
+                                    .invalid-feedback.d-none(id="matriculaVacio") El campo no puede estar vacío
+                                    .invalid-feedback.d-none(id="matriculaExiste") La matrícula ya existe
+                                    .invalid-feedback.d-none(id="matriculaInvalido") La matrícula no es valida
+                    .form-group
+                        label.form-label(for="genero") Género:
+                        select.form-select(name="genero" id="genero" required)
+                            option(value="Masculino" selected=persona.genero === 'Masculino') Masculino
+                            option(value="Femenino" selected=persona.genero === 'Femenino') Femenino
+                            option(value="Otro" selected=persona.genero === 'Otro') Otro
+                    .form-group
+                        label.form-label(for="celular1") Celular 1:
+                        .input-group.has-validation
+                            input.form-control(type="tel" id="celular1" name="celular1" title="Debe contener un máximo de 10 digitos" value=telefono.celular1)
+                            .invalid-feedback.d-none(id="celular1Invalido") El celular debe contener 10 digitos sin espacios ni guiones
+                            .invalid-feedback.d-none(id="celular1Letras") El celular no puede contener letras, espacios ni guiones
+                    .form-group
+                        label.form-label(for="celular2") Celular 2:
+                        .input-group.has-validation
+                            input.form-control(type="tel" id="celular2" name="celular2" title="Debe contener un máximo de 10 digitos" value=telefono.celular2)
+                            .invalid-feedback.d-none(id="celular2Invalido") El celular debe contener 10 digitos sin espacios ni guiones
+                            .invalid-feedback.d-none(id="celular2Letras") El celular no puede contener letras, espacios ni guiones
+                    .form-group
+                        label.form-label(for="patologiaBase") Patologia Base:
+                        select.form-select(name="patologiaBase" id="patologiaBase" required)
+                            option(value="ninguna" selected=patologiabase.patologiaBase === 'ninguna') Ninguna
+                            option(value="obesidad" selected=patologiabase.patologiaBase === 'obesidad') Obesidad
+                            option(value="diabetes" selected=patologiabase.patologiaBase === 'diabetes') Diabetes
+                            option(value="enfermedad respiratorio cronica" selected=patologiabase.patologiaBase === 'enfermedad respiratorio cronica') Enfermedad respiratoria crónica
+                            option(value="enfermedad cardiaca cronica" selected=patologiabase.patologiaBase === 'enfermedad cardiaca cronica') Enfermedad cardiaca crónica
+                            option(value="inmunodeficiencia congenita o adquirida" selected=patologiabase.patologiaBase === 'inmunodeficiencia congenita o adquirida') Inmunodeficiencia congénita o adquirida
+                            option(value="enfermedad oncohematologica" selected=patologiabase.patologiaBase === 'enfermedad oncohematologica') Enfermedad oncohematológica
+                            option(value="trasplante de organo solido o de medula osea" selected=patologiabase.patologiaBase === 'trasplante de organo solido o de medula osea') Trasplante de órgano sólido o de médula ósea
+                            option(value="insuficiencia renal cronica" selected=patologiabase.patologiaBase === 'insuficiencia renal cronica') Insuficiencia renal crónica
+                            option(value="otro" selected=patologiabase.patologiaBase === 'otro') Otro
+                    .form-group
+                        label.form-label(for="ubicacion") Seleccione ubicación en el mapa:
+                        #map
+                    .form-group
+                        label.form-label(for="longitud") Longitud:
+                        input.form-control(type="text" id="longitud" name="longitud" readonly value=persona.longitud)
+                    .form-group
+                        label.form-label(for="latitud") Latitud:
+                        input.form-control(type="text" id="latitud" name="latitud" readonly value=persona.latitud)
+                    br
+                    button(type="submit" class="btn btn-primary") Actualizar
+                    | &nbsp;&nbsp;&nbsp;&nbsp;
+                    button(type="button" class="btn btn-primary" onclick="window.history.back()") Volver
 
 
-  script.
-    // Obtener fechas una vez que el DOM está listo
-    $(function () {
-      let pers = !{JSON.stringify(persona)};
-      $('#map').css('width', $('#formPersona').outerWidth() + 'px');
-      $().ready(function () {
-        initMap();
-      });
-
-      function initMap() {
-        let map = L.map('map');
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-          attribution: '© OpenStreetMap contributors'
-        }).addTo(map);
-
-        if ("geolocation" in navigator) {
-          navigator.geolocation.getCurrentPosition(function (position) {
-            var userLocation = [pers.latitud, pers.longitud];
-            map.setView(userLocation, 15);
-            var marker = L.marker(userLocation, { draggable: true }).addTo(map);
-            marker.on('dragend', function (event) {
-              actualizarCoordenadas(event.target.getLatLng());
+    script.
+        // Obtener fechas una vez que el DOM está listo
+        $(function () {
+            let pers = !{JSON.stringify(persona)};
+            $('#map').css('width', $('#formPersona').outerWidth() + 'px');
+            $().ready(function () {
+                initMap();
             });
-            actualizarCoordenadas(map.getCenter());
-          });
-        }
-      }
 
-      function actualizarCoordenadas(coords) {
-        var lng = coords.lng.toFixed(6);
-        var lat = coords.lat.toFixed(6);
-        $('#longitud').val(lng);
-        $('#latitud').val(lat);
-      }
+            function initMap() {
+                let map = L.map('map');
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    attribution: '© OpenStreetMap contributors'
+                }).addTo(map);
 
-      // Definir patrones de validación
-      const namePattern = /^[A-Za-záéíóúüñÁÉÍÓÚÜÑ\s]{1,}$/;
-      const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-      const cellPattern = /^[0-9]{1,}$/;
-
-      // Funciones para mostrar y quitar errores
-      function mostrarError(input, valid) {
-        input.addClass('is-invalid').removeClass('is-valid').addClass();
-        input.next('.invalid-feedback').removeClass('d-none');
-        if (valid) $('#' + input.attr('id') + valid).removeClass('d-none');
-      }
-
-      function quitarError(input) {
-        input.addClass('is-valid').removeClass('is-invalid');
-        input.next('.invalid-feedback').addClass('d-none');
-      }
-
-      // Validar existencia y mostrar mensajes correspondientes
-      function validarCampo(campo, endpoint, pattern, valid1, valid2, valid3) {
-        const value = campo.val().trim();
-        // Limpiar errores previos
-        quitarError(campo);
-
-        if (endpoint === 'dni' || endpoint === 'matricula') {
-          $.post(endpoint, { data: value }, res => {
-            if (!value) {
-              mostrarError(campo, valid1);
-              $('#' + campo.attr('id') + valid1).removeClass('d-none');
-              $('#' + campo.attr('id') + valid2).addClass('d-none');
-            } else if (!res.valido) {
-              mostrarError(campo, valid2);
-              $('#' + campo.attr('id') + valid2).removeClass('d-none');
-              $('#' + campo.attr('id') + valid1).addClass('d-none');
-            } else if(campo ){
-
+                if ("geolocation" in navigator) {
+                    navigator.geolocation.getCurrentPosition(function (position) {
+                        var userLocation = [pers.latitud, pers.longitud];
+                        map.setView(userLocation, 15);
+                        var marker = L.marker(userLocation, { draggable: true }).addTo(map);
+                        marker.on('dragend', function (event) {
+                            actualizarCoordenadas(event.target.getLatLng());
+                        });
+                        actualizarCoordenadas(map.getCenter());
+                    });
+                }
             }
-          });
-        } else {
-          if (campo.val().length === 0) {
-            mostrarError(campo, valid1);
-            $('#' + campo.attr('id') + valid1).removeClass('d-none');
-            $('#' + campo.attr('id') + valid2).addClass('d-none');
-            if(valid3 !== ''){
-              $('#' + campo.attr('id') + valid3).addClass('d-none');
+
+            function actualizarCoordenadas(coords) {
+                var lng = coords.lng.toFixed(6);
+                var lat = coords.lat.toFixed(6);
+                $('#longitud').val(lng);
+                $('#latitud').val(lat);
             }
-          } else if (!(pattern.test(value))) {
-            mostrarError(campo, valid2);
-            $('#' + campo.attr('id') + valid2).removeClass('d-none');
-            $('#' + campo.attr('id') + valid1).addClass('d-none');
-            if(valid3 !== ''){
-              $('#' + campo.attr('id') + valid3).addClass('d-none');
+
+            // Definir patrones de validación
+            const namePattern = /^[A-Za-záéíóúüñÁÉÍÓÚÜÑ\s]{1,}$/;
+            const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+            const cellPattern = /^[0-9]{1,}$/;
+
+            // Funciones para mostrar y quitar errores
+            function mostrarError(input, valid) {
+                input.addClass('is-invalid').removeClass('is-valid').addClass();
+                $('#' + input.attr('id') + valid).removeClass('d-none');
             }
-          } else if (campo.val().length > 30 && (endpoint === 'nombre' || endpoint === 'apellido')) {
-            mostrarError(campo, valid3);
-            $('#' + campo.attr('id') + valid3).removeClass('d-none');
-            $('#' + campo.attr('id') + valid1).addClass('d-none');
-            $('#' + campo.attr('id') + valid2).addClass('d-none');
-          }
-        }
-      }
 
-      function validarCelular(campo, pattern) {
-        if (campo.val().trim() !== '') {
-          if (!pattern.test(campo.val().trim())) {
-            mostrarError(campo, 'Letras');
-            $('#' + campo.attr('id') + 'Letras').removeClass('d-none');
-            $('#' + campo.attr('id') + 'Invalido').addClass('d-none');
-          } else if(campo.val().length > 10){
-            mostrarError(campo, 'Invalido')
-            $('#' + campo.attr('id') + 'Invalido').removeClass('d-none');
-            $('#' + campo.attr('id') + 'Letras').addClass('d-none');
-          } else {
-            quitarError(campo);
-            $('#' + campo.attr('id') + 'Letras').addClass('d-none');
-            $('#' + campo.attr('id') + 'Invalido').addClass('d-none');
-          }
-        } else {
-          quitarError(campo);
-        }
-      }
+            function quitarError(input) {
+                input.addClass('is-valid').removeClass('is-invalid');
+                input.next('.invalid-feedback').addClass('d-none');
+            }
 
-      function validarComboBox(campo){
-        if(campo.val() !== ''){
-          quitarError(campo);
-        }
-      }
+            // Validar existencia y mostrar mensajes correspondientes
+            function validarCampo(campo, endpoint, pattern, valid1, valid2, valid3) {
+                const value = campo.val().trim();
+                // Limpiar errores previos
+                quitarError(campo);
 
-      function validarFecha() {
-        const campo = $('#fechaDeNacimiento');
-        const fechaNacimiento = campo.val();
-        const valid1 = 'Vacia'
-        const valid2 = 'Superior'
-        const valid3 = 'Agente'
-        const valid4 = 'Antigua'
-        // Limpiar errores previos
-        quitarError(campo)
-        if (!fechaNacimiento) {
-          mostrarError(campo, 'El campo no puede estar vacío');
-          $('#' + campo.attr('id') + valid1).removeClass('d-none');
-          $('#' + campo.attr('id') + valid2).addClass('d-none')
-          $('#' + campo.attr('id') + valid3).addClass('d-none')
-          $('#' + campo.attr('id') + valid4).addClass('d-none')
-        } else {
-          let fechaIngresada = new Date(fechaNacimiento)
-          fechaIngresada.setHours(24, 0, 0, 0)
-          let fechaActual = new Date()
-          fechaActual.setHours(0, 0, 0, 0)      
-          if (fechaIngresada.getFullYear() < 1924) {
-            mostrarError(campo, 'La fecha ingresada debe ser posterior a 1923');
-            $('#' + campo.attr('id') + valid4).removeClass('d-none');
-            $('#' + campo.attr('id') + valid2).addClass('d-none')
-            $('#' + campo.attr('id') + valid1).addClass('d-none')
-            $('#' + campo.attr('id') + valid3).addClass('d-none')
-          } else if (((fechaIngresada - fechaActual) / (1000 * 60 * 60 * 24)) > 0) {
-            mostrarError(campo, 'La fecha de nacimiento es superior a la actual');
-            $('#' + campo.attr('id') + valid2).removeClass('d-none');
-            $('#' + campo.attr('id') + valid1).addClass('d-none')
-            $('#' + campo.attr('id') + valid3).addClass('d-none')
-            $('#' + campo.attr('id') + valid4).addClass('d-none')
-          } else if ($('#ocupacion option:selected').val() === 'agente de salud' && (((fechaIngresada - fechaActual) / (1000 * 60 * 60 * 24)) > -8400)) { //725.328.000.000
-            mostrarError(campo, 'La fecha de nacimiento debe ser anterior a 2000 para un agente de salud');
-            $('#' + campo.attr('id') + valid3).removeClass('d-none');
-            $('#' + campo.attr('id') + valid2).addClass('d-none')
-            $('#' + campo.attr('id') + valid1).addClass('d-none')
-            $('#' + campo.attr('id') + valid4).addClass('d-none')
-          } else {
-            quitarError(campo);
-          }
-        }
-      }
+                if (endpoint === 'dni' || endpoint === 'matricula') {
+                    let matricula = !{JSON.stringify(agentedesalud)}.matricula;
+                    let agentes = !{JSON.stringify(agentesdesalud)};
 
-      // Función para validar todos los campos antes de enviar el formulario  4x
-      function validarFormulario() {
-        var inputs = $('#formPersona input:visible, #formPersona select:visible');
-        let valid = true;
-        inputs.each(function () {
-          var input = $(this);
-          if ((input.attr('id') !== 'longitud' && input.attr('id') !== 'latitud') && (!input.hasClass('is-valid')) || (input.attr('id') === 'matriculaDiv' && !(input.hasClass('d-none')))) {
-            console.log(input.attr('id'));
-            valid = false;
-          }
+                    $.post(endpoint, { data: value }, res => {
+                        if (!value) {
+                            mostrarError(campo, valid1);
+                            $('#' + campo.attr('id') + valid1).removeClass('d-none');
+                            $('#' + campo.attr('id') + valid2).addClass('d-none');
+                            $('#' + campo.attr('id') + valid3).addClass('d-none');
+                        } else if (!res.valido) {
+                            mostrarError(campo, valid2);
+                            $('#' + campo.attr('id') + valid2).removeClass('d-none');
+                            $('#' + campo.attr('id') + valid1).addClass('d-none');
+                            $('#' + campo.attr('id') + valid3).addClass('d-none');
+                        } else if((endpoint === 'matricula') && (value != matricula)){
+                            agentes.forEach(agente => {
+                                if(value == agente.matricula){
+                                    mostrarError(campo, valid3);
+                                    $('#' + campo.attr('id') + valid3).removeClass('d-none');
+                                    $('#' + campo.attr('id') + valid1).addClass('d-none');
+                                    $('#' + campo.attr('id') + valid2).addClass('d-none');
+                                }
+                            })
+                        } else {
+                            quitarError(campo);
+                        }
+                    });
+                } else {
+                    if (campo.val().length === 0) {
+                        mostrarError(campo, valid1);
+                        $('#' + campo.attr('id') + valid1).removeClass('d-none');
+                        $('#' + campo.attr('id') + valid2).addClass('d-none');
+                        if(valid3 !== ''){
+                            $('#' + campo.attr('id') + valid3).addClass('d-none');
+                        }
+                    } else if (!(pattern.test(value))) {
+                        mostrarError(campo, valid2);
+                        $('#' + campo.attr('id') + valid2).removeClass('d-none');
+                        $('#' + campo.attr('id') + valid1).addClass('d-none');
+                        if(valid3 !== ''){
+                            $('#' + campo.attr('id') + valid3).addClass('d-none');
+                        }
+                    } else if (campo.val().length > 30 && (endpoint === 'nombre' || endpoint === 'apellido')) {
+                        mostrarError(campo, valid3);
+                        $('#' + campo.attr('id') + valid3).removeClass('d-none');
+                        $('#' + campo.attr('id') + valid1).addClass('d-none');
+                        $('#' + campo.attr('id') + valid2).addClass('d-none');
+                    }
+                }
+            }
 
+            function validarCelular(campo, pattern) {
+                if (campo.val().trim() !== '') {
+                    if (!pattern.test(campo.val().trim())) {
+                        mostrarError(campo, 'Letras');
+                        $('#' + campo.attr('id') + 'Letras').removeClass('d-none');
+                        $('#' + campo.attr('id') + 'Invalido').addClass('d-none');
+                    } else if(campo.val().length > 10){
+                        mostrarError(campo, 'Invalido')
+                        $('#' + campo.attr('id') + 'Invalido').removeClass('d-none');
+                        $('#' + campo.attr('id') + 'Letras').addClass('d-none');
+                    } else {
+                        quitarError(campo);
+                        $('#' + campo.attr('id') + 'Letras').addClass('d-none');
+                        $('#' + campo.attr('id') + 'Invalido').addClass('d-none');
+                    }
+                } else {
+                    quitarError(campo);
+                }
+            }
+
+            function validarComboBox(campo){
+                if(campo.val() !== ''){
+                    quitarError(campo);
+                }
+            }
+
+            function validarFecha() {
+                const campo = $('#fechaDeNacimiento');
+                const fechaNacimiento = campo.val();
+                const valid1 = 'Vacia'
+                const valid2 = 'Superior'
+                const valid3 = 'Agente'
+                const valid4 = 'Antigua'
+                // Limpiar errores previos
+                quitarError(campo)
+                if (!fechaNacimiento) {
+                    mostrarError(campo, 'El campo no puede estar vacío');
+                    $('#' + campo.attr('id') + valid1).removeClass('d-none');
+                    $('#' + campo.attr('id') + valid2).addClass('d-none')
+                    $('#' + campo.attr('id') + valid3).addClass('d-none')
+                    $('#' + campo.attr('id') + valid4).addClass('d-none')
+                } else {
+                    let fechaIngresada = new Date(fechaNacimiento)
+                    fechaIngresada.setHours(24, 0, 0, 0)
+                    let fechaActual = new Date()
+                    fechaActual.setHours(0, 0, 0, 0)      
+                    if (fechaIngresada.getFullYear() < 1924) {
+                        mostrarError(campo, 'La fecha ingresada debe ser posterior a 1923');
+                        $('#' + campo.attr('id') + valid4).removeClass('d-none');
+                        $('#' + campo.attr('id') + valid2).addClass('d-none')
+                        $('#' + campo.attr('id') + valid1).addClass('d-none')
+                        $('#' + campo.attr('id') + valid3).addClass('d-none')
+                    } else if (((fechaIngresada - fechaActual) / (1000 * 60 * 60 * 24)) > 0) {
+                        mostrarError(campo, 'La fecha de nacimiento es superior a la actual');
+                        $('#' + campo.attr('id') + valid2).removeClass('d-none');
+                        $('#' + campo.attr('id') + valid1).addClass('d-none')
+                        $('#' + campo.attr('id') + valid3).addClass('d-none')
+                        $('#' + campo.attr('id') + valid4).addClass('d-none')
+                    } else if ($('#ocupacion option:selected').val() === 'agente de salud' && (((fechaIngresada - fechaActual) / (1000 * 60 * 60 * 24)) > -8400)) { //725.328.000.000
+                        mostrarError(campo, 'La fecha de nacimiento debe ser anterior a 2000 para un agente de salud');
+                        $('#' + campo.attr('id') + valid3).removeClass('d-none');
+                        $('#' + campo.attr('id') + valid2).addClass('d-none')
+                        $('#' + campo.attr('id') + valid1).addClass('d-none')
+                        $('#' + campo.attr('id') + valid4).addClass('d-none')
+                    } else {
+                        quitarError(campo);
+                    }
+                }
+            }
+
+            // Función para validar todos los campos antes de enviar el formulario  4x
+            function validarFormulario() {
+                var inputs = $('#formPersona input:visible, #formPersona select:visible');
+                let valid = true;
+                inputs.each(function () {
+                    var input = $(this);
+                    if ((input.attr('id') !== 'longitud' && input.attr('id') !== 'latitud') && (!input.hasClass('is-valid')) || (input.attr('id') === 'matriculaDiv' && !(input.hasClass('d-none')))) {
+                        console.log(input.attr('id'));
+                        valid = false;
+                    }
+
+                });
+                if(!valid) {
+                    alert('Por favor, complete todos los campos correctamente.');
+                }
+                return valid;
+            }
+
+            function mostrarMatricula(){
+                quitarError($('#matricula'));
+                if($('#ocupacion option:selected').val() === 'agente de salud'){
+                    let agen = !{JSON.stringify(agentedesalud)};
+                    $('#matriculaDiv').removeClass('d-none');
+                    $('#matricula').val(agen.matricula);
+                } else {
+                    $('#matriculaDiv').addClass('d-none');
+                    $('#matricula').val('');
+                }
+            }
+
+
+            // Eventos
+            $('#dni').on('keyup focusout', function () {
+                validarCampo($(this), 'dni', '', 'Vacio', 'Invalido', 'Existe');
+            });
+
+            $('#nombre, #apellido').on('keyup focusout', function() {
+                validarCampo($(this), 'nombre', namePattern, 'Vacio', 'Numeros', 'Invalido');
+            });
+
+            $('#email').on('keyup focusout', function() {
+                validarCampo($(this), 'email', emailPattern, 'Vacio', 'Invalido', '');
+            });
+
+            $('#fechaDeNacimiento').on('keyup focusout', function () {
+                validarFecha();
+            });
+
+            $('#ocupacion').on('change', function () {
+                validarFecha();
+                validarComboBox($(this));
+                mostrarMatricula();
+            });
+
+            $('#genero, #patologiaBase').on('change', function () {
+                validarComboBox($(this));
+            });
+
+            $('#matricula').on('keyup focusout', function () {
+                validarCampo($(this), 'matricula', cellPattern, 'Vacio', 'Invalido', 'Existe');
+            });
+
+            $('#celular1, #celular2').on('keyup focusout', function() {
+                validarCelular($(this), cellPattern);
+            });
+
+            $('#longitud, #latitud').on('focusout', function() {
+                $(this).addClass('is-valid').removeClass('is-invalid');
+            });
+
+            $('#map').on('dragend', function(event) {
+                quitarError($('#map'));
+                quitarError($('#longitud'));
+                quitarError($('#latitud'));
+                var lng = event.target.getCenter().lng.toFixed(6);
+                var lat = event.target.getCenter().lat.toFixed(6);
+                actualizarCoordenadas({ lng: lng, lat: lat });
+            });
+
+            $('#dni, #nombre, #apellido, #email, #fechaDeNacimiento, #matricula, #celular1, #celular2, #longitud, #latitud').trigger('focusout');
+            $('#ocupacion, #genero, #patologiaBase').trigger('change');
+
+            // Asociar el evento submit al formulario
+            $('#formPersona input').on('keypress submit', function () {
+                if (event.which === 13) {
+                    console.log("Formulario enviado por teclado");
+                    if (!validarFormulario()) {
+                        event.preventDefault(); // Evita que el formulario se envíe si la validación falla
+                    }
+                }
+            });
+            $('#formPersona').on('submit', function (event) {
+                // Retorna el resultado de la función validarFormulario
+                console.log("Formulario enviado por submit");
+                if (!validarFormulario()) {
+                    event.preventDefault(); // Evita que el formulario se envíe si la validación falla
+                }
+            });
         });
-        if(!valid) {
-          alert('Por favor, complete todos los campos correctamente.');
-        }
-        return valid;
-      }
-
-      function mostrarMatricula(campo){
-        if(campo.val() === 'agente de salud'){
-          let agen = !{JSON.stringify(agentedesalud)};
-          $('#matriculaDiv').removeClass('d-none');
-          $('#matricula').val(agen.matricula);
-        } else {
-          $('#matriculaDiv').addClass('d-none');
-          $('#matricula').val('');
-        }
-      }
-
-
-      // Eventos
-      $('#dni').on('keyup focusout', function () {
-        validarCampo($(this), 'dni', '', 'Vacio', 'Invalido', 'Existe');
-      });
-
-      $('#nombre, #apellido').on('keyup focusout', function() {
-        validarCampo($(this), 'nombre', namePattern, 'Vacio', 'Numeros', 'Invalido');
-      });
-
-      $('#email').on('keyup focusout', function() {
-        validarCampo($(this), 'email', emailPattern, 'Vacio', 'Invalido', '');
-      });
-
-      $('#fechaDeNacimiento').on('keyup focusout', function () {
-        validarFecha();
-      });
-
-      $('#ocupacion').on('change', function () {
-        validarFecha();
-        validarComboBox($(this));
-        mostrarMatricula($(this));
-      });
-
-      $('#genero, #patologiaBase').on('change', function () {
-        validarComboBox($(this));
-      });
-
-      $('#matricula').on('keyup focusout', function () {
-        validarCampo($(this), 'matricula', cellPattern, 'Vacio', 'Invalido', 'Existe');
-      });
-
-      $('#celular1, #celular2').on('keyup focusout', function() {
-        validarCelular($(this), cellPattern);
-      });
-
-      $('#longitud, #latitud').on('focusout', function() {
-        $(this).addClass('is-valid').removeClass('is-invalid');
-      });
-
-      $('#map').on('dragend', function(event) {
-        quitarError($('#map'));
-        quitarError($('#longitud'));
-        quitarError($('#latitud'));
-        var lng = event.target.getCenter().lng.toFixed(6);
-        var lat = event.target.getCenter().lat.toFixed(6);
-        actualizarCoordenadas({ lng: lng, lat: lat });
-      });
-
-      $('#dni, #nombre, #apellido, #email, #fechaDeNacimiento, #matricula, #celular1, #celular2, #longitud, #latitud').trigger('focusout');
-      $('#ocupacion, #genero, #patologiaBase').trigger('change');
-
-      // Asociar el evento submit al formulario
-      $('#formPersona input').on('keypress submit', function () {
-        if (event.which === 13) {
-          console.log("Formulario enviado por teclado");
-          if (!validarFormulario()) {
-            event.preventDefault(); // Evita que el formulario se envíe si la validación falla
-          }
-        }
-      });
-      $('#formPersona').on('submit', function (event) {
-        // Retorna el resultado de la función validarFormulario
-        console.log("Formulario enviado por submit");
-        if (!validarFormulario()) {
-          event.preventDefault(); // Evita que el formulario se envíe si la validación falla
-        }
-      });
-    });

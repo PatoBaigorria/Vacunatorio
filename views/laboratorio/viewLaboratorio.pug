@@ -1,3 +1,4 @@
+- var title = 'Listado de Laboratorios'
 include ..\includes\layout
 block content
 head
@@ -9,29 +10,47 @@ head
             text-underline-offset: 4px; /* Ajusta el espacio entre el texto y el subrayado */
         }
 
+        .flash-message {
+            display: none;
+            opacity: 1;
+            transition: opacity 1s ease-out;
+        }
+
+        .fade-in {
+            display: block;
+            animation: fadeOut 3s 1s; /* fadeIn dura 3 segundos, fadeOut comienza después de 3 segundos y dura 2 segundos */
+        }
+
+        @keyframes fadeOut {
+            from {
+                opacity: 1;
+            }
+            to {
+                opacity: 0;
+            }
+        }
 body
     div.container.my-4
-      div.row
-        div.col-sm-12.col-md-12.col-lg-12.col-xl-12
-            section#viewLaboratorios
-                h2 Listado de Laboratorios
-                br
-                if messages.success
-                    .alert.alert-success
-                        = messages.success 
-                div(style="text-align: left;")
-                    a.btn.btn-primary.btn-lg(href="/laboratorios/alta") Alta
-    
+        div.row
+            div.col-sm-12.col-md-12.col-lg-12.col-xl-12
+                section#viewLaboratorios
+                    h2 Listado de Laboratorios
                     br
-                    br
-                    div.table.responsive
-                        table#laboratorios.table.table-striped.table-bordered
-                //Bootstrap   
+                    if messages.success
+                        .alert.alert-successflash-message.fade-in
+                            = messages.success 
+                    div(style="text-align: left;")
+                        a.btn.btn-primary.btn-lg(href="/laboratorios/alta") Alta
+                        br
+                        br
+                        div.table.responsive
+                            table#laboratorios.table.table-striped.table-bordered
+                    //Bootstrap   
 script.
     let labs = !{JSON.stringify(laboratorios)};
     let tabla 
     $(document).ready(function() {
-       tabla = $('#laboratorios').DataTable({
+        tabla = $('#laboratorios').DataTable({
             data: labs,
             pageLength:5,
             lengthMenu:[5,10,15,20],
@@ -62,10 +81,16 @@ script.
                 { width: '15%', targets: [0, 1, 2] }, // Ancho del 10% para la primera columna
                 { width: '8%', targets: [6] },
             ]
-        });
+            });
     });
-    
+
     $(document).ready(function() {
+        $('.flash-message').addClass('fade-in');
+        // Configurar un temporizador para ocultar el mensaje después de cierto tiempo
+        setTimeout(function() {
+            $('.flash-message').removeClass('fade-in');
+        }, 3000);
+
         tabla.on('click', 'button', function (f) {
             let data = tabla.row(f.target.closest('tr')).data();
             if ($(event.target).hasClass('fa-trash-can')) {
@@ -89,8 +114,7 @@ script.
             } else {window.location.href= "/laboratorios/" + data.idLaboratorio}
         })
     });
-    
+
     function alta(){
         window.location.href= "/laboratorios/alta"
     }
-    

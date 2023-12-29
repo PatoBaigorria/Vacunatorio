@@ -32,7 +32,10 @@ const listarLaboratorios = async (req, res) => {
 // Muestra formulario de creacion de Laboratorio
 const altaLaboratorio = async (req, res) => {
   try {
-    res.render("laboratorio/formLaboratorio");
+    let laboratorios = await Laboratorio.findAll({
+      raw: true
+    });
+    res.render("laboratorio/formLaboratorio", { laboratorios: laboratorios });
   } catch (error) {
     res.status(500).json({
       message: "Error al crear el laboratorio.",

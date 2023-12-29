@@ -11,7 +11,7 @@ const agentedesalud = Agentedesalud.init(
       foreignKey: true,
     },
     matricula: {
-      allowNull: false,
+      allowNull: true,
       type: DataTypes.INTEGER,
     },
   },

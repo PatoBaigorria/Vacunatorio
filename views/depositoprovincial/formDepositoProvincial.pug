@@ -3,6 +3,8 @@ include ..\includes\layout
 block content
 html(lang="es") 
     head
+        link(rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="")
+        script(src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin="")
         style.
             #formDepositoProvincial {
                 max-width: 600px;
@@ -15,7 +17,13 @@ html(lang="es")
                 margin-top: 10px;
             }
             label {
+                margin-top: 5px;
                 margin-bottom: 5px;
+            }
+            #map {
+                height: 300px;
+                width: 100%;
+                border: 1px solid #000;
             }
     body
         #formDepositoProvincial
@@ -26,34 +34,54 @@ html(lang="es")
             br
             form(action="/depositosprovinciales" method="post")
                 .form-group
+                    label.form-label(for="ubicacion") Seleccione ubicación en el mapa:
+                    #map
+                .form-group
                     label.form-label(for="longitud") Longitud:
-                    .input-group.has-validation
-                        input.form-control(type="text" id="longitud" name="longitud")
-                        .invalid-feedback(id="longInvalido") Ingrese solo números
+                    input.form-control(type="text" id="longitud" name="longitud" readonly)
                 .form-group
                     label.form-label(for="latitud") Latitud:
-                    .input-group.has-validation
-                        input.form-control(type="text" id="latitud" name="latitud")
-                        .invalid-feedback(id="latInvalido") Ingrese solo números
-                    br
+                    input.form-control(type="text" id="latitud" name="latitud" readonly)
+                br
                 button(type="submit" class="btn btn-primary") Dar de Alta
                 | &nbsp;&nbsp;&nbsp;&nbsp;
                 button(type="button" class="btn btn-primary" onclick="window.history.back()") Volver
     script.
-        const longitudPattern = /^[-+]?([1-8]?\d(\.\d+)?|90(\.0+)?)$/;
-        const latitudPattern = /^[-+]?([1-8]?\d(\.\d+)?|90(\.0+)?)$/;
-
-        function validarRegex(regex){
-            if(!regex.test($(this).val())){
-                this.addClass('is-invalid');
-                this.removeClass('is-valid');
-            } else {
-                this.addClass('is-valid');
-                this.removeClass('is-invalid');
-            }
-        }
-
         $(function (){
-            $('#longitud').on('keyup', validarRegex.bind($('#longitud'), longitudPattern));
-            $('#latitud').on('keyup', validarRegex.bind($('#latitud'), latitudPattern));
+            $('#map').css('width', $('#formDepositoProvincial').outerWidth() + 'px');
+            $().ready(function () {
+                initMap();
+            });
+
+            function initMap() {
+                let map = L.map('map');
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap contributors'
+                }).addTo(map);
+
+                if ("geolocation" in navigator) {
+                navigator.geolocation.getCurrentPosition(function (position) {
+                    var userLocation = [position.coords.latitude, position.coords.longitude];
+                    map.setView(userLocation, 15);
+                    var marker = L.marker(userLocation, { draggable: true }).addTo(map);
+                    marker.on('dragend', function (event) {
+                    actualizarCoordenadas(event.target.getLatLng());
+                    });
+                    actualizarCoordenadas(map.getCenter());
+                });
+                }
+            }
+
+            function actualizarCoordenadas(coords) {
+                var lng = coords.lng.toFixed(6);
+                var lat = coords.lat.toFixed(6);
+                $('#longitud').val(lng);
+                $('#latitud').val(lat);
+            }
+
+            $('#longitud, #latitud').on('focusout', function() {
+                $(this).addClass('is-valid').removeClass('is-invalid');
+            });
+
+            $('#longitud, #latitud').trigger('focusout');
         });
