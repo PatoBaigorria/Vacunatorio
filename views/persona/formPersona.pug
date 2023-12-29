@@ -36,7 +36,7 @@ block content
           .form-group
             label.form-label(for="dni") DNI:
             .input-group.has-validation
-              input.form-control(type="text" id="dni" name="DNI" required)
+              input.form-control(type="number" id="dni" name="DNI" required)
               .invalid-feedback.d-none(id="dniExiste") El DNI ingresado ya existe en la BD
               .invalid-feedback.d-none(id="dniInvalido") El DNI ingresado no es valido
               .invalid-feedback.d-none(id="dniVacio") El campo no puede estar vacío
@@ -69,11 +69,13 @@ block content
               .invalid-feedback.d-none(id="fechaDeNacimientoSuperior") La fecha de nacimiento es superior a la actual
               .invalid-feedback.d-none(id="fechaDeNacimientoAgente") La fecha de nacimiento debe superior cuando se trata de un agente de salud
           .form-group
-            label(for="ocupacion") Ocupación:
-            select(class="form-control" name="ocupacion" id="ocupacion" required)
-              option(disabled selected hidden value="") Selecciona una Ocupacion:
-              option(value="agente de salud") Agente de Salud
-              option(value="otro") Otro
+            label.form-label(for="ocupacion") Ocupación:
+            .input-group.has-validation
+              select.form-select(name="ocupacion" id="ocupacion" required)
+                option(disabled selected hidden value="") Selecciona una Ocupacion:
+                option(value="agente de salud") Agente de Salud
+                option(value="otro") Otro
+              .invalid-feedback.d-none(id="ocupacionSinSeleccionar") Seleccione una ocupación
           .form-group.d-none#matriculaDiv
             label.form-label(for="matricula" id="matriculaLabel") Matrícula:
             .input-group.has-validation
@@ -82,12 +84,14 @@ block content
               .invalid-feedback.d-none(id="matriculaInvalido") La matrícula no es valida
               .invalid-feedback.d-none(id="matriculaExiste") La matrícula ya existe
           .form-group
-            label(for="genero") Género:
-            select.form-control(name="genero" id="genero" required)
-              option(disabled selected hidden value="") Seleccione un género
-              option(value="Masculino") Masculino
-              option(value="Femenino") Femenino
-              option(value="Otro") Otro
+            label.form-label(for="genero") Género:
+            .input-group.has-validation
+              select.form-select(name="genero" id="genero" required)
+                option(disabled selected hidden value="") Seleccione un género
+                option(value="Masculino") Masculino
+                option(value="Femenino") Femenino
+                option(value="Otro") Otro
+              .invalid-feedback.d-none(id="generoSinSeleccionar") Seleccione un género
           .form-group
             label.form-label(for="celular1") Celular 1:
             .input-group.has-validation
@@ -102,18 +106,20 @@ block content
               .invalid-feedback.d-none(id="celular1Letras") El celular no puede contener letras, espacios ni guiones
           .form-group
             label.form-label(for="patologiaBase") Patologia Base:
-            select.form-control(name="patologiaBase" id="patologiaBase" required)
-              option(disabled selected hidden value="") Selecciona una patologia base:
-              option(value="ninguna") Ninguna
-              option(value="obesidad") Obesidad
-              option(value="diabetes") Diabetes
-              option(value="enfermedad respiratorio cronica") Enfermedad respiratoria crónica
-              option(value="enfermedad cardiaca cronica") Enfermedad cardiaca crónica
-              option(value="inmunodeficiencia congénita o adquirida") Inmunodeficiencia congénita o adquirida
-              option(value="enfermedad oncohematologica") Enfermedad oncohematológica
-              option(value="trasplante de organo solido o de medula osea") Trasplante de órgano sólido o de médula ósea
-              option(value="insuficiencia renal cronica") Insuficiencia renal crónica
-              option(value="otro") Otro
+            .input-group.has-validation
+              select.form-select(name="patologiaBase" id="patologiaBase" required)
+                option(disabled selected hidden value="") Selecciona una patologia base:
+                option(value="ninguna") Ninguna
+                option(value="obesidad") Obesidad
+                option(value="diabetes") Diabetes
+                option(value="enfermedad respiratorio cronica") Enfermedad respiratoria crónica
+                option(value="enfermedad cardiaca cronica") Enfermedad cardiaca crónica
+                option(value="inmunodeficiencia congénita o adquirida") Inmunodeficiencia congénita o adquirida
+                option(value="enfermedad oncohematologica") Enfermedad oncohematológica
+                option(value="trasplante de organo solido o de medula osea") Trasplante de órgano sólido o de médula ósea
+                option(value="insuficiencia renal cronica") Insuficiencia renal crónica
+                option(value="otro") Otro
+              .invalid-feedback.d-none(id="patologiaBaseSinSeleccionar") Seleccione una patologia
           .form-group
             label.form-label(for="ubicacion") Seleccione ubicación en el mapa:
             #map
@@ -249,7 +255,10 @@ block content
       }
 
       function validarComboBox(campo){
-        if(campo.val() !== ''){
+        if(campo.val() === null){
+          mostrarError(campo, 'SinSeleccionar');
+          $('#' + campo.attr('id') + 'SinSeleccionar').removeClass('d-none');
+        } else {
           quitarError(campo);
         }
       }
@@ -368,17 +377,14 @@ block content
         validarCampo($(this), 'matricula', cellPattern, 'Vacio', 'Invalido', 'Existe');
       });
 
-      $('#genero, #patologia').on('change', function () {
-        validarComboBox($(this));
-      });
-
-      $('#patologiaBase').on('change', function () {
+      $('#genero, #patologiaBase').on('change', function () {
         validarComboBox($(this));
       });
 
       $('#celular1, #celular2').on('keyup focusout', function() {
         validarCelular($(this), cellPattern);
       });
+
       $('#map').on('dragend', function(event) {
         quitarError($('#map'));
         quitarError($('#longitud'));
@@ -387,6 +393,14 @@ block content
         var lat = event.target.getCenter().lat.toFixed(6);
         actualizarCoordenadas({ lng: lng, lat: lat });
       });
+
+      $('#longitud, #latitud').on('focusout', function() {
+        $(this).addClass('is-valid').removeClass('is-invalid');
+      });
+
+      $('#dni, #nombre, #apellido, #email, #fechaDeNacimiento, #matricula, #celular1, #celular2, #longitud, #latitud').trigger('focusout');
+      $('#ocupacion, #genero, #patologiaBase').trigger('change');
+
       // Asociar el evento submit al formulario
       $('#formPersona input').on('keypress submit', function () {
         if (event.which === 13) {
