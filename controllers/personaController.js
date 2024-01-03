@@ -5,7 +5,7 @@ const { Persona, Telefono, PatologiaBase, AgenteDeSalud } = require("../models/r
 
 // Obtener todas las personas
 
-const dni = async (req, res) => {
+/*const dni = async (req, res) => {
 	try {
 		const dniRegex = /^[0-9]{7,8}$/;
 		if (dniRegex.test(req.body.data)) {
@@ -31,18 +31,18 @@ const matricula = async (req, res) => {
 	} catch (error) {
 		res.status(500).json({ message: "Error al comprobar el DNI." });
 	}
-}
+}*/
 
 const listarPersonas = async (req, res) => {
 	try {
-		const Personas = await Persona.findAll(
+		const personas = await Persona.findAll(
 			{
 				include: [{ model: Telefono, attributes: ['celular1', 'celular2'] },
 				{ model: PatologiaBase, attributes: ['patologiaBase'] },
 				{ model: AgenteDeSalud, attributes: ['matricula'] }]
 			});
 		res.render("persona/viewPersona", {
-			Personas: Personas,
+			personas: personas,
 		})
 	} catch (error) {
 		res.status(500).json({ message: "Error al obtener las personas." });
@@ -51,10 +51,8 @@ const listarPersonas = async (req, res) => {
 
 const altaPersona = async (req, res) => {
 	try {
-		let personas = await Persona.findAll({
-			include: [{ model: AgenteDeSalud, attributes: ['matricula'] }]
-		})
-		res.render("persona/formPersona", { personas: personas });
+		let agentes = await AgenteDeSalud.findAll()
+		res.render("persona/formPersona", { agentes: agentes });
 	} catch (error) {
 		res.status(500).json({ message: "Error al crear la persona." });
 	}
@@ -75,7 +73,7 @@ const createPersona = async (req, res) => {
 			return res.redirect("/personas/alta");
 		}
 
-		if (agentes.map(x => x.matricula).includes(matricula)) {
+		if (agentes.map(agente => agente.matricula).includes(matricula)) {
 			// Mostrar un mensaje flash indicando que la persona ya existe
 			req.flash('error', 'El agente ya existe en la base de datos.');
 			// Redirigir al formulario de alta
@@ -93,7 +91,6 @@ const createPersona = async (req, res) => {
 			longitud,
 			latitud
 		});
-
 		if (ocupacion === "agente de salud") {
 			await AgenteDeSalud.create({
 				DNI,
@@ -105,7 +102,6 @@ const createPersona = async (req, res) => {
 				nulo
 			});
 		}
-
 		if (celular1 !== "" && celular2 !== "") {
 			await Telefono.create({
 				DNI,
@@ -127,13 +123,10 @@ const createPersona = async (req, res) => {
 				DNI
 			});
 		}
-
-		if (patologiaBase !== "") {
-			await PatologiaBase.create({
-				DNI,
-				patologiaBase
-			});
-		}
+		await PatologiaBase.create({
+			DNI,
+			patologiaBase
+		});
 
 		// Utiliza req.flash() para establecer el mensaje flash
 		req.flash('success', 'Persona creada exitosamente.');
@@ -151,10 +144,11 @@ const createPersona = async (req, res) => {
 
 const editPersona = async (req, res) => {
 	try {
-		const persona = await Persona.findByPk(req.params.id);
-		const telefono = await Telefono.findByPk(req.params.id);
-		const patologiabase = await PatologiaBase.findByPk(req.params.id);
-		const agentedesalud = await AgenteDeSalud.findByPk(req.params.id);
+		const persona = await Persona.findByPk(req.params.id, {
+			include: [{ model: Telefono, attributes: ['celular1', 'celular2'] },
+			{ model: PatologiaBase, attributes: ['patologiaBase'] },
+			{ model: AgenteDeSalud, attributes: ['matricula'] }]
+		});
 		const agentesdesalud = await AgenteDeSalud.findAll();
 		if (!persona) {
 			// Manejar el caso donde no se encuentra la persona
@@ -165,9 +159,6 @@ const editPersona = async (req, res) => {
 
 		res.render("persona/editPersona", {
 			persona: persona,
-			telefono: telefono,
-			patologiabase: patologiabase,
-			agentedesalud: agentedesalud,
 			agentesdesalud: agentesdesalud
 		});
 	} catch (error) {
@@ -179,7 +170,7 @@ const editPersona = async (req, res) => {
 // Actualizar una persona por su ID
 const updatePersona = async (req, res) => {
 	try {
-		const { DNI, nombre, apellido, fechaDeNacimiento, email, ocupacion, celular1, celular2, patologiaBase, genero, longitud, latitud } = req.body;
+		const { nombre, apellido, fechaDeNacimiento, email, ocupacion, celular1, celular2, patologiaBase, genero, longitud, latitud } = req.body;
 		const matricula = parseFloat(req.body.matricula);
 		await Persona.update(
 			{
@@ -271,18 +262,16 @@ const updatePersona = async (req, res) => {
 				}
 			);
 		};
-		if (patologiaBase !== "") {
-			await PatologiaBase.update(
-				{
-					patologiaBase: patologiaBase,
+		await PatologiaBase.update(
+			{
+				patologiaBase: patologiaBase,
+			},
+			{
+				where: {
+					DNI: req.params.id,
 				},
-				{
-					where: {
-						DNI: req.params.id,
-					},
-				}
-			);
-		}
+			}
+		);
 		req.flash('success', 'Persona actualizada exitosamente');
 		res.redirect("/personas");
 	} catch (error) {
@@ -312,6 +301,6 @@ module.exports = {
 	editPersona,
 	updatePersona,
 	deletePersona,
-	dni,
-	matricula,
+	//dni,
+	//matricula,
 };

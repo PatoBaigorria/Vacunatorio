@@ -10,6 +10,21 @@ head
             text-underline-offset: 4px; /* Ajusta el espacio entre el texto y el subrayado */
         }
 
+        .modal-content {
+            background-color: #f1f1f1;
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        .modal-header {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        .modal-footer {
+            background-color: #f1f1f1;
+        }
+
         .flash-message {
             display: none;
             opacity: 1;
@@ -39,6 +54,18 @@ body
                     if messages.success
                         .alert.alert-success.flash-message.fade-in
                             = messages.success
+                    div.modal#confirmDeleteModal(tabindex="-1" role="dialog")
+                        div.modal-dialog(role="document")
+                            div.modal-content
+                                div.modal-header
+                                    h5.modal-title Confirmar Eliminación
+                                    button.close(type="button" data-dismiss="modal" aria-label="Close")
+                                        span(aria-hidden="true") &times;
+                                div.modal-body
+                                    p ¿Está seguro de que desea eliminar esta persona?
+                                div.modal-footer
+                                    button.btn.btn-secondary(id="cancelDeleteBtn" type="button" data-dismiss="modal") Cancelar
+                                    button.btn.btn-danger(id="confirmDeleteBtn" type="button") Confirmar
                     div(style="text-align: left;")
                         a.btn.btn-primary.btn-lg(href="/personas/alta") Alta
                         br
@@ -46,8 +73,9 @@ body
                         div.table.responsive 
                             table#personas.table.table-striped.table-bordered
 
+
 script.
-    let pers = !{JSON.stringify(Personas)};
+    let pers = !{JSON.stringify(personas)};
     let perstab 
     $(document).ready(function() {
         perstab = $('#personas').DataTable({
@@ -97,16 +125,15 @@ script.
         });
 
         function agregarMensajeSiVacio(td, cellData, rowData, row, col) {
-        // Verificar si la celda está vacía y agregar el mensaje
-        if (!cellData) {
-            $(td).text("No posee");
+            // Verificar si la celda está vacía y agregar el mensaje
+            if (!cellData) {
+                $(td).text("No posee");
+            }
         }
-    }
     });
 
     $(document).ready(function() {
         $('.flash-message').addClass('fade-in');
-        // Configurar un temporizador para ocultar el mensaje después de cierto tiempo
         setTimeout(function() {
             $('.flash-message').removeClass('fade-in');
         }, 3000);
@@ -114,26 +141,39 @@ script.
         perstab.on('click', 'button', function (f) {
             let data = perstab.row(f.target.closest('tr')).data();
             if ($(event.target).hasClass('fa-trash-can')) {
-                if(confirm("¿Desea eliminar la Persona?")){
-                    $.ajax({
-                        url: '/personas/'+data.DNI+'?_method=DELETE',
-                        type: 'POST',
-                        success: function(data) {
-                            if (data.success) {
-                                window.location.href = "/personas";
-                            } else {
-                                console.error(data.message);
-                                window.location.href = "/personas";
-                            }
-                        },
-                        error: function(error) {
-                            console.error(error);
-                        }
-                    });
+                $('#confirmDeleteModal').modal('show');
+                $('#confirmDeleteBtn').on('click', function() {
+            // Realizar la acción de eliminación
+            $.ajax({
+                url: '/personas/' + data.DNI + '?_method=DELETE',
+                type: 'POST',
+                success: function(data) {
+                    if (data.success) {
+                        window.location.href = "/personas";
+                    } else {
+                        console.error(data.message);
+                        //window.location.href = "/personas";
+                    }
+                },
+                error: function(error) {
+                    console.error(error);
                 }
-            } else {window.location.href= "/personas/" + data.DNI}
-        })
-    }); 
+            });
+
+            $('#confirmDeleteModal').modal('hide');
+        });
+
+        // Configurar el botón de cancelar y la 'X' para cerrar el modal
+        $('#cancelDeleteBtn, .modal-header button.close').on('click', function() {
+            $('#confirmDeleteModal').modal('hide');
+        });
+            } else {
+                window.location.href = "/personas/" + data.DNI;
+            }
+        });
+
+        // Configurar el botón de confirmar y la 'X' para cerrar el modal
+    });
 
     function crearP(){
         window.location.href= "/personas/alta"
