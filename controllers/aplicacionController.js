@@ -35,7 +35,7 @@ const listarAplicacion = async (req, res) => {
   }
 };
 
-const crearAplicacion = async (req, res) => {
+const altaAplicacion = async (req, res) => {
   try {
     const lotes = await LoteInterno.findAll();
     const personas = await Persona.findAll();
@@ -69,7 +69,7 @@ const createAplicacion = async (req, res) => {
   }
 };
 
-const editarAplicacion = async (req, res) => {
+const editAplicacion = async (req, res) => {
   try {
     const aplicacion = await Aplicacion.findByPk(req.params.id);
     const lotes = await LoteInterno.findAll();
@@ -105,13 +105,13 @@ const updateAplicacion = async (req, res) => {
 const deleteAplicacion = async (req, res) => {
   try {
     await Aplicacion.destroy({
-      where: 
+      where:
       {
         idAplicacion: req.params.id
       },
     });
     req.flash('success', 'Aplicación de Vacuna eliminada exitosamente.');
-    res.json({success:true});
+    res.json({ success: true });
   } catch (error) {
     res.status(500).json({ message: "Error al eliminar la aplicación." });
   }
@@ -121,10 +121,9 @@ const deleteAplicacion = async (req, res) => {
 
 module.exports = {
   listarAplicacion,
-  crearAplicacion,
+  altaAplicacion,
   createAplicacion,
-  editarAplicacion,
+  editAplicacion,
   updateAplicacion,
-  deleteAplicacion,
-
+  deleteAplicacion
 };

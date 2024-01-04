@@ -13,16 +13,28 @@ const descarte = Descarte.init(
     DNIAgente: {
       type: DataTypes.INTEGER,
       foreignKey: true,
+      allowNull: false,
     },
     numeroDeSerie: {
       type: DataTypes.INTEGER,
       foreignKey: true,
+      allowNull: false,
     },
-    empresaDescartante: DataTypes.STRING,
-    motivo: DataTypes.STRING,
-    cantidadDeVacunas: DataTypes.INTEGER,
+    empresaDescartante: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    motivo: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    cantidadDeVacunas: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
     fechaDeDescarte: {
       type: DataTypes.DATEONLY,
+      allowNull: false,
     },
   },
   {

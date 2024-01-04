@@ -15,7 +15,6 @@ const patologiabase = Patologiabase.init(
       primaryKey: true,
     },
   },
-
   {
     sequelize,
     freezeTableName: true,

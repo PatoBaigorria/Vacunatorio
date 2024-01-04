@@ -11,8 +11,14 @@ const centrodevacunacion = Centrodevacunacion.init(
       primaryKey: true,
       autoIncrement: true,
     },
-    longitud: DataTypes.DOUBLE,
-    latitud: DataTypes.DOUBLE,
+    longitud: {
+      type: DataTypes.DOUBLE,
+      allowNull: false,
+    },
+    latitud: {
+      type: DataTypes.DOUBLE,
+      allowNull: false,
+    }
   },
   {
     sequelize,

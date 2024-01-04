@@ -42,7 +42,7 @@ const createDepProv = async (req, res) => {
   }
 };
 // Editar Deposito Provincial por ID
-const editarDepProv = async (req, res) => {
+const editDepProv = async (req, res) => {
   try {
     const depositoP = await DepositoProvincial.findByPk(req.params.id);
     res.render("depositoprovincial/editDepositoProvincial", { depositoP: depositoP });
@@ -79,7 +79,7 @@ const deleteDepositoProvincial = async (req, res) => {
       },
     });
     req.flash('success', 'Depósito Provincial eliminado exitosamente.');
-    res.json({success:true});
+    res.json({ success: true });
   } catch (error) {
     res
       .status(500)
@@ -116,7 +116,7 @@ module.exports = {
   listarDepositosProvinciales,
   altaDepProv,
   createDepProv,
-  editarDepProv,
+  editDepProv,
   updateDepositoProvincial,
   deleteDepositoProvincial,
   getLotesInternosByDepositoProvincialId,

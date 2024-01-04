@@ -10,12 +10,36 @@ const laboratorio = Laboratorio.init(
       primaryKey: true,
       autoIncrement: true,
     },
-    nombreLaboratorio: DataTypes.STRING,
-    pais: DataTypes.STRING,
-    email: DataTypes.STRING,
-    telefono: DataTypes.STRING,
-    longitud: DataTypes.DOUBLE,
-    latitud: DataTypes.DOUBLE,
+    nombreLaboratorio: {
+      type: DataTypes.STRING,
+      foreignKey: true,
+      allowNull: false,
+    },
+    pais: {
+      type: DataTypes.STRING,
+      foreignKey: true,
+      allowNull: false,
+    },
+    email: {
+      type: DataTypes.STRING,
+      foreignKey: true,
+      allowNull: false,
+    },
+    telefono: {
+      type: DataTypes.STRING,
+      foreignKey: true,
+      allowNull: false,
+    },
+    longitud: {
+      type: DataTypes.DOUBLE,
+      foreignKey: true,
+      allowNull: false,
+    },
+    latitud: {
+      type: DataTypes.DOUBLE,
+      foreignKey: true,
+      allowNull: false,
+    },
   },
   {
     sequelize,

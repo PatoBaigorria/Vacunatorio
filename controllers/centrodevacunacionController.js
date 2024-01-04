@@ -42,7 +42,7 @@ const createCentroVac = async (req, res) => {
   }
 };
 // Editar Centro de Vacunacion por ID
-const editarCentroVac = async (req, res) => {
+const editCentroVac = async (req, res) => {
   try {
     const centroV = await CentroDeVacunacion.findByPk(req.params.id);
     res.render("centrodevacunacion/editCentroDeVacunacion", { centroV: centroV });
@@ -74,13 +74,13 @@ const updateCentroDeVacunacion = async (req, res) => {
 const deleteCentroDeVacunacion = async (req, res) => {
   try {
     await CentroDeVacunacion.destroy({
-      where: 
+      where:
       {
         idCentroDeVacunacion: req.params.id,
       },
     });
     req.flash('success', 'Centro de Vacunación eliminado exitosamente.');
-    res.json({success: true});
+    res.json({ success: true });
   } catch (error) {
     res
       .status(500)
@@ -94,7 +94,7 @@ module.exports = {
   listarCentrosDeVacunacion,
   altaCentroVac,
   createCentroVac,
-  editarCentroVac,
+  editCentroVac,
   updateCentroDeVacunacion,
   deleteCentroDeVacunacion,
 };

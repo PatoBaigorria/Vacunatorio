@@ -14,10 +14,12 @@ const traslado = Traslado.init(
     numeroDeSerie: {
       type: DataTypes.INTEGER,
       foreignKey: true,
+      allowNull: false,
     },
     idCentroDeVacunacion: {
       type: DataTypes.INTEGER,
       foreignKey: true,
+      allowNull: false,
     },
     fechaDeSalida: {
       type: DataTypes.DATEONLY,

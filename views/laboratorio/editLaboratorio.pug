@@ -1,147 +1,291 @@
+//- Incluye tus estilos y scripts
 - var title ='Actualización de Laboratorio'
 include ..\includes\layout
 block content
-html(lang="es")    
-    head
-        style.
-            #formLaboratorio {
-                max-width: 600px;
-                margin: auto;
-            }
-            h2 {
-                text-align: center;
-                text-decoration: underline;
-                text-underline-offset: 4px;
-                margin-top: 10px;
-            }
-            label {
-                margin-bottom: 5px;
-            }
-    body
-        #formLaboratorio
-            h2.text-center Actualizar Laboratorio
+    html(lang="es")
+        head
+            link(rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="")
+            script(src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin="")
+            style.
+                #formLaboratorio {
+                    max-width: 600px;
+                    margin: auto;
+                }
+                h2 {
+                    text-align: center;
+                    text-decoration: underline;
+                    text-underline-offset: 4px;
+                    margin-top: 10px;
+                }
+                .modal-content {
+                    background-color: #f1f1f1;
+                    padding: 20px;
+                    border-radius: 10px;
+                    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+                }
+                .modal-header {
+                    background-color: #dc3545;
+                    color: white;
+                }
+                .modal-body {
+                    padding: 20px;
+                }
+                #mensajeAlerta{
+                    color: #721c24;
+                }
+                label {
+                    margin-top: 5px;
+                    margin-bottom: 5px;
+                }
+                #map {
+                    height: 300px;
+                    width: 100%;
+                    border: 1px solid #000;
+                }
+        body
+
+            h2.text-center Actualice los datos del laboratorio
             if messages.error
                 .alert.alert-danger
                     = messages.error
-            br
-            form(action="/laboratorios/"+laboratorio.idLaboratorio+"?_method=PUT" method="post")
+            div.modal#alertModal(tabindex="-1" role="dialog" aria-labelledby="alertModalLabel" aria-hidden="true")
+                div.modal-dialog(role="document")
+                    div.modal-content
+                        div.modal-header
+                            h5.modal-title#alertModalLabel Alerta
+                            button.close(type="button" data-bs-dismiss="modal" aria-label="Close")
+                                span(aria-hidden="true") ×
+                        div.modal-body
+                            p#mensajeAlerta Mensaje de alerta
+            form#formLaboratorio(action="/laboratorios/"+laboratorio.idLaboratorio+"?_method=PUT" method="post")
                 .form-group
-                    label.form-label(for="nombre") Nombre de laboratorio:
+                    label.form-label(for="nombreLaboratorio") Nombre de laboratorio:
                     .input-group.has-validation
-                        input.form-control(type="text" id="nombre" name="nombre" value=laboratorio.nombreLaboratorio required)
-                        .invalid-feedback(id="nombreInvalido") Ingrese solo letras
+                        input.form-control(type="text" id="nombreLaboratorio" name="nombreLaboratorio" value=laboratorio.nombreLaboratorio required)
+                        .invalid-feedback.d-none(id="nombreLaboratorioVacio") El campo no puede estar vacío
+                        .invalid-feedback.d-none(id="nombreLaboratorioInvalido") El nombre es invalido
+                        .invalid-feedback.d-none(id="nombreLaboratorioMaximo") El nombre no puede contener más de treinta caracteres
+                        .invalid-feedback.d-none(id="nombreLaboratorioExiste") El nombre del laboratorio ya existe en la BD
                 .form-group
                     label.form-label(for="pais") País:
                     .input-group.has-validation
                         input.form-control(type="text" id="pais" name="pais" value=laboratorio.pais required)
-                        .invalid-feedback(id="paisInvalido") Ingrese solo letras
+                        .invalid-feedback.d-none(id="paisVacio") El campo no puede estar vacío
+                        .invalid-feedback.d-none(id="paisInvalido") El país no puede contener números
+                        .invalid-feedback.d-none(id="paisMaximo") El país no puede contener más de cincuenta y seis caracteres
                 .form-group
                     label.form-label(for="email") Email:
                     .input-group.has-validation
                         input.form-control(type="text" id="email" name="email" value=laboratorio.email required)
+                        .invalid-feedback.d-none(id="emailVacio") El campo no puede estar vacío
+                        .invalid-feedback.d-none(id="emailInvalido") El email no es valido
                 .form-group
                     label.form-label(for="telefono") Teléfono:
                     .input-group.has-validation
                         input.form-control(type="text" id="telefono" name="telefono" value=laboratorio.telefono required)
-                        .invalid-feedback(id="telefonoInvalido") Ingrese solo diez dígitos
-                        .invalid-feedback(id="telefonoLetra") Ingrese solo números
-                        .invalid-feedback(id="telefonoVacio") El campo no puede estar vacío
+                        .invalid-feedback.d-none(id="telefonoVacio") El campo no puede estar vacío
+                        .invalid-feedback.d-none(id="telefonoInvalido") El teléfono no puede contener letras, espacios ni guiones
+                        .invalid-feedback.d-none(id="telefonoMaximo") El teléfono debe contener 10 dígitos sin espacios ni guiones
+                    label Seleccione la ubicación en el mapa:
+                    #map
                 .form-group
                     label.form-label(for="longitud") Longitud:
-                    .input-group.has-validation
-                        input.form-control(type="text" id="longitud" value=laboratorio.longitud name="longitud")
-                        .invalid-feedback(id="longInvalido") Ingrese solo números
+                    input.form-control(type="text" id="longitud" name="longitud" readonly)
                 .form-group
                     label.form-label(for="latitud") Latitud:
-                    .input-group.has-validation
-                        input.form-control(type="text" id="latitud" value=laboratorio.latitud name="latitud")
-                        .invalid-feedback(id="latInvalido") Ingrese solo números
-                    br
-                button(type="submit" class="btn btn-primary") Actualizar
+                    input.form-control(type="text" id="latitud" name="latitud" readonly)
+                br
+                button(type="submit" class="btn btn-primary") Actualizar laboratorio
                 | &nbsp;&nbsp;&nbsp;&nbsp;
                 button(type="button" class="btn btn-primary" onclick="window.history.back()") Volver
     script.
-        const namePattern = /^[A-Za-záéíóúüñÁÉÍÓÚÜÑ\s]{1,30}$/;
-        const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-        const telefonoPattern = /^[0-9]{1,}$/;
-        const longitudPattern = /^[-+]?([1-8]?\d(\.\d+)?|90(\.0+)?)$/;
-        const latitudPattern = /^[-+]?([1-8]?\d(\.\d+)?|90(\.0+)?)$/;
+        $(function () {
+            $('#map').css('width', $('#formLaboratorio').outerWidth() + 'px');
+            $().ready(function () {
+                initMap();
+            });
 
-        function mostrarError(input, valid) {
-            input.addClass('is-invalid').removeClass('is-valid').addClass();
-            input.next('.invalid-feedback').removeClass('d-none');
-            if (valid) $('#' + input.attr('id') + valid).removeClass('d-none');
-        }
+            function initMap() {
+                let map = L.map('map');
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    attribution: '© OpenStreetMap contributors'
+                }).addTo(map);
 
-        function quitarError(input) {
-            input.addClass('is-valid').removeClass('is-invalid');
-            input.next('.invalid-feedback').addClass('d-none');
-        }
-
-        function validarTelefono() {
-            if ($('#telefono').val().trim() !== '') {
-                if(!telefonoPattern.test($('#telefono').val().trim())){
-                    mostrarError($('#telefono'), 'Letra')
-                    $('#' + $('#telefono').attr('id') + 'Letra').removeClass('d-none');
-                    $('#' + $('#telefono').attr('id') + 'Invalido').addClass('d-none');
-                    $('#' + $('#telefono').attr('id') + 'Vacio').addClass('d-none');
-                } else if($('#telefono').val().length !== 10) {
-                    mostrarError($('#telefono'), 'Invalido')
-                    $('#' + $('#telefono').attr('id') + 'Invalido').removeClass('d-none');
-                    $('#' + $('#telefono').attr('id') + 'Letra').addClass('d-none');
-                    $('#' + $('#telefono').attr('id') + 'Vacio').addClass('d-none');
-                } else {
-                    quitarError($('#telefono'));
-                    $('#' + $('#telefono').attr('id') + 'Vacio').addClass('d-none');
-                    $('#' + $('#telefono').attr('id') + 'Letra').addClass('d-none');
-                    $('#' + $('#telefono').attr('id') + 'Invalido').addClass('d-none');
+                if ("geolocation" in navigator) {
+                    navigator.geolocation.getCurrentPosition(function (position) {
+                        var userLocation = [!{JSON.stringify(laboratorio)}.latitud, !{JSON.stringify(laboratorio)}.longitud];
+                        map.setView(userLocation, 15);
+                        var marker = L.marker(userLocation, { draggable: true }).addTo(map);
+                        marker.on('dragend', function (event) {
+                            actualizarCoordenadas(event.target.getLatLng());
+                        });
+                        actualizarCoordenadas(map.getCenter());
+                    });
                 }
-            } else {
-                mostrarError($('#telefono'), 'Vacio');
-                $('#' + $('#telefono').attr('id') + 'Vacio').removeClass('d-none');
-                $('#' + $('#telefono').attr('id') + 'Letra').addClass('d-none');
-                $('#' + $('#telefono').attr('id') + 'Invalido').addClass('d-none');
             }
-        }
 
-
-        function validarRegex(regex){
-            if(!regex.test($(this).val())){
-                this.addClass('is-invalid');
-                this.removeClass('is-valid');
-            } else {
-                this.addClass('is-valid');
-                this.removeClass('is-invalid');
+            function actualizarCoordenadas(coords) {
+                var lng = coords.lng.toFixed(6);
+                var lat = coords.lat.toFixed(6);
+                $('#longitud').val(lng);
+                $('#latitud').val(lat);
             }
-        }
 
-        function validarExistente(endpoint){
-            $.post(endpoint, {data:this.val()},  res=>{
-                if(res.existe || !res.valido){
-                    $('#'+endpoint).addClass('is-invalid').removeClass('is-valid');
-                    if (res.existe){
-                        $('#'+endpoint+'Existe').addClass("is-invalid").removeClass("d-none")
-                    } else if (!res.valido){
-                        $('#'+endpoint+'Invalido').addClass("is-invalid").removeClass("d-none")
+            function mostrarAlerta() {
+                $('#mensajeAlerta').text("¡Datos incorrectos! Por favor, verifica la información ingresada.");
+                $('#alertModal').modal('show');
+            }
+
+            // Funciones para mostrar y quitar errores
+            function mostrarError(campo, error) {
+                campo.addClass('is-invalid').removeClass('is-valid').addClass();
+                $('#' + campo.attr('id') + error).removeClass('d-none');
+            }
+
+            function quitarError(campo) {
+                campo.addClass('is-valid').removeClass('is-invalid');
+                $('div[id^=' + campo.attr('id') + '].invalid-feedback').addClass('d-none');
+            }
+
+            function validarNombLab() {
+                quitarError($('#nombreLaboratorio'));
+                console.log('Entro')
+                if(!$('#nombreLaboratorio').val()) {
+                    mostrarError($('#nombreLaboratorio'), 'Vacio');
+                } else if(!/^[A-Za-záéíóúüñÁÉÍÓÚÜÑ\s]{1,}$/.test($('#nombreLaboratorio').val())) {
+                    mostrarError($('#nombreLaboratorio'), 'Invalido');
+                } else if($('#nombreLaboratorio').val().length > 30) {
+                    mostrarError($('#nombreLaboratorio'), 'Maximo');
+                } else {
+                    if(!{JSON.stringify(laboratorios)}.map(laboratorio => laboratorio.nombreLaboratorio).filter(nombre => nombre != !{JSON.stringify(laboratorio)}.nombreLaboratorio).map( nombre => nombre == $('#nombreLaboratorio').val()).includes(true)) mostrarError($('#nombreLaboratorio'), 'Existe')
+                }
+            }
+
+            function validarPais(){
+                quitarError($('#pais'));
+                if ($('#pais').val().length == 0) {
+                    mostrarError($('#pais'), 'Vacio');
+                } else if (!/^[A-Za-záéíóúüñÁÉÍÓÚÜÑ\s]{1,}$/.test($('#pais').val())) {
+                    mostrarError($('#pais'), 'Invalido');
+                } else if ($('#pais').val().length > 56) {
+                    mostrarError($('#pais'), 'Maximo');
+                }
+            }
+
+            function validarEmail(){
+                quitarError($('#email'));
+                if (!$('#email').val()) {
+                    mostrarError($('#email'), 'Vacio');
+                } else if (!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test($('#email').val())) {
+                    mostrarError($('#email'), 'Invalido');
+                } 
+            }
+
+            function validarTelefono(){
+                quitarError($('#telefono'));
+                if ($('#telefono').val().length == 0) {
+                    mostrarError($('#telefono'), 'Vacio');
+                } else if (!/^[0-9]{1,}$/.test($('#telefono').val())) {
+                    mostrarError($('#telefono'), 'Invalido');
+                } else if ($('#telefono').val().length != 10) {
+                    mostrarError($('#telefono'), 'Maximo');
+                }
+            }
+
+            // Función para validar todos los campos antes de enviar el formulario
+            function validarFormulario() {
+                let inputs = $('#formLaboratorio input');
+                let camposInvalidos = false;
+                inputs.each(function () {
+                    if ($(this).attr('id') !== 'longitud' && $(this).attr('id') !== 'latitud') {
+                        if ($(this).hasClass('is-invalid')) {
+                            camposInvalidos = true;
+                        }
                     }
-                } else {
-                    $('#'+endpoint).addClass('is-valid').removeClass('is-invalid');
-                    $('#'+endpoint+'Invalido').addClass("d-none").removeClass("is-invalid")
-                    $('#'+endpoint+'Existe').addClass("d-none").removeClass("is-invalid")
+                });
+                if (camposInvalidos) {
+                    mostrarAlerta();
+                    return false;
                 }
-            })
-        }
+                return true;
+            }
 
-        $(function (){
+            // Eventos
+            $('#nombreLaboratorio').on('keyup focusout', function () {
+                validarNombLab();
+            });
 
-            $('#nombre').on('keyup', validarExistente.bind($('#nombre'), 'nombre'));
-            $('#nombre').on('keyup', validarRegex.bind($('#nombre'), namePattern));
-            $('#pais').on('keyup', validarRegex.bind($('#pais'), namePattern));
-            $('#email').on('keyup', validarRegex.bind($('#email'), emailPattern));
-            //$('#telefono').on('keyup', validarRegex.bind($('#telefono'), telefonoPattern));
-            $('#telefono').on('keyup', function() {
+            $('#pais').on('keyup focusout', function () {
+                validarPais();
+            });
+
+            $('#email').on('keyup focusout', function () {
+                validarEmail();
+            });
+
+            $('#telefono').on('keyup focusout', function () {
                 validarTelefono();
             });
-            $('#longitud').on('keyup', validarRegex.bind($('#longitud'), longitudPattern));
-            $('#latitud').on('keyup', validarRegex.bind($('#latitud'), latitudPattern));
+
+            $('#map').on('dragend', function(event) {
+                if($(this).hasClass('is-invalid')){
+                    quitarError($('#longitud'));
+                    quitarError($('#latitud'));
+                }
+                var lng = event.target.getCenter().lng.toFixed(6);
+                var lat = event.target.getCenter().lat.toFixed(6);
+                actualizarCoordenadas({ lng: lng, lat: lat });
+            });
+            let press = 0
+            $('#alertModal').on('keyup', function (event) {
+                // Si la tecla presionada es "Enter", oculta el modal
+                if(event.key === 'Enter'){
+                    press = press+1
+                }
+                if (event.key === 'Escape' || press == 2) {
+                    $('#alertModal').modal('hide');
+                    press = 0
+                }
+            });
+
+            $('#alertModal').on('hidden.bs.modal', function () {
+                // Buscar el primer elemento con la clase 'is-invalid' y hacer foco en él
+                var primerInvalido = $('.is-invalid:first');
+                if (primerInvalido.length > 0) {
+                    primerInvalido.focus();
+                }
+            });
+
+            $('#longitud, #latitud').on('focusout', function () {
+                $(this).addClass('is-valid').removeClass('is-invalid');
+            });
+
+            $('#alertModal').on('hidden.bs.modal', function () {
+                // Buscar el primer elemento con la clase 'is-invalid' y hacer foco en él
+                var primerInvalido = $('.is-invalid:first');
+                if (primerInvalido.length > 0) {
+                    primerInvalido.focus();
+                }
+            });
+
+            $('#nombreLaboratorio, #pais, #email, #telefono, #longitud, #latitud').trigger('focusout');
+            $('#nombreLaboratorio').trigger('focus')
+
+            $('#formLaboratorio input').on('keypress', function (event) {
+                if (event.which === 13) {
+                    console.log("Formulario enviado por teclado");
+                    //console.log(validarFormulario());
+                    if(!validarFormulario()){
+                        event.preventDefault();
+                    }
+                    // Puedes agregar lógica adicional aquí si es necesario
+                }
+            });
+
+            $('#formLaboratorio button[type="submit"]').on('click', function (event) {
+                console.log("Botón de envío clicado");
+                if (!validarFormulario()) {
+                    event.preventDefault();
+                }
+            });
         });

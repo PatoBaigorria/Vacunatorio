@@ -1,4 +1,4 @@
-const { increment } = require("../models/agentedesalud");
+//const { increment } = require("../models/agentedesalud");
 const { Persona, Telefono, PatologiaBase, AgenteDeSalud } = require("../models/relaciones");
 
 // Controlador para mostrar el formulario de ingreso de datos de persona

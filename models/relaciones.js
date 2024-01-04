@@ -143,7 +143,7 @@ Descarte.belongsTo(AgenteDeSalud, {
 async function sincronizarModelos() {
   try {
     await sequelize.sync({
-      force: false,
+      //force: true,
     }); // La opción force: true creará las tablas borrando los datos existentes
     console.log("Modelos sincronizados con la base de datos.");
   } catch (error) {

@@ -10,16 +10,38 @@ const persona = Persona.init(
       type: DataTypes.INTEGER,
       primaryKey: true,
     },
-    nombre: DataTypes.STRING,
-    apellido: DataTypes.STRING,
-    email: DataTypes.STRING,
+    nombre: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    apellido: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    email: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
     fechaDeNacimiento: {
       type: DataTypes.DATEONLY,
+      allowNull: false,
     },
-    ocupacion: DataTypes.STRING,
-    genero: DataTypes.STRING,
-    longitud: DataTypes.DOUBLE,
-    latitud: DataTypes.DOUBLE,
+    ocupacion: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    genero: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    longitud: {
+      type: DataTypes.DOUBLE,
+      allowNull: false,
+    },
+    latitud: {
+      type: DataTypes.DOUBLE,
+      allowNull: false,
+    },
   },
   {
     sequelize,

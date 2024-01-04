@@ -6,7 +6,7 @@ const controllers = require("../controllers/indexController");
 router.get("/", controllers.depositoNacionalController.listarDepositosNacionales);
 router.get("/alta", controllers.depositoNacionalController.altaDepNac);
 router.post("/", controllers.depositoNacionalController.createDepNac);
-router.get("/:id", controllers.depositoNacionalController.editarDepNac);
+router.get("/:id", controllers.depositoNacionalController.editDepNac);
 router.put("/:id", controllers.depositoNacionalController.updateDepositoNacional);
 router.delete("/:id", controllers.depositoNacionalController.deleteDepositoNacional);
 /*

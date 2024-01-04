@@ -43,7 +43,7 @@ const createDepNac = async (req, res) => {
   }
 };
 // Editar Deposito Nacional por ID
-const editarDepNac = async (req, res) => {
+const editDepNac = async (req, res) => {
   try {
     const depositoN = await DepositoNacional.findByPk(req.params.id);
     res.render("depositonacional/editDepositoNacional", { depositoN: depositoN });
@@ -80,7 +80,7 @@ const deleteDepositoNacional = async (req, res) => {
       },
     });
     req.flash('success', 'Depósito Nacional eliminado exitosamente.');
-    res.json({success:true});
+    res.json({ success: true });
   } catch (error) {
     res
       .status(500)
@@ -94,7 +94,7 @@ module.exports = {
   listarDepositosNacionales,
   altaDepNac,
   createDepNac,
-  editarDepNac,
+  editDepNac,
   updateDepositoNacional,
   deleteDepositoNacional,
   //getLotesInternosByDepositoNacionalId,

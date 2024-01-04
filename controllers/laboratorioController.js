@@ -64,7 +64,7 @@ const createLaboratorio = async (req, res) => {
       longitud,
       latitud,
     });
-    req.flash('success', 'Laboratorio creado exitosamente.');
+    req.flash('success', 'Laboratorio creado exitosamente');
     res.redirect("/laboratorios");
   } catch (error) {
     console.error(error);
@@ -76,7 +76,8 @@ const createLaboratorio = async (req, res) => {
 const editLaboratorio = async (req, res) => {
   try {
     const laboratorio = await Laboratorio.findByPk(req.params.id);
-    res.render("laboratorio/editLaboratorio", { laboratorio: laboratorio });
+    const laboratorios = await Laboratorio.findAll({ raw: true });
+    res.render("laboratorio/editLaboratorio", { laboratorio: laboratorio, laboratorios: laboratorios });
   } catch (error) {
     res.status(500).json({
       message: "Error al obtener el laboratorio.",

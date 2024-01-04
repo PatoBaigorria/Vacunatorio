@@ -17,6 +17,22 @@ block content
                     text-underline-offset: 4px;
                     margin-top: 10px;
                 }
+                .modal-content {
+                    background-color: #f1f1f1;
+                    padding: 20px;
+                    border-radius: 10px;
+                    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+                }
+                .modal-header {
+                    background-color: #dc3545;
+                    color: white;
+                }
+                .modal-body {
+                    padding: 20px;
+                }
+                #mensajeAlerta{
+                    color: #721c24;
+                }
                 label {
                     margin-top: 5px;
                     margin-bottom: 5px;
@@ -27,128 +43,124 @@ block content
                     border: 1px solid #000;
                 }
         body
-            #formPersona
-                h2.text-center Actualice los datos de la persona
-                if messages.error
-                    .alert.alert-danger
-                        = messages.error
-                div.modal#alertModal(tabindex="-1" role="dialog" aria-labelledby="alertModalLabel" aria-hidden="true")
-                    div.modal-dialog(role="document")
-                        div.modal-content
-                            div.modal-header
-                                h5.modal-title#alertModalLabel Alerta
-                                button.close(type="button" data-bs-dismiss="modal" aria-label="Close")
-                                    span(aria-hidden="true") ×
-                            div.modal-body
-                                p#mensajeAlerta Mensaje de alerta
-                form(action="/personas/"+persona.DNI+"?_method=PUT" method="post")
-                    .form-group
-                        label.form-label(for="dni") DNI:
-                        .input-group
-                            input.form-control(type="text" id="dni" name="DNI" value=persona.DNI disabled)
-                    .form-group
-                        label.form-label(for="nombre") Nombre:
-                        .input-group.has-validation
-                            input.form-control(type="text" id="nombre" name="nombre" value=persona.nombre required)
-                            .invalid-feedback.d-none(id="nombreVacio") El campo no puede estar vacío
-                            .invalid-feedback.d-none(id="nombreInvalido") El nombre no puede contener más de treinta caracteres
-                            .invalid-feedback.d-none(id="nombreNumeros") El nombre no puede contener números
-                    .form-group
-                        label.form-label(for="apellido") Apellido:
-                        .input-group.has-validation
-                            input.form-control(type="text" id="apellido" name="apellido" value=persona.apellido required)
-                            .invalid-feedback.d-none(id="apellidoVacio") El campo no puede estar vacío
-                            .invalid-feedback.d-none(id="apellidoInvalido") El apellido no puede contener más de treinta caracteres
-                            .invalid-feedback.d-none(id="apellidoNumeros") El apellido no puede contener números
-                    .form-group
-                        label.form-label(for="email") Email:
-                        .input-group.has-validation
-                            input.form-control(type="email" id="email" name="email" value=persona.email required)
-                            .invalid-feedback.d-none(id="emailVacio") El campo no puede estar vacío
-                            .invalid-feedback.d-none(id="emailInvalido") El email no es valido
-                    .form-group
-                        label.form-label(for="fechaDeNacimiento") Fecha de Nacimiento:
-                        .input-group.has-validation
-                            input.form-control(type="date" id="fechaDeNacimiento" name="fechaDeNacimiento" value=persona.fechaDeNacimiento required)
-                            .invalid-feedback.d-none(id="fechaDeNacimientoVacia") El campo no puede estar vacío
-                            .invalid-feedback.d-none(id="fechaDeNacimientoAntigua") La fecha ingresada debe ser posterior a 1923
-                            .invalid-feedback.d-none(id="fechaDeNacimientoSuperior") La fecha de nacimiento es superior a la actual
-                            .invalid-feedback.d-none(id="fechaDeNacimientoAgente") La fecha de nacimiento debe superior cuando se trata de un agente de salud
-                    .form-group
-                        label(for="ocupacion") Ocupación:
-                        if(persona.ocupacion=="agente de salud")
-                            select.form-select(name="ocupacion" id="ocupacion" required)
-                                option(value="agente de salud" selected) Agente de Salud
-                                option(value="otro") Otro
-                            .form-group.d-inline#matriculaDiv
-                                label.form-label(for="matricula" id="matriculaLabel") Matrícula:
-                                .input-group.has-validation
-                                    input.form-control(type="number" id="matricula" name="matricula" value=persona.Agentedesalud.matricula)
-                                    .invalid-feedback.d-none(id="matriculaVacio") El campo no puede estar vacío
-                                    .invalid-feedback.d-none(id="matriculaInvalido") La matrícula no es valida
-                                    .invalid-feedback.d-none(id="matriculaExiste") La matrícula ya existe
-                        else 
-                            select.form-select(name="ocupacion" id="ocupacion" required)
-                                option(value="agente de salud") Agente de Salud
-                                option(value="otro" selected) Otro
-                            .form-group.d-none#matriculaDiv
-                                label.form-label(for="matricula" id="matriculaLabel") Matrícula:
-                                .input-group.has-validation
-                                    input.form-control(type="number" id="matricula" name="matricula")
-                                    .invalid-feedback.d-none(id="matriculaVacio") El campo no puede estar vacío
-                                    .invalid-feedback.d-none(id="matriculaExiste") La matrícula ya existe
-                                    .invalid-feedback.d-none(id="matriculaInvalido") La matrícula no es valida
-                    .form-group
-                        label.form-label(for="genero") Género:
-                        select.form-select(name="genero" id="genero" required)
-                            option(value="Masculino" selected=persona.genero === 'Masculino') Masculino
-                            option(value="Femenino" selected=persona.genero === 'Femenino') Femenino
-                            option(value="Otro" selected=persona.genero === 'Otro') Otro
-                    .form-group
-                        label.form-label(for="celular1") Celular 1:
-                        .input-group.has-validation
-                            input.form-control(type="tel" id="celular1" name="celular1" title="Debe contener un máximo de 10 digitos" value=persona.Telefono.celular1)
-                            .invalid-feedback.d-none(id="celular1Invalido") El celular debe contener 10 digitos sin espacios ni guiones
-                            .invalid-feedback.d-none(id="celular1Letras") El celular no puede contener letras, espacios ni guiones
-                    .form-group
-                        label.form-label(for="celular2") Celular 2:
-                        .input-group.has-validation
-                            input.form-control(type="tel" id="celular2" name="celular2" title="Debe contener un máximo de 10 digitos" value=persona.Telefono.celular2)
-                            .invalid-feedback.d-none(id="celular2Invalido") El celular debe contener 10 digitos sin espacios ni guiones
-                            .invalid-feedback.d-none(id="celular2Letras") El celular no puede contener letras, espacios ni guiones
-                    .form-group
-                        label.form-label(for="patologiaBase") Patologia Base:
-                        select.form-select(name="patologiaBase" id="patologiaBase" required)
-                            option(value="ninguna" selected=persona.Patologiabases.patologiaBase === 'ninguna') Ninguna
-                            option(value="obesidad" selected=persona.Patologiabases.patologiaBase === 'obesidad') Obesidad
-                            option(value="diabetes" selected=persona.Patologiabases.patologiaBase === 'diabetes') Diabetes
-                            option(value="enfermedad respiratorio cronica" selected=persona.Patologiabases.patologiaBase === 'enfermedad respiratorio cronica') Enfermedad respiratoria crónica
-                            option(value="enfermedad cardiaca cronica" selected=persona.Patologiabases.patologiaBase === 'enfermedad cardiaca cronica') Enfermedad cardiaca crónica
-                            option(value="inmunodeficiencia congenita o adquirida" selected=persona.Patologiabases.patologiaBase === 'inmunodeficiencia congenita o adquirida') Inmunodeficiencia congénita o adquirida
-                            option(value="enfermedad oncohematologica" selected=persona.Patologiabases.patologiaBase === 'enfermedad oncohematologica') Enfermedad oncohematológica
-                            option(value="trasplante de organo solido o de medula osea" selected=persona.Patologiabases.patologiaBase === 'trasplante de organo solido o de medula osea') Trasplante de órgano sólido o de médula ósea
-                            option(value="insuficiencia renal cronica" selected=persona.Patologiabases.patologiaBase === 'insuficiencia renal cronica') Insuficiencia renal crónica
-                            option(value="otro" selected=persona.Patologiabases.patologiaBase === 'otro') Otro
-                    .form-group
-                        label.form-label(for="ubicacion") Seleccione ubicación en el mapa:
-                        #map
-                    .form-group
-                        label.form-label(for="longitud") Longitud:
-                        input.form-control(type="text" id="longitud" name="longitud" readonly value=persona.longitud)
-                    .form-group
-                        label.form-label(for="latitud") Latitud:
-                        input.form-control(type="text" id="latitud" name="latitud" readonly value=persona.latitud)
-                    br
-                    button(type="submit" class="btn btn-primary") Actualizar
-                    | &nbsp;&nbsp;&nbsp;&nbsp;
-                    button(type="button" class="btn btn-primary" onclick="window.history.back()") Volver
+
+            h2.text-center Actualice los datos de la persona
+            if messages.error
+                .alert.alert-danger
+                    = messages.error
+            div.modal#alertModal(tabindex="-1" role="dialog" aria-labelledby="alertModalLabel" aria-hidden="true")
+                div.modal-dialog(role="document")
+                    div.modal-content
+                        div.modal-header
+                            h5.modal-title#alertModalLabel Alerta
+                            button.close(type="button" data-bs-dismiss="modal" aria-label="Close")
+                                span(aria-hidden="true") ×
+                        div.modal-body
+                            p#mensajeAlerta Mensaje de alerta
+            form#formPersona(action="/personas/"+persona.DNI+"?_method=PUT" method="post")
+                .form-group
+                    label.form-label(for="dni") DNI:
+                    .input-group
+                        input.form-control(type="text" id="dni" name="DNI" value=persona.DNI disabled)
+                .form-group
+                    label.form-label(for="nombre") Nombre:
+                    .input-group.has-validation
+                        input.form-control(type="text" id="nombre" name="nombre" value=persona.nombre required)
+                        .invalid-feedback.d-none(id="nombreVacio") El campo no puede estar vacío
+                        .invalid-feedback.d-none(id="nombreInvalido") El nombre no puede contener más de treinta caracteres
+                        .invalid-feedback.d-none(id="nombreNumeros") El nombre no puede contener números
+                .form-group
+                    label.form-label(for="apellido") Apellido:
+                    .input-group.has-validation
+                        input.form-control(type="text" id="apellido" name="apellido" value=persona.apellido required)
+                        .invalid-feedback.d-none(id="apellidoVacio") El campo no puede estar vacío
+                        .invalid-feedback.d-none(id="apellidoInvalido") El apellido no puede contener más de treinta caracteres
+                        .invalid-feedback.d-none(id="apellidoNumeros") El apellido no puede contener números
+                .form-group
+                    label.form-label(for="email") Email:
+                    .input-group.has-validation
+                        input.form-control(type="email" id="email" name="email" value=persona.email required)
+                        .invalid-feedback.d-none(id="emailVacio") El campo no puede estar vacío
+                        .invalid-feedback.d-none(id="emailInvalido") El email no es valido
+                .form-group
+                    label.form-label(for="fechaDeNacimiento") Fecha de Nacimiento:
+                    .input-group.has-validation
+                        input.form-control(type="date" id="fechaDeNacimiento" name="fechaDeNacimiento" value=persona.fechaDeNacimiento required)
+                        .invalid-feedback.d-none(id="fechaDeNacimientoVacia") El campo no puede estar vacío
+                        .invalid-feedback.d-none(id="fechaDeNacimientoAntigua") La fecha ingresada debe ser posterior a 1923
+                        .invalid-feedback.d-none(id="fechaDeNacimientoSuperior") La fecha de nacimiento es superior a la actual
+                        .invalid-feedback.d-none(id="fechaDeNacimientoAgente") La fecha de nacimiento debe superior cuando se trata de un agente de salud
+                .form-group
+                    label(for="ocupacion") Ocupación:
+                    if(persona.ocupacion=="agente de salud")
+                        select.form-select(name="ocupacion" id="ocupacion" required)
+                            option(value="agente de salud" selected) Agente de Salud
+                            option(value="otro") Otro
+                        .form-group.d-inline#matriculaDiv
+                            label.form-label(for="matricula" id="matriculaLabel") Matrícula:
+                            .input-group.has-validation
+                                input.form-control(type="number" id="matricula" name="matricula" value=persona.Agentedesalud.matricula)
+                                .invalid-feedback.d-none(id="matriculaVacio") El campo no puede estar vacío
+                                .invalid-feedback.d-none(id="matriculaInvalido") La matrícula no es valida
+                                .invalid-feedback.d-none(id="matriculaExiste") La matrícula ya existe
+                    else 
+                        select.form-select(name="ocupacion" id="ocupacion" required)
+                            option(value="agente de salud") Agente de Salud
+                            option(value="otro" selected) Otro
+                        .form-group.d-none#matriculaDiv
+                            label.form-label(for="matricula" id="matriculaLabel") Matrícula:
+                            .input-group.has-validation
+                                input.form-control(type="number" id="matricula" name="matricula")
+                                .invalid-feedback.d-none(id="matriculaVacio") El campo no puede estar vacío
+                                .invalid-feedback.d-none(id="matriculaExiste") La matrícula ya existe
+                                .invalid-feedback.d-none(id="matriculaInvalido") La matrícula no es valida
+                .form-group
+                    label.form-label(for="genero") Género:
+                    select.form-select(name="genero" id="genero" required)
+                        option(value="Masculino" selected=persona.genero === 'Masculino') Masculino
+                        option(value="Femenino" selected=persona.genero === 'Femenino') Femenino
+                        option(value="Otro" selected=persona.genero === 'Otro') Otro
+                .form-group
+                    label.form-label(for="celular1") Celular 1:
+                    .input-group.has-validation
+                        input.form-control(type="tel" id="celular1" name="celular1" title="Debe contener un máximo de 10 digitos" value=persona.Telefono.celular1)
+                        .invalid-feedback.d-none(id="celular1Invalido") El celular debe contener 10 digitos sin espacios ni guiones
+                        .invalid-feedback.d-none(id="celular1Letras") El celular no puede contener letras, espacios ni guiones
+                .form-group
+                    label.form-label(for="celular2") Celular 2:
+                    .input-group.has-validation
+                        input.form-control(type="tel" id="celular2" name="celular2" title="Debe contener un máximo de 10 digitos" value=persona.Telefono.celular2)
+                        .invalid-feedback.d-none(id="celular2Invalido") El celular debe contener 10 digitos sin espacios ni guiones
+                        .invalid-feedback.d-none(id="celular2Letras") El celular no puede contener letras, espacios ni guiones
+                .form-group
+                    label.form-label(for="patologiaBase") Patologia Base:
+                    select.form-select(name="patologiaBase" id="patologiaBase" required)
+                        option(value="ninguna" selected=persona.Patologiabases.patologiaBase === 'ninguna') Ninguna
+                        option(value="obesidad" selected=persona.Patologiabases.patologiaBase === 'obesidad') Obesidad
+                        option(value="diabetes" selected=persona.Patologiabases.patologiaBase === 'diabetes') Diabetes
+                        option(value="enfermedad respiratorio cronica" selected=persona.Patologiabases.patologiaBase === 'enfermedad respiratorio cronica') Enfermedad respiratoria crónica
+                        option(value="enfermedad cardiaca cronica" selected=persona.Patologiabases.patologiaBase === 'enfermedad cardiaca cronica') Enfermedad cardiaca crónica
+                        option(value="inmunodeficiencia congenita o adquirida" selected=persona.Patologiabases.patologiaBase === 'inmunodeficiencia congenita o adquirida') Inmunodeficiencia congénita o adquirida
+                        option(value="enfermedad oncohematologica" selected=persona.Patologiabases.patologiaBase === 'enfermedad oncohematologica') Enfermedad oncohematológica
+                        option(value="trasplante de organo solido o de medula osea" selected=persona.Patologiabases.patologiaBase === 'trasplante de organo solido o de medula osea') Trasplante de órgano sólido o de médula ósea
+                        option(value="insuficiencia renal cronica" selected=persona.Patologiabases.patologiaBase === 'insuficiencia renal cronica') Insuficiencia renal crónica
+                        option(value="otro" selected=persona.Patologiabases.patologiaBase === 'otro') Otro
+                    label Seleccione ubicación en el mapa:
+                    #map
+                .form-group
+                    label.form-label(for="longitud") Longitud:
+                    input.form-control(type="text" id="longitud" name="longitud" readonly)
+                .form-group
+                    label.form-label(for="latitud") Latitud:
+                    input.form-control(type="text" id="latitud" name="latitud" readonly)
+                br
+                button(type="submit" class="btn btn-primary") Actualizar persona
+                | &nbsp;&nbsp;&nbsp;&nbsp;
+                button(type="button" class="btn btn-primary" onclick="window.history.back()") Volver
 
 
     script.
-        // Obtener fechas una vez que el DOM está listo
-        $(function () {
-            let pers = !{JSON.stringify(persona)};
-            let press = 0
+        $(function () {"¡Datos incorrectos! Por favor, verifica la información ingresada."
             $('#map').css('width', $('#formPersona').outerWidth() + 'px');
             $().ready(function () {
                 initMap();
@@ -180,8 +192,8 @@ block content
                 $('#latitud').val(lat);
             }
 
-            function mostrarAlerta(mensaje) {
-                $('#mensajeAlerta').text(mensaje);
+            function mostrarAlerta() {
+                $('#mensajeAlerta').text("¡Datos incorrectos! Por favor, verifica la información ingresada.");
                 $('#alertModal').modal('show');
             }
 
@@ -327,7 +339,6 @@ block content
 
             $('#map').on('dragend', function(event) {
                 if($(this).hasClass('is-invalid')){
-                    quitarError($('#map'));
                     quitarError($('#longitud'));
                     quitarError($('#latitud'));
                 }
@@ -335,7 +346,7 @@ block content
                 var lat = event.target.getCenter().lat.toFixed(6);
                 actualizarCoordenadas({ lng: lng, lat: lat });
             });
-
+            let press = 0
             $('#alertModal').on('keyup', function (event) {
                 // Si la tecla presionada es "Enter", oculta el modal
                 if(event.key === 'Enter'){

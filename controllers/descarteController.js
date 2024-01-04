@@ -22,13 +22,13 @@ const listarDescartes = async (req, res) => {
   }
 };
 
-const crearDescarte = async (req, res) => {
+const altaDescarte = async (req, res) => {
   try {
     const personas = await Persona.findAll();
     const lotesInternos = await LoteInterno.findAll();
-    res.render("descarte/formDescarte", { 
-      personas: personas, 
-      lotesInternos: lotesInternos 
+    res.render("descarte/formDescarte", {
+      personas: personas,
+      lotesInternos: lotesInternos
     });
   } catch (error) {
     res.status(500).json({ message: "Error al obtener los descartes. " + error.message });
@@ -38,7 +38,7 @@ const crearDescarte = async (req, res) => {
 // Crear un nuevo descarte
 const createDescarte = async (req, res) => {
   try {
-    const { DNIAgente, numeroDeSerie, empresaDescartante, motivo, cantidadDeVacunas, fechaDeDescarte } = req.body; 
+    const { DNIAgente, numeroDeSerie, empresaDescartante, motivo, cantidadDeVacunas, fechaDeDescarte } = req.body;
     await Descarte.create({
       DNIAgente,
       numeroDeSerie,
@@ -56,7 +56,7 @@ const createDescarte = async (req, res) => {
   }
 };
 
-const editarDescarte = async (req, res) => {
+const editDescarte = async (req, res) => {
   try {
     const descarte = await Descarte.findByPk(req.params.id);
     const personas = await Persona.findAll();
@@ -85,10 +85,10 @@ const updateDescarte = async (req, res) => {
 // Eliminar un descarte por su ID
 const deleteDescarte = async (req, res) => {
   try {
-    await Descarte.destroy({ 
-      where: 
-      { 
-        idDescarte: req.params.id 
+    await Descarte.destroy({
+      where:
+      {
+        idDescarte: req.params.id
       },
     });
     req.flash('success', 'Descarte de Vacuna eliminada exitosamente.');
@@ -100,9 +100,9 @@ const deleteDescarte = async (req, res) => {
 
 module.exports = {
   listarDescartes,
-  crearDescarte,
+  altaDescarte,
   createDescarte,
-  editarDescarte,
+  editDescarte,
   updateDescarte,
   deleteDescarte,
 };

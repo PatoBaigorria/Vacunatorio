@@ -6,7 +6,7 @@ const controllers = require("../controllers/indexController");
 router.get("/", controllers.centroDeVacunacionController.listarCentrosDeVacunacion);
 router.get("/alta", controllers.centroDeVacunacionController.altaCentroVac);
 router.post("/", controllers.centroDeVacunacionController.createCentroVac);
-router.get("/:id", controllers.centroDeVacunacionController.editarCentroVac);
+router.get("/:id", controllers.centroDeVacunacionController.editCentroVac);
 router.put("/:id", controllers.centroDeVacunacionController.updateCentroDeVacunacion);
 router.delete("/:id", controllers.centroDeVacunacionController.deleteCentroDeVacunacion);
 

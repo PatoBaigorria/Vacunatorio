@@ -1,3 +1,4 @@
+- var title = 'Listado de Lotes Proveedores'
 include ..\includes\layout
 block content
 head
@@ -8,39 +9,79 @@ head
             text-decoration: underline;
             text-underline-offset: 4px; /* Ajusta el espacio entre el texto y el subrayado */
         }
-        .alert-message {
-                position: fixed;
-                top: 20px;
-                right: 20px;
-                z-index: 1000;
-                display: none; /* Ocultar inicialmente */
+        .modal-content {
+            background-color: #f1f1f1;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        }
+        .modal-header {
+            background-color: #dc3545;
+            color: white;
+        }
+        .modal-body {
+            padding: 20px;
+        }
+        #mensajeAlerta{
+            color: #721c24;
+        }
+        .modal-footer {
+            background-color: #f1f1f1;
+        }
+        .flash-message {
+            display: none;
+            opacity: 1;
+            transition: opacity 1s ease-out;
+        }
+        .fade-in {
+            display: block;
+            animation: fadeOut 3s 1s; /* fadeIn dura 3 segundos, fadeOut comienza después de 3 segundos y dura 2 segundos */
+        }
+        @keyframes fadeOut {
+            from {
+                opacity: 1;
             }
+            to {
+                opacity: 0;
+            }
+        }
 body
     div.container.my-4
         div.row
-            div.col-sm-12.col-md-12.col-lg-12.col-xl-12
+            div.col-sm-13.col-md-13.col-lg-13.col-xl-13
                 section#viewLotesProveedores
                     h2 Listado de Lotes Proveedores
                     br
-                    if messages.success.length
-                        .alert-message#flashMessage.alert.alert-success
-                            each message in messages.success // Recorre los mensajes
-                                = message
+                    if messages.success
+                        .alert.alert-success.flash-message.fade-in
+                            = messages.success
+                    if messages.error
+                        .alert.alert-danger.flash-message.fade-in
+                            = messages.error
+                    div.modal#confirmDeleteModal(tabindex="-1" role="dialog")
+                        div.modal-dialog(role="document")
+                            div.modal-content
+                                div.modal-header
+                                    h5.modal-title Confirmar la eliminación del lote proveedor
+                                    button.close(type="button" data-dismiss="modal" aria-label="Close")
+                                        span(aria-hidden="true") &times;
+                                div.modal-body
+                                    p#mensajeAlerta ¿Está seguro de que desea eliminar este lote proveedor?
+                                div.modal-footer
+                                    button.btn.btn-secondary(id="cancelDeleteBtn" type="button" data-dismiss="modal") Cancelar
+                                    button.btn.btn-danger(id="confirmDeleteBtn" type="button") Confirmar
                     div(style="text-align: left;")
-                        a.btn.btn-primary.btn-lg(href="/lotesproveedores/crear") Crear
+                        a.btn.btn-primary.btn-lg(href="/lotesproveedores/alta") Alta
                         br
                         br
                         div.table.responsive
                             table#lotesproveedores.table.table-striped.table-bordered
 
 script.
-    let lotes = !{JSON.stringify(lotesProveedores)}
-    let lotestab
-
+    let tabla
     $(document).ready(function() {
-        // Asegúrate de usar el mismo id de la tabla aquí
-        lotestab = $('#lotesproveedores').DataTable({
-            data: lotes,
+        tabla = $('#lotesproveedores').DataTable({
+            data: !{JSON.stringify(lotesProveedores)},
             pageLength: 5,
             lengthMenu: [5, 10, 15, 20],
             language: {
@@ -56,7 +97,7 @@ script.
                 { data: 'fechaDeVencimiento', title: 'Fecha de Vencimiento' },
                 { data: 'fechaDeCompra', title: 'Fecha de Compra' },
                 {
-                    data: null, title: 'Opciones',
+                    data: 'opciones', title: 'Opciones',
                     render: function(data, type, row) {
                         return `<button class="btn btn-success btn-sm fa-solid fa-pencil me-2"></button>` +
                             `<button class="btn btn-danger btn-sm fa-solid fa-trash-can"></button>`;
@@ -74,42 +115,52 @@ script.
         });
     });
     $(document).ready(function() {
-        lotestab.on('click', 'button', function(f) {
-            let data = lotestab.row(f.target.closest('tr')).data();
+        $('.flash-message').addClass('fade-in');
+        setTimeout(function() {
+            $('.flash-message').removeClass('fade-in');
+        }, 3000);
+
+        tabla.on('click', 'button', function (f) {
+            let data = tabla.row(f.target.closest('tr')).data();
             if ($(event.target).hasClass('fa-trash-can')) {
-                if(confirm('¿Seguro que desea eliminar este lote?')) {
-                    $.post('/lotesproveedores/' + data.numeroDeLote + '?_method=DELETE', function(data) {
+                $('#confirmDeleteModal').modal('show');
+                $('#confirmDeleteBtn').on('click', function() {
+            // Realizar la acción de eliminación
+            $.ajax({
+                url: '/lotesproveedores/' + data.numeroDeLote + '?_method=DELETE',
+                type: 'POST',
+                success: function(data) {
+                    if (data.success) {
                         window.location.href = "/lotesproveedores";
-                    })
+                    } else {
+                        console.error(data.message);
+                        //window.location.href = "/lotesproveedores";
+                    }
+                },
+                error: function(error) {
+                    console.error(error);
                 }
-            } else {
-                window.location.href = "/lotesproveedores/" + data.numeroDeLote;
-            }
-        });
-    })
-    
-    $(document).ready(function() {
-        let successMessages = !{JSON.stringify(messages.success)};
-        
-        if (successMessages.length > 0) {
-            let flashElement = $('<div>').addClass('alert alert-success alert-message');
-            successMessages.forEach(function(message) {
-                flashElement.append($('<p>').text(message));
             });
-            $('.container').prepend(flashElement); // Agrega los mensajes al principio del contenedor
-            flashElement.fadeIn('slow', function() {
-                setTimeout(function(){
-                    flashElement.fadeOut('slow');
-                }, 5000);
+
+            $('#confirmDeleteModal').modal('hide');
+                });
+
+                // Configurar el botón de cancelar y la 'X' para cerrar el modal
+                $('#cancelDeleteBtn, .modal-header button.close').on('click', function() {
+                    $('#confirmDeleteModal').modal('hide');
+                });
+
+                // Agregar evento al documento para escuchar la tecla 'Enter'
+                $(document).on('keydown', function(e) {
+                    if (e.key === 'Enter' && $('#confirmDeleteModal').is(':visible')) {
+                        // Disparar el evento de click en el botón de confirmación
+                        $('#confirmDeleteBtn').trigger('click');
+                    }
+                });
+                    } else {
+                        window.location.href = "/lotesproveedores/" + data.numeroDeLote;
+                    }
+                });
+
+                // Configurar el botón de confirmar y la 'X' para cerrar el modal
             });
-        } else {
-            // Si no hay mensajes, oculta el elemento flash (por si estaba mostrándose anteriormente)
-            $('.alert-message').fadeOut('slow');
-        }
-    });
-
-    function crear(){
-        window.location.href= "/lotesproveedores/crear"
-    }
-    
-

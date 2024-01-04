@@ -32,7 +32,7 @@ const listarLotesInternos = async (req, res) => {
   }
 };
 
-const crearLoteInterno = async (req, res) => {
+const altaLoteInterno = async (req, res) => {
   try {
     const lotesInternos = await LoteInterno.findAll();
     const lotesProveedores = await LoteProveedor.findAll();
@@ -107,7 +107,7 @@ const createLoteInterno = async (req, res) => {
   }
 };
 
-const editarLoteInterno = async (req, res) => {
+const editLoteInterno = async (req, res) => {
   try {
     const loteInterno = await LoteInterno.findByPk(req.params.id);
     const lotesProveedores = await LoteProveedor.findAll();
@@ -194,7 +194,7 @@ const deleteLoteInterno = async (req, res) => {
       },
     });
     req.flash('success', 'Lote Interno eliminado exitosamente.');
-    res.json({success:true});
+    res.json({ success: true });
   } catch (error) {
     res.status(500).json({ message: "Error al eliminar el lote interno." });
   }
@@ -202,9 +202,9 @@ const deleteLoteInterno = async (req, res) => {
 
 module.exports = {
   listarLotesInternos,
-  crearLoteInterno,
+  altaLoteInterno,
   createLoteInterno,
-  editarLoteInterno,
+  editLoteInterno,
   updateLoteInterno,
   deleteLoteInterno,
 };

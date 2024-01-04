@@ -37,7 +37,7 @@ const altaTraslado = async (req, res) => {
       lotesInternos: lotesInternos,
       centrosDeVacunacion: centrosDeVacunacion,
     });
-    
+
   } catch (error) {
     res.status(500).json({
       message: "Error al crear el traslado."
@@ -49,9 +49,9 @@ const createTraslados = async (req, res) => {
   try {
     const { numeroDeSerie, idCentroDeVacunacion, fechaDeSalida, fechaDeLlegada } = req.body;
     await Traslado.create({
-      numeroDeSerie, 
-      idCentroDeVacunacion, 
-      fechaDeSalida, 
+      numeroDeSerie,
+      idCentroDeVacunacion,
+      fechaDeSalida,
       fechaDeLlegada
     });
     req.flash("success", "Traslado creado exitosamente");
@@ -63,15 +63,16 @@ const createTraslados = async (req, res) => {
   }
 };
 // Editar Traslado por ID
-const editarTraslado = async (req, res) => {
+const editTraslado = async (req, res) => {
   try {
     const traslado = await Traslado.findByPk(req.params.id);
     const lotesInternos = await LoteInterno.findAll();
     const centrosDeVacunacion = await CentroDeVacunacion.findAll();
-    res.render("traslado/editTraslado", { 
+    res.render("traslado/editTraslado", {
       traslado: traslado,
       lotesInternos: lotesInternos,
-      centrosDeVacunacion: centrosDeVacunacion});
+      centrosDeVacunacion: centrosDeVacunacion
+    });
   } catch (error) {
     res.status(500).json({
       message: "Error al obtener el Traslado." + error.message,
@@ -104,7 +105,7 @@ const deleteTraslado = async (req, res) => {
       }
     });
     req.flash('success', 'Traslado eliminado exitosamente.');
-    res.json({success:true});
+    res.json({ success: true });
   } catch (error) {
     res.status(500).json({
       message: "Error al eliminar el traslado." + error.message
@@ -116,7 +117,7 @@ module.exports = {
   listarTraslados,
   altaTraslado,
   createTraslados,
-  editarTraslado,
+  editTraslado,
   updateTraslado,
   deleteTraslado,
 };
