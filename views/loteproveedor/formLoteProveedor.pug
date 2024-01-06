@@ -142,7 +142,7 @@ block content
             }
 
             function validarComboBox(campo){
-                if(campo.val() === null){
+                if(!campo.val()){
                     mostrarError(campo, 'SinSeleccionar');
                     $('#' + campo.attr('id') + 'SinSeleccionar').removeClass('d-none');
                 } else {

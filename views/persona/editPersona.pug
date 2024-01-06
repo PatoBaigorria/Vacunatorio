@@ -135,16 +135,6 @@ block content
                 .form-group
                     label.form-label(for="patologiaBase") Patologia Base:
                     select.form-select(name="patologiaBase" id="patologiaBase" required)
-                        option(value="ninguna" selected=persona.Patologiabases.patologiaBase === 'ninguna') Ninguna
-                        option(value="obesidad" selected=persona.Patologiabases.patologiaBase === 'obesidad') Obesidad
-                        option(value="diabetes" selected=persona.Patologiabases.patologiaBase === 'diabetes') Diabetes
-                        option(value="enfermedad respiratorio cronica" selected=persona.Patologiabases.patologiaBase === 'enfermedad respiratorio cronica') Enfermedad respiratoria crónica
-                        option(value="enfermedad cardiaca cronica" selected=persona.Patologiabases.patologiaBase === 'enfermedad cardiaca cronica') Enfermedad cardiaca crónica
-                        option(value="inmunodeficiencia congenita o adquirida" selected=persona.Patologiabases.patologiaBase === 'inmunodeficiencia congenita o adquirida') Inmunodeficiencia congénita o adquirida
-                        option(value="enfermedad oncohematologica" selected=persona.Patologiabases.patologiaBase === 'enfermedad oncohematologica') Enfermedad oncohematológica
-                        option(value="trasplante de organo solido o de medula osea" selected=persona.Patologiabases.patologiaBase === 'trasplante de organo solido o de medula osea') Trasplante de órgano sólido o de médula ósea
-                        option(value="insuficiencia renal cronica" selected=persona.Patologiabases.patologiaBase === 'insuficiencia renal cronica') Insuficiencia renal crónica
-                        option(value="otro" selected=persona.Patologiabases.patologiaBase === 'otro') Otro
                     label Seleccione ubicación en el mapa:
                     #map
                 .form-group
@@ -284,6 +274,27 @@ block content
                 }
             }
 
+            function cargarPatologias(){
+                [
+                    "Ninguna",
+                    "Obesidad",
+                    "Diabetes",
+                    "Enfermedad respiratorio cronica",
+                    "Enfermedad cardiaca cronica",
+                    "Inmunodeficiencia congénita o adquirida",
+                    "Enfermedad oncohematologica",
+                    "Trasplante de organo solido o de medula osea",
+                    "Insuficiencia renal cronica",
+                    "Otro"
+                ].forEach(patologia => {
+                    if(patologia == !{JSON.stringify(persona)}.Patologiabase.patologiaBase){
+                        $('#patologiaBase').append('<option value="' + patologia + '" selected>' + patologia + '</option>');
+                    }
+
+                    $('#patologiaBase').append('<option value="' + patologia + '">' + patologia + '</option>');
+                })
+            }
+
             // Función para validar todos los campos antes de enviar el formulario  4x
             function validarFormulario() {
                 let inputs = $('#formPersona input:visible:not([d-none]), #formPersona select:visible:not([d-none])');
@@ -325,7 +336,12 @@ block content
                 validarMatricula()
             });
 
-            $('#genero, #patologiaBase, #ocupacion').on('change', function () {
+            $('#patologiaBase').on('change', function () {
+                cargarPatologias()
+                quitarError($(this));
+            });
+
+            $('#genero, #ocupacion').on('change', function () {
                 quitarError($(this));
             });
 

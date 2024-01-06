@@ -1,3 +1,4 @@
+- var title = 'Listado de Depósitos Nacionales'
 include ..\includes\layout
 block content
 head
@@ -8,28 +9,78 @@ head
             text-decoration: underline;
             text-underline-offset: 4px; /* Ajusta el espacio entre el texto y el subrayado */
         }
+        .modal-content {
+            background-color: #f1f1f1;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        }
+        .modal-header {
+            background-color: #dc3545;
+            color: white;
+        }
+        .modal-body {
+            padding: 20px;
+        }
+        #mensajeAlerta{
+            color: #721c24;
+        }
+        .modal-footer {
+            background-color: #f1f1f1;
+        }
+        .flash-message {
+            display: none;
+            opacity: 1;
+            transition: opacity 1s ease-out;
+        }
+        .fade-in {
+            display: block;
+            animation: fadeOut 3s 1s; /* fadeIn dura 3 segundos, fadeOut comienza después de 3 segundos y dura 2 segundos */
+        }
+        @keyframes fadeOut {
+            from {
+                opacity: 1;
+            }
+            to {
+                opacity: 0;
+            }
+        }
 body
     div.container.my-4
-      div.row
-        div.col-sm-12.col-md-12.col-lg-12.col-xl-12
-            section#viewDepositosNacionales
-                h2 Listado de Depósitos Nacionales
-                br
-                if messages.success
-                    .alert.alert-success
-                        = messages.success 
-                div(style="text-align: left;")
-                    a.btn.btn-primary.btn-lg(href="/depositosnacionales/alta") Alta
+        div.row
+            div.col-sm-13.col-md-13.col-lg-13.col-xl-13
+                section#viewDepositosNacionales
+                    h2 Listado de Depósitos Nacionales
                     br
-                    br
-                    div.table.responsive
-                        table#depositosnacionales.table.table-striped.table-bordered
+                    if messages.success
+                        .alert.alert-success.flash-message.fade-in
+                            = messages.success
+                    if messages.error
+                        .alert.alert-danger.flash-message.fade-in
+                            = messages.error
+                    div.modal#confirmDeleteModal(tabindex="-1" role="dialog")
+                        div.modal-dialog(role="document")
+                            div.modal-content
+                                div.modal-header
+                                    h5.modal-title Confirmar la eliminación del depósito nacional
+                                    button.close(type="button" data-dismiss="modal" aria-label="Close")
+                                        span(aria-hidden="true") &times;
+                                div.modal-body
+                                    p#mensajeAlerta ¿Está seguro de que desea eliminar este depósito nacional?
+                                div.modal-footer
+                                    button.btn.btn-secondary(id="cancelDeleteBtn" type="button" data-dismiss="modal") Cancelar
+                                    button.btn.btn-danger(id="confirmDeleteBtn" type="button") Confirmar
+                    div(style="text-align: left;")
+                        a.btn.btn-primary.btn-lg(href="/depositosnacionales/alta") Alta
+                        br
+                        br
+                        div.table.responsive
+                            table#depositosnacionales.table.table-striped.table-bordered
 script.
-    let depnac = !{JSON.stringify(depositosNac)};
-    let dnt 
+    let tabla 
     $(document).ready(function() {
-        dnt = $('#depositosnacionales').DataTable({
-            data: depnac,
+        tabla = $('#depositosnacionales').DataTable({
+            data: !{JSON.stringify(depositosNac)},
             pageLength:5,
             lengthMenu:[5,10,15,20],
             language: {
@@ -39,15 +90,13 @@ script.
                 {data: 'idDepositoNacional', title: 'ID Deposito Nacional'},
                 {data: 'longitud', title: 'Longitud'},
                 {data: 'latitud', title: 'Latitud'},
-
                 {
-                    data: null, title: 'Opciones',
+                    data: 'opciones', title: 'Opciones',
                     render: function(data, type, row) {
                         return `<button class="btn btn-success btn-sm fa-solid fa-pencil me-2"></button>` +
                             `<button class="btn btn-danger btn-sm fa-solid fa-trash-can"></button>`;
                     }
-                }
-            ],
+                }            ],
             columnDefs: [
                 {orderable: false, targets:[3]}, // Columna de "Opciones"
                 {searchable: false, targets:[1, 2, 3]},
@@ -57,20 +106,54 @@ script.
             ]
         });
     });
-    $(document).ready(function() {
-        dnt.on('click', 'button', function (f) {
-            let data = dnt.row(f.target.closest('tr')).data();
-            if ($(event.target).hasClass('fa-trash-can')) {
-                if(confirm("¿Desea eliminar el Deposito Nacional?")){
-                    $.post('/depositosnacionales/'+data.idDepositoNacional+'?_method=DELETE', function(data){
-                         window.location.href = "/depositosnacionales";
-                    })
-                }
-            } else {window.location.href= "/depositosnacionales/" + data.idDepositoNacional}
-        })
-    });
-    function altaDN(){
-        window.location.href= "/depositosnacionales/alta"
-    }
 
-     
+    $(document).ready(function() {
+        $('.flash-message').addClass('fade-in');
+        setTimeout(function() {
+            $('.flash-message').removeClass('fade-in');
+        }, 3000);
+
+        tabla.on('click', 'button', function (f) {
+            let data = tabla.row(f.target.closest('tr')).data();
+            if ($(event.target).hasClass('fa-trash-can')) {
+                $('#confirmDeleteModal').modal('show');
+                $('#confirmDeleteBtn').on('click', function() {
+            // Realizar la acción de eliminación
+            $.ajax({
+                url: '/depositosnacionales/' + data.idDepositoNacional + '?_method=DELETE',
+                type: 'POST',
+                success: function(data) {
+                    if (data.success) {
+                        window.location.href = "/depositosnacionales";
+                    } else {
+                        console.error(data.message);
+                        //window.location.href = "/depositosnacionales";
+                    }
+                },
+                error: function(error) {
+                    console.error(error);
+                }
+            });
+
+            $('#confirmDeleteModal').modal('hide');
+        });
+
+        // Configurar el botón de cancelar y la 'X' para cerrar el modal
+        $('#cancelDeleteBtn, .modal-header button.close').on('click', function() {
+            $('#confirmDeleteModal').modal('hide');
+        });
+
+        // Agregar evento al documento para escuchar la tecla 'Enter'
+        $(document).on('keydown', function(e) {
+            if (e.key === 'Enter' && $('#confirmDeleteModal').is(':visible')) {
+                // Disparar el evento de click en el botón de confirmación
+                $('#confirmDeleteBtn').trigger('click');
+            }
+        });
+            } else {
+                window.location.href = "/depositosnacionales/" + data.idDepositoNacional;
+            }
+        });
+
+        // Configurar el botón de confirmar y la 'X' para cerrar el modal
+        });

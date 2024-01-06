@@ -1,3 +1,4 @@
+
 //const { increment } = require("../models/agentedesalud");
 const { Persona, Telefono, PatologiaBase, AgenteDeSalud } = require("../models/relaciones");
 

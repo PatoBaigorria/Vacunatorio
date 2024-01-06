@@ -23,152 +23,152 @@ const Traslado = require("./traslado");
 
 // Relaciones entre los modelos
 Laboratorio.hasMany(LoteProveedor, {
-  foreignKey: 'idLaboratorio'
+	foreignKey: 'idLaboratorio'
 });
 
 LoteProveedor.belongsTo(Laboratorio, {
-  foreignKey: 'idLaboratorio'
+	foreignKey: 'idLaboratorio'
 });
 
 LoteProveedor.hasMany(LoteInterno, {
-  foreignKey: 'idLaboratorio'
+	foreignKey: 'idLaboratorio'
 });
 
 LoteInterno.belongsTo(LoteProveedor, {
-  foreignKey: 'numeroDeLote'
+	foreignKey: 'numeroDeLote'
 });
 
-LoteInterno.belongsTo(LoteProveedor, {
-  foreignKey: 'idLaboratorio'
+LoteInterno.belongsTo(Laboratorio, {
+	foreignKey: 'idLaboratorio'
 });
 
 DepositoNacional.hasMany(LoteInterno, {
-  foreignKey: 'idDepositoNacional'
+	foreignKey: 'idDepositoNacional'
 });
 
 DepositoProvincial.hasMany(LoteInterno, {
-  foreignKey: 'idDepositoProvincial'
+	foreignKey: 'idDepositoProvincial'
 });
 
 CentroDeVacunacion.hasMany(LoteInterno, {
-  foreignKey: 'idCentroDeVacunacion',
+	foreignKey: 'idCentroDeVacunacion',
 });
 
 LoteInterno.belongsTo(DepositoNacional, {
-  foreignKey: 'idDepositoNacional',
+	foreignKey: 'idDepositoNacional',
 });
 
 LoteInterno.belongsTo(DepositoProvincial, {
-  foreignKey: 'idDepositoProvincial',
+	foreignKey: 'idDepositoProvincial',
 });
 
 LoteInterno.belongsTo(CentroDeVacunacion, {
-  foreignKey: 'idCentroDeVacunacion',
+	foreignKey: 'idCentroDeVacunacion',
 });
 
 LoteInterno.belongsToMany(CentroDeVacunacion, {
-  through: Traslado,
-  foreignKey: 'numeroDeSerie'
+	through: Traslado,
+	foreignKey: 'numeroDeSerie'
 });
 
 CentroDeVacunacion.belongsToMany(LoteInterno, {
-  through: Traslado,
-  foreignKey: 'idCentroDeVacunacion'
+	through: Traslado,
+	foreignKey: 'idCentroDeVacunacion'
 });
 
 Persona.hasOne(Telefono, {
-  foreignKey: 'DNI'
+	foreignKey: 'DNI'
 });
 
-Persona.hasMany(PatologiaBase, {
-  foreignKey: 'DNI'
+Persona.hasOne(PatologiaBase, {
+	foreignKey: 'DNI'
 });
 
 Telefono.belongsTo(Persona, {
-  foreignKey: 'DNI'
+	foreignKey: 'DNI'
 });
 
 PatologiaBase.belongsTo(Persona, {
-  foreignKey: 'DNI'
+	foreignKey: 'DNI'
 });
 
 Persona.hasOne(AgenteDeSalud, {
-  foreignKey: 'DNI',
+	foreignKey: 'DNI',
 });
 
 AgenteDeSalud.belongsTo(Persona, {
-  foreignKey: 'DNI',
+	foreignKey: 'DNI',
 });
 
 Persona.hasMany(Aplicacion, {
-  foreignKey: 'DNIPaciente'
+	foreignKey: 'DNIPaciente'
 });
 
 AgenteDeSalud.hasMany(Aplicacion, {
-  foreignKey: 'DNIAgente'
+	foreignKey: 'DNIAgente'
 });
 
 LoteInterno.hasMany(Aplicacion, {
-  foreignKey: 'numeroDeSerie',
+	foreignKey: 'numeroDeSerie',
 });
 
 Aplicacion.belongsTo(Persona, {
-  foreignKey: 'DNIPaciente'
+	foreignKey: 'DNIPaciente'
 });
 
 Aplicacion.belongsTo(AgenteDeSalud, {
-  foreignKey: 'DNIAgente'
+	foreignKey: 'DNIAgente'
 });
 
 Aplicacion.belongsTo(LoteInterno, {
-  foreignKey: 'numeroDeSerie'
+	foreignKey: 'numeroDeSerie'
 });
 
 LoteInterno.hasMany(Descarte, {
-  foreignKey: 'numeroDeSerie'
+	foreignKey: 'numeroDeSerie'
 });
 
 AgenteDeSalud.hasMany(Descarte, {
-  foreignKey: 'DNIAgente'
+	foreignKey: 'DNIAgente'
 });
 
 Descarte.belongsTo(LoteInterno, {
-  foreignKey: 'numeroDeSerie'
+	foreignKey: 'numeroDeSerie'
 });
 
 Descarte.belongsTo(AgenteDeSalud, {
-  foreignKey: 'DNIAgente'
+	foreignKey: 'DNIAgente'
 });
 
 async function sincronizarModelos() {
-  try {
-    await sequelize.sync({
-      //force: true,
-    }); // La opción force: true creará las tablas borrando los datos existentes
-    console.log("Modelos sincronizados con la base de datos.");
-  } catch (error) {
-    console.error(
-      "Error al sincronizar los modelos con la base de datos:",
-      error
-    );
-  }
+	try {
+		await sequelize.sync({
+			//force: true,
+		}); // La opción force: true creará las tablas borrando los datos existentes
+		console.log("Modelos sincronizados con la base de datos.");
+	} catch (error) {
+		console.error(
+			"Error al sincronizar los modelos con la base de datos:",
+			error
+		);
+	}
 }
 
 // Llamar a la función para sincronizar los modelos al iniciar la aplicación
 sincronizarModelos();
 
 module.exports = {
-  AgenteDeSalud,
-  Aplicacion,
-  CentroDeVacunacion,
-  DepositoNacional,
-  DepositoProvincial,
-  Descarte,
-  Laboratorio,
-  LoteInterno,
-  LoteProveedor,
-  PatologiaBase,
-  Persona,
-  Telefono,
-  Traslado,
+	AgenteDeSalud,
+	Aplicacion,
+	CentroDeVacunacion,
+	DepositoNacional,
+	DepositoProvincial,
+	Descarte,
+	Laboratorio,
+	LoteInterno,
+	LoteProveedor,
+	PatologiaBase,
+	Persona,
+	Telefono,
+	Traslado,
 };

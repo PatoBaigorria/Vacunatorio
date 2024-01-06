@@ -3,7 +3,9 @@ include ..\includes\layout
 block content
 html(lang="es") 
     head
-       style.
+        link(rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="")
+        script(src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin="")
+        style.
             #formDepositoNacional {
                 max-width: 600px;
                 margin: auto;
@@ -17,28 +19,68 @@ html(lang="es")
             label {
                 margin-bottom: 5px;
             }
-            .readonly-input {
-                color: gray;
-                background-color: #f0f0f0;
+            #map {
+                height: 300px;
+                width: 100%;
+                border: 1px solid #000;
             }
+body
+    h2.text-center Actualice el Depósito Nacional
+    br
+    form#formDepositoNacional(action="/depositosnacionales/"+depositoN.idDepositoNacional+"?_method=PUT" method="post")
+        .form-group
+            label.form-label ID del depósito nacional:
+            input.form-control.is-valid(type="text" id="idDepositoNacional" name="idDepositoNacional" value=depositoN.idDepositoNacional disabled)
+        .form-group
+            label.form-label(for="ubicacion") Seleccione ubicación en el mapa:
+            #map
+        .form-group
+            label.form-label(for="longitud") Longitud:
+            input.form-control(type="text" id="longitud" name="longitud" readonly)
+        .form-group
+            label.form-label(for="latitud") Latitud:
+            input.form-control(type="text" id="latitud" name="latitud" readonly)
+        br
+        button(type="submit" class="btn btn-primary") Actualizar
+        | &nbsp;&nbsp;&nbsp;&nbsp;
+        button(type="button" class="btn btn-primary" onclick="window.history.back()") Volver
 
-    body
-        #formDepositoNacional
-            h2.text-center Actualice el Depósito Nacional
-            br
-            form(action="/depositosnacionales/"+depositoN.idDepositoNacional+"?_method=PUT" method="post")
-                .form-group
-                    label.form-label(for="idDepositoNacional") ID Depósito Nacional:
-                    input.form-control.readonly-input(type="text" id="idDepositoNacional" name="idDepositoNacional" value=depositoN.idDepositoNacional readonly disabled)
-                br
-                .form-group
-                    label.form-label(for="longitud") Longitud:
-                    input.form-control(type="text" id="longitud" name="longitud" value=depositoN.longitud)
-                br
-                .form-group
-                    label.form-label(for="latitud") Latitud:
-                    input.form-control(type="text" id="latitud" name="latitud" value=depositoN.latitud)
-                br
-                button(type="submit" class="btn btn-primary") Actualizar
-                | &nbsp;&nbsp;&nbsp;&nbsp;
-                button(type="button" class="btn btn-primary" onclick="window.history.back()") Volver
+script.
+    $(function (){
+        $('#map').css('width', $('#formCentroDeVacunacion').outerWidth() + 'px');
+        $().ready(function () {
+            initMap();
+        });
+
+        function initMap() {
+            let map = L.map('map');
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors'
+            }).addTo(map);
+
+            if ("geolocation" in navigator) {
+            navigator.geolocation.getCurrentPosition(function (position) {
+                var userLocation = [!{JSON.stringify(depositoN)}.latitud, !{JSON.stringify(depositoN)}.longitud];
+                map.setView(userLocation, 15);
+                var marker = L.marker(userLocation, { draggable: true }).addTo(map);
+                marker.on('dragend', function (event) {
+                actualizarCoordenadas(event.target.getLatLng());
+                });
+                actualizarCoordenadas(map.getCenter());
+            });
+            }
+        }
+
+        function actualizarCoordenadas(coords) {
+            var lng = coords.lng.toFixed(6);
+            var lat = coords.lat.toFixed(6);
+            $('#longitud').val(lng);
+            $('#latitud').val(lat);
+        }
+
+        $('#longitud, #latitud').on('focusout', function() {
+            $(this).addClass('is-valid').removeClass('is-invalid');
+        });
+
+        $('#longitud, #latitud').trigger('focusout');
+    });
