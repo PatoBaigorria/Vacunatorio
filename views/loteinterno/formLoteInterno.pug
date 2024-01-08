@@ -61,8 +61,8 @@ html(lang="es")
                 label.form-label(for="numeroDeLote") Número del lote proveedor:
                 .input-group.has-validation
                     select.form-select(name="numeroDeLote" id="numeroDeLote" required disabled)
+                        option(disabled selected hidden value="") Seleccione un Lote Proveedor
                     .invalid-feedback.d-none(id="numeroDeLoteSinLaboratorio") Seleccione un laboratorio antes de elegir un lote proveedor
-                    .invalid-feedback.d-none(id="numeroDeLoteSinSeleccionar") Seleccione un lote proveedor
             .form-group
                 label.form-label(for="cantidadDeVacunas") Cantidad de Vacunas:
                 .input-group.has-validation
@@ -75,6 +75,8 @@ html(lang="es")
                     input.form-control(type="date" id="fechaDeLlegadaDepositoNacional" name="fechaDeLlegadaDepositoNacional" )
                     .invalid-feedback.d-none(id="fechaDeLlegadaDepositoNacionalVacio") Seleccione el depósito nacional al que debe llegar
                     .invalid-feedback.d-none(id="fechaDeLlegadaDepositoNacionalSuperior") La fecha seleccionada es superior a la fecha actual
+                    .invalid-feedback.d-none(id="fechaDeLlegadaDepositoNacionalProveedor") Debe seleccionar un lote proveedor antes de elegir una fecha de llegada
+                    .invalid-feedback.d-none(id="fechaDeLlegadaDepositoNacionalAnterior") La fecha seleccionada es anterior a la fecha de compra
                     .invalid-feedback.d-none(id="fechaDeLlegadaCentroDeVacunacionSeleccion") Seleccione un Depósito Nacional antes de seleccionar una fecha de llegada
             .form-group
                 label.form-label(for="idDepositoNacional") Depósito Nacional:
@@ -155,15 +157,12 @@ script.
             if(!$('#idLaboratorio').val()){
                 mostrarError($('#idLaboratorio'), 'SinSeleccionar');
                 mostrarError($('#numeroDeLote'), 'SinLaboratorio');
-            } else {
+            } else if($('#numeroDeLote').hasClass('is-invalid')){
                 $('#numeroDeLote').prop('disabled', false);
                 quitarError($('#idLaboratorio'));
                 quitarError($('#numeroDeLote'));
-                mostrarError($('#numeroDeLote'), 'SinSeleccionar');
             }
-            if($('#numeroDeLote').val()){
-                quitarError($('#numeroDeLote')) 
-            }
+            cargarLote()
         }
 
         function cargarLote(){
@@ -191,13 +190,25 @@ script.
             if($('#fechaDeLlegadaDepositoNacional').val() != '' && !$('#idDepositoNacional').val()) {
                 mostrarError($('#fechaDeLlegadaDepositoNacional'), 'Vacio');
             } else if($('#fechaDeLlegadaDepositoNacional').val() != '') {
-                console.log('Fecha de llegada: ' + $('#fechaDeLlegadaDepositoNacional').val())
                 let fechaIngresada = new Date($('#fechaDeLlegadaDepositoNacional').val())
                 let fechaActual = new Date()
                 fechaIngresada.setHours(24, 0, 0, 0)
                 fechaActual.setHours(0, 0, 0, 0)
                 if (((fechaIngresada - fechaActual) / (1000 * 60 * 60 * 24)) > 0) {
                     mostrarError($('#fechaDeLlegadaDepositoNacional'), 'Superior');
+                } else {
+                    if(!$('#numeroDeLote').val()){
+                        mostrarError($('#fechaDeLlegadaDepositoNacional'), 'Proveedor');
+                    } else {
+                        let fechaCompra = new Date(!{JSON.stringify(lotesProveedores)}.find(lote => lote.numeroDeLote == $('#numeroDeLote').val()))
+                        console.log('Fecha de compra: ' + fechaCompra.fechaDeCompra)
+                        console.log('Fecha ingresada: ' + fechaIngresada)
+                        console.log(fechaIngresada < fechaCompra)
+                        if (fechaIngresada < fechaCompra) {
+                            console.log('Fecha de llegada: ' + $('#fechaDeLlegadaDepositoNacional').val())
+                            mostrarError($('#fechaDeLlegadaDepositoNacional'), 'Anterior');
+                        }
+                    }
                 }
             }
         }
@@ -288,7 +299,6 @@ script.
 
         // Eventos
         $('#idLaboratorio').on('change', function () {
-            cargarLote()
             validarComboBox()
         })
 

@@ -289,9 +289,9 @@ block content
                 ].forEach(patologia => {
                     if(patologia == !{JSON.stringify(persona)}.Patologiabase.patologiaBase){
                         $('#patologiaBase').append('<option value="' + patologia + '" selected>' + patologia + '</option>');
+                    } else {
+                        $('#patologiaBase').append('<option value="' + patologia + '">' + patologia + '</option>');
                     }
-
-                    $('#patologiaBase').append('<option value="' + patologia + '">' + patologia + '</option>');
                 })
             }
 

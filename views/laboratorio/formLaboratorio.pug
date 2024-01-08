@@ -1,5 +1,5 @@
 //- Incluye tus estilos y scripts
-- var title ='Alta de Laboratorio'
+- var title ='Alta de un Laboratorio'
 include ..\includes\layout
 block content
     html(lang="es")
@@ -42,9 +42,12 @@ block content
                     width: 100%;
                     border: 1px solid #000;
                 }
+                .navbar-nav .nav-item:hover .nav-link {
+                    cursor: pointer;
+                    color: #0000FF;
+                }
         body
-
-            h2.text-center Ingresar un Laboratorio
+            h2.text-center Ingrese los datos del laboratorio
             if messages.error
                 .alert.alert-danger
                     = messages.error
@@ -56,48 +59,48 @@ block content
                             button.close(type="button" data-bs-dismiss="modal" aria-label="Close")
                                 span(aria-hidden="true") ×
                         div.modal-body
-                            p#mensajeAlerta Mensaje de alerta
+                            p#mensajeAlerta.text-center Mensaje de alerta
             form#formLaboratorio(action="/laboratorios" method="post")
                 .form-group
-                    label.form-label(for="nombreLaboratorio") Nombre de Laboratorio:
+                    label.form-label(for="nombreLaboratorio") Nombre del laboratorio:
                     .input-group.has-validation
-                        input.form-control(type="text" id="nombreLaboratorio" name="nombreLaboratorio" required)
-                        .invalid-feedback.d-none(id="nombreLaboratorioVacio") El campo no puede estar vacío
+                        input.is-invalid.form-control(type="text" id="nombreLaboratorio" name="nombreLaboratorio" required)
+                        .invalid-feedback(id="nombreLaboratorioVacio") El campo no puede estar vacío
                         .invalid-feedback.d-none(id="nombreLaboratorioInvalido") El nombre es invalido
-                        .invalid-feedback.d-none(id="nombreLaboratorioMaximo") El nombre no puede contener más de treinta caracteres
                         .invalid-feedback.d-none(id="nombreLaboratorioExiste") El nombre del laboratorio ya existe en la BD
                 .form-group
-                    label.form-label(for="pais") País:
+                    label.form-label(for="pais") País de origen del laboratorio:
                     .input-group.has-validation
-                        input.form-control(type="text" id="pais" name="pais" required)
-                        .invalid-feedback.d-none(id="paisVacio") El campo no puede estar vacío
+                        input.is-invalid.form-control(type="text" id="pais" name="pais" required)
+                        .invalid-feedback(id="paisVacio") El campo no puede estar vacío
                         .invalid-feedback.d-none(id="paisInvalido") El país no puede contener números
                         .invalid-feedback.d-none(id="paisMaximo") El país no puede contener más de cincuenta y seis caracteres
                 .form-group
-                    label.form-label(for="email") Email:
+                    label.form-label(for="email") Email del laboratorio:
                     .input-group.has-validation
-                        input.form-control(type="email" id="email" name="email" required)
-                        .invalid-feedback.d-none(id="emailVacio") El campo no puede estar vacío
+                        input.is-invalid.form-control(type="email" id="email" name="email" required)
+                        .invalid-feedback(id="emailVacio") El campo no puede estar vacío
                         .invalid-feedback.d-none(id="emailInvalido") El email no es valido
                 .form-group
-                    label.form-label(for="telefono") Teléfono:
+                    label.form-label(for="telefono") Teléfono del laboratorio:
                     .input-group.has-validation
-                        input.form-control(type="tel" id="telefono" name="telefono" title="Debe contener un máximo de 10 dígitos" required)
-                        .invalid-feedback.d-none(id="telefonoVacio") El campo no puede estar vacío
+                        input.is-invalid.form-control(type="tel" id="telefono" name="telefono" title="Debe contener un máximo de 10 dígitos" required)
+                        .invalid-feedback(id="telefonoVacio") El campo no puede estar vacío
                         .invalid-feedback.d-none(id="telefonoInvalido") El teléfono no puede contener letras, espacios ni guiones
                         .invalid-feedback.d-none(id="telefonoMaximo") El teléfono debe contener 10 dígitos sin espacios ni guiones
-                    label Seleccione la ubicación en el mapa:
+                    label Seleccione la ubicación del laboratorio en el mapa:
                     #map
                 .form-group
                     label.form-label(for="longitud") Longitud:
-                    input.form-control(type="text" id="longitud" name="longitud" readonly)
+                    input.form-control.is-valid(type="text" id="longitud" name="longitud" readonly)
                 .form-group
                     label.form-label(for="latitud") Latitud:
-                    input.form-control(type="text" id="latitud" name="latitud" readonly)
-                    br
-                button(type="submit" class="btn btn-primary") Dar de alta
-                | &nbsp;&nbsp;&nbsp;&nbsp;
-                button(type="button" class="btn btn-primary" onclick="window.history.back()") Volver
+                    input.form-control.is-valid(type="text" id="latitud" name="latitud" readonly)
+                br
+                div.text-center
+                    button(type="submit" class="btn btn-primary") Alta
+                    | &nbsp;&nbsp;&nbsp;&nbsp;
+                    button(type="button" class="btn btn-primary" onclick="window.history.back()") Volver
 
     script.
         $(function () {
@@ -132,12 +135,11 @@ block content
                 $('#latitud').val(lat);
             }
 
-            function mostrarAlerta(mensaje) {
-                $('#mensajeAlerta').text(mensaje);
+            function mostrarAlerta() {
+                $('#mensajeAlerta').text("¡Datos incorrectos! Por favor, verifica la información ingresada.");
                 $('#alertModal').modal('show');
             }
 
-            // Funciones para mostrar y quitar errores
             function mostrarError(campo, error) {
                 campo.addClass('is-invalid').removeClass('is-valid').addClass();
                 $('#' + campo.attr('id') + error).removeClass('d-none');
@@ -154,8 +156,6 @@ block content
                     mostrarError($('#nombreLaboratorio'), 'Vacio');
                 } else if(!/^[A-Za-záéíóúüñÁÉÍÓÚÜÑ\s]{1,}$/.test($('#nombreLaboratorio').val())) {
                     mostrarError($('#nombreLaboratorio'), 'Invalido');
-                } else if($('#nombreLaboratorio').val().length > 30) {
-                    mostrarError($('#nombreLaboratorio'), 'Maximo');
                 } else {
                     if (!{JSON.stringify(laboratorios)}.some(laboratorio => laboratorio.nombreLaboratorio == $('#nombreLaboratorio').val())) {
                         mostrarError($('#nombreLaboratorio'), 'Existe');
@@ -171,19 +171,6 @@ block content
                     mostrarError($('#pais'), 'Invalido');
                 } else if ($('#pais').val().length > 56) {
                     mostrarError($('#pais'), 'Maximo');
-                }
-            }
-
-            function validarEmail(){
-                quitarError($('#email'));
-                if ($('#email').val().length == 0) {
-                    mostrarError($('#email'), 'Vacio');
-                    $('#' + $('#email').attr('id') + 'Vacio').removeClass('d-none');
-                    $('#' + $('#email').attr('id') + 'Invalido').addClass('d-none');
-                } else if (!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test($('#email').val())) {
-                    mostrarError($('#email'), 'Invalido');
-                    $('#' + $('#email').attr('id') + 'Invalido').removeClass('d-none');
-                    $('#' + $('#email').attr('id') + 'Vacio').addClass('d-none');
                 }
             }
 
@@ -207,7 +194,6 @@ block content
                 }
             }
 
-            // Función para validar todos los campos antes de enviar el formulario
             function validarFormulario() {
                 let inputs = $('#formLaboratorio input');
                 let camposInvalidos = false;
@@ -219,7 +205,7 @@ block content
                     }
                 });
                 if (camposInvalidos) {
-                    mostrarAlerta("¡Datos incorrectos! Por favor, verifica la información ingresada.");
+                    mostrarAlerta();
                     return false;
                 }
                 return true;
@@ -243,18 +229,13 @@ block content
             });
 
             $('#map').on('dragend', function(event) {
-                if($(this).hasClass('is-invalid')){
-                    quitarError($('#map'));
-                    quitarError($('#longitud'));
-                    quitarError($('#latitud'));
-                }
                 var lng = event.target.getCenter().lng.toFixed(6);
                 var lat = event.target.getCenter().lat.toFixed(6);
                 actualizarCoordenadas({ lng: lng, lat: lat });
             });
+
             let press = 0
             $('#alertModal').on('keyup', function (event) {
-                // Si la tecla presionada es "Enter", oculta el modal
                 if(event.key === 'Enter'){
                     press = press+1
                 }
@@ -265,41 +246,30 @@ block content
             });
 
             $('#alertModal').on('hidden.bs.modal', function () {
-                // Buscar el primer elemento con la clase 'is-invalid' y hacer foco en él
                 var primerInvalido = $('.is-invalid:first');
                 if (primerInvalido.length > 0) {
                     primerInvalido.focus();
                 }
-            });
-
-            $('#longitud, #latitud').on('focusout', function () {
-                $(this).addClass('is-valid').removeClass('is-invalid');
             });
 
             $('#alertModal').on('hidden.bs.modal', function () {
-                // Buscar el primer elemento con la clase 'is-invalid' y hacer foco en él
                 var primerInvalido = $('.is-invalid:first');
                 if (primerInvalido.length > 0) {
                     primerInvalido.focus();
                 }
             });
 
-            $('#nombreLaboratorio, #pais, #email, #telefono, #longitud, #latitud').trigger('focusout');
             $('#nombreLaboratorio').trigger('focus')
 
             $('#formLaboratorio input').on('keypress', function (event) {
                 if (event.which === 13) {
-                    console.log("Formulario enviado por teclado");
-                    //console.log(validarFormulario());
                     if(!validarFormulario()){
                         event.preventDefault();
                     }
-                    // Puedes agregar lógica adicional aquí si es necesario
                 }
             });
 
             $('#formLaboratorio button[type="submit"]').on('click', function (event) {
-                console.log("Botón de envío clicado");
                 if (!validarFormulario()) {
                     event.preventDefault();
                 }

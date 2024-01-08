@@ -9,7 +9,7 @@ const loteproveedor = Loteproveedor.init(
     numeroDeLote: {
       type: DataTypes.INTEGER,
       primaryKey: true,
-      autoIncrement: true,
+      //autoIncrement: true,
     },
     idLaboratorio: {
       type: DataTypes.INTEGER,

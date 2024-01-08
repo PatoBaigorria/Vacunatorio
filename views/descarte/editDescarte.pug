@@ -14,66 +14,291 @@ html(lang="es")
                 text-underline-offset: 4px;
                 margin-top: 10px;
             }
+            .modal-content {
+                background-color: #f1f1f1;
+                padding: 20px;
+                border-radius: 10px;
+                box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            }
+            .modal-header {
+                background-color: #dc3545;
+                color: white;
+            }
+            .modal-body {
+                padding: 20px;
+            }
+            #mensajeAlerta{
+                color: #721c24;
+            }
             label {
+                margin-top: 5px;
                 margin-bottom: 5px;
             }
-            .readonly-input {
-                color: gray;
-                background-color: #f0f0f0;
-            }
     body
-        #formDescarte
-            h2.text-center Actualice el Descarte
-            br
-            form(action="/descartes/"+descarte.idDescarte+"?_method=PUT" method="post")
-                .form-group
-                    label.form-label(for="idDescarte") ID Descarte:
-                    input.form-control.readonly-input(type="text" id="idDescarte" name="idDescarte" value=descarte.idDescarte readonly disabled)
-                br
-                .form-group
-                    label.form-label(for="persona") Seleccione un Agente de Salud:
-                    select.form-select#personaSelect(name="DNIAgente")
+        h2.text-center Actualice el Descarte
+        if messages.error
+            .alert.alert-danger
+                = messages.error
+        div.modal#alertModal(tabindex="-1" role="dialog" aria-labelledby="alertModalLabel" aria-hidden="true")
+            div.modal-dialog(role="document")
+                div.modal-content
+                    div.modal-header
+                        h5.modal-title#alertModalLabel Alerta
+                        button.close(type="button" data-bs-dismiss="modal" aria-label="Close")
+                            span(aria-hidden="true") ×
+                    div.modal-body
+                        p#mensajeAlerta Mensaje de alerta
+        form#formDescarte(action="/descartes/"+descarte.idDescarte+"?_method=PUT" method="post")
+            .form-group
+                label.form-label(for="DNIAgente") Seleccione un Agente de Salud Existente:
+                .input-group.has-validation
+                    select.form-select.is-invalid(name="DNIAgente" id="DNIAgente" required)
                         each persona in personas
-                            if(persona.ocupacion === 'agente de salud')
-                                if(persona.DNI === descarte.DNIAgente)
-                                    option(value=persona.DNI selected)= persona.nombre + ' ' + persona.apellido
-                                else
+                            if(persona.DNI == descarte.DNIAgente)
+                                option(value=persona.DNI selected)= persona.nombre + ' ' + persona.apellido
+                            else 
+                                if(persona.ocupacion=="agente de salud")
                                     option(value=persona.DNI)= persona.nombre + ' ' + persona.apellido
-                br
-                .form-group
-                    label.form-label(for="num-serie") Seleccione un Nº de Serie Lote Interno:
-                    select.form-select#numeroDeSerieSelect(name="numeroDeSerie")
-                        each loteI in lotesInternos
-                            if(loteI.numeroDeSerie === descarte.numeroDeSerie)
-                                option(value=loteI.numeroDeSerie selected)= loteI.numeroDeSerie
-                            else
-                                option(value=loteI.numeroDeSerie)= loteI.numeroDeSerie
-                br
-                .form-group
-                    label.form-label(for="emp-desc") Empresa Descartante:
-                    select.form-select#empresaDescartanteSelect(name="empresaDescartante")
-                        each emp in empresas
-                            if(emp === descarte.empresaDescartante)
-                                option(value=emp selected)= emp
-                            else
-                                option(value=emp)= emp
-                br
-                .form-group
-                    label.form-label(for="motivo") Motivo Descarte:
-                    select.form-select#motivoSelect(name="motivo")
-                        each motivo in motivos
-                            if(motivo === descarte.motivo)
-                                option(value=motivo selected)= motivo
-                            else
-                                option(value=motivo)= motivo
-                .form-group
-                    label.form-label(for="cant-vac") Cantidad de Vacunas:
-                    input.form-control(type="number" id="cant-vac" name="cantidadDeVacunas" value=descarte.cantidadDeVacunas required)
-                br
-                .form-group
-                    label.form-label(for="fecha-desc") Fecha Descarte:
-                    input.form-control(type="date" id="fecha-desc" name="fechaDeDescarte" value=descarte.fechaDeDescarte required)
-                br
-                button(type="submit" class="btn btn-primary") Actualizar
-                | &nbsp;&nbsp;&nbsp;&nbsp;
-                button(type="button" class="btn btn-primary" onclick="window.history.back()") Volver
+            .form-group
+                label.form-label(for="numeroDeSerie") Nº de Serie de Lote Interno:
+                .input-group.has-validation
+                    select.form-select.is-invalid(name="numeroDeSerie" id="numeroDeSerie" value=descarte.numeroDeSerie required)
+            .form-group
+                label.form-label(for="empresaDescartante") Empresa Descartante:
+                .input-group.has-validation
+                    select.form-select(name="empresaDescartante" id="empresaDescartante" required)
+            .form-group
+                label.form-label(for="motivo") Motivo de descarte:
+                .input-group.has-validation
+                    select.form-select(name="motivo" id="motivo" required)
+            .form-group
+                label.form-label(for="cantidadDeVacunas") Cantidad de Vacunas:
+                .input-group.has-validation
+                    input.form-control(type="text" id="cantidadDeVacunas" name="cantidadDeVacunas" value=descarte.cantidadDeVacunas required)
+                    .invalid-feedback.d-none(id="cantidadDeVacunasVacio") El campo no puede estar vacío
+                    .invalid-feedback.d-none(id="cantidadDeVacunasNumeros") Ingrese solo números positivos
+            .form-group
+                label.form-label(for="fechaDeDescarte") Fecha de descarte:
+                .input-group.has-validation
+                    input.form-control(type="date" id="fechaDeDescarte" name="fechaDeDescarte" value=descarte.fechaDeDescarte required)
+                    .invalid-feedback.d-none(id="fechaDeDescarteVacio") El campo no puede estar vacío
+                    .invalid-feedback.d-none(id="fechaDeDescarteSuperior") La fecha seleccionada es superior a la fecha actual
+                    .invalid-feedback.d-none(id="fechaDeDescarteNumeroDeSerie") Debe seleccionar un lote interno antes de elegir una fecha de descarte
+                    .invalid-feedback.d-none(id="fechaDeDescarteNulo") El lote aún no ha llegado al depósito nacional
+                    .invalid-feedback.d-none(id="fechaDeDescarteLlegada") La fecha de descarte no puede ser previa a la fecha de llegada al depósito nacional
+            br
+            button(type="submit" class="btn btn-primary") Actualizar
+            | &nbsp;&nbsp;&nbsp;&nbsp;
+            button(type="button" class="btn btn-primary" onclick="window.history.back()") Volver
+script.
+    $(function () {
+        function mostrarAlerta(mensaje) {
+            $('#mensajeAlerta').text(mensaje);
+            $('#alertModal').modal('show');
+        }
+
+        // Funciones para mostrar y quitar errores
+        function mostrarError(campo, error) {
+            campo.addClass('is-invalid').removeClass('is-valid').addClass();
+            $('#' + campo.attr('id') + error).removeClass('d-none');
+        }
+
+        function quitarError(campo) {
+            campo.addClass('is-valid').removeClass('is-invalid');
+            $('div[id^=' + campo.attr('id') + '].invalid-feedback').addClass('d-none');
+        }
+
+        function cargarLote(){
+            !{JSON.stringify(lotesInternos)}.forEach(lote => {
+                if(lote.numeroDeSerie == !{JSON.stringify(descarte)}.numeroDeSerie){
+                    $('#numeroDeSerie').append('<option selected value="' + lote.numeroDeSerie + '">' + lote.numeroDeSerie + '</option>');
+                } else {
+                    $('#numeroDeSerie').append('<option value="' + lote.numeroDeSerie + '">' + lote.numeroDeSerie + '</option>');
+                }
+            })
+        }
+
+        function cargarEmpDesc(){
+            quitarError($('#empresaDescartante'))
+            const empDesc = !{JSON.stringify(empresas)}
+            const empDescAct = !{JSON.stringify(descarte)}.empresaDescartante
+            empDesc.forEach(empDesc => {
+                if(empDesc == empDescAct){
+                    $('#empresaDescartante').append('<option value="' + empDesc + '" selected>' + empDesc + '</option>');
+                } else {
+                    $('#empresaDescartante').append('<option value="' + empDesc + '">' + empDesc + '</option>');
+                }
+            })
+        }
+
+        function cargarMotivoDescarte(){
+            quitarError($('#motivo'))
+            const motDesc = !{JSON.stringify(motivos)}
+            const motDescAct = !{JSON.stringify(descarte)}.motivoDescarte
+            motDesc.forEach(motivo => {
+                if(motivo == motDescAct){
+                    $('#motivo').append('<option value="' + motivo + '" selected>' + motivo + '</option>');
+                } else {
+                    $('#motivo').append('<option value="' + motivo + '">' + motivo + '</option>');
+                }
+            })
+        }
+
+        function validarCantidadDeVacunas() {
+            quitarError($('#cantidadDeVacunas'))
+            if ($('#cantidadDeVacunas').val() == '') {
+                mostrarError($('#cantidadDeVacunas'), 'Vacio')
+            } else if(!/^[0-9]{1,}$/.test($('#cantidadDeVacunas').val()) || $('#cantidadDeVacunas').val() < 0 || $('#cantidadDeVacunas').val()[0] == 0){
+                mostrarError($('#cantidadDeVacunas'), 'Numeros')
+            }
+        }
+
+        function cantidadDeVacunasTotales() {
+            if ($('#cantidadDeVacunas').hasClass('is-valid')) {
+                let cantidadDeVacunasIngresadas = parseInt($('#cantidadDeVacunas').val(), 10);
+                let loteEncontrado = !{JSON.stringify(lotesInternos)}.find(lote => lote.numeroDeSerie == $('#numeroDeSerie').val());
+                if (loteEncontrado) {
+                    let vacunasOriginales = loteEncontrado.cantidadDeVacunas;
+                    let vacunasTotales = vacunasOriginales - cantidadDeVacunasIngresadas;
+                    loteEncontrado.cantidadDeVacunas = vacunasTotales;
+                    console.log('Cantidad de vacunas originales:', vacunasOriginales);
+                    console.log('Cantidad de vacunas ingresadas:', cantidadDeVacunasIngresadas);
+                    console.log('Nueva cantidad de vacunas:', vacunasTotales);
+                    console.log('Objeto actualizado:', loteEncontrado);
+                } else {
+                    console.log('No se encontró un lote con el número de serie proporcionado.');
+                }
+            }
+        }
+
+        function validarFechaDeDescarte() {
+            quitarError($('#fechaDeDescarte'))
+            if(!$('#fechaDeDescarte').val()) {
+                mostrarError($('#fechaDeDescarte'), 'Vacio');
+            } else {
+                let fechaIngresada = new Date($('#fechaDeDescarte').val())
+                let fechaActual = new Date()
+                fechaIngresada.setHours(24, 0, 0, 0)
+                fechaActual.setHours(0, 0, 0, 0)
+                if (((fechaIngresada - fechaActual) / (1000 * 60 * 60 * 24)) > 0) {
+                    mostrarError($('#fechaDeDescarte'), 'Superior');
+                } else if(!$('#numeroDeSerie').val()){
+                    mostrarError($('#fechaDeDescarte'), 'NumeroDeSerie');
+                } else {
+                    let fechaLlegada = !{JSON.stringify(lotesInternos)}.find(lote => lote.numeroDeSerie == $('#numeroDeSerie').val())
+                    if(!fechaLlegada.fechaDeLlegadaDepositoNacional){
+                        mostrarError($('#fechaDeDescarte'), 'Nulo');
+                    } else {
+                        fechaLlegada = new Date(fechaLlegada.fechaDeLlegadaDepositoNacional)
+                        fechaLlegada.setHours(24, 0, 0, 0)
+                        if(fechaLlegada > fechaIngresada){
+                            mostrarError($('#fechaDeDescarte'), 'Llegada');
+                        }
+                    }
+                }
+            }
+        }
+
+        function validarFormulario() {
+            let inputs = $('#formDescarte input, #formDescarte select');
+            let camposInvalidos = false;
+            inputs.each(function () {
+                if ($(this).hasClass('is-invalid')) {
+                    camposInvalidos = true;
+                }
+            });
+            if (camposInvalidos) {
+                mostrarAlerta("¡Datos incorrectos! Por favor, verifica la información ingresada.");
+                return false;
+            }
+            return true;
+        }
+
+        // Eventos
+        $('#DNIAgente').on('change', function(){
+            if($('#DNIAgente').hasClass('is-invalid')){
+                quitarError($('#DNIAgente'))
+            }
+            cargarLote();
+        })
+
+        $('#numeroDeSerie').on('change', function(){
+            if($(this).hasClass('is-invalid')){
+                quitarError($(this))
+            }
+            //validarFechaDeDescarte()
+        });
+
+        $('#empresaDescartante').on('change', function(){
+            if($(this).hasClass('is-invalid')){
+                quitarError($(this))
+            }
+            cargarEmpDesc()
+        });
+
+        $('#motivo').on('change', function(){
+            if($(this).hasClass('is-invalid')){
+                quitarError($(this))
+            }
+            cargarMotivoDescarte();
+        });
+
+
+        $('#cantidadDeVacunas').on('keyup focusout', function(){
+            validarCantidadDeVacunas();
+        });
+
+        $('#fechaDeDescarte').on('keyup focusout', function(){
+            validarFechaDeDescarte();
+        }); 
+
+        let press = 0
+        $('#alertModal').on('keypress', function (event) {
+            // Si la tecla presionada es "Enter", oculta el modal
+            if(event.key === 'Enter'){
+                press = press + 1
+            }
+            if (event.key === 'Escape' || press == 2) {
+                $('#alertModal').modal('hide');
+                press = 0
+            }
+        });            
+
+        // Evento cuando se oculta el modal
+        $('#alertModal').on('hidden.bs.modal', function () {
+            // Buscar el primer elemento con la clase 'is-invalid' y hacer foco en él
+            var primerInvalido = $('.is-invalid:first');
+            if (primerInvalido.length > 0) {
+                primerInvalido.focus();
+            }
+        });
+
+        $('#DNIAgente, #numeroDeSerie, #empresaDescartante, #motivo').trigger('change');
+        $('#cantidadDeVacunas, #fechaDeDescarte').trigger('focusout')
+        $('#DNIAgente').trigger('focus')
+
+        // Asociar el evento submit al formulario
+        $('#formDescarte input').on('keypress', function (event) {
+            if (event.which === 13) {
+                console.log("Formulario enviado por teclado");
+                //console.log(validarFormulario());
+                if(!validarFormulario()){
+                    event.preventDefault();
+                } else {
+                    cantidadDeVacunasTotales()
+                }
+                // Puedes agregar lógica adicional aquí si es necesario
+            }
+        });
+
+        $('#formDescarte button[type="submit"]').on('click', function (event) {
+            console.log("Botón de envío clicado");
+            if (!validarFormulario()) {
+                event.preventDefault();
+                console.log("Envío no exitoso");
+                press = 1
+            } else {
+                cantidadDeVacunasTotales()
+            }
+        });
+    });

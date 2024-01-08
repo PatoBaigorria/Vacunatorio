@@ -3,7 +3,6 @@ const router = express.Router();
 const controllers = require("../controllers/indexController");
 
 //Importacion del Controlador
-router.post("/nombre", controllers.laboratorioController.nombre);
 router.get("/", controllers.laboratorioController.listarLaboratorios);
 router.get("/alta", controllers.laboratorioController.altaLaboratorio);
 router.post("/", controllers.laboratorioController.createLaboratorio);

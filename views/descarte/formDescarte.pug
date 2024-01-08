@@ -14,192 +14,289 @@ html(lang="es")
                 text-underline-offset: 4px;
                 margin-top: 10px;
             }
+            .modal-content {
+                background-color: #f1f1f1;
+                padding: 20px;
+                border-radius: 10px;
+                box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            }
+            .modal-header {
+                background-color: #dc3545;
+                color: white;
+            }
+            .modal-body {
+                padding: 20px;
+            }
+            #mensajeAlerta{
+                color: #721c24;
+            }
             label {
+                margin-top: 5px;
                 margin-bottom: 5px;
             }
     body
-        #formDescarte
-            h2.text-center Crear un Descarte
-            if messages.error
-                .alert.alert-danger
-                    = messages.error
-            br
-            form(action="/descartes" method="post")
-                .form-group
-                    label.form-label(for="DNIAgente") Seleccione un Agente de Salud Existente:
+        h2.text-center Crear un Descarte
+        if messages.error
+            .alert.alert-danger
+                = messages.error
+        div.modal#alertModal(tabindex="-1" role="dialog" aria-labelledby="alertModalLabel" aria-hidden="true")
+            div.modal-dialog(role="document")
+                div.modal-content
+                    div.modal-header
+                        h5.modal-title#alertModalLabel Alerta
+                        button.close(type="button" data-bs-dismiss="modal" aria-label="Close")
+                            span(aria-hidden="true") ×
+                    div.modal-body
+                        p#mensajeAlerta Mensaje de alerta
+        form#formDescarte(action="/descartes" method="post")
+            .form-group
+                label.form-label(for="DNIAgente") Seleccione un Agente de Salud Existente:
+                .input-group.has-validation
                     select.form-select(name="DNIAgente" id="DNIAgente" required)
-                        option(value="") Seleccione un Agente de Salud
+                        option(disabled selected hidden value="") Seleccione un Agente de Salud
                             each persona in personas
-                                if(persona.ocupacion === "agente de salud")
+                                if(persona.ocupacion=="agente de salud")
                                     option(value=persona.DNI)= persona.nombre + ' ' + persona.apellido
-                #agenteInvalido.invalid-feedback    
-                br
-                .form-group
-                    label.form-label(for="numeroDeSerie") Nº de Serie Lote Interno:
-                    select.form-select(name="numeroDeSerie" id="numeroDeSerie" required)
-                        option(value="") Selecciona un Lote Interno
-                            each loteI in lotesInternos
-                                option(value=loteI.numeroDeSerie)= loteI.numeroDeSerie
-                #numSerieInvalido.invalid-feedback    
-                br
-                .form-group
-                    label.form-label(for="empresaDescartante") Empresa Descartante:
+                    .invalid-feedback.d-none(id="DNIAgenteSinSeleccionar") Seleccione un agente de salud
+            .form-group
+                label.form-label(for="numeroDeSerie") Nº de Serie de Lote Interno:
+                .input-group.has-validation
+                    select.form-select(name="numeroDeSerie" id="numeroDeSerie" required disabled)
+                    .invalid-feedback.d-none(id="numeroDeSerieSinAgente") Seleccione un agente
+            .form-group
+                label.form-label(for="empresaDescartante") Empresa Descartante:
+                .input-group.has-validation
                     select.form-select(name="empresaDescartante" id="empresaDescartante" required)
-                        option(value="") Seleccione una Empresa
+                        option(disabled selected hidden value="") Seleccione una Empresa Descartante
                         option(value="Veolia") Veolia
                         option(value="Clean Harbors") Clean Harbors
                         option(value="Waste Management") Waste Management
                         option(value="Stericycle") Stericycle
-                #empDescartanteInvalido.invalid-feedback    
-                br
-                .form-group
-                    label.form-label(for="motivo") Motivo Descarte:
+                    .invalid-feedback.d-none(id="empresaDescartanteSinSeleccionar") Seleccione una empresa descartante
+            .form-group
+                label.form-label(for="motivo") Motivo de descarte:
+                .input-group.has-validation
                     select.form-select(name="motivo" id="motivo" required)
-                        option(value="") Seleccione un Motivo
+                        option(disabled selected hidden value="") Seleccione un Motivo
                         option(value="Vencida") Vencida
                         option(value="Rotura") Rotura
                         option(value="Cadena Pérdida de Frío") Cadena Pérdida de Frío
                         option(value="Contaminación") Contaminación
-                #motivoInvalido.invalid-feedback    
-                br
-                .form-group
-                    label.form-label(for="cant-vac") Cantidad de Vacunas:
-                    .input-group.has-validation
-                        input.form-control(type="number" id="cant-vac" name="cantidadDeVacunas" required)
-                        .invalid-feedback(id="cantVacunasInvalido") Ingrese solo números positivos y mayor a cero
-                    br
-                .form-group
-                    label.form-label(for="fechaDeDescarte") Fecha Descarte:
-                    .input-group.has-validation
-                        input.form-control(type="date" id="fechaDeDescarte" name="fechaDeDescarte" required)
-                        #fechaInvalida.invalid-feedback(style="display: none")
-                    br
-                button(type="submit" class="btn btn-primary") Guardar
-                | &nbsp;&nbsp;&nbsp;&nbsp;
-                button(type="button" class="btn btn-primary" onclick="window.history.back()") Volver
+                    .invalid-feedback.d-none(id="motivoSinSeleccionar") Seleccione un motivo de descarte
+            .form-group
+                label.form-label(for="cantidadDeVacunas") Cantidad de Vacunas:
+                .input-group.has-validation
+                    input.form-control(type="text" id="cantidadDeVacunas" name="cantidadDeVacunas" required)
+                    .invalid-feedback.d-none(id="cantidadDeVacunasVacio") El campo no puede estar vacío
+                    .invalid-feedback.d-none(id="cantidadDeVacunasNumeros") Ingrese solo números positivos
+            .form-group
+                label.form-label(for="fechaDeDescarte") Fecha de descarte:
+                .input-group.has-validation
+                    input.form-control(type="date" id="fechaDeDescarte" name="fechaDeDescarte" required)
+                    .invalid-feedback.d-none(id="fechaDeDescarteVacio") El campo no puede estar vacío
+                    .invalid-feedback.d-none(id="fechaDeDescarteSuperior") La fecha seleccionada es superior a la fecha actual
+                    .invalid-feedback.d-none(id="fechaDeDescarteNumeroDeSerie") Debe seleccionar un lote interno antes de elegir una fecha de descarte
+                    .invalid-feedback.d-none(id="fechaDeDescarteNulo") El lote aún no ha llegado al depósito nacional
+                    .invalid-feedback.d-none(id="fechaDeDescarteLlegada") La fecha de descarte no puede ser previa a la fecha de llegada al depósito nacional
+            br
+            button(type="submit" class="btn btn-primary") Guardar
+            | &nbsp;&nbsp;&nbsp;&nbsp;
+            button(type="button" class="btn btn-primary" onclick="window.history.back()") Volver
 script.
-    const cantVacunas = /^(?!0+$)[0-9]+$/;
-    const fechaDescartePattern = /^(20)\d\d-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$/;
-
-    function validarRegex(regex){
-            if(!regex.test($(this).val())){
-                this.addClass('is-invalid');
-                this.removeClass('is-valid');
-            } else {
-                this.addClass('is-valid');
-                this.removeClass('is-invalid');
-            }
-    }
-
     $(function () {
-        
-        $('#cant-vac').on('keyup', validarRegex.bind($('#cant-vac'), cantVacunas));
-        
-        $('#DNIAgente').on('change', function(){
-            validarDescarte();
-        });
-
-        $('#numeroDeSerie').on('change', function(){
-            validarDescarte();
-        });
-
-        $('#empresaDescartante').on('change', function(){
-            validarDescarte();
-        });
-
-        $('#motivo').on('change', function(){
-            validarDescarte();
-        });
-    
-        function validarDescarte() {
-            const valorSeleccionadoAgente = $('#DNIAgente').val();
-            const valorSeleccionadoNumSerie = $('#numeroDeSerie').val();
-            const valorSeleccionadoEmpDescartante = $('#empresaDescartante').val();
-            const valorSeleccionadoMotivo = $('#motivo').val();
-            const agenteInvalidoMsg = $('#agenteInvalido');
-            const numSerieInvalidoMsg = $('#numSerieInvalido');
-            const empDescartanteInvalidoMsg = $('#empDescartanteInvalido');
-            const motivoInvalidoMsg = $('#motivoInvalido');
-            let validacionAgente = true;
-            let validacionNumSerie = true;
-            let validacionEmpDescartante = true;
-            let validacionMotivo = true;
-
-            if (valorSeleccionadoAgente === '') {
-                $('#DNIAgente').addClass('is-invalid').removeClass('is-valid');
-                agenteInvalidoMsg.show().text('Debe seleccionar un Agente de Salud');
-                validacionAgente = false;
-            } else {
-                $('#DNIAgente').addClass('is-valid').removeClass('is-invalid');
-                agenteInvalidoMsg.hide();
-            }
-
-            if (valorSeleccionadoNumSerie === '') {
-                $('#numeroDeSerie').addClass('is-invalid').removeClass('is-valid');
-                numSerieInvalidoMsg.show().text('Debe seleccionar un Lote');
-                validacionNumSerie = false;
-            } else {
-                $('#numeroDeSerie').addClass('is-valid').removeClass('is-invalid');
-                numSerieInvalidoMsg.hide();
-            }
-
-            if (valorSeleccionadoEmpDescartante === '') {
-                $('#empresaDescartante').addClass('is-invalid').removeClass('is-valid');
-                empDescartanteInvalidoMsg.show().text('Debe seleccionar una Empresa');
-                validacionEmpDescartante = false;
-            } else {
-                $('#empresaDescartante').addClass('is-valid').removeClass('is-invalid');
-                empDescartanteInvalidoMsg.hide();
-            }
-
-            if (valorSeleccionadoMotivo === '') {
-                $('#motivo').addClass('is-invalid').removeClass('is-valid');
-                motivoInvalidoMsg.show().text('Debe seleccionar un Motivo');
-                validacionMotivo = false;
-            } else {
-                $('#motivo').addClass('is-valid').removeClass('is-invalid');
-                motivoInvalidoMsg.hide();
-            }
-            return validacionAgente && validacionNumSerie && validacionEmpDescartante && validacionMotivo;
+        function mostrarAlerta(mensaje) {
+            $('#mensajeAlerta').text(mensaje);
+            $('#alertModal').modal('show');
         }
 
-        $('#fechaDeDescarte').on('change', function() {
-            validarFechaDescarte();
-        });
-        
-        function validarFechaDescarte() {
-            const fechaDescarteValue = $('#fechaDeDescarte').val();
-            const fechaActual = new Date().toISOString().split('T')[0]; // Obtiene la fecha actual en formato ISO yyyy-mm-dd
-            const fechaInvalidaMsg = $('#fechaInvalida');
-        
-            if (fechaDescarteValue <= fechaActual) {
-                $('#fechaDeDescarte').addClass('is-valid').removeClass('is-invalid');
-                $('#fechaInvalida').hide();
-                return true;
+        // Funciones para mostrar y quitar errores
+        function mostrarError(campo, error) {
+            campo.addClass('is-invalid').removeClass('is-valid').addClass();
+            $('#' + campo.attr('id') + error).removeClass('d-none');
+        }
+
+        function quitarError(campo) {
+            campo.addClass('is-valid').removeClass('is-invalid');
+            $('div[id^=' + campo.attr('id') + '].invalid-feedback').addClass('d-none');
+        }
+
+        function validarDNIAgente(){
+            if(!$('#DNIAgente').val()){
+                mostrarError($('#DNIAgente'), 'SinSeleccionar');
+                mostrarError($('#numeroDeSerie'), 'SinAgente');
+                cargarLote()
+            } else if($('#numeroDeSerie').hasClass('is-invalid')){
+                $('#numeroDeSerie').prop('disabled', false);
+                quitarError($('#DNIAgente'));
+                quitarError($('#numeroDeSerie'));
+                cargarLote()
+            }
+        }
+
+        function cargarLote(){
+            $('#numeroDeSerie').empty()
+            if(!$('#DNIAgente').val()){
+                $('#numeroDeSerie').append('<option disabled selected hidden value="">Seleccione un lote interno</option>');
             } else {
-                $('#fechaDeDescarte').addClass('is-invalid').removeClass('is-valid');
-                $('#fechaInvalida').show().text('La fecha debe ser menor o igual a la fecha actual');
+                !{JSON.stringify(lotesInternos)}.filter(lote => lote.fechaDeLlegadaDepositoNacional != null).forEach(lote => {
+                    $('#numeroDeSerie').append('<option value="' + lote.numeroDeSerie + '">' + lote.numeroDeSerie + '</option>');
+                })  
+            }
+        }
+
+        function validarComboBox(campo){
+            if(campo.val() === null){
+                mostrarError(campo, 'SinSeleccionar');
+                $('#' + campo.attr('id') + 'SinSeleccionar').removeClass('d-none');
+            } else {
+                quitarError(campo);
+            }
+        }
+
+
+        function validarCantidadDeVacunas() {
+            quitarError($('#cantidadDeVacunas'))
+            if ($('#cantidadDeVacunas').val() == '') {
+                mostrarError($('#cantidadDeVacunas'), 'Vacio')
+            } else if(!/^[0-9]{1,}$/.test($('#cantidadDeVacunas').val()) || $('#cantidadDeVacunas').val() < 0 || $('#cantidadDeVacunas').val()[0] == 0){
+                mostrarError($('#cantidadDeVacunas'), 'Numeros')
+            }
+        }
+
+        function cantidadDeVacunasTotales() {
+            if ($('#numeroDeSerie').hasClass('is-valid') && $('#cantidadDeVacunas').hasClass('is-valid')) {
+                let numeroDeSerie = $('#numeroDeSerie').val();
+                let cantidadDeVacunasIngresadas = parseInt($('#cantidadDeVacunas').val(), 10);
+
+                let loteEncontrado = !{JSON.stringify(lotesInternos)}.find(lote => lote.numeroDeSerie == numeroDeSerie);
+
+                if (loteEncontrado) {
+                    let vacunasOriginales = loteEncontrado.cantidadDeVacunas;
+                    let vacunasTotales = vacunasOriginales - cantidadDeVacunasIngresadas;
+
+                    loteEncontrado.cantidadDeVacunas = vacunasTotales;
+
+                    console.log('Cantidad de vacunas originales:', vacunasOriginales);
+                    console.log('Cantidad de vacunas ingresadas:', cantidadDeVacunasIngresadas);
+                    console.log('Nueva cantidad de vacunas:', vacunasTotales);
+                    console.log('Objeto actualizado:', loteEncontrado);
+                } else {
+                    console.log('No se encontró un lote con el número de serie proporcionado.');
+                }
+            }
+        }
+
+        function validarFechaDeDescarte() {
+            quitarError($('#fechaDeDescarte'))
+            if(!$('#fechaDeDescarte').val()) {
+                mostrarError($('#fechaDeDescarte'), 'Vacio');
+            } else {
+                let fechaIngresada = new Date($('#fechaDeDescarte').val())
+                let fechaActual = new Date()
+                fechaIngresada.setHours(24, 0, 0, 0)
+                fechaActual.setHours(0, 0, 0, 0)
+                if (((fechaIngresada - fechaActual) / (1000 * 60 * 60 * 24)) > 0) {
+                    mostrarError($('#fechaDeDescarte'), 'Superior');
+                } else if(!$('#numeroDeSerie').val()){
+                    mostrarError($('#fechaDeDescarte'), 'NumeroDeSerie');
+                } else {
+                    let fechaLlegada = !{JSON.stringify(lotesInternos)}.find(lote => lote.numeroDeSerie == $('#numeroDeSerie').val())
+                    if(!fechaLlegada.fechaDeLlegadaDepositoNacional){
+                        mostrarError($('#fechaDeDescarte'), 'Nulo');
+                    } else {
+                        fechaLlegada = new Date(fechaLlegada.fechaDeLlegadaDepositoNacional)
+                        fechaLlegada.setHours(24, 0, 0, 0)
+                        if(fechaLlegada > fechaIngresada){
+                            mostrarError($('#fechaDeDescarte'), 'Llegada');
+                        }
+                    }
+                }
+            }
+        }
+
+        function validarFormulario() {
+            let inputs = $('#formDescarte input, #formDescarte select');
+            let camposInvalidos = false;
+            inputs.each(function () {
+                if ($(this).hasClass('is-invalid')) {
+                    camposInvalidos = true;
+                }
+            });
+            if (camposInvalidos) {
+                mostrarAlerta("¡Datos incorrectos! Por favor, verifica la información ingresada.");
                 return false;
             }
+            return true;
         }
 
-        $('#formDescarte').submit(function(event) {
-            event.preventDefault();
+        // Eventos
+        $('#DNIAgente').on('change', function(){
+            cargarLote();
+            validarDNIAgente()
+            validarComboBox($(this));
+        })
 
-            const comboValido = validarDescarte();
-            if (comboValido){
-                const fechaDescarteValue = $('#fechaDeDescarte').val();
-                const fechaActual = new Date().toISOString().split('T')[0]; // Obtiene la fecha actual en formato ISO yyyy-mm-dd
-                const fechaInvalidaMsg = $('#fechaInvalida');
+        $('#numeroDeSerie').on('change', function(){
+            validarFechaDeDescarte()
+        });
 
-                if (fechaDescarteValue <= fechaActual) {
-                    event.target.submit();
-                } else {
-                   fechaInvalidaMsg.show().text('La fecha debe ser menor o igual a la fecha actual');
+        $('#empresaDescartante, #motivo').on('change', function(){
+            validarComboBox($(this));
+        });
+
+
+        $('#cantidadDeVacunas').on('keyup focusout', function(){
+            validarCantidadDeVacunas();
+            cantidadDeVacunasTotales()
+        });
+
+        $('#fechaDeDescarte').on('keyup focusout', function(){
+            validarFechaDeDescarte();
+        });
+
+        let press = 0
+        $('#alertModal').on('keypress', function (event) {
+            // Si la tecla presionada es "Enter", oculta el modal
+            if(event.key === 'Enter'){
+                press = press + 1
+            }
+            if (event.key === 'Escape' || press == 2) {
+                $('#alertModal').modal('hide');
+                press = 0
+            }
+        });            
+
+        // Evento cuando se oculta el modal
+        $('#alertModal').on('hidden.bs.modal', function () {
+            // Buscar el primer elemento con la clase 'is-invalid' y hacer foco en él
+            var primerInvalido = $('.is-invalid:first');
+            if (primerInvalido.length > 0) {
+                primerInvalido.focus();
+            }
+        });
+
+        $('#DNIAgente, #numeroDeSerie, #empresaDescartante, #motivo').trigger('change');
+        $('#cantidadDeVacunas, #fechaDeDescarte').trigger('focusout')
+        $('#DNIAgente').trigger('focus')
+
+        // Asociar el evento submit al formulario
+        $('#formDescarte input').on('keypress', function (event) {
+            if (event.which === 13) {
+                console.log("Formulario enviado por teclado");
+                //console.log(validarFormulario());
+                if(!validarFormulario()){
+                    event.preventDefault();
                 }
-            } else {
-                
+                // Puedes agregar lógica adicional aquí si es necesario
+            }
+        });
+
+        $('#formDescarte button[type="submit"]').on('click', function (event) {
+            console.log("Botón de envío clicado");
+            if (!validarFormulario()) {
+                event.preventDefault();
+                console.log("Envío no exitoso");
+                press = 1
             }
         });
     });
-    

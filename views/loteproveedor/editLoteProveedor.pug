@@ -35,7 +35,7 @@ block content
                     margin-bottom: 5px;
                 }
         body
-            h2.text-center Crear un Lote Proveedor
+            h2.text-center Actualizar un Lote Proveedor
             if messages.error
                 .alert.alert-danger
                     = messages.error
@@ -51,9 +51,13 @@ block content
                             p#mensajeAlerta Mensaje de alerta
             form#formLoteProveedor(action="/lotesproveedores/"+loteProveedor.numeroDeLote+"?_method=PUT" method="post")
                 .form-group
+                    label.form-label(for="numeroDeLote") Lote N°:
+                    .input-group.has-validation
+                        input.form-control.is-valid(type="text" name="numeroDeLote" id="numeroDeLote" value=loteProveedor.numeroDeLote disabled)
+                .form-group
                     label.form-label(for="idLaboratorio") Laboratorio:
                     .input-group.has-validation
-                        select.form-select(name="idLaboratorio" id="idLaboratorio" required)
+                        select.form-select.is-valid(name="idLaboratorio" id="idLaboratorio" required)
                             each lab in laboratorios
                                 if(lab.idLaboratorio==loteProveedor.idLaboratorio)
                                     option(value=lab.idLaboratorio selected)= lab.nombreLaboratorio
@@ -62,32 +66,11 @@ block content
                 .form-group
                     label.form-label(for="tipoDeVacuna") Tipo de Vacuna:
                     .input-group.has-validation
-                        select.form-select(name="tipoDeVacuna" id="tipoDeVacuna" required)
-                            option(value="Tuberculosis" selected=loteProveedor.tipoDeVacuna) Tuberculosis
-                            option(value="Meningitis-Neumonía" selected=loteProveedor.tipoDeVacuna) Meningitis-Neumonía
-                            option(value="Difteria-Tétanos-Hepatitis B" selected=loteProveedor.tipoDeVacuna) Difteria-Tétanos-Hepatitis B
-                            option(value="Antipoliomelítica" selected=loteProveedor.tipoDeVacuna) Stericycle
-                            option(value="Sarampión-Rubéola-Paperas" selected=loteProveedor.tipoDeVacuna) Sarampión-Rubéola-Paperas
-                            option(value="Rotavirus" selected=loteProveedor.tipoDeVacuna) Rotavirus
-                            option(value="Meningococo" selected=loteProveedor.tipoDeVacuna) Meningococo
-                            option(value="Antigripal" selected=loteProveedor.tipoDeVacuna) Antigripal
-                            option(value="Hepatitis A" selected=loteProveedor.tipoDeVacuna) Hepatitis A
-                            option(value="Varicela" selected=loteProveedor.tipoDeVacuna) Varicela
-                            option(value="HPV" selected=loteProveedor.tipoDeVacuna) HPV
+                        select.form-select.is-valid(name="tipoDeVacuna" id="tipoDeVacuna" required)
                 .form-group
                     label.form-label(for="nombreComercial") Nombre Comercial de la Vacuna:
                     .input-group.has-validation
-                        select.form-select(name="nombreComercial" id="nombreComercial" required)
-                            option(value="BCG" selected=loteProveedor.nombreComercial) BCG
-                            option(value="Neumococo Conjugada" selected=loteProveedor.nombreComercial) Neumococo Conjugada
-                            option(value="Quíntuple" selected=loteProveedor.nombreComercial) Quíntuple
-                            option(value="IPV" selected=loteProveedor.nombreComercial) IPV
-                            option(value="Triple Viral" selected=loteProveedor.nombreComercial) Triple Viral
-                            option(value="Triple Bacteriana Celular" selected=loteProveedor.nombreComercial) Triple Bacteriana Celular
-                            option(value="Triple Bacteriana Acelular" selected=loteProveedor.nombreComercial) Triple Bacteriana Acelular
-                            option(value="Influenzae b" selected=loteProveedor.nombreComercial) Influenzae b
-                            option(value="Doble Bacteriana" selected=loteProveedor.nombreComercial) Doble Bacteriana
-                            option(value="Virus Papiloma Humano" selected=loteProveedor.nombreComercial) Virus Papiloma Humano
+                        select.form-select.is-valid(name="nombreComercial" id="nombreComercial" required)
                 .form-group
                     label.form-label(for="cantidadDeLotesInternos") Cantidad de Lotes Internos:
                     .input-group.has-validation
@@ -117,9 +100,10 @@ block content
                         .invalid-feedback.d-none(id="fechaDeVencimientoImposible") La fecha de fabricación está vacia
                         .invalid-feedback.d-none(id="fechaDeVencimientoAntiguo") La fecha de vencimiento debe tener una diferencia mayor de cinco años con la fecha de fabricación
                 br
-                button(type="submit" class="btn btn-primary") Actualizar lote proveedor
-                | &nbsp;&nbsp;&nbsp;&nbsp;
-                button(type="button" class="btn btn-primary" onclick="window.history.back()") Volver
+                div.text-center
+                    button(type="submit" class="btn btn-primary") Actualizar
+                    | &nbsp;&nbsp;&nbsp;&nbsp;
+                    button(type="button" class="btn btn-primary" onclick="window.history.back()") Volver
     script.
         $(function (){
             function mostrarAlerta(mensaje) {
@@ -136,6 +120,53 @@ block content
             function quitarError(campo) {
                 campo.addClass('is-valid').removeClass('is-invalid');
                 $('div[id^=' + campo.attr('id') + '].invalid-feedback').addClass('d-none');
+            }
+
+            function cargarTipoDeVacuna(){
+                [
+                    "Tuberculosis",
+                    "Meningitis-Neumonía",
+                    "Difteria-Tétanos-Hepatitis B",
+                    "Antipoliomelítica",
+                    "Sarampión-Rubéola-Paperas",
+                    "Rotavirus",
+                    "Meningococo",
+                    "Antigripal",
+                    "Hepatitis A",
+                    "Varicela",
+                    "HPV"
+                ].forEach(tipo => {
+                    console.log(tipo)
+                    console.log(!{JSON.stringify(loteProveedor)}.tipoDeVacuna)
+                    if(tipo == !{JSON.stringify(loteProveedor)}.tipoDeVacuna){
+                        $('#tipoDeVacuna').append(`<option selected value="${tipo}">${tipo}</option>`)
+                    } else {
+                        $('#tipoDeVacuna').append(`<option value="${tipo}">${tipo}</option>`)
+                    }
+                })
+            }
+
+            function cargarNombreComercial(){
+                [
+                    "BCG",
+                    "Neumococo Conjugada",
+                    "Quíntuple",
+                    "IPV",
+                    "Triple Viral",
+                    "Triple Bacteriana Celular",
+                    "Triple Bacteriana Acelular",
+                    "Influenzae b",
+                    "Doble Bacteriana",
+                    "Virus Papiloma Humano"
+                ].forEach(nombre => {
+                    console.log(nombre)
+                    console.log(!{JSON.stringify(loteProveedor)}.nombreComercial)
+                    if(nombre == !{JSON.stringify(loteProveedor)}.nombreComercial){
+                        $('#nombreComercial').append(`<option selected value="${nombre}">${nombre}</option>`)
+                    } else {
+                        $('#nombreComercial').append(`<option value="${nombre}">${nombre}</option>`)
+                    }
+                })
             }
 
             function validarCantidadDeLotesInternos() {
@@ -223,8 +254,12 @@ block content
             }
 
             // Eventos
-            $('#idLaboratorio, #tipoDeVacuna, #nombreComercial').on('change', function () {
-                quitarError($(this));
+            $('#tipoDeVacuna').on('change', function () {
+                cargarTipoDeVacuna();
+            });
+
+            $('#nombreComercial').on('change', function () {
+                cargarNombreComercial();
             });
 
             $('#cantidadDeLotesInternos').on('keyup focusout', function () {
@@ -266,8 +301,8 @@ block content
                 }
             });
 
-            $('#idLaboratorio, #tipoDeVacuna, #nombreComercial').trigger('change');
-            $('#cantidadDeLotesInternos, #fechaDeFabricacion, #fechaDeCompra, #fechaDeVencimiento').trigger('focusout')
+            $('#tipoDeVacuna, #nombreComercial').trigger('change');
+            $('#cantidadDeLotesInternos, #fechaDeFabricacion, #fechaDeVencimiento, #fechaDeCompra').trigger('focusout')
             $('#idLaboratorio').trigger('focus')
 
             // Asociar el evento submit al formulario

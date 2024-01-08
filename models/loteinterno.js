@@ -29,7 +29,11 @@ const loteinterno = Loteinterno.init(
         key: "idLaboratorio",
       },
     },
-    cantidadDeVacunas: {
+    cantidadDeVacunasTotales: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+    cantidadDeVacunasRestantes: {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
