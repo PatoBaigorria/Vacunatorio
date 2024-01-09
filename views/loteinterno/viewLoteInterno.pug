@@ -1,56 +1,12 @@
-- var title = 'Listado de Personas'
+- var title = 'Listado de lotes internos'
 include ..\includes\layout
 block content
-head
-    title Lote Interno
-    style.
-        h2 {
-            text-align: center;
-            text-decoration: underline;
-            text-underline-offset: 4px; /* Ajusta el espacio entre el texto y el subrayado */
-        }
-        .modal-content {
-            background-color: #f1f1f1;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-        }
-        .modal-header {
-            background-color: #dc3545;
-            color: white;
-        }
-        .modal-body {
-            padding: 20px;
-        }
-        #mensajeAlerta{
-            color: #721c24;
-        }
-        .modal-footer {
-            background-color: #f1f1f1;
-        }
-        .flash-message {
-            display: none;
-            opacity: 1;
-            transition: opacity 1s ease-out;
-        }
-        .fade-in {
-            display: block;
-            animation: fadeOut 3s 1s; /* fadeIn dura 3 segundos, fadeOut comienza después de 3 segundos y dura 2 segundos */
-        }
-        @keyframes fadeOut {
-            from {
-                opacity: 1;
-            }
-            to {
-                opacity: 0;
-            }
-        }
 body
     div.container.my-4
         div.row
             div.col-sm-13.col-md-13.col-lg-13.col-xl-13
                 section#viewLotesInternos
-                    h2 Listado de Lotes Internos
+                    h2 Listado de los lotes internos
                     br
                     if messages.success
                         .alert.alert-success.flash-message.fade-in
@@ -76,8 +32,6 @@ body
                         br
                         div.table.responsive
                             table#lotesinternos.table.table-striped.table-bordered
-
-
 script.
     let tabla 
     $(document).ready(function() {
@@ -92,7 +46,8 @@ script.
                 {data: 'numeroDeSerie', title: 'Número de Serie'},
                 {data: 'Loteproveedor.numeroDeLote', title: 'Número de Lote'},
                 {data: 'Laboratorio.nombreLaboratorio', title: 'Laboratorio Fabricante'},
-                {data: 'cantidadDeVacunas', title: 'Cantidad de Vacunas'},
+                {data: 'cantidadDeVacunasTotales', title: 'Cantidad de vacunas totales'},
+                {data: 'cantidadDeVacunasRestantes', title: 'Cantidad de vacunas restantes'},
                 {data: 'fechaDeLlegadaDepositoNacional', title: 'Fecha de Llegada al Depósito Nacional', createdCell: agregarMensajeLlegada},
                 {data: 'idDepositoNacional', title: 'ID del Depósito Nacional', createdCell: agregarMensajeDep},
                 {data: 'fechaDeSalidaDepositoNacional', title: 'Fecha de Salida del Depósito Nacional', createdCell: agregarMensajeSalida},
@@ -194,6 +149,4 @@ script.
                 window.location.href = "/lotesinternos/" + data.numeroDeSerie;
             }
         });
-
-        // Configurar el botón de confirmar y la 'X' para cerrar el modal
     });

@@ -35,9 +35,8 @@ const altaLoteProveedor = async (req, res) => {
 // Crear un nuevo lote proveedor
 const createLoteProveedor = async (req, res) => {
 	try {
-		const { numeroDeLote, idLaboratorio, tipoDeVacuna, nombreComercial, cantidadDeLotesInternos, fechaDeFabricacion, fechaDeVencimiento, fechaDeCompra } = req.body;
+		const { idLaboratorio, tipoDeVacuna, nombreComercial, cantidadDeLotesInternos, fechaDeFabricacion, fechaDeVencimiento, fechaDeCompra } = req.body;
 		await LoteProveedor.create({
-			numeroDeLote,
 			idLaboratorio,
 			tipoDeVacuna,
 			nombreComercial,
@@ -49,7 +48,7 @@ const createLoteProveedor = async (req, res) => {
 		req.flash('success', 'Lote Proveedor creado exitosamente.');
 		res.redirect("/lotesproveedores");
 	} catch (error) {
-		req.flash('error', 'Error al crear el lote proveedor.');
+		req.flash('error', 'Error al crear el lote proveedor. ', error.message);
 		res.redirect("/lotesproveedores/alta");
 	}
 };

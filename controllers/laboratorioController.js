@@ -95,12 +95,8 @@ const deleteLaboratorio = async (req, res) => {
 			},
 		});
 		req.flash('success', 'Laboratorio eliminado exitosamente.');
-		res.json({ success: true });
-
 	} catch (error) {
-		res.status(500).json({
-			message: "Error al eliminar el laboratorio.",
-		});
+		req.flash('error', 'Error al eliminar el laboratorio. ', error.message);
 	}
 };
 

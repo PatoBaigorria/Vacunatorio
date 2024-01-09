@@ -1,19 +1,12 @@
+- var title = 'Listado de traslados'
 include ..\includes\layout
 block content
-head
-    title Traslado
-    style.
-        h2 {
-            text-align: center;
-            text-decoration: underline;
-            text-underline-offset: 4px; /* Ajusta el espacio entre el texto y el subrayado */
-        }
 body
     div.container.my-4
       div.row
         div.col-sm-12.col-md-12.col-lg-12.col-xl-12
             section#viewTraslados
-                h2 Listado de Traslados
+                h2 Listado de los traslados
                 br
                 if messages.success
                     .alert.alert-success

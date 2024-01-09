@@ -8,7 +8,7 @@ const {
 // Obtener todas las aplicaciones
 const listarAplicacion = async (req, res) => {
   try {
-    const aplicacion = await Aplicacion.findAll(
+    const aplicaciones = await Aplicacion.findAll(
       {
         include: [{
           model: AgenteDeSalud,
@@ -29,7 +29,7 @@ const listarAplicacion = async (req, res) => {
         ]
       }
     );
-    res.render("aplicacion/viewAplicacion", { aplicacion: aplicacion });
+    res.render("aplicacion/viewAplicacion", { aplicaciones: aplicaciones });
   } catch (error) {
     res.status(500).json({ message: "Error al obtener las aplicaciones.", error: error.message });
   }

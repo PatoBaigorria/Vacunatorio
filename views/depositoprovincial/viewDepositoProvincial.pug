@@ -1,56 +1,12 @@
-- var title = 'Listado de Depósitos Provinciales'
+- var title = 'Listado de depósitos provinciales'
 include ..\includes\layout
 block content
-head
-    title Deposito Provincial
-    style.
-        h2 {
-            text-align: center;
-            text-decoration: underline;
-            text-underline-offset: 4px; /* Ajusta el espacio entre el texto y el subrayado */
-        }
-        .modal-content {
-            background-color: #f1f1f1;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-        }
-        .modal-header {
-            background-color: #dc3545;
-            color: white;
-        }
-        .modal-body {
-            padding: 20px;
-        }
-        #mensajeAlerta{
-            color: #721c24;
-        }
-        .modal-footer {
-            background-color: #f1f1f1;
-        }
-        .flash-message {
-            display: none;
-            opacity: 1;
-            transition: opacity 1s ease-out;
-        }
-        .fade-in {
-            display: block;
-            animation: fadeOut 3s 1s; /* fadeIn dura 3 segundos, fadeOut comienza después de 3 segundos y dura 2 segundos */
-        }
-        @keyframes fadeOut {
-            from {
-                opacity: 1;
-            }
-            to {
-                opacity: 0;
-            }
-        }
 body
     div.container.my-4
         div.row
             div.col-sm-13.col-md-13.col-lg-13.col-xl-13
                 section#viewDepositosProvinciales
-                    h2 Listado de Depósitos Provinciales
+                    h2 Listado de los depósitos provinciales
                     br
                     if messages.success
                         .alert.alert-success.flash-message.fade-in

@@ -1,138 +1,113 @@
-- var title ='Crear Lotes Internos';
+- var title ='Crear un lote interno';
 include ..\includes\layout
 block content
 html(lang="es")
-    head
-        style.
-            #formLoteInterno {
-                max-width: 600px;
-                margin: auto;
-            }
-            h2 {
-                text-align: center;
-                text-decoration: underline;
-                text-underline-offset: 4px;
-                margin-top: 10px;
-            }
-            .modal-content {
-                background-color: #f1f1f1;
-                padding: 20px;
-                border-radius: 10px;
-                box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-            }
-            .modal-header {
-                background-color: #dc3545;
-                color: white;
-            }
-            .modal-body {
-                padding: 20px;
-            }
-            #mensajeAlerta{
-                color: #721c24;
-            }
-            label {
-                margin-top: 5px;
-                margin-bottom: 5px;
-            }
-    body
-        h2.text-center Crear Lotes Internos
-        if messages.error
-            .alert.alert-danger
-                = messages.error
-        div.modal#alertModal(tabindex="-1" role="dialog" aria-labelledby="alertModalLabel" aria-hidden="true")
-            div.modal-dialog(role="document")
-                div.modal-content
-                    div.modal-header
-                        h5.modal-title#alertModalLabel Alerta
-                        button.close(type="button" data-bs-dismiss="modal" aria-label="Close")
-                            span(aria-hidden="true") ×
-                    div.modal-body
-                        p#mensajeAlerta Mensaje de alerta
-        form#formLoteInterno(action="/lotesinternos" method="post")
-            .form-group
-                label.form-label(for="idLaboratorio") Nombre del laboratorio:
-                .input-group.has-validation
-                    select.form-select(name="idLaboratorio" id="idLaboratorio" required)
-                        option(disabled selected hidden value="") Seleccione un Laboratorio
-                            each lab in laboratorios
-                                option(value=lab.idLaboratorio)= lab.nombreLaboratorio
-                    .invalid-feedback.d-none(id="idLaboratorioSinSeleccionar") Seleccione un laboratorio
-            .form-group
-                label.form-label(for="numeroDeLote") Número del lote proveedor:
-                .input-group.has-validation
-                    select.form-select(name="numeroDeLote" id="numeroDeLote" required disabled)
-                        option(disabled selected hidden value="") Seleccione un Lote Proveedor
-                    .invalid-feedback.d-none(id="numeroDeLoteSinLaboratorio") Seleccione un laboratorio antes de elegir un lote proveedor
-            .form-group
-                label.form-label(for="cantidadDeVacunas") Cantidad de Vacunas:
-                .input-group.has-validation
-                    input.form-control(type="text" id="cantidadDeVacunas" name="cantidadDeVacunas" required)
-                    .invalid-feedback.d-none(id="cantidadDeVacunasVacio") El campo no puede estar vacío
-                    .invalid-feedback.d-none(id="cantidadDeVacunasNumeros") Ingrese solo números positivos
-            .form-group
-                label.form-label(for="fechaDeLlegadaDepositoNacional") Fecha de llegada al Depósito Nacional:
-                .input-group.has-validation
-                    input.form-control(type="date" id="fechaDeLlegadaDepositoNacional" name="fechaDeLlegadaDepositoNacional" )
-                    .invalid-feedback.d-none(id="fechaDeLlegadaDepositoNacionalVacio") Seleccione el depósito nacional al que debe llegar
-                    .invalid-feedback.d-none(id="fechaDeLlegadaDepositoNacionalSuperior") La fecha seleccionada es superior a la fecha actual
-                    .invalid-feedback.d-none(id="fechaDeLlegadaDepositoNacionalProveedor") Debe seleccionar un lote proveedor antes de elegir una fecha de llegada
-                    .invalid-feedback.d-none(id="fechaDeLlegadaDepositoNacionalAnterior") La fecha seleccionada es anterior a la fecha de compra
-                    .invalid-feedback.d-none(id="fechaDeLlegadaCentroDeVacunacionSeleccion") Seleccione un Depósito Nacional antes de seleccionar una fecha de llegada
-            .form-group
-                label.form-label(for="idDepositoNacional") Depósito Nacional:
-                .input-group.has-validation
-                    select.form-select(name="idDepositoNacional" id="idDepositoNacional" )
-                        option(selected hidden value="") Seleccione un Deposito Nacional si corresponde
-                            each dnac in depositosNacionales
-                                option(value=dnac.idDepositoNacional)= dnac.idDepositoNacional
-            .form-group
-                label.form-label(for="fechaDeSalidaDepositoNacional") Fecha de salida al Depósito Provincial:
-                .input-group.has-validation
-                    input.form-control(type="date" id="fechaDeSalidaDepositoNacional" name="fechaDeSalidaDepositoNacional" )
-                    .invalid-feedback.d-none(id="fechaDeSalidaDepositoNacionalVacio") Seleccione el depósito provincial al que debe llegar
-                    .invalid-feedback.d-none(id="fechaDeSalidaDepositoNacionalSuperior") La fecha seleccionada es superior a la fecha actual
-                    .invalid-feedback.d-none(id="fechaDeLlegadaCentroDeVacunacionSeleccion") Seleccione un Depósito Nacional y un Deposito Provincial antes de seleccionar una fecha de salida
-                    .invalid-feedback.d-none(id="fechaDeSalidaDepositoNacionalAntiguo") La fecha ingresada debe ser posterior a la fecha de salida del depósito nacional
-            .form-group
-                label.form-label(for="fechaDeLlegadaDepositoProvincial") Fecha de llegada al Depósito Provincial:
-                .input-group.has-validation
-                    input.form-control(type="date" id="fechaDeLlegadaDepositoProvincial" name="fechaDeLlegadaDepositoProvincial" )
-                    .invalid-feedback.d-none(id="fechaDeLlegadaDepositoProvincialVacio") Seleccione el depósito provincial al que debe llegar
-                    .invalid-feedback.d-none(id="fechaDeLlegadaDepositoProvincialSuperior") La fecha seleccionada es superior a la fecha actual
-                    .invalid-feedback.d-none(id="fechaDeLlegadaCentroDeVacunacionSeleccion") Seleccione un Depósito Nacional y un Deposito Provincial antes de seleccionar una fecha de llegada
-                    .invalid-feedback.d-none(id="fechaDeLlegadaDepositoProvincialAntiguo") La fecha ingresada debe ser posterior a la fecha de llegada al depósito provincial
-            .form-group
-                label.form-label(for="idDepositoProvincial") Depósito Provincial:
-                .input-group.has-validation
-                    select.form-select(name="idDepositoProvincial" id="idDepositoProvincial" )
-                        option(selected hidden value="") Seleccione un Depósito Provincial si corresponde
-                            each dprov in depositosProvinciales
-                                option(value=dprov.idDepositoProvincial)= dprov.idDepositoProvincial
-            .form-group
-                label.form-label(for="fechaDeSalidaDepositoProvincial") Fecha de salida al Centro de Vacunacion
-                .input-group.has-validation
-                    input.form-control(type="date" id="fechaDeSalidaDepositoProvincial" name="fechaDeSalidaDepositoProvincial" )
-                    .invalid-feedback.d-none(id="fechaDeSalidaDepositoProvincialVacio") Seleccione el centro de vacunación al que debe llegar
-                    .invalid-feedback.d-none(id="fechaDeSalidaDepositoProvincialSuperior") La fecha seleccionada es superior a la fecha actual
-                    .invalid-feedback.d-none(id="fechaDeLlegadaCentroDeVacunacionSeleccion") Seleccione un Depósito Nacional, un Deposito Provincial y un Centro de Vacunación antes de seleccionar una fecha de salida
-                    .invalid-feedback.d-none(id="fechaDeSalidaDepositoProvincialAntiguo") La fecha ingresada debe ser posterior a la fecha de llegada al depósito provincial
-            .form-group
-                label.form-label(for="fechaDeLlegadaCentroDeVacunacion") Fecha de llegada al Centro de Vacunacion
-                .input-group.has-validation
-                    input.form-control(type="date" id="fechaDeLlegadaCentroDeVacunacion" name="fechaDeLlegadaCentroDeVacunacion" )
-                    .invalid-feedback.d-none(id="fechaDeLlegadaCentroDeVacunacionVacio") Seleccione el centro de vacunación al que debe llegar
-                    .invalid-feedback.d-none(id="fechaDeLlegadaCentroDeVacunacionSuperior") La fecha seleccionada es superior a la fecha actual
-                    .invalid-feedback.d-none(id="fechaDeLlegadaCentroDeVacunacionSeleccion") Seleccione un Depósito Nacional y un Deposito Provincial antes de seleccionar una fecha de llegada
-                    .invalid-feedback.d-none(id="fechaDeLlegadaCentroDeVacunacionAntiguo") La fecha ingresada debe ser posterior a la fecha de salida del depósito provincial
-            .form-group
-                label.form-label(for="idCentroDeVacunacion") Centro de Vacunación:
-                .input-group.has-validation
-                    select.form-select(name="idCentroDeVacunacion" id="idCentroDeVacunacion" )
-                        option(selected hidden value="") Seleccione un Centro de Vacunación si corresponde
-                            each cvac in centrosDeVacunaciones
-                                option(value=cvac.idCentroDeVacunacion)= cvac.idCentroDeVacunacion
-            br
-            button(type="submit" class="btn btn-primary") Guardar
+head
+    style.
+        #formLoteInterno {
+            max-width: 600px;
+            margin: auto;
+        }
+body
+    h2.text-center Crear un lote interno
+    if messages.error
+        .alert.alert-danger
+            = messages.error
+    div.modal#alertModal(tabindex="-1" role="dialog" aria-labelledby="alertModalLabel" aria-hidden="true")
+        div.modal-dialog(role="document")
+            div.modal-content
+                div.modal-header
+                    h5.modal-title#alertModalLabel Alerta
+                    button.close(type="button" data-bs-dismiss="modal" aria-label="Close")
+                        span(aria-hidden="true") ×
+                div.modal-body
+                    p#mensajeAlerta Mensaje de alerta
+    form#formLoteInterno(action="/lotesinternos" method="post")
+        .form-group
+            label.form-label(for="idLaboratorio") Nombre del laboratorio:
+            .input-group.has-validation
+                select.form-select(name="idLaboratorio" id="idLaboratorio" required)
+                    option(disabled selected hidden value="") Seleccione un Laboratorio
+                        each lab in laboratorios
+                            option(value=lab.idLaboratorio)= lab.nombreLaboratorio
+                .invalid-feedback.d-none(id="idLaboratorioSinSeleccionar") Seleccione un laboratorio
+        .form-group
+            label.form-label(for="numeroDeLote") Número del lote proveedor:
+            .input-group.has-validation
+                select.form-select(name="numeroDeLote" id="numeroDeLote" required disabled)
+                    option(disabled selected hidden value="") Seleccione un Lote Proveedor
+                .invalid-feedback.d-none(id="numeroDeLoteSinLaboratorio") Seleccione un laboratorio antes de elegir un lote proveedor
+        .form-group
+            label.form-label(for="cantidadDeVacunas") Cantidad de Vacunas:
+            .input-group.has-validation
+                input.form-control(type="text" id="cantidadDeVacunas" name="cantidadDeVacunas" required)
+                .invalid-feedback.d-none(id="cantidadDeVacunasVacio") El campo no puede estar vacío
+                .invalid-feedback.d-none(id="cantidadDeVacunasNumeros") Ingrese solo números positivos
+        .form-group
+            label.form-label(for="fechaDeLlegadaDepositoNacional") Fecha de llegada al Depósito Nacional:
+            .input-group.has-validation
+                input.form-control(type="date" id="fechaDeLlegadaDepositoNacional" name="fechaDeLlegadaDepositoNacional" )
+                .invalid-feedback.d-none(id="fechaDeLlegadaDepositoNacionalVacio") Seleccione el depósito nacional al que debe llegar
+                .invalid-feedback.d-none(id="fechaDeLlegadaDepositoNacionalSuperior") La fecha seleccionada es superior a la fecha actual
+                .invalid-feedback.d-none(id="fechaDeLlegadaDepositoNacionalProveedor") Debe seleccionar un lote proveedor antes de elegir una fecha de llegada
+                .invalid-feedback.d-none(id="fechaDeLlegadaDepositoNacionalAnterior") La fecha seleccionada es anterior a la fecha de compra
+                .invalid-feedback.d-none(id="fechaDeLlegadaCentroDeVacunacionSeleccion") Seleccione un Depósito Nacional antes de seleccionar una fecha de llegada
+        .form-group
+            label.form-label(for="idDepositoNacional") Depósito Nacional:
+            .input-group.has-validation
+                select.form-select(name="idDepositoNacional" id="idDepositoNacional" )
+                    option(selected hidden value="") Seleccione un Deposito Nacional si corresponde
+                        each dnac in depositosNacionales
+                            option(value=dnac.idDepositoNacional)= dnac.idDepositoNacional
+        .form-group
+            label.form-label(for="fechaDeSalidaDepositoNacional") Fecha de salida al Depósito Provincial:
+            .input-group.has-validation
+                input.form-control(type="date" id="fechaDeSalidaDepositoNacional" name="fechaDeSalidaDepositoNacional" )
+                .invalid-feedback.d-none(id="fechaDeSalidaDepositoNacionalVacio") Seleccione el depósito provincial al que debe llegar
+                .invalid-feedback.d-none(id="fechaDeSalidaDepositoNacionalSuperior") La fecha seleccionada es superior a la fecha actual
+                .invalid-feedback.d-none(id="fechaDeLlegadaCentroDeVacunacionSeleccion") Seleccione un Depósito Nacional y un Deposito Provincial antes de seleccionar una fecha de salida
+                .invalid-feedback.d-none(id="fechaDeSalidaDepositoNacionalAntiguo") La fecha ingresada debe ser posterior a la fecha de salida del depósito nacional
+        .form-group
+            label.form-label(for="fechaDeLlegadaDepositoProvincial") Fecha de llegada al Depósito Provincial:
+            .input-group.has-validation
+                input.form-control(type="date" id="fechaDeLlegadaDepositoProvincial" name="fechaDeLlegadaDepositoProvincial" )
+                .invalid-feedback.d-none(id="fechaDeLlegadaDepositoProvincialVacio") Seleccione el depósito provincial al que debe llegar
+                .invalid-feedback.d-none(id="fechaDeLlegadaDepositoProvincialSuperior") La fecha seleccionada es superior a la fecha actual
+                .invalid-feedback.d-none(id="fechaDeLlegadaCentroDeVacunacionSeleccion") Seleccione un Depósito Nacional y un Deposito Provincial antes de seleccionar una fecha de llegada
+                .invalid-feedback.d-none(id="fechaDeLlegadaDepositoProvincialAntiguo") La fecha ingresada debe ser posterior a la fecha de llegada al depósito provincial
+        .form-group
+            label.form-label(for="idDepositoProvincial") Depósito Provincial:
+            .input-group.has-validation
+                select.form-select(name="idDepositoProvincial" id="idDepositoProvincial" )
+                    option(selected hidden value="") Seleccione un Depósito Provincial si corresponde
+                        each dprov in depositosProvinciales
+                            option(value=dprov.idDepositoProvincial)= dprov.idDepositoProvincial
+        .form-group
+            label.form-label(for="fechaDeSalidaDepositoProvincial") Fecha de salida al Centro de Vacunacion
+            .input-group.has-validation
+                input.form-control(type="date" id="fechaDeSalidaDepositoProvincial" name="fechaDeSalidaDepositoProvincial" )
+                .invalid-feedback.d-none(id="fechaDeSalidaDepositoProvincialVacio") Seleccione el centro de vacunación al que debe llegar
+                .invalid-feedback.d-none(id="fechaDeSalidaDepositoProvincialSuperior") La fecha seleccionada es superior a la fecha actual
+                .invalid-feedback.d-none(id="fechaDeLlegadaCentroDeVacunacionSeleccion") Seleccione un Depósito Nacional, un Deposito Provincial y un Centro de Vacunación antes de seleccionar una fecha de salida
+                .invalid-feedback.d-none(id="fechaDeSalidaDepositoProvincialAntiguo") La fecha ingresada debe ser posterior a la fecha de llegada al depósito provincial
+        .form-group
+            label.form-label(for="fechaDeLlegadaCentroDeVacunacion") Fecha de llegada al Centro de Vacunacion
+            .input-group.has-validation
+                input.form-control(type="date" id="fechaDeLlegadaCentroDeVacunacion" name="fechaDeLlegadaCentroDeVacunacion" )
+                .invalid-feedback.d-none(id="fechaDeLlegadaCentroDeVacunacionVacio") Seleccione el centro de vacunación al que debe llegar
+                .invalid-feedback.d-none(id="fechaDeLlegadaCentroDeVacunacionSuperior") La fecha seleccionada es superior a la fecha actual
+                .invalid-feedback.d-none(id="fechaDeLlegadaCentroDeVacunacionSeleccion") Seleccione un Depósito Nacional y un Deposito Provincial antes de seleccionar una fecha de llegada
+                .invalid-feedback.d-none(id="fechaDeLlegadaCentroDeVacunacionAntiguo") La fecha ingresada debe ser posterior a la fecha de salida del depósito provincial
+        .form-group
+            label.form-label(for="idCentroDeVacunacion") Centro de Vacunación:
+            .input-group.has-validation
+                select.form-select(name="idCentroDeVacunacion" id="idCentroDeVacunacion" )
+                    option(selected hidden value="") Seleccione un Centro de Vacunación si corresponde
+                        each cvac in centrosDeVacunaciones
+                            option(value=cvac.idCentroDeVacunacion)= cvac.idCentroDeVacunacion
+        br
+        div.text-center
+            button(type="submit" class="btn btn-primary") Crear
             | &nbsp;&nbsp;&nbsp;&nbsp;
             button(type="button" class="btn btn-primary" onclick="window.history.back()") Volver
 script.

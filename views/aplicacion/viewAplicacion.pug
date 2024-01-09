@@ -1,36 +1,42 @@
+- var title = 'Listado de las aplicaciones'
 include ..\includes\layout
 block content
-head
-    title Aplicacion
-    style.
-        h2 {
-            text-align: center;
-            text-decoration: underline;
-            text-underline-offset: 4px; /* Ajusta el espacio entre el texto y el subrayado */
-        }
 body
     div.container.my-4
-      div.row
-        div.col-sm-12.col-md-12.col-lg-12.col-xl-12
-            section#viewAplicaciones
-                h2 Listado de Aplicaciones
-                br
-                if messages.success
-                    .alert.alert-success
-                        = messages.success 
-                div(style="text-align: left;")
-                    a.btn.btn-primary.btn-lg(href="/aplicaciones/crear") Crear
+        div.row
+            div.col-sm-12.col-md-12.col-lg-12.col-xl-12
+                section#viewAplicaciones
+                    h2 Listado de las aplicaciones
                     br
-                    br
-                    div.table.responsive
-                        table#aplicaciones.table.table-striped.table-bordered               
-       
+                    if messages.success
+                        .alert.alert-success
+                            = messages.success
+                    if messages.error
+                        .alert.alert-danger.flash-message.fade-in
+                            = messages.error
+                    div.modal#confirmDeleteModal(tabindex="-1" role="dialog")
+                        div.modal-dialog(role="document")
+                            div.modal-content
+                                div.modal-header
+                                    h5.modal-title Confirmar la eliminación de la aplicación
+                                    button.close(type="button" data-dismiss="modal" aria-label="Close")
+                                        span(aria-hidden="true") &times;
+                                    div.modal-body
+                                        p#mensajeAlerta ¿Está seguro de que desea eliminar esta aplicación?
+                                    div.modal-footer
+                                        button.btn.btn-secondary(id="cancelDeleteBtn" type="button" data-dismiss="modal") Cancelar
+                                        button.btn.btn-danger(id="confirmDeleteBtn" type="button") Confirmar 
+                    div(style="text-align: left;")
+                        a.btn.btn-primary.btn-lg(href="/aplicaciones/crear") Crear
+                        br
+                        br
+                        div.table.responsive
+                            table#aplicaciones.table.table-striped.table-bordered
 script.
-    let aplic = !{JSON.stringify(aplicacion)};
-    let apptab 
+    let tabla 
     $(document).ready(function() {
-        apptab = $('#aplicaciones').DataTable({
-            data: aplic,
+        tabla = $('#aplicaciones').DataTable({
+            data: !{JSON.stringify(aplicaciones)},
             pageLength:5,
             lengthMenu:[5,10,15,20],
             language: {
@@ -45,10 +51,10 @@ script.
                 {data: 'Loteinterno.numeroDeSerie', title: 'Número de Serie de la Vacuna'},
                 {data: 'fechaDeAplicacion', title: 'Fecha de Aplicacion'},
                 {
-                    data: null, title: 'Opciones',
+                    data: 'opciones', title: 'Opciones',
                     render: function(data, type, row) {
-                        return `<button class="btn btn-success btn-sm fa-solid fa-pencil me-2"></button>` +
-                            `<button class="btn btn-danger btn-sm fa-solid fa-trash-can"></button>`;
+                        return `<button title="Editar" class="btn btn-success btn-sm fa-solid fa-pencil me-2"></button>` +
+                            `<button title="Eliminar" class="btn btn-danger btn-sm fa-solid fa-trash-can"></button>`;
                     }
                 }
             ],
@@ -60,19 +66,48 @@ script.
                 { width: '10%', targets: [6] },
             ]
         });
-    });
-    $(document).ready(function() {
-        apptab.on('click', 'button', function (f) {
-            let data = apptab.row(f.target.closest('tr')).data();
+
+        $('.flash-message').addClass('fade-in');
+        setTimeout(function() {
+            $('.flash-message').removeClass('fade-in');
+        }, 3000);
+
+        tabla.on('click', 'button', function (f) {
+            let data = tabla.row(f.target.closest('tr')).data();
             if ($(event.target).hasClass('fa-trash-can')) {
-                if(confirm("¿Desea eliminar una Aplicación?")){
-                    $.post('/aplicaciones/'+data.idAplicacion+'?_method=DELETE', function(data){
-                         window.location.href = "/aplicaciones";
-                    })
-                }
-            } else {window.location.href= "/aplicaciones/" + data.idAplicacion}
-        })
+                $('#confirmDeleteModal').modal('show');
+                $('#confirmDeleteBtn').on('click', function() {
+            // Realizar la acción de eliminación
+                    $.ajax({
+                        url: '/aplicaciones/' + data.idAplicacion + '?_method=DELETE',
+                        type: 'POST',
+                        success: function(data) {
+                            if (data.success) {
+                                window.location.href = "/aplicaciones";
+                            } else {
+                                console.error(data.message);
+                            }
+                        },
+                        error: function(error) {
+                            console.error(error);
+                        }
+                    });
+
+                    $('#confirmDeleteModal').modal('hide');
+                });
+
+                $('#cancelDeleteBtn, .modal-header button.close').on('click', function() {
+                    $('#confirmDeleteModal').modal('hide');
+                });
+
+                $(document).on('keydown', function(e) {
+                    if (e.key === 'Enter' && $('#confirmDeleteModal').is(':visible')) {
+                        // Disparar el evento de click en el botón de confirmación
+                        $('#confirmDeleteBtn').trigger('click');
+                    }
+                });
+            } else {
+                window.location.href = "/aplicaciones/" + data.idAplicacion;
+            }
+        });
     });
-    function crear(){
-        window.location.href= "/aplicaciones/crear"
-    }

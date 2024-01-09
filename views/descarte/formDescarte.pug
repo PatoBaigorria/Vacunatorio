@@ -1,105 +1,80 @@
-- var title ='Crear Descarte de Vacunas'
+- var title ='Crear el descarte de vacuna'
 include ..\includes\layout
 block content
 html(lang="es")
-    head
-        style.
-            #formDescarte {
-                max-width: 600px;
-                margin: auto;
-            }
-            h2 {
-                text-align: center;
-                text-decoration: underline;
-                text-underline-offset: 4px;
-                margin-top: 10px;
-            }
-            .modal-content {
-                background-color: #f1f1f1;
-                padding: 20px;
-                border-radius: 10px;
-                box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-            }
-            .modal-header {
-                background-color: #dc3545;
-                color: white;
-            }
-            .modal-body {
-                padding: 20px;
-            }
-            #mensajeAlerta{
-                color: #721c24;
-            }
-            label {
-                margin-top: 5px;
-                margin-bottom: 5px;
-            }
-    body
-        h2.text-center Crear un Descarte
-        if messages.error
-            .alert.alert-danger
-                = messages.error
-        div.modal#alertModal(tabindex="-1" role="dialog" aria-labelledby="alertModalLabel" aria-hidden="true")
-            div.modal-dialog(role="document")
-                div.modal-content
-                    div.modal-header
-                        h5.modal-title#alertModalLabel Alerta
-                        button.close(type="button" data-bs-dismiss="modal" aria-label="Close")
-                            span(aria-hidden="true") ×
-                    div.modal-body
-                        p#mensajeAlerta Mensaje de alerta
-        form#formDescarte(action="/descartes" method="post")
-            .form-group
-                label.form-label(for="DNIAgente") Seleccione un Agente de Salud Existente:
-                .input-group.has-validation
-                    select.form-select(name="DNIAgente" id="DNIAgente" required)
-                        option(disabled selected hidden value="") Seleccione un Agente de Salud
-                            each persona in personas
-                                if(persona.ocupacion=="agente de salud")
-                                    option(value=persona.DNI)= persona.nombre + ' ' + persona.apellido
-                    .invalid-feedback.d-none(id="DNIAgenteSinSeleccionar") Seleccione un agente de salud
-            .form-group
-                label.form-label(for="numeroDeSerie") Nº de Serie de Lote Interno:
-                .input-group.has-validation
-                    select.form-select(name="numeroDeSerie" id="numeroDeSerie" required disabled)
-                    .invalid-feedback.d-none(id="numeroDeSerieSinAgente") Seleccione un agente
-            .form-group
-                label.form-label(for="empresaDescartante") Empresa Descartante:
-                .input-group.has-validation
-                    select.form-select(name="empresaDescartante" id="empresaDescartante" required)
-                        option(disabled selected hidden value="") Seleccione una Empresa Descartante
-                        option(value="Veolia") Veolia
-                        option(value="Clean Harbors") Clean Harbors
-                        option(value="Waste Management") Waste Management
-                        option(value="Stericycle") Stericycle
-                    .invalid-feedback.d-none(id="empresaDescartanteSinSeleccionar") Seleccione una empresa descartante
-            .form-group
-                label.form-label(for="motivo") Motivo de descarte:
-                .input-group.has-validation
-                    select.form-select(name="motivo" id="motivo" required)
-                        option(disabled selected hidden value="") Seleccione un Motivo
-                        option(value="Vencida") Vencida
-                        option(value="Rotura") Rotura
-                        option(value="Cadena Pérdida de Frío") Cadena Pérdida de Frío
-                        option(value="Contaminación") Contaminación
-                    .invalid-feedback.d-none(id="motivoSinSeleccionar") Seleccione un motivo de descarte
-            .form-group
-                label.form-label(for="cantidadDeVacunas") Cantidad de Vacunas:
-                .input-group.has-validation
-                    input.form-control(type="text" id="cantidadDeVacunas" name="cantidadDeVacunas" required)
-                    .invalid-feedback.d-none(id="cantidadDeVacunasVacio") El campo no puede estar vacío
-                    .invalid-feedback.d-none(id="cantidadDeVacunasNumeros") Ingrese solo números positivos
-            .form-group
-                label.form-label(for="fechaDeDescarte") Fecha de descarte:
-                .input-group.has-validation
-                    input.form-control(type="date" id="fechaDeDescarte" name="fechaDeDescarte" required)
-                    .invalid-feedback.d-none(id="fechaDeDescarteVacio") El campo no puede estar vacío
-                    .invalid-feedback.d-none(id="fechaDeDescarteSuperior") La fecha seleccionada es superior a la fecha actual
-                    .invalid-feedback.d-none(id="fechaDeDescarteNumeroDeSerie") Debe seleccionar un lote interno antes de elegir una fecha de descarte
-                    .invalid-feedback.d-none(id="fechaDeDescarteNulo") El lote aún no ha llegado al depósito nacional
-                    .invalid-feedback.d-none(id="fechaDeDescarteLlegada") La fecha de descarte no puede ser previa a la fecha de llegada al depósito nacional
-            br
-            button(type="submit" class="btn btn-primary") Guardar
+head
+    style.
+        #formDescarte {
+            max-width: 600px;
+            margin: auto;
+        }
+body
+    h2.text-center Crear un descarte
+    if messages.error
+        .alert.alert-danger
+            = messages.error
+    div.modal#alertModal(tabindex="-1" role="dialog" aria-labelledby="alertModalLabel" aria-hidden="true")
+        div.modal-dialog(role="document")
+            div.modal-content
+                div.modal-header
+                    h5.modal-title#alertModalLabel Alerta
+                    button.close(type="button" data-bs-dismiss="modal" aria-label="Close")
+                        span(aria-hidden="true") ×
+                div.modal-body
+                    p#mensajeAlerta Mensaje de alerta
+    form#formDescarte(action="/descartes" method="post")
+        .form-group
+            label.form-label(for="DNIAgente") Seleccione un Agente de Salud Existente:
+            .input-group.has-validation
+                select.form-select(name="DNIAgente" id="DNIAgente" required)
+                    option(disabled selected hidden value="") Seleccione un Agente de Salud
+                        each persona in personas
+                            if(persona.ocupacion=="agente de salud")
+                                option(value=persona.DNI)= persona.nombre + ' ' + persona.apellido
+                .invalid-feedback.d-none(id="DNIAgenteSinSeleccionar") Seleccione un agente de salud
+        .form-group
+            label.form-label(for="numeroDeSerie") Nº de Serie de Lote Interno:
+            .input-group.has-validation
+                select.form-select(name="numeroDeSerie" id="numeroDeSerie" required disabled)
+                .invalid-feedback.d-none(id="numeroDeSerieSinAgente") Seleccione un agente
+        .form-group
+            label.form-label(for="empresaDescartante") Empresa Descartante:
+            .input-group.has-validation
+                select.form-select(name="empresaDescartante" id="empresaDescartante" required)
+                    option(disabled selected hidden value="") Seleccione una Empresa Descartante
+                    option(value="Veolia") Veolia
+                    option(value="Clean Harbors") Clean Harbors
+                    option(value="Waste Management") Waste Management
+                    option(value="Stericycle") Stericycle
+                .invalid-feedback.d-none(id="empresaDescartanteSinSeleccionar") Seleccione una empresa descartante
+        .form-group
+            label.form-label(for="motivo") Motivo de descarte:
+            .input-group.has-validation
+                select.form-select(name="motivo" id="motivo" required)
+                    option(disabled selected hidden value="") Seleccione un Motivo
+                    option(value="Vencida") Vencida
+                    option(value="Rotura") Rotura
+                    option(value="Cadena Pérdida de Frío") Cadena Pérdida de Frío
+                    option(value="Contaminación") Contaminación
+                .invalid-feedback.d-none(id="motivoSinSeleccionar") Seleccione un motivo de descarte
+        .form-group
+            label.form-label(for="cantidadDeVacunas") Cantidad de Vacunas:
+            .input-group.has-validation
+                input.form-control(type="text" id="cantidadDeVacunas" name="cantidadDeVacunas" required)
+                .invalid-feedback.d-none(id="cantidadDeVacunasVacio") El campo no puede estar vacío
+                .invalid-feedback.d-none(id="cantidadDeVacunasNumeros") Ingrese solo números positivos
+        .form-group
+            label.form-label(for="fechaDeDescarte") Fecha de descarte:
+            .input-group.has-validation
+                input.form-control(type="date" id="fechaDeDescarte" name="fechaDeDescarte" required)
+                .invalid-feedback.d-none(id="fechaDeDescarteVacio") El campo no puede estar vacío
+                .invalid-feedback.d-none(id="fechaDeDescarteSuperior") La fecha seleccionada es superior a la fecha actual
+                .invalid-feedback.d-none(id="fechaDeDescarteNumeroDeSerie") Debe seleccionar un lote interno antes de elegir una fecha de descarte
+                .invalid-feedback.d-none(id="fechaDeDescarteNulo") El lote aún no ha llegado al depósito nacional
+                .invalid-feedback.d-none(id="fechaDeDescarteLlegada") La fecha de descarte no puede ser previa a la fecha de llegada al depósito nacional
+        br
+        div.text-center
+            button(type="submit" class="btn btn-primary") Crear
             | &nbsp;&nbsp;&nbsp;&nbsp;
             button(type="button" class="btn btn-primary" onclick="window.history.back()") Volver
 script.

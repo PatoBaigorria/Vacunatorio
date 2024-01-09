@@ -1,49 +1,36 @@
-- var title ='Actualizar Centro de Vacunación'
+- var title ='Actualizar centro de vacunación'
 include ..\includes\layout
 block content
 html(lang="es") 
-    head
-        link(rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="")
-        script(src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin="")
-        style.
-            #formCentroDeVacunacion {
-                max-width: 600px;
-                margin: auto;
-            }
-            h2 {
-                text-align: center;
-                text-decoration: underline;
-                text-underline-offset: 4px;
-                margin-top: 10px;
-            }
-            label {
-                margin-bottom: 5px;
-            }
-            #map {
-                height: 300px;
-                width: 100%;
-                border: 1px solid #000;
-            }
-    body
-        h2.text-center Actualice el Centro de Vacunación
-        if messages.error
-            .alert.alert-danger
-                = messages.error
+head
+    link(rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="")
+    script(src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin="")
+    style.
+        #formCentroDeVacunacion {
+            max-width: 600px;
+            margin: auto;
+        }
+body
+    h2.text-center Actualice los datos del centro de vacunación
+    if messages.error
+        .alert.alert-danger
+            = messages.error
+    br
+    form#formCentroDeVacunacion(action="/centrosdevacunacion/"+centroV.idCentroDeVacunacion+"?_method=PUT" method="post")
+        .form-group
+            label.form-label ID del Centro de Vacunación:
+            input.form-control.is-valid(type="text" id="idCentroDeVacunacion" name="idCentroDeVacunacion" value=centroV.idCentroDeVacunacion disabled)
+        .form-group
+            label.form-label(for="ubicacion") Seleccione la ubicación del centro de vacunación en el mapa:
+            #map
+        .form-group
+            label.form-label(for="longitud") Longitud:
+            input.form-control(type="text" id="longitud" name="longitud" readonly)
+        .form-group
+            label.form-label(for="latitud") Latitud:
+            input.form-control(type="text" id="latitud" name="latitud" readonly)
         br
-        form#formCentroDeVacunacion(action="/centrosdevacunacion/"+centroV.idCentroDeVacunacion+"?_method=PUT" method="post")
-            .form-group
-                label.form-label ID del Centro de Vacunación:
-                input.form-control.is-valid(type="text" id="idCentroDeVacunacion" name="idCentroDeVacunacion" value=centroV.idCentroDeVacunacion disabled)
-            .form-group
-                label.form-label(for="ubicacion") Seleccione ubicación en el mapa:
-                #map
-            .form-group
-                label.form-label(for="longitud") Longitud:
-                input.form-control(type="text" id="longitud" name="longitud" readonly)
-            .form-group
-                label.form-label(for="latitud") Latitud:
-                input.form-control(type="text" id="latitud" name="latitud" readonly)
-            br
+        div.text-center
             button(type="submit" class="btn btn-primary") Actualizar
             | &nbsp;&nbsp;&nbsp;&nbsp;
             button(type="button" class="btn btn-primary" onclick="window.history.back()") Volver

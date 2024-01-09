@@ -1,65 +1,12 @@
 - var title = 'Listado de Laboratorios'
 include ..\includes\layout
 block content
-head
-    title Laboratorios
-    style.
-        h2 {
-            text-align: center;
-            text-decoration: underline;
-            text-underline-offset: 4px; /* Ajusta el espacio entre el texto y el subrayado */
-        }
-        .modal-content {
-            background-color: #f1f1f1;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-        }
-        .modal-header {
-            background-color: #dc3545;
-            color: white;
-        }
-        .modal-body {
-            padding: 20px;
-        }
-        #mensajeAlerta{
-            color: #721c24;
-        }
-        .modal-footer {
-            background-color: #f1f1f1;
-        }
-
-        .flash-message {
-            display: none;
-            opacity: 1;
-            transition: opacity 1s ease-out;
-        }
-
-        .fade-in {
-            display: block;
-            animation: fadeOut 3s 1s; /* fadeIn dura 3 segundos, fadeOut comienza después de 3 segundos y dura 2 segundos */
-        }
-
-        @keyframes fadeOut {
-            from {
-                opacity: 1;
-            }
-            to {
-                opacity: 0;
-            }
-        }
-
-        .navbar-nav .nav-item:hover .nav-link {
-            cursor: pointer;
-            color: #0000FF;
-        }
-
 body
     div.container.my-4
         div.row
             div.col-sm-13.col-md-13.col-lg-13.col-xl-13
                 section#viewLaboratorios
-                    h2 Listado de Laboratorios
+                    h2 Listado de los laboratorios
                     br
                     br
                     if messages.success
@@ -86,8 +33,6 @@ body
                         br
                         div.table.responsive 
                             table#laboratorios.table.table-striped.table-bordered
-
-
 script.
     let tabla 
     $(document).ready(function() {
@@ -105,12 +50,11 @@ script.
                 {data: 'telefono', title: 'Telefono del laboratorio' },
                 {data: 'longitud', title: 'Longitud'},
                 {data: 'latitud', title: 'Latitud'},
-
                 {
                     data: 'opciones', title: 'Opciones',
                     render: function(data, type, row) {
-                        return `<button class="btn btn-success btn-sm fa-solid fa-pencil me-2"></button>` +
-                            `<button class="btn btn-danger btn-sm fa-solid fa-trash-can"></button>`;
+                        return `<button title="Editar" class="btn btn-success btn-sm fa-solid fa-pencil me-2"></button>` +
+                            `<button title="Eliminar" class="btn btn-danger btn-sm fa-solid fa-trash-can"></button>`;
                     }
                 }
             ],
@@ -124,9 +68,7 @@ script.
                 { width: '8%', targets: [6] },
             ]
         });
-    });
 
-    $(document).ready(function() {
         $('.flash-message').addClass('fade-in');
         setTimeout(function() {
             $('.flash-message').removeClass('fade-in');
@@ -146,7 +88,6 @@ script.
                         window.location.href = "/laboratorios";
                     } else {
                         console.error(data.message);
-                        //window.location.href = "/laboratorios";
                     }
                 },
                 error: function(error) {
@@ -173,6 +114,4 @@ script.
                 window.location.href = "/laboratorios/" + data.idLaboratorio;
             }
         });
-
-        // Configurar el botón de confirmar y la 'X' para cerrar el modal
     });

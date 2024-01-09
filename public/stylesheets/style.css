@@ -1,0 +1,59 @@
+h2 {
+	text-align: center;
+	text-decoration: underline;
+	text-underline-offset: 4px;
+	margin-top: 10px;
+}
+label {
+	margin-top: 5px;
+	margin-bottom: 5px;
+}
+.modal-content {
+	background-color: #f1f1f1;
+	padding: 20px;
+	border-radius: 10px;
+	box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+.modal-header {
+	background-color: #dc3545;
+	color: white;
+}
+.modal-body {
+	padding: 20px;
+}
+.modal-footer {
+	background-color: #f1f1f1;
+}
+.navbar-nav .nav-item:hover .nav-link {
+	cursor: pointer;
+	color: #0000ff;
+}
+#form {
+	max-width: 600px;
+	margin: auto;
+}
+#map {
+	height: 300px;
+	width: 100%;
+	border: 1px solid #000;
+}
+#mensajeAlerta {
+	color: #721c24;
+}
+.flash-message {
+	display: none;
+	opacity: 1;
+	transition: opacity 1s ease-out;
+}
+.fade-in {
+	display: block;
+	animation: fadeOut 3s 1s; /* fadeIn dura 3 segundos, fadeOut comienza después de 3 segundos y dura 2 segundos */
+}
+@keyframes fadeOut {
+	from {
+		opacity: 1;
+	}
+	to {
+		opacity: 0;
+	}
+}

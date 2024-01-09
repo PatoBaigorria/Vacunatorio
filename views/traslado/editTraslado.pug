@@ -2,83 +2,84 @@
 include ..\includes\layout
 block content
 html(lang="es")
-    head
-        style.
-            #formTraslado {
-                max-width: 600px;
-                margin: auto;
-            }
-            h2 {
-                text-align: center;
-                text-decoration: underline;
-                text-underline-offset: 4px;
-                margin-top: 10px;
-            }
-            label {
-                margin-bottom: 5px;
-            }
-            .readonly-input {
-                color: gray;
-                background-color: #f0f0f0;
-            }
-            .fecha-salida,
-            .fecha-llegada {
-                width: 600px;
-            }
+head
+    style.
+        #formTraslado {
+            max-width: 600px;
+            margin: auto;
+        }
+        h2 {
+            text-align: center;
+            text-decoration: underline;
+            text-underline-offset: 4px;
+            margin-top: 10px;
+        }
+        label {
+            margin-bottom: 5px;
+        }
+        .readonly-input {
+            color: gray;
+            background-color: #f0f0f0;
+        }
+        .fecha-salida,
+        .fecha-llegada {
+            width: 600px;
+        }
 
-    body
-        #formTraslado
-            h2.text-center.text Actualice el Traslado
+body
+    #formTraslado
+        h2.text-center.text Actualice los datos del traslado
+        br
+        form(action="/traslados/"+traslado.idTraslado+"?_method=PUT" method="post")
+            .form-group
+                label.form-label(for="idTraslado") ID Traslado:
+                input.form-control.readonly-input(type="text" id="idTraslado" name="idTraslado" value=traslado.idTraslado readonly disabled)
             br
-            form(action="/traslados/"+traslado.idTraslado+"?_method=PUT" method="post")
-                .form-group
-                    label.form-label(for="idTraslado") ID Traslado:
-                    input.form-control.readonly-input(type="text" id="idTraslado" name="idTraslado" value=traslado.idTraslado readonly disabled)
-                br
-                .form-group
-                    label.form-label(for="num-serie") Nº de Serie Lote Interno:
-                    select.form-select#numeroDeSerieSelect(name="numeroDeSerie")
-                            each numSerie in lotesInternos
-                                if traslado.numeroDeSerie==numSerie.numeroDeSerie
-                                    option(value=numSerie.numeroDeSerie)=numSerie.numeroDeSerie
-                            each numSerie in lotesInternos
-                                if traslado.numeroDeSerie==numSerie.numeroDeSerie
-                                    break
-                                else
-                                    option(value=numSerie.numeroDeSerie)=numSerie.numeroDeSerie
-                br
-                .form-group
-                    label.form-label(for="id-ctrovac") Centro de Vacunacion:
-                    select.form-select#idCentroDeVacunacion(name="idCentroDeVacunacion")
+            .form-group
+                label.form-label(for="num-serie") Nº de Serie Lote Interno:
+                select.form-select#numeroDeSerieSelect(name="numeroDeSerie")
+                        each numSerie in lotesInternos
+                            if traslado.numeroDeSerie==numSerie.numeroDeSerie
+                                option(value=numSerie.numeroDeSerie)=numSerie.numeroDeSerie
+                        each numSerie in lotesInternos
+                            if traslado.numeroDeSerie==numSerie.numeroDeSerie
+                                break
+                            else
+                                option(value=numSerie.numeroDeSerie)=numSerie.numeroDeSerie
+            br
+            .form-group
+                label.form-label(for="id-ctrovac") Centro de Vacunacion:
+                select.form-select#idCentroDeVacunacion(name="idCentroDeVacunacion")
+                    each cvac in centrosDeVacunacion
+                        if traslado.idCentroDeVacunacion==cvac.idCentroDeVacunacion && traslado.idCentroDeVacunacion != null
+                            option(cvac.idCentroDeVacunacion)= cvac.idCentroDeVacunacion
+                            option(value="") Ningún Centro de Vacunación
+                    if traslado.idCentroDeVacunacion != null
                         each cvac in centrosDeVacunacion
-                            if traslado.idCentroDeVacunacion==cvac.idCentroDeVacunacion && traslado.idCentroDeVacunacion != null
-                                option(cvac.idCentroDeVacunacion)= cvac.idCentroDeVacunacion
-                                option(value="") Ningún Centro de Vacunación
-                        if traslado.idCentroDeVacunacion != null
+                            if traslado.idCentroDeVacunacion==cvac.idCentroDeVacunacion
+                                break
+                            else
+                                option(value=cvac.idCentroDeVacunacion)= cvac.idCentroDeVacunacion
+                    else
+                        option(value="") Selecciona un Centro de Vacunación
                             each cvac in centrosDeVacunacion
-                                if traslado.idCentroDeVacunacion==cvac.idCentroDeVacunacion
-                                    break
-                                else
-                                    option(value=cvac.idCentroDeVacunacion)= cvac.idCentroDeVacunacion
-                        else
-                            option(value="") Selecciona un Centro de Vacunación
-                                each cvac in centrosDeVacunacion
-                                    option(value=cvac.idCentroDeVacunacion)= cvac.idCentroDeVacunacion
-                br
-                .form-group
-                    label.form-label(for="fecha-sal-trasl") Fecha Salida de Traslado:
-                        if traslado.fechaDeSalida != null
-                            input.form-control(type="date" id="fecha-sal-trasl" name="fechaDeSalida" class="fecha-salida" value=traslado.fechaDeSalida)
-                        else
-                            input.form-control(type="date" id="fecha-sal-trasl" name="fechaDeSalida" class="fecha-salida")
-                br
-                .form-group
-                    label.form-label(for="fecha-lleg-trasl") Fecha Llegada de Traslado en Destino:
-                        if traslado.fechaDeLlegada != null
-                            input.form-control(type="date" id="fecha-lleg-trasl" name="fechaDeLlegada" class="fecha-llegada" value=traslado.fechaDeLlegada)
-                        else
-                            input.form-control(type="date" id="fecha-lleg-trasl" name="fechaDeLlegada" class="fecha-llegada")
-                br
+                                option(value=cvac.idCentroDeVacunacion)= cvac.idCentroDeVacunacion
+            br
+            .form-group
+                label.form-label(for="fecha-sal-trasl") Fecha Salida de Traslado:
+                    if traslado.fechaDeSalida != null
+                        input.form-control(type="date" id="fecha-sal-trasl" name="fechaDeSalida" class="fecha-salida" value=traslado.fechaDeSalida)
+                    else
+                        input.form-control(type="date" id="fecha-sal-trasl" name="fechaDeSalida" class="fecha-salida")
+            br
+            .form-group
+                label.form-label(for="fecha-lleg-trasl") Fecha Llegada de Traslado en Destino:
+                    if traslado.fechaDeLlegada != null
+                        input.form-control(type="date" id="fecha-lleg-trasl" name="fechaDeLlegada" class="fecha-llegada" value=traslado.fechaDeLlegada)
+                    else
+                        input.form-control(type="date" id="fecha-lleg-trasl" name="fechaDeLlegada" class="fecha-llegada")
+            br
+            div.text-center
                 button(type="submit" class="btn btn-primary") Actualizar
                 | &nbsp;&nbsp;&nbsp;&nbsp;
                 button(type="button" class="btn btn-primary" onclick="window.history.back()") Volver
