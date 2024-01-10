@@ -2,7 +2,7 @@
 const { Model, DataTypes } = require("sequelize");
 const sequelize = require("../database/db");
 
-class Aplicacion extends Model { }
+class Aplicacion extends Model {}
 
 const aplicacion = Aplicacion.init(
   {
@@ -28,6 +28,10 @@ const aplicacion = Aplicacion.init(
     },
     fechaDeAplicacion: {
       type: DataTypes.DATEONLY,
+      allowNull: false,
+    },
+    activo: {
+      type: DataTypes.BOOLEAN,
       allowNull: false,
     },
   },

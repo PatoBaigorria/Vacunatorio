@@ -17,7 +17,7 @@ const listarDepositosProvinciales = async (req, res) => {
 };
 
 // Muestra formulario de creacion de Deposito Provincial
-const altaDepProv = async (req, res) => {
+const formDepProv = async (req, res) => {
   try {
     res.render("depositoprovincial/formDepositoProvincial");
   } catch (error) {
@@ -33,6 +33,7 @@ const createDepProv = async (req, res) => {
     await DepositoProvincial.create({
       longitud,
       latitud,
+      activo: 1,
     });
     req.flash("success", "Depósito Provincial creado exitosamente");
     res.redirect("/depositosprovinciales");
@@ -78,46 +79,60 @@ const deleteDepositoProvincial = async (req, res) => {
         idDepositoProvincial: req.params.id,
       },
     });
-    req.flash('success', 'Depósito Provincial eliminado exitosamente.');
+    req.flash("success", "Depósito provincial eliminado exitosamente.");
     res.json({ success: true });
   } catch (error) {
-    res
-      .status(500)
-      .json({
-        message: "Error al eliminar el depósito provincial."
-      });
-  }
-};
-
-// Obtener los lotes internos asociados a un depósito provincial por su ID
-const getLotesInternosByDepositoProvincialId = async (req, res) => {
-  try {
-    const depositoProvincial = await Depositoprovincial.findByPk(
-      req.params.id,
-      {
-        include: [Loteinterno],
-      }
-    );
-
-    if (!depositoProvincial) {
-      return res
-        .status(404)
-        .json({ message: "Depósito provincial no encontrado." });
-    }
-
-    res.json(depositoProvincial.lotesinternos);
-  } catch (error) {
     res.status(500).json({
-      message: "Error al obtener los lotes internos del depósito provincial.",
+      message: "Error al eliminar el depósito provincial.",
     });
   }
 };
+
+const bajaDepositoProvincial = async (req, res) => {
+  try {
+    await DepositoProvincial.update(
+      { activo: 0 },
+      {
+        where: {
+          idDepositoProvincial: req.params.id,
+        },
+      }
+    );
+    req.flash("success", "Depósito provincial dado de baja exitosamente.");
+    res.json({ success: true });
+  } catch (error) {
+    console.error("Error al dar de baja el depósito provincial:", error);
+    req.flash("error", "Error al dar de baja el depósito provincial.");
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+const altaDepositoProvincial = async (req, res) => {
+  try {
+    await DepositoProvincial.update(
+      { activo: 1 },
+      {
+        where: {
+          idDepositoProvincial: req.params.id,
+        },
+      }
+    );
+    req.flash("success", "Depósito provincial dado de alta exitosamente.");
+    res.json({ success: true });
+  } catch (error) {
+    console.error("Error al dar de alta el depósito provincial:", error);
+    req.flash("error", "Error al dar de alta el depósito provincial.");
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
 module.exports = {
   listarDepositosProvinciales,
-  altaDepProv,
+  formDepProv,
   createDepProv,
   editDepProv,
   updateDepositoProvincial,
   deleteDepositoProvincial,
-  getLotesInternosByDepositoProvincialId,
+  bajaDepositoProvincial,
+  altaDepositoProvincial,
 };

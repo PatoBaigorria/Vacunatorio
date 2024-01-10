@@ -18,11 +18,11 @@ body
                         div.modal-dialog(role="document")
                             div.modal-content
                                 div.modal-header
-                                    h5.modal-title Confirmar la eliminación de la aplicación
+                                    h5.modal-title Confirmar la baja de la aplicación de la vacuna
                                     button.close(type="button" data-dismiss="modal" aria-label="Close")
                                         span(aria-hidden="true") &times;
                                     div.modal-body
-                                        p#mensajeAlerta ¿Está seguro de que desea eliminar esta aplicación?
+                                        p#mensajeAlerta ¿Está seguro que desea dar de baja esta aplicación de vacuna?
                                     div.modal-footer
                                         button.btn.btn-secondary(id="cancelDeleteBtn" type="button" data-dismiss="modal") Cancelar
                                         button.btn.btn-danger(id="confirmDeleteBtn" type="button") Confirmar 
@@ -53,8 +53,8 @@ script.
                 {
                     data: 'opciones', title: 'Opciones',
                     render: function(data, type, row) {
-                        return `<button title="Editar" class="btn btn-success btn-sm fa-solid fa-pencil me-2"></button>` +
-                            `<button title="Eliminar" class="btn btn-danger btn-sm fa-solid fa-trash-can"></button>`;
+                        return `<button title="Editar" class="btn btn-primary btn-sm fa-solid fa-pencil me-2"></button>
+                        <button class="btn btn-success btn-sm fa-solid fa-check-circle"></button>`;
                     }
                 }
             ],

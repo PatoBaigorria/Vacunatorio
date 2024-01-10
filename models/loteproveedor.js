@@ -40,6 +40,10 @@ const loteproveedor = Loteproveedor.init(
       type: DataTypes.DATEONLY,
       allowNull: false,
     },
+    activo: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+    },
   },
   {
     sequelize,

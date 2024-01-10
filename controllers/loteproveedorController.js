@@ -21,7 +21,7 @@ const listarLotesProveedores = async (req, res) => {
 	}
 };
 
-const altaLoteProveedor = async (req, res) => {
+const formLoteProveedor = async (req, res) => {
 	try {
 		const laboratorios = await Laboratorio.findAll();
 		res.render("loteproveedor/formLoteProveedor", { laboratorios: laboratorios });
@@ -37,14 +37,15 @@ const createLoteProveedor = async (req, res) => {
 	try {
 		const { idLaboratorio, tipoDeVacuna, nombreComercial, cantidadDeLotesInternos, fechaDeFabricacion, fechaDeVencimiento, fechaDeCompra } = req.body;
 		await LoteProveedor.create({
-			idLaboratorio,
-			tipoDeVacuna,
-			nombreComercial,
-			cantidadDeLotesInternos,
-			fechaDeFabricacion,
-			fechaDeVencimiento,
-			fechaDeCompra
-		});
+      idLaboratorio,
+      tipoDeVacuna,
+      nombreComercial,
+      cantidadDeLotesInternos,
+      fechaDeFabricacion,
+      fechaDeVencimiento,
+      fechaDeCompra,
+      activo: 1,
+    });
 		req.flash('success', 'Lote Proveedor creado exitosamente.');
 		res.redirect("/lotesproveedores");
 	} catch (error) {
@@ -97,11 +98,51 @@ const deleteLoteProveedor = async (req, res) => {
 	}
 };
 
+const bajaLoteProveedor = async (req, res) => {
+  try {
+    await LoteProveedor.update(
+      { activo: 0 },
+      {
+        where: {
+          numeroDeLote: req.params.id,
+        },
+      }
+    );
+    req.flash("success", "Lote proveedor dado de baja exitosamente.");
+    res.json({ success: true });
+  } catch (error) {
+    console.error("Error al dar de baja el lote proveedor:", error);
+    req.flash("error", "Error al dar de baja el lote proveedor.");
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+const altaLoteProveedor = async (req, res) => {
+  try {
+    await LoteProveedor.update(
+      { activo: 1 },
+      {
+        where: {
+          numeroDeLote: req.params.id,
+        },
+      }
+    );
+    req.flash("success", "Lote proveedor dado de alta exitosamente.");
+    res.json({ success: true });
+  } catch (error) {
+    console.error("Error al dar de alta el lote proveedor:", error);
+    req.flash("error", "Error al dar de alta el lote proveedor.");
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
 module.exports = {
-	listarLotesProveedores,
-	altaLoteProveedor,
-	createLoteProveedor,
-	editLoteProveedor,
-	updateLoteProveedor,
-	deleteLoteProveedor
+  listarLotesProveedores,
+  formLoteProveedor,
+  createLoteProveedor,
+  editLoteProveedor,
+  updateLoteProveedor,
+  deleteLoteProveedor,
+  bajaLoteProveedor,
+  altaLoteProveedor
 };

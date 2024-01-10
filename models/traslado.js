@@ -27,6 +27,10 @@ const traslado = Traslado.init(
     fechaDeLlegada: {
       type: DataTypes.DATEONLY,
     },
+    activo: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+    },
   },
 
   {

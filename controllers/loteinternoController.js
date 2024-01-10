@@ -24,7 +24,7 @@ const listarLotesInternos = async (req, res) => {
 	}
 };
 
-const altaLoteInterno = async (req, res) => {
+const formLoteInterno = async (req, res) => {
 	try {
 		const lotesInternos = await LoteInterno.findAll();
 		const lotesProveedores = await LoteProveedor.findAll();
@@ -76,20 +76,21 @@ const createLoteInterno = async (req, res) => {
 			fechaDeLlegadaCentroDeVacunacion = null;
 		}
 		await LoteInterno.create({
-			numeroDeSerie,
-			numeroDeLote,
-			idLaboratorio,
-			cantidadDeVacunasTotales: cantidadDeVacunas,
-			cantidadDeVacunasRestantes: cantidadDeVacunas,
-			fechaDeLlegadaDepositoNacional,
-			idDepositoNacional,
-			fechaDeSalidaDepositoNacional,
-			fechaDeLlegadaDepositoProvincial,
-			idDepositoProvincial,
-			fechaDeSalidaDepositoProvincial,
-			fechaDeLlegadaCentroDeVacunacion,
-			idCentroDeVacunacion
-		});
+      numeroDeSerie,
+      numeroDeLote,
+      idLaboratorio,
+      cantidadDeVacunasTotales: cantidadDeVacunas,
+      cantidadDeVacunasRestantes: cantidadDeVacunas,
+      fechaDeLlegadaDepositoNacional,
+      idDepositoNacional,
+      fechaDeSalidaDepositoNacional,
+      fechaDeLlegadaDepositoProvincial,
+      idDepositoProvincial,
+      fechaDeSalidaDepositoProvincial,
+      fechaDeLlegadaCentroDeVacunacion,
+      idCentroDeVacunacion,
+      activo: 1,
+    });
 		req.flash('success', 'Lote Interno creado exitosamente.');
 		res.redirect("/lotesinternos");
 	} catch (error) {
@@ -194,11 +195,55 @@ const deleteLoteInterno = async (req, res) => {
 	}
 };
 
+const bajaLoteInterno = async (req, res) => {
+  try {
+    await LoteInterno.update(
+      {
+        activo: 0,
+      },
+      {
+        where: {
+          numeroDeSerie: req.params.id,
+        },
+      }
+    );
+    req.flash("success", "Lote interno dado de baja exitosamente.");
+    res.json({ success: true });
+  } catch (error) {
+    console.error("Error al dar de baja el lote interno:", error);
+    req.flash("error", "Error al dar de baja el lote interno.");
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+const altaLoteInterno = async (req, res) => {
+  try {
+    await LoteInterno.update(
+      {
+        activo: 1,
+      },
+      {
+        where: {
+          numeroDeSerie: req.params.id,
+        },
+      }
+    );
+    req.flash("success", "Lote interno dado de alta exitosamente.");
+    res.json({ success: true });
+  } catch (error) {
+    console.error("Error al dar de baja el lote interno:", error);
+    req.flash("error", "Error al dar de baja el lote interno.");
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
 module.exports = {
-	listarLotesInternos,
-	altaLoteInterno,
-	createLoteInterno,
-	editLoteInterno,
-	updateLoteInterno,
-	deleteLoteInterno,
+  listarLotesInternos,
+  formLoteInterno,
+  createLoteInterno,
+  editLoteInterno,
+  updateLoteInterno,
+  deleteLoteInterno,
+  bajaLoteInterno,
+  altaLoteInterno
 };

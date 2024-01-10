@@ -14,18 +14,30 @@ body
                     if messages.error
                         .alert.alert-danger.flash-message.fade-in
                             = messages.error
-                    div.modal#confirmDeleteModal(tabindex="-1" role="dialog")
+                    div.modal#confirmBajaModal(tabindex="-1" role="dialog")
                         div.modal-dialog(role="document")
                             div.modal-content
                                 div.modal-header
-                                    h5.modal-title Confirmar la eliminación del lote interno
+                                    h5.modal-title Confirmar la baja del lote interno
                                     button.close(type="button" data-dismiss="modal" aria-label="Close")
                                         span(aria-hidden="true") &times;
                                 div.modal-body
-                                    p#mensajeAlerta ¿Está seguro de que desea eliminar este lote interno?
+                                    p#mensajeAlerta ¿Está seguro de que desea dar de baja este lote interno?
                                 div.modal-footer
-                                    button.btn.btn-secondary(id="cancelDeleteBtn" type="button" data-dismiss="modal") Cancelar
-                                    button.btn.btn-danger(id="confirmDeleteBtn" type="button") Confirmar
+                                    button.btn.btn-secondary(id="cancelBajaBtn" type="button" data-dismiss="modal") Cancelar
+                                    button.btn.btn-danger(id="confirmBajaBtn" type="button") Confirmar
+                    div.modal#confirmAltaModal(tabindex="-1" role="dialog")
+                        div.modal-dialog(role="document")
+                            div.modal-content
+                                div.modal-header
+                                    h5.modal-title Confirmar el alta del lote interno
+                                    button.close(type="button" data-dismiss="modal" aria-label="Close")
+                                        span(aria-hidden="true") &times;
+                                div.modal-body
+                                    p#mensajeAlerta ¿Está seguro de que desea dar de alta este lote interno?
+                                div.modal-footer
+                                    button.btn.btn-secondary(id="cancelAltaBtn" type="button" data-dismiss="modal") Cancelar
+                                    button.btn.btn-danger(id="confirmAltaBtn" type="button") Confirmar
                     div(style="text-align: left;")
                         a.btn.btn-primary.btn-lg(href="/lotesinternos/crear") Crear
                         br
@@ -56,20 +68,27 @@ script.
                 {data: 'fechaDeSalidaDepositoProvincial', title: 'Fecha de Salida del Depósito Provincial', createdCell: agregarMensajeSalida},
                 {data: 'fechaDeLlegadaCentroDeVacunacion', title: 'Fecha de Llegada al Centro de Vacunación', createdCell: agregarMensajeLlegada},
                 {data: 'idCentroDeVacunacion', title: 'ID del Centro de Vacunación', createdCell: agregarMensajeVac},
+                { data: 'activo', title: 'Estado del lote interno', createdCell: agregarMensajeSiActivoOInactivo },
                 {
                     data: 'opciones', title: 'Opciones',
-                    render: function(data, type, row) {
-                        return `<button class="btn btn-success btn-sm fa-solid fa-pencil me-2"></button>` +
-                            `<button class="btn btn-danger btn-sm fa-solid fa-trash-can"></button>`;
+                    render: function (data, type, row) {
+                        let editBtn = `<button title="Editar" class="btn btn-primary btn-sm fa-solid fa-pencil me-2"></button>`;
+                        let deactivateBtn = `<button title="Dar de baja" class="btn btn-warning btn-sm fa-solid fa-exclamation-circle"></button>`;
+                        let activateBtn = `<button title="Dar de alta" class="btn btn-success btn-sm fa-solid fa-check-circle"></button>`;
+                        if (row.activo == 1) {
+                            return `${editBtn} ${deactivateBtn}`;
+                        } else {
+                            return `${editBtn} ${activateBtn}`;
+                        }
                     }
                 }
             ],
             columnDefs: [
-                //{orderable: false, targets:[12]}, // Columna de "Opciones"
+                {orderable: false, targets:[14]}, // Columna de "Opciones"
                 {searchable: false, targets:[1, 2, 3]},
-                {className: "dt-center", targets: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]},
-                { width: "5%", targets: [0, 1, 2, 3, 5, 8, 9, 10, 11, 12] },
-                { width: "15%", targets: [4, 6, 7] }
+                {className: "dt-center", targets: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]},
+                { width: "10%", targets: [2, 14] },
+                { width: "5%", targets: [0, 1, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13] }
             ]
         });
 
@@ -100,6 +119,15 @@ script.
                 $(td).text("Aún no se encuentra en el vacunatorio");
             }
         }
+
+        function agregarMensajeSiActivoOInactivo(td, cellData, rowData, row, col) {
+            // Verificar si la celda está vacía y agregar el mensaje
+            if (cellData == 1) {
+                $(td).text("Activo");
+            } else {
+                $(td).text("Inactivo");
+            }
+        }
     });
 
     $(document).ready(function() {
@@ -110,41 +138,66 @@ script.
 
         tabla.on('click', 'button', function (f) {
             let data = tabla.row(f.target.closest('tr')).data();
-            if ($(event.target).hasClass('fa-trash-can')) {
-                $('#confirmDeleteModal').modal('show');
-                $('#confirmDeleteBtn').on('click', function() {
-            // Realizar la acción de eliminación
-            $.ajax({
-                url: '/lotesinternos/' + data.numeroDeSerie + '?_method=DELETE',
-                type: 'POST',
-                success: function(data) {
-                    if (data.success) {
-                        window.location.href = "/lotesinternos";
-                    } else {
-                        console.error(data.message);
-                        //window.location.href = "/lotesinternos";
+
+            if ($(event.target).hasClass('fa-exclamation-circle')) {
+                // Código para dar de baja (lo mantengo igual)
+                $('#confirmBajaModal').modal('show');
+                $('#confirmBajaBtn').on('click', function() {
+                    $.ajax({
+                        url: '/lotesinternos/' + data.numeroDeSerie + '/baja',
+                        type: 'PUT',
+                        success: function(data) {
+                            if (data.success) {
+                                window.location.href = "/lotesinternos";
+                            } else {
+                                console.error(data.message);
+                            }
+                        },
+                        error: function(error) {
+                            console.error(error);
+                        }
+                    });
+                    $('#confirmBajaModal').modal('hide');
+                });
+
+                // Configurar el botón de cancelar y la 'X' para cerrar el modal
+                $('#cancelBajaBtn, .modal-header button.close').on('click', function() {
+                    $('#confirmBajaModal').modal('hide');
+                });
+
+                // Agregar evento al documento para escuchar la tecla 'Enter'
+                $(document).on('keydown', function(e) {
+                    if (e.key === 'Enter' && $('#confirmBajaModal').is(':visible')) {
+                        // Disparar el evento de click en el botón de confirmación
+                        $('#confirmBajaBtn').trigger('click');
                     }
-                },
-                error: function(error) {
-                    console.error(error);
-                }
-            });
-
-            $('#confirmDeleteModal').modal('hide');
-        });
-
-        // Configurar el botón de cancelar y la 'X' para cerrar el modal
-        $('#cancelDeleteBtn, .modal-header button.close').on('click', function() {
-            $('#confirmDeleteModal').modal('hide');
-        });
-
-        // Agregar evento al documento para escuchar la tecla 'Enter'
-        $(document).on('keydown', function(e) {
-            if (e.key === 'Enter' && $('#confirmDeleteModal').is(':visible')) {
-                // Disparar el evento de click en el botón de confirmación
-                $('#confirmDeleteBtn').trigger('click');
-            }
-        });
+                });
+            } else if ($(event.target).hasClass('fa-check-circle')) {
+            // Código para dar de alta
+                $('#confirmAltaModal').modal('show');
+                $('#confirmAltaBtn').on('click', function() {
+                    $.ajax({
+                        url: '/lotesinternos/' + data.numeroDeSerie + '/alta',
+                        type: 'PUT',  // Cambiado a PUT, ya que es una acción de activación
+                        success: function(data) {
+                            if (data.success) {
+                                window.location.href = "/lotesinternos";
+                            } else {
+                                console.error(data.message);
+                            }
+                        },
+                        error: function(error) {
+                            console.error(error);
+                        }
+                    });
+                    $('#confirmAltaModal').modal('hide');
+                })
+                $(document).on('keydown', function(e) {
+                    if (e.key === 'Enter' && $('#confirmAltaModal').is(':visible')) {
+                        // Disparar el evento de click en el botón de confirmación
+                        $('#confirmAltaBtn').trigger('click');
+                    }
+                });
             } else {
                 window.location.href = "/lotesinternos/" + data.numeroDeSerie;
             }

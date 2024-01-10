@@ -15,7 +15,7 @@ const listarCentrosDeVacunacion = async (req, res) => {
 };
 
 // Muestra formulario de creacion de Centro de Vacunacion
-const altaCentroVac = async (req, res) => {
+const formCentroVac = async (req, res) => {
   try {
     res.render("centrodevacunacion/formCentroDeVacunacion");
   } catch (error) {
@@ -33,6 +33,7 @@ const createCentroVac = async (req, res) => {
     await CentroDeVacunacion.create({
       longitud,
       latitud,
+      activo: 1,
     });
     req.flash("success", "Centro de Vacunación creado exitosamente");
     res.redirect("/centrosdevacunacion");
@@ -90,11 +91,51 @@ const deleteCentroDeVacunacion = async (req, res) => {
   }
 };
 
+const bajaCentroDeVacunacion = async (req, res) => {
+  try {
+    await CentroDeVacunacion.update(
+      { activo: 0 },
+      {
+        where: {
+          idCentroDeVacunacion: req.params.id,
+        },
+      }
+    );
+    req.flash("success", "Centro de vacunación dado de baja exitosamente.");
+    res.json({ success: true });
+  } catch (error) {
+    console.error("Error al dar de baja el centro de vacunacion:", error);
+    req.flash("error", "Error al dar de baja el centro de vacunacion.");
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+const altaCentroDeVacunacion = async (req, res) => {
+  try {
+    await CentroDeVacunacion.update(
+      { activo: 1 },
+      {
+        where: {
+          idCentroDeVacunacion: req.params.id,
+        },
+      }
+    );
+    req.flash("success", "Centro de vacunación dado de alta exitosamente.");
+    res.json({ success: true });
+  } catch (error) {
+    console.error("Error al dar de alta el centro de vacunacion:", error);
+    req.flash("error", "Error al dar de alta el centro de vacunacion.");
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
 module.exports = {
   listarCentrosDeVacunacion,
-  altaCentroVac,
+  formCentroVac,
   createCentroVac,
   editCentroVac,
   updateCentroDeVacunacion,
   deleteCentroDeVacunacion,
+  bajaCentroDeVacunacion,
+  altaCentroDeVacunacion
 };

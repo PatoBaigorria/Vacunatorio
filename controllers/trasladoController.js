@@ -52,7 +52,8 @@ const createTraslados = async (req, res) => {
       numeroDeSerie,
       idCentroDeVacunacion,
       fechaDeSalida,
-      fechaDeLlegada
+      fechaDeLlegada,
+      activo: 1,
     });
     req.flash("success", "Traslado creado exitosamente");
     res.redirect("/traslados");
@@ -97,7 +98,7 @@ const updateTraslado = async (req, res) => {
 };
 
 // Eliminar un traslado por su ID
-const deleteTraslado = async (req, res) => {
+const deleteTrasladoFisica = async (req, res) => {
   try {
     await Traslado.destroy({
       where: {
@@ -113,11 +114,31 @@ const deleteTraslado = async (req, res) => {
   }
 };
 
+const deleteTrasladoLogica = async (req, res) => {
+  try {
+    await Traslado.update(
+      {
+        activo: 0,
+      },
+      {
+        where: {
+          DNI: req.params.id,
+        },
+      }
+    );
+    req.flash("success", "Traslado dado de baja exitosamente.");
+    res.redirect("/traslados");
+  } catch (error) {
+    res.status(500).json({ message: "Error al dar de baja el traslado." });
+  }
+};
+
 module.exports = {
   listarTraslados,
   altaTraslado,
   createTraslados,
   editTraslado,
   updateTraslado,
-  deleteTraslado,
+  deleteTrasladoFisica,
+  deleteTrasladoLogica
 };

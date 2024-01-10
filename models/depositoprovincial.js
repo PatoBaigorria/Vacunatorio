@@ -17,7 +17,11 @@ const depositoprovincial = Depositoprovincial.init(
     latitud: {
       type: DataTypes.DOUBLE,
       allowNull: false,
-    }
+    },
+    activo: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+    },
   },
   {
     sequelize,

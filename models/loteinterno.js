@@ -72,6 +72,10 @@ const loteinterno = Loteinterno.init(
       foreignKey: true,
       allowNull: true,
     },
+    activo: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+    },
   },
   {
     sequelize,

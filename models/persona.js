@@ -42,6 +42,10 @@ const persona = Persona.init(
       type: DataTypes.DOUBLE,
       allowNull: false,
     },
+    activo: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+    },
   },
   {
     sequelize,
