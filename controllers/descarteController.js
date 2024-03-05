@@ -57,7 +57,6 @@ const createDescarte = async (req, res) => {
       fechaDeDescarte,
     } = req.body;
 
-    // Crear el descarte
     await Descarte.create({
       DNIAgente,
       numeroDeSerie,
@@ -68,46 +67,16 @@ const createDescarte = async (req, res) => {
       activo: 1,
     });
 
-    // Actualizar el lote interno
     const loteEncontrado = await LoteInterno.findOne({
       where: { numeroDeSerie: numeroDeSerie },
     });
     if (loteEncontrado) {
-      const vacunasOriginales = loteEncontrado.cantidadDeVacunas;
-      const vacunasTotales = vacunasOriginales - cantidadDeVacunas;
-
-      // Actualizar la cantidad de vacunas en el lote interno
+      const vacunasTotales = loteEncontrado.cantidadDeVacunasRestantes - cantidadDeVacunas;
       await loteEncontrado.update({
         cantidadDeVacunasRestantes: vacunasTotales,
       });
     }
 
-    req.flash("success", "Descarte creado exitosamente.");
-    res.redirect("/descartes");
-  } catch (error) {
-    console.error(error);
-    req.flash("error", "Error al crear el descarte.");
-    res.status(500).json({ message: "Error al crear el descarte." });
-  }
-};
-const createDescarte1 = async (req, res) => {
-  try {
-    const {
-      DNIAgente,
-      numeroDeSerie,
-      empresaDescartante,
-      motivo,
-      cantidadDeVacunas,
-      fechaDeDescarte,
-    } = req.body;
-    await Descarte.create({
-      DNIAgente,
-      numeroDeSerie,
-      empresaDescartante,
-      motivo,
-      cantidadDeVacunas,
-      fechaDeDescarte,
-    });
     req.flash("success", "Descarte creado exitosamente.");
     res.redirect("/descartes");
   } catch (error) {

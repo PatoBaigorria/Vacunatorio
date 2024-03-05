@@ -1,18 +1,13 @@
-- var title ='Actulizar Lote Interno';
+- const title ='Actualización del lote interno'
 include ..\includes\layout
 block content
 html(lang="es")
-head
-    style.
-        #formLoteInterno {
-            max-width: 600px;
-            margin: auto;
-        }
 body
     h2.text-center Actualice los datos del lote interno
     if messages.error
         .alert.alert-danger
             = messages.error
+    br
     div.modal#alertModal(tabindex="-1" role="dialog" aria-labelledby="alertModalLabel" aria-hidden="true")
         div.modal-dialog(role="document")
             div.modal-content
@@ -21,8 +16,8 @@ body
                     button.close(type="button" data-bs-dismiss="modal" aria-label="Close")
                         span(aria-hidden="true") ×
                 div.modal-body
-                    p#mensajeAlerta Mensaje de alerta
-    form#formLoteInterno(action="/lotesinternos/"+loteInterno.numeroDeSerie+"?_method=PUT" method="post")
+                    p#mensajeAlerta.text-center
+    form#form(action="/lotesinternos/"+loteInterno.numeroDeSerie+"?_method=PUT" method="post")
         .form-group
             label.form-label(for="numeroDeSerie") Número de serie del lote interno:
             .input-group
@@ -41,11 +36,11 @@ body
             .input-group.has-validation
                 select.form-select(name="numeroDeLote" id="numeroDeLote" required)
         .form-group
-            label.form-label(for="cantidadDeVacunasRestantes") Cantidad de Vacunas:
+            label.form-label(for="cantidadDeVacunasTotales") Cantidad de Vacunas:
             .input-group.has-validation
-                input.form-control.is-valid(type="text" id="cantidadDeVacunasRestantes" value=loteInterno.cantidadDeVacunasRestantes name="cantidadDeVacunasRestantes" required)
-                .invalid-feedback.d-none(id="cantidadDeVacunasRestantesVacio") El campo no puede estar vacío
-                .invalid-feedback.d-none(id="cantidadDeVacunasRestantesNumeros") Ingrese solo números positivos
+                input.form-control.is-valid(type="text" id="cantidadDeVacunasTotales" value=loteInterno.cantidadDeVacunasTotales name="cantidadDeVacunasTotales" required)
+                .invalid-feedback.d-none(id="cantidadDeVacunasTotalesVacio") El campo no puede estar vacío
+                .invalid-feedback.d-none(id="cantidadDeVacunasTotalesNumeros") Ingrese solo números positivos
         .form-group
             label.form-label(for="fechaDeLlegadaDepositoNacional") Fecha de llegada al Depósito Nacional:
             .input-group.has-validation
@@ -154,53 +149,52 @@ body
 script.
     $(function (){
         function mostrarAlerta(mensaje) {
-            $('#mensajeAlerta').text(mensaje);
-            $('#alertModal').modal('show');
+            $('#mensajeAlerta').text(mensaje)
+            $('#alertModal').modal('show')
         }
-
-        // Funciones para mostrar y quitar errores
+        
         function mostrarError(campo, error) {
-            campo.addClass('is-invalid').removeClass('is-valid').addClass();
-            $('#' + campo.attr('id') + error).removeClass('d-none');
+            campo.addClass('is-invalid').removeClass('is-valid').addClass()
+            $('#' + campo.attr('id') + error).removeClass('d-none')
         }
 
         function quitarError(campo) {
-            campo.addClass('is-valid').removeClass('is-invalid');
-            $('div[id^=' + campo.attr('id') + '].invalid-feedback').addClass('d-none');
+            campo.addClass('is-valid').removeClass('is-invalid')
+            $('div[id^=' + campo.attr('id') + '].invalid-feedback').addClass('d-none')
         }
 
         function cargarLote(){
             $('#numeroDeLote').empty()
             if(!$('#idLaboratorio').val()){
-                $('#numeroDeLote').append('<option disabled selected hidden value="">Seleccione un Lote Proveedor</option>');
+                $('#numeroDeLote').append('<option disabled selected hidden value="">Seleccione un Lote Proveedor</option>')
             } else {
                 !{JSON.stringify(lotesProveedores)}.filter(lote => lote.idLaboratorio == $('#idLaboratorio').val()).forEach(lote => {
-                    $('#numeroDeLote').append('<option value="' + lote.numeroDeLote + '">' + lote.numeroDeLote + '</option>');
+                    $('#numeroDeLote').append('<option value="' + lote.numeroDeLote + '">' + lote.numeroDeLote + '</option>')
                 })  
             }
         }
 
-        function validarCantidadDeVacunasRestantes() {
-            quitarError($('#cantidadDeVacunasRestantes'))
-            if ($('#cantidadDeVacunasRestantes').val() == '') {
-                mostrarError($('#cantidadDeVacunasRestantes'), 'Vacio')
-            } else if(!/^[0-9]{1,}$/.test($('#cantidadDeVacunasRestantes').val()) || $('#cantidadDeVacunasRestantes').val() < 0 || $('#cantidadDeVacunasRestantes').val()[0] == 0){
-                mostrarError($('#cantidadDeVacunasRestantes'), 'Numeros')
+        function validarCantidadDeVacunasTotales() {
+            quitarError($('#cantidadDeVacunasTotales'))
+            if ($('#cantidadDeVacunasTotales').val() == '') {
+                mostrarError($('#cantidadDeVacunasTotales'), 'Vacio')
+            } else if(!/^[0-9]{1,}$/.test($('#cantidadDeVacunasTotales').val()) || $('#cantidadDeVacunasTotales').val() < 0 || $('#cantidadDeVacunasTotales').val()[0] == 0){
+                mostrarError($('#cantidadDeVacunasTotales'), 'Numeros')
             }
         }
 
         function validarFechaDeLlegadaAlDepNac() {
             quitarError($('#fechaDeLlegadaDepositoNacional'))
             if($('#fechaDeLlegadaDepositoNacional').val() != '' && !$('#idDepositoNacional').val()) {
-                mostrarError($('#fechaDeLlegadaDepositoNacional'), 'Vacio');
+                mostrarError($('#fechaDeLlegadaDepositoNacional'), 'Vacio')
             } else if($('#fechaDeLlegadaDepositoNacional').val() != '') {
                 console.log('Fecha de llegada: ' + $('#fechaDeLlegadaDepositoNacional').val())
-                let fechaIngresada = new Date($('#fechaDeLlegadaDepositoNacional').val())
-                let fechaActual = new Date()
+                const fechaIngresada = new Date($('#fechaDeLlegadaDepositoNacional').val())
+                const fechaActual = new Date()
                 fechaIngresada.setHours(24, 0, 0, 0)
                 fechaActual.setHours(0, 0, 0, 0)
                 if (((fechaIngresada - fechaActual) / (1000 * 60 * 60 * 24)) > 0) {
-                    mostrarError($('#fechaDeLlegadaDepositoNacional'), 'Superior');
+                    mostrarError($('#fechaDeLlegadaDepositoNacional'), 'Superior')
                 }
             }
         }
@@ -208,15 +202,15 @@ script.
         function validarFechaDeSalidaAlDepPro() {
             quitarError($('#fechaDeSalidaDepositoNacional'))
             if($('#fechaDeSalidaDepositoNacional').val() != '' && !$('#idDepositoProvincial').val()) {
-                mostrarError($('#fechaDeSalidaDepositoNacional'), 'Vacio');
+                mostrarError($('#fechaDeSalidaDepositoNacional'), 'Vacio')
             } else if($('#fechaDeSalidaDepositoNacional').val() != '') {
                 console.log('Fecha de llegada: ' + $('#fechaDeSalidaDepositoNacional').val())
-                let fechaIngresada = new Date($('#fechaDeSalidaDepositoNacional').val())
-                let fechaActual = new Date()
+                const fechaIngresada = new Date($('#fechaDeSalidaDepositoNacional').val())
+                const fechaActual = new Date()
                 fechaIngresada.setHours(24, 0, 0, 0)
                 fechaActual.setHours(0, 0, 0, 0)
                 if (((fechaIngresada - fechaActual) / (1000 * 60 * 60 * 24)) > 0) {
-                    mostrarError($('#fechaDeSalidaDepositoNacional'), 'Superior');
+                    mostrarError($('#fechaDeSalidaDepositoNacional'), 'Superior')
                 }
             }
         }
@@ -224,15 +218,15 @@ script.
         function validarFechaDeLlegadaAlDepPro() {
             quitarError($('#fechaDeLlegadaDepositoProvincial'))
             if($('#fechaDeLlegadaDepositoProvincial').val() != '' && !$('#idDepositoProvincial').val()) {
-                mostrarError($('#fechaDeLlegadaDepositoProvincial'), 'Vacio');
+                mostrarError($('#fechaDeLlegadaDepositoProvincial'), 'Vacio')
             } else if($('#fechaDeLlegadaDepositoProvincial').val() != '') {
                 console.log('Fecha de llegada: ' + $('#fechaDeLlegadaDepositoProvincial').val())
-                let fechaIngresada = new Date($('#fechaDeLlegadaDepositoProvincial').val())
-                let fechaActual = new Date()
+                const fechaIngresada = new Date($('#fechaDeLlegadaDepositoProvincial').val())
+                const fechaActual = new Date()
                 fechaIngresada.setHours(24, 0, 0, 0)
                 fechaActual.setHours(0, 0, 0, 0)
                 if (((fechaIngresada - fechaActual) / (1000 * 60 * 60 * 24)) > 0) {
-                    mostrarError($('#fechaDeLlegadaDepositoProvincial'), 'Superior');
+                    mostrarError($('#fechaDeLlegadaDepositoProvincial'), 'Superior')
                 }
             }
         }
@@ -240,15 +234,15 @@ script.
         function validarFechaDeSalidaAlCen() {
             quitarError($('#fechaDeSalidaDepositoProvincial'))
             if($('#fechaDeSalidaDepositoProvincial').val() != '' && !$('#idCentroDeVacunacion').val()) {
-                mostrarError($('#fechaDeSalidaDepositoProvincial'), 'Vacio');
+                mostrarError($('#fechaDeSalidaDepositoProvincial'), 'Vacio')
             } else if($('#fechaDeSalidaDepositoProvincial').val() != '') {
                 console.log('Fecha de llegada: ' + $('#fechaDeSalidaDepositoProvincial').val())
-                let fechaIngresada = new Date($('#fechaDeSalidaDepositoProvincial').val())
-                let fechaActual = new Date()
+                const fechaIngresada = new Date($('#fechaDeSalidaDepositoProvincial').val())
+                const fechaActual = new Date()
                 fechaIngresada.setHours(24, 0, 0, 0)
                 fechaActual.setHours(0, 0, 0, 0)
                 if (((fechaIngresada - fechaActual) / (1000 * 60 * 60 * 24)) > 0) {
-                    mostrarError($('#fechaDeSalidaDepositoProvincial'), 'Superior');
+                    mostrarError($('#fechaDeSalidaDepositoProvincial'), 'Superior')
                 }
             }
         }
@@ -256,40 +250,39 @@ script.
         function validarFechaDeLlegadaAlCen() {
             quitarError($('#fechaDeLlegadaCentroDeVacunacion'))
             if($('#fechaDeLlegadaCentroDeVacunacion').val() != '' && !$('#idCentroDeVacunacion').val()) {
-                mostrarError($('#fechaDeLlegadaCentroDeVacunacion'), 'Vacio');
+                mostrarError($('#fechaDeLlegadaCentroDeVacunacion'), 'Vacio')
             } else if($('#fechaDeLlegadaCentroDeVacunacion').val() != '') {
                 console.log('Fecha de llegada: ' + $('#fechaDeLlegadaCentroDeVacunacion').val())
-                let fechaIngresada = new Date($('#fechaDeLlegadaCentroDeVacunacion').val())
-                let fechaActual = new Date()
+                const fechaIngresada = new Date($('#fechaDeLlegadaCentroDeVacunacion').val())
+                const fechaActual = new Date()
                 fechaIngresada.setHours(24, 0, 0, 0)
                 fechaActual.setHours(0, 0, 0, 0)
                 if (((fechaIngresada - fechaActual) / (1000 * 60 * 60 * 24)) > 0) {
-                    mostrarError($('#fechaDeLlegadaCentroDeVacunacion'), 'Superior');
+                    mostrarError($('#fechaDeLlegadaCentroDeVacunacion'), 'Superior')
                 } else if(!$('#idDepositoNacional').val() || !$('#idDepositoProvincial').val()) {
-                    mostrarError($('#fechaDeLlegadaCentroDeVacunacion'), 'Seleccion');
+                    mostrarError($('#fechaDeLlegadaCentroDeVacunacion'), 'Seleccion')
                     console.log('aaasd')
                 } else if ($('#fechaDeLlegadaCentroDeVacunacion').val() < $('#fechaDeLlegadaDepositoNacional').val() || $('#fechaDeLlegadaCentroDeVacunacion').val() < $('#fechaDeSalidaDepositoNacional').val() || $('#fechaDeLlegadaCentroDeVacunacion').val() < $('#fechaDeLlegadaDepositoProvincial').val() || $('#fechaDeLlegadaCentroDeVacunacion').val() < $('#fechaDeSalidaDepositoProvincial').val()) {
-                    mostrarError($('#fechaDeLlegadaCentroDeVacunacion'), 'Antiguo');
+                    mostrarError($('#fechaDeLlegadaCentroDeVacunacion'), 'Antiguo')
                 }
             }
         }
 
         function validarFormulario() {
-            let inputs = $('#formLoteInterno input, #formLoteInterno select');
-            let camposInvalidos = false;
+            const inputs = $('#form input, #form select')
+            let camposInvalidos = false
             inputs.each(function () {
                 if ($(this).hasClass('is-invalid')) {
-                    camposInvalidos = true;
+                    camposInvalidos = true
                 }
-            });
+            })
             if (camposInvalidos) {
-                mostrarAlerta("¡Datos incorrectos! Por favor, verifica la información ingresada.");
-                return false;
+                mostrarAlerta("¡Datos incorrectos! Por favor, verifica la información ingresada.")
+                return false
             }
-            return true;
+            return true
         }
-
-        // Eventos
+        
         $('#idLaboratorio').on('change', function () {
             quitarError($(this))
             cargarLote()
@@ -299,31 +292,31 @@ script.
             quitarError($(this))
         })
 
-        $('#cantidadDeVacunasRestantes').on('keyup focusout', function () {
-            validarCantidadDeVacunasRestantes();
-        });
+        $('#cantidadDeVacunasTotales').on('keyup focusout', function () {
+            validarCantidadDeVacunasTotales()
+        })
 
         $('#fechaDeLlegadaDepositoNacional').on('keyup focusout', function () {
             validarFechaDeLlegadaAlDepNac()
-        });
+        })
 
         $('#fechaDeSalidaDepositoNacional').on('keyup focusout', function () {
             validarFechaDeLlegadaAlDepNac()
             validarFechaDeSalidaAlDepPro()
-        });
+        })
 
         $('#fechaDeLlegadaDepositoProvincial').on('keyup focusout', function () {
             validarFechaDeLlegadaAlDepNac()
             validarFechaDeSalidaAlDepPro()
             validarFechaDeLlegadaAlDepPro()
-        });
+        })
 
         $('#fechaDeSalidaDepositoProvincial').on('keyup focusout', function () {
             validarFechaDeLlegadaAlDepNac()
             validarFechaDeSalidaAlDepPro()
             validarFechaDeLlegadaAlDepPro()
             validarFechaDeSalidaAlCen()
-        });
+        })
 
         $('#fechaDeLlegadaCentroDeVacunacion').on('keyup focusout', function () {
             validarFechaDeLlegadaAlDepNac()
@@ -331,62 +324,56 @@ script.
             validarFechaDeLlegadaAlDepPro()
             validarFechaDeSalidaAlCen()
             validarFechaDeLlegadaAlCen()
-        });
+        })
 
         $('#idDepositoNacional, #idDepositoProvincial, #idCentroDeVacunacion').on('change', function () {
             if(!$(this).hasClass('is-valid')) {
-                quitarError($(this));
+                quitarError($(this))
             }
-            validarFechaDeLlegadaAlDepNac();
-            validarFechaDeLlegadaAlDepPro();
-            validarFechaDeSalidaAlDepPro();
+            validarFechaDeLlegadaAlDepNac()
+            validarFechaDeLlegadaAlDepPro()
+            validarFechaDeSalidaAlDepPro()
             validarFechaDeSalidaAlCen()
             validarFechaDeLlegadaAlCen()
-        });
+        })
 
         let press = 0
         $('#alertModal').on('keypress', function (event) {
-            // Si la tecla presionada es "Enter", oculta el modal
             if(event.key === 'Enter'){
                 press = press + 1
             }
             if (event.key === 'Escape' || press == 2) {
-                $('#alertModal').modal('hide');
+                $('#alertModal').modal('hide')
                 press = 0
             }
-        });            
+        })            
 
-        // Evento cuando se oculta el modal
-        $('#alertModal').on('hidden.bs.modal', function () {
-            // Buscar el primer elemento con la clase 'is-invalid' y hacer foco en él
-            var primerInvalido = $('.is-invalid:first');
+        $('#alertModal').on('hidden.bs.modal', function () { 
+            const primerInvalido = $('.is-invalid:first')
             if (primerInvalido.length > 0) {
-                primerInvalido.focus();
+                primerInvalido.focus()
             }
-        });
+        })
 
-        $('#idLaboratorio, #numeroDeLote, #idDepositoNacional, #idDepositoProvincial, #idCentroDeVacunacion').trigger('change');
-        $('#cantidadDeVacunasRestantes, #fechaDeLlegadaDepositoNacional, #fechaDeSalidaDepositoNacional, #fechaDeLlegadaDepositoProvincial, #fechaDeSalidaDepositoProvincial, #fechaDeLlegadaCentroDeVacunacion').trigger('focusout')
+        $('#idLaboratorio, #numeroDeLote, #idDepositoNacional, #idDepositoProvincial, #idCentroDeVacunacion').trigger('change')
+        $('#cantidadDeVacunasTotales, #fechaDeLlegadaDepositoNacional, #fechaDeSalidaDepositoNacional, #fechaDeLlegadaDepositoProvincial, #fechaDeSalidaDepositoProvincial, #fechaDeLlegadaCentroDeVacunacion').trigger('focusout')
         $('#idLaboratorio').trigger('focus')
-
-        // Asociar el evento submit al formulario
-        $('#formLoteInterno input').on('keypress', function (event) {
+        
+        $('#form input').on('keypress', function (event) {
             if (event.which === 13) {
-                console.log("Formulario enviado por teclado");
-                //console.log(validarFormulario());
+                console.log("Formulario enviado por teclado")                
                 if(!validarFormulario()){
-                    event.preventDefault();
+                    event.preventDefault()
                 }
-                // Puedes agregar lógica adicional aquí si es necesario
             }
-        });
+        })
 
-        $('#formLoteInterno button[type="submit"]').on('click', function (event) {
-            console.log("Botón de envío clicado");
+        $('#form button[type="submit"]').on('click', function (event) {
+            console.log("Botón de envío clicado")
             if (!validarFormulario()) {
-                event.preventDefault();
-                console.log("Envío no exitoso");
+                event.preventDefault()
+                console.log("Envío no exitoso")
                 press = 1
             }
-        });
-    });
+        })
+    })

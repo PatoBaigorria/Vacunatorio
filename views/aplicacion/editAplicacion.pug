@@ -1,60 +1,53 @@
-- var title ='Actualizar aplicacion de vacunas'
+- const title ='Actualizar aplicacion de vacunas'
 include ..\includes\layout
 block content
 html(lang="es")
-head
-    style.
-        #formAplicacion {
-            max-width: 600px;
-            margin: auto;
-        }
 body
-    #formAplicacion
-        h2.text-center Actualice los datos de la aplicación de la vacuna
+    h2.text-center Actualice los datos de la aplicación de la vacuna
+    br
+    form#form(action=`/aplicaciones/${aplicacion.idAplicacion}?_method=PUT` method="post")
+        .form-group
+            label.form-label(for="idAplicacion") ID Aplicación:
+            input.form-control.readonly-input(type="text" id="idAplicacion" name="idAplicacion" value=aplicacion.idAplicacion readonly disabled)
         br
-        form(action="/aplicaciones/"+aplicacion.idAplicacion+"?_method=PUT" method="post")
-            .form-group
-                label.form-label(for="idAplicacion") ID Aplicación:
-                input.form-control.readonly-input(type="text" id="idAplicacion" name="idAplicacion" value=aplicacion.idAplicacion readonly disabled)
-            br
-            .form-group
-                label.form-label(for="DNIPaciente") Seleccione un Paciente:
-                select.form-select(name="DNIPaciente" id="DNIPaciente" onchange=`agenteS(${JSON.stringify(agentes)}, ${JSON.stringify(personas)})` required)
-                    each persona in personas
-                        if(persona.DNI === aplicacion.DNIPaciente)
-                            option(value=persona.DNI selected) #{persona.nombre} #{persona.apellido}
-                        else
-                            option(value=persona.DNI) #{persona.nombre} #{persona.apellido}
-            br
-            .form-group
-                label.form-label(for="DNIAgente") Seleccione un Agente de Salud:
-                select.form-select(name="DNIAgente" id="DNIAgente" class="DNIAgente" required)
-                    each persona in personas
-                        if(persona.DNI === aplicacion.DNIAgente)
-                            option(value=aplicacion.DNIAgente) #{persona.nombre} #{persona.apellido}
-            br
-            .form-group
-                label.form-label(for="numeroDeSerie") Seleccione el Lote de Vacunas que se Aplicara al Paciente:
-                select.form-select(name="numeroDeSerie" id="numeroDeSerie" required)
-                    each lote in lotes
-                        if(lote.numeroDeSerie === aplicacion.numeroDeSerie)
-                            option(value=lote.numeroDeSerie selected) #{lote.numeroDeSerie}
-                        else
-                            option(value=lote.numeroDeSerie) #{lote.numeroDeSerie}
-            br
-            .form-group
-                label.form-label(for="fechaDeAplicacion") Fecha de Aplicación:
-                input.form-control(type="date" name="fechaDeAplicacion" id="fechaDeAplicacion" value=aplicacion.fechaDeAplicacion required)
-            br
-            div.text-center
-                button(type="submit" class="btn btn-primary") Actualizar
-                | &nbsp;&nbsp;&nbsp;&nbsp;
-                button(type="button" class="btn btn-primary" onclick="window.history.back()") Volver
+        .form-group
+            label.form-label(for="DNIPaciente") Seleccione un Paciente:
+            select.form-select(name="DNIPaciente" id="DNIPaciente" onchange=`agenteS(${JSON.stringify(agentes)}, ${JSON.stringify(personas)})` required)
+                each persona in personas
+                    if(persona.DNI === aplicacion.DNIPaciente)
+                        option(value=persona.DNI selected) #{persona.nombre} #{persona.apellido}
+                    else
+                        option(value=persona.DNI) #{persona.nombre} #{persona.apellido}
+        br
+        .form-group
+            label.form-label(for="DNIAgente") Seleccione un Agente de Salud:
+            select.form-select(name="DNIAgente" id="DNIAgente" class="DNIAgente" required)
+                each persona in personas
+                    if(persona.DNI === aplicacion.DNIAgente)
+                        option(value=aplicacion.DNIAgente) #{persona.nombre} #{persona.apellido}
+        br
+        .form-group
+            label.form-label(for="numeroDeSerie") Seleccione el Lote de Vacunas que se Aplicara al Paciente:
+            select.form-select(name="numeroDeSerie" id="numeroDeSerie" required)
+                each lote in lotes
+                    if(lote.numeroDeSerie === aplicacion.numeroDeSerie)
+                        option(value=lote.numeroDeSerie selected) #{lote.numeroDeSerie}
+                    else
+                        option(value=lote.numeroDeSerie) #{lote.numeroDeSerie}
+        br
+        .form-group
+            label.form-label(for="fechaDeAplicacion") Fecha de Aplicación:
+            input.form-control(type="date" name="fechaDeAplicacion" id="fechaDeAplicacion" value=aplicacion.fechaDeAplicacion required)
+        br
+        div.text-center
+            button(type="submit" class="btn btn-primary") Actualizar
+            | &nbsp;&nbsp;&nbsp;&nbsp;
+            button(type="button" class="btn btn-primary" onclick="window.history.back()") Volver
 script.
     function agenteS(agentes, pacientes) {
         let paciente = null
-        let pacienteSelect = document.getElementById("DNIPaciente").value;
-        let agenteSelect = document.getElementById("DNIAgente");
+        const pacienteSelect = document.getElementById("DNIPaciente").value;
+        const agenteSelect = document.getElementById("DNIAgente");
         agenteSelect.innerHTML = "";  // Limpiar el contenido actual
         for (let i = 0; i < agentes.length; i++) {
             if (agentes[i].DNI != pacienteSelect) {

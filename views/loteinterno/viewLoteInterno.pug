@@ -1,4 +1,4 @@
-- var title = 'Listado de lotes internos'
+- const title = 'Listado de lotes internos'
 include ..\includes\layout
 block content
 body
@@ -7,6 +7,7 @@ body
             div.col-sm-13.col-md-13.col-lg-13.col-xl-13
                 section#viewLotesInternos
                     h2 Listado de los lotes internos
+                    br
                     br
                     if messages.success
                         .alert.alert-success.flash-message.fade-in
@@ -22,10 +23,10 @@ body
                                     button.close(type="button" data-dismiss="modal" aria-label="Close")
                                         span(aria-hidden="true") &times;
                                 div.modal-body
-                                    p#mensajeAlerta ¿Está seguro de que desea dar de baja este lote interno?
+                                    p#mensajeAlerta.text-center ¿Está seguro de que desea dar de baja este lote interno?
                                 div.modal-footer
-                                    button.btn.btn-secondary(id="cancelBajaBtn" type="button" data-dismiss="modal") Cancelar
-                                    button.btn.btn-danger(id="confirmBajaBtn" type="button") Confirmar
+                                    button.btn.btn-secondary#cancelBajaBtn(type="button" data-dismiss="modal") Cancelar
+                                    button.btn.btn-danger#confirmBajaBtn(type="button") Confirmar
                     div.modal#confirmAltaModal(tabindex="-1" role="dialog")
                         div.modal-dialog(role="document")
                             div.modal-content
@@ -34,11 +35,11 @@ body
                                     button.close(type="button" data-dismiss="modal" aria-label="Close")
                                         span(aria-hidden="true") &times;
                                 div.modal-body
-                                    p#mensajeAlerta ¿Está seguro de que desea dar de alta este lote interno?
+                                    p#mensajeAlerta.text-center ¿Está seguro de que desea dar de alta este lote interno?
                                 div.modal-footer
-                                    button.btn.btn-secondary(id="cancelAltaBtn" type="button" data-dismiss="modal") Cancelar
-                                    button.btn.btn-danger(id="confirmAltaBtn" type="button") Confirmar
-                    div(style="text-align: left;")
+                                    button.btn.btn-secondary#cancelAltaBtn(type="button" data-dismiss="modal") Cancelar
+                                    button.btn.btn-danger#confirmAltaBtn(type="button") Confirmar
+                    div(style="text-align: left")
                         a.btn.btn-primary.btn-lg(href="/lotesinternos/crear") Crear
                         br
                         br
@@ -47,7 +48,7 @@ body
 script.
     let tabla 
     $(document).ready(function() {
-        tabla = $('#lotesinternos').DataTable({
+        tabla = $(lotesinternos).DataTable({
             data: !{JSON.stringify(lotesInternos)},
             pageLength:5,
             lengthMenu:[5,10,15,20],
@@ -68,138 +69,131 @@ script.
                 {data: 'fechaDeSalidaDepositoProvincial', title: 'Fecha de Salida del Depósito Provincial', createdCell: agregarMensajeSalida},
                 {data: 'fechaDeLlegadaCentroDeVacunacion', title: 'Fecha de Llegada al Centro de Vacunación', createdCell: agregarMensajeLlegada},
                 {data: 'idCentroDeVacunacion', title: 'ID del Centro de Vacunación', createdCell: agregarMensajeVac},
-                { data: 'activo', title: 'Estado del lote interno', createdCell: agregarMensajeSiActivoOInactivo },
+                {data: 'activo', title: 'Estado del lote interno', createdCell: agregarMensajeSiActivoOInactivo },
                 {
                     data: 'opciones', title: 'Opciones',
                     render: function (data, type, row) {
-                        let editBtn = `<button title="Editar" class="btn btn-primary btn-sm fa-solid fa-pencil me-2"></button>`;
-                        let deactivateBtn = `<button title="Dar de baja" class="btn btn-warning btn-sm fa-solid fa-exclamation-circle"></button>`;
-                        let activateBtn = `<button title="Dar de alta" class="btn btn-success btn-sm fa-solid fa-check-circle"></button>`;
+                        const editBtn = `<button title="Editar" class="btn btn-primary btn-sm fa-solid fa-pencil me-2"></button>`
+                        const deactivateBtn = `<button title="Dar de baja" class="btn btn-warning btn-sm fa-solid fa-exclamation-circle"></button>`
+                        const activateBtn = `<button title="Dar de alta" class="btn btn-success btn-sm fa-solid fa-check-circle"></button>`
                         if (row.activo == 1) {
-                            return `${editBtn} ${deactivateBtn}`;
+                            return `${editBtn} ${deactivateBtn}`
                         } else {
-                            return `${editBtn} ${activateBtn}`;
+                            return `${editBtn} ${activateBtn}`
                         }
                     }
                 }
             ],
             columnDefs: [
-                {orderable: false, targets:[14]}, // Columna de "Opciones"
+                {orderable: false, targets:[14]},
                 {searchable: false, targets:[1, 2, 3]},
                 {className: "dt-center", targets: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]},
                 { width: "10%", targets: [2, 14] },
                 { width: "5%", targets: [0, 1, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13] }
             ]
-        });
+        })
 
         function agregarMensajeSalida(td, cellData, rowData, row, col) {
-            // Verificar si la celda está vacía y agregar el mensaje
             if (!cellData) {
-                $(td).text("Aún no ha salido del depósito");
+                $(td).text("Aún no ha salido del depósito")
             }
         }
 
         function agregarMensajeLlegada(td, cellData, rowData, row, col) {
-            // Verificar si la celda está vacía y agregar el mensaje
             if (!cellData) {
-                $(td).text("Aún no ha llegado al depósito");
+                $(td).text("Aún no ha llegado al depósito")
             }
         }
 
         function agregarMensajeDep(td, cellData, rowData, row, col) {
-            // Verificar si la celda está vacía y agregar el mensaje
             if (!cellData) {
-                $(td).text("Aún no se encuentra en el depósito");
+                $(td).text("Aún no se encuentra en el depósito")
             }
         }
 
         function agregarMensajeVac(td, cellData, rowData, row, col) {
-            // Verificar si la celda está vacía y agregar el mensaje
             if (!cellData) {
-                $(td).text("Aún no se encuentra en el vacunatorio");
+                $(td).text("Aún no se encuentra en el vacunatorio")
             }
         }
 
         function agregarMensajeSiActivoOInactivo(td, cellData, rowData, row, col) {
-            // Verificar si la celda está vacía y agregar el mensaje
             if (cellData == 1) {
-                $(td).text("Activo");
+                $(td).text("Activo")
             } else {
-                $(td).text("Inactivo");
+                $(td).text("Inactivo")
             }
         }
-    });
+    })
 
     $(document).ready(function() {
-        $('.flash-message').addClass('fade-in');
+        $('.flash-message').addClass('fade-in')
         setTimeout(function() {
-            $('.flash-message').removeClass('fade-in');
-        }, 3000);
+            $('.flash-message').removeClass('fade-in')
+        }, 3000)
 
         tabla.on('click', 'button', function (f) {
-            let data = tabla.row(f.target.closest('tr')).data();
-
+            const data = tabla.row(f.target.closest('tr')).data()
             if ($(event.target).hasClass('fa-exclamation-circle')) {
-                // Código para dar de baja (lo mantengo igual)
-                $('#confirmBajaModal').modal('show');
-                $('#confirmBajaBtn').on('click', function() {
+                $(confirmBajaModal).modal('show')
+                $(confirmBajaBtn).on('click', function() {
                     $.ajax({
-                        url: '/lotesinternos/' + data.numeroDeSerie + '/baja',
+                        url: `/lotesinternos/${data.numeroDeSerie}/baja`,
                         type: 'PUT',
                         success: function(data) {
                             if (data.success) {
-                                window.location.href = "/lotesinternos";
+                                location.reload(true)
                             } else {
-                                console.error(data.message);
+                                console.error(data.message)
                             }
                         },
                         error: function(error) {
-                            console.error(error);
+                            console.error(error)
                         }
-                    });
-                    $('#confirmBajaModal').modal('hide');
-                });
+                    })
+                    $(confirmBajaModal).modal('hide')
+                })
 
-                // Configurar el botón de cancelar y la 'X' para cerrar el modal
                 $('#cancelBajaBtn, .modal-header button.close').on('click', function() {
-                    $('#confirmBajaModal').modal('hide');
-                });
+                    $(confirmBajaModal).modal('hide')
+                })
 
-                // Agregar evento al documento para escuchar la tecla 'Enter'
                 $(document).on('keydown', function(e) {
-                    if (e.key === 'Enter' && $('#confirmBajaModal').is(':visible')) {
-                        // Disparar el evento de click en el botón de confirmación
-                        $('#confirmBajaBtn').trigger('click');
+                    if (e.key === 'Enter' && $(confirmBajaModal).is(':visible')) {
+                        $(confirmBajaBtn).trigger('click')
                     }
-                });
+                })
             } else if ($(event.target).hasClass('fa-check-circle')) {
-            // Código para dar de alta
-                $('#confirmAltaModal').modal('show');
-                $('#confirmAltaBtn').on('click', function() {
+                $(confirmAltaModal).modal('show')
+                $(confirmAltaBtn).on('click', function() {
                     $.ajax({
-                        url: '/lotesinternos/' + data.numeroDeSerie + '/alta',
-                        type: 'PUT',  // Cambiado a PUT, ya que es una acción de activación
+                        url: `/lotesinternos/${data.numeroDeSerie}/alta`,
+                        type: 'PUT',
                         success: function(data) {
                             if (data.success) {
-                                window.location.href = "/lotesinternos";
+                                location.reload(true)
                             } else {
-                                console.error(data.message);
+                                console.error(data.message)
                             }
                         },
                         error: function(error) {
-                            console.error(error);
+                            console.error(error)
                         }
-                    });
-                    $('#confirmAltaModal').modal('hide');
+                    })
+                    $(confirmAltaModal).modal('hide')
                 })
+
+                $('#cancelAltaBtn, .modal-header button.close').on('click', function() {
+                    $(confirmAltaModal).modal('hide')
+                })
+                
                 $(document).on('keydown', function(e) {
-                    if (e.key === 'Enter' && $('#confirmAltaModal').is(':visible')) {
-                        // Disparar el evento de click en el botón de confirmación
-                        $('#confirmAltaBtn').trigger('click');
+                    if (e.key === 'Enter' && $(confirmAltaModal).is(':visible')) {
+                        $(confirmAltaBtn).trigger('click')
                     }
-                });
+                })
             } else {
-                window.location.href = "/lotesinternos/" + data.numeroDeSerie;
+                window.location.href = `/lotesinternos/${data.numeroDeSerie}`
             }
-        });
-    });
+        })
+    })

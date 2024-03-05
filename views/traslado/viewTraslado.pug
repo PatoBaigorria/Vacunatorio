@@ -8,9 +8,37 @@ body
             section#viewTraslados
                 h2 Listado de los traslados
                 br
+                br
                 if messages.success
-                    .alert.alert-success
+                    .alert.alert-success.flash-message.fade-in
                         = messages.success
+                if messages.error
+                    .alert.alert-danger.flash-message.fade-in
+                        = messages.error
+                div.modal#confirmBajaModal(tabindex="-1" role="dialog")
+                    div.modal-dialog(role="document")
+                        div.modal-content
+                            div.modal-header
+                                h5.modal-title Confirmar la baja del traslado
+                                button.close(type="button" data-dismiss="modal" aria-label="Close")
+                                    span(aria-hidden="true") &times;
+                            div.modal-body
+                                p#mensajeAlerta.text-center ¿Está seguro de que desea dar de baja este traslado?
+                            div.modal-footer
+                                button.btn.btn-secondary(id="cancelBajaBtn" type="button" data-dismiss="modal") Cancelar
+                                button.btn.btn-danger(id="confirmBajaBtn" type="button") Confirmar
+                div.modal#confirmAltaModal(tabindex="-1" role="dialog")
+                    div.modal-dialog(role="document")
+                        div.modal-content
+                            div.modal-header
+                                h5.modal-title Confirmar el alta del traslado
+                                button.close(type="button" data-dismiss="modal" aria-label="Close")
+                                    span(aria-hidden="true") &times;
+                            div.modal-body
+                                p#mensajeAlerta.text-center ¿Está seguro de que desea dar de alta este traslado?
+                            div.modal-footer
+                                button.btn.btn-secondary(id="cancelAltaBtn" type="button" data-dismiss="modal") Cancelar
+                                button.btn.btn-danger(id="confirmAltaBtn" type="button") Confirmar
                 div(style="text-align: left;")
                     a.btn.btn-primary.btn-lg(href="/traslados/crear") Crear
                     br
@@ -18,11 +46,10 @@ body
                     div.table.responsive
                         table#traslados.table.table-striped.table-bordered                    
 script.
-    let trasl = !{JSON.stringify(traslados)};
-    let trasltab 
+    let tabla 
     $(document).ready(function() {
-        trasltab = $('#traslados').DataTable({
-            data: trasl,
+        tabla = $(traslados).DataTable({
+            data: !{JSON.stringify(traslados)},
             pageLength:5,
             lengthMenu:[5,10,15,20],
             language: {
@@ -34,37 +61,108 @@ script.
                 {data: 'idCentroDeVacunacion', title: 'ID del Centro de Vacunación'},
                 {data: 'fechaDeSalida', title: 'Fecha de Salida'},
                 {data: 'fechaDeLlegada', title: 'Fecha de Llegada'},
-
+                { data: 'activo', title: 'Estado del traslado', createdCell: agregarMensajeSiActivoOInactivo },
                 {
-                    data: null, title: 'Opciones',
-                    render: function(data, type, row) {
-                        return `<button class="btn btn-success btn-sm fa-solid fa-pencil me-2"></button>` +
-                            `<button class="btn btn-danger btn-sm fa-solid fa-trash-can"></button>`;
+                    data: 'opciones', title: 'Opciones',
+                    render: function (data, type, row) {
+                        let editBtn = `<button title="Editar" class="btn btn-primary btn-sm fa-solid fa-pencil me-2"></button>`;
+                        let deactivateBtn = `<button title="Dar de baja" class="btn btn-warning btn-sm fa-solid fa-exclamation-circle"></button>`;
+                        let activateBtn = `<button title="Dar de alta" class="btn btn-success btn-sm fa-solid fa-check-circle"></button>`;
+                        if (row.activo == 1) {
+                            return `${editBtn} ${deactivateBtn}`;
+                        } else {
+                            return `${editBtn} ${activateBtn}`;
+                        }
                     }
                 }
             ],
             columnDefs: [
-                {orderable: false, targets:[5]}, // Columna de "Opciones"
-                {searchable: false, targets:[5]},
-                {className: "dt-center", targets: [0, 1, 2, 3, 4, 5]},
-                { width: '10%', targets: [0, 1, 2] },
-                { width: '10%', targets: [3, 4] },
-                { width: '10%', targets: [5] },
+                {orderable: false, targets:[6]}, // Columna de "Opciones"
+                {searchable: false, targets:[6]},
+                {className: "dt-center", targets: [0, 1, 2, 3, 4, 5, 6]},
+                //{ width: '14%', targets: [0, 1, 2, 3, 4, 5] },
+                { width: '10%', targets: [6] },
             ]
         });
+
+        function agregarMensajeSiActivoOInactivo(td, cellData, rowData, row, col) {
+            if (cellData == 1) {
+                $(td).text("Activo");
+            } else {
+                $(td).text("Inactivo");
+            }
+        }
     });
+
     $(document).ready(function() {
-        trasltab.on('click', 'button', function (f) {
-            let data = trasltab.row(f.target.closest('tr')).data();
-            if ($(event.target).hasClass('fa-trash-can')) {
-                if(confirm("¿Desea eliminar el Traslado?")){
-                    $.post('/traslados/'+data.idTraslado+'?_method=DELETE', function(data){
-                         window.location.href = "/traslados";
-                    })
-                }
-            } else {window.location.href= "/traslados/" + data.idTraslado}
-        })
+        $('.flash-message').addClass('fade-in');
+        setTimeout(function() {
+            $('.flash-message').removeClass('fade-in');
+        }, 3000);
+
+        tabla.on('click', 'button', function (f) {
+            let data = tabla.row(f.target.closest('tr')).data();
+
+            if ($(event.target).hasClass('fa-exclamation-circle')) {
+                $(confirmBajaBtn).modal('show');
+                $(confirmBajaBtn).on('click', function() {
+                    $.ajax({
+                        url: '/traslados/' + data.idTraslado + '/baja',
+                        type: 'PUT',
+                        success: function(data) {
+                            if (data.success) {
+                                location.reload(true)
+                            } else {
+                                console.error(data.message);
+                            }
+                        },
+                        error: function(error) {
+                            console.error(error);
+                        }
+                    });
+                    $(confirmBajaModal).modal('hide');
+                });
+                
+                $('#cancelBajaBtn, .modal-header button.close').on('click', function() {
+                    $(confirmBajaModal).modal('hide');
+                });
+
+                $(document).on('keydown', function(e) {
+                    if (e.key === 'Enter' && $(confirmBajaModal).is(':visible')) {
+                        $(confirmBajaBtn).trigger('click');
+                    }
+                });
+            } else if ($(event.target).hasClass('fa-check-circle')) {
+                $(confirmAltaModal).modal('show');
+                $(confirmAltaBtn).on('click', function() {
+                    $.ajax({
+                        url: '/traslados/' + data.idTraslado + '/alta',
+                        type: 'PUT',
+                        success: function(data) {
+                            if (data.success) {
+                                location.reload(true)
+                            } else {
+                                console.error(data.message);
+                            }
+                        },
+                        error: function(error) {
+                            console.error(error);
+                        }
+                    });
+                    $(confirmAltaModal).modal('hide');
+                })
+
+                $('#cancelAltaBtn, .modal-header button.close').on('click', function() {
+                    $(confirmAltaModal).modal('hide');
+                });
+
+                $(document).on('keydown', function(e) {
+                    if (e.key === 'Enter' && $(confirmAltaModal).is(':visible')) {
+                        $(confirmAltaBtn).trigger('click');
+                    }
+                });
+            } else {
+                window.location.href = "/traslados/" + data.idTraslado;
+            }
+        });
     });
-    function crear(){
-        window.location.href= "/traslados/crear"
-    }

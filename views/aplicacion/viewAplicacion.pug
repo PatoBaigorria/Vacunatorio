@@ -1,4 +1,4 @@
-- var title = 'Listado de las aplicaciones'
+- const title = 'Listado de aplicaciones'
 include ..\includes\layout
 block content
 body
@@ -8,26 +8,39 @@ body
                 section#viewAplicaciones
                     h2 Listado de las aplicaciones
                     br
+                    br
                     if messages.success
-                        .alert.alert-success
+                        .alert.alert-success.flash-message.fade-in
                             = messages.success
                     if messages.error
                         .alert.alert-danger.flash-message.fade-in
                             = messages.error
-                    div.modal#confirmDeleteModal(tabindex="-1" role="dialog")
-                        div.modal-dialog(role="document")
+                    div.modal#confirmBajaModal(tabindex='-1' role='dialog')
+                        div.modal-dialog(role='document')
                             div.modal-content
                                 div.modal-header
-                                    h5.modal-title Confirmar la baja de la aplicación de la vacuna
-                                    button.close(type="button" data-dismiss="modal" aria-label="Close")
-                                        span(aria-hidden="true") &times;
-                                    div.modal-body
-                                        p#mensajeAlerta ¿Está seguro que desea dar de baja esta aplicación de vacuna?
-                                    div.modal-footer
-                                        button.btn.btn-secondary(id="cancelDeleteBtn" type="button" data-dismiss="modal") Cancelar
-                                        button.btn.btn-danger(id="confirmDeleteBtn" type="button") Confirmar 
-                    div(style="text-align: left;")
-                        a.btn.btn-primary.btn-lg(href="/aplicaciones/crear") Crear
+                                    h5.modal-title Confirmar la baja de la aplicación
+                                    button.close(type='button' data-dismiss='modal' aria-label='Close')
+                                        span(aria-hidden='true') &times;
+                                div.modal-body
+                                    p#mensajeAlerta.text-center ¿Está seguro que desea dar de baja a esta aplicación?
+                                div.modal-footer
+                                    button.btn.btn-secondary#cancelBajaBtn(type='button' data-dismiss='modal') Cancelar
+                                    button.btn.btn-danger#confirmBajaBtn(type='button') Confirmar
+                    div.modal#confirmAltaModal(tabindex='-1' role='dialog')
+                        div.modal-dialog(role='document')
+                            div.modal-content
+                                div.modal-header
+                                    h5.modal-title Confirmar el alta de la aplicación
+                                    button.close(type='button' data-dismiss='modal' aria-label='Close')
+                                        span(aria-hidden='true') &times;
+                                div.modal-body
+                                    p#mensajeAlerta.text-center ¿Está seguro que desea dar de alta a esta aplicación?
+                                div.modal-footer
+                                    button.btn.btn-secondary#cancelAltaBtn(type='button' data-dismiss='modal') Cancelar
+                                    button.btn.btn-danger#confirmAltaBtn(type='button') Confirmar
+                    div(style='text-align: left')
+                        a.btn.btn-primary.btn-lg(href='/aplicaciones/crear') Crear
                         br
                         br
                         div.table.responsive
@@ -35,7 +48,7 @@ body
 script.
     let tabla 
     $(document).ready(function() {
-        tabla = $('#aplicaciones').DataTable({
+        tabla = $(aplicaciones).DataTable({
             data: !{JSON.stringify(aplicaciones)},
             pageLength:5,
             lengthMenu:[5,10,15,20],
@@ -43,71 +56,114 @@ script.
                 url: '//cdn.datatables.net/plug-ins/1.13.7/i18n/es-AR.json'
             },
             columns:[
-                {data: 'idAplicacion', title: 'ID de la Aplicación'},
+                {data: 'idAplicacion', title: 'ID de la aplicación'},
                 {data: 'Persona.nombre', title: 'Nombre del Paciente'},
                 {data: 'Persona.apellido', title: 'Apellido del Paciente'},
                 {data: 'Agentedesalud.Persona.nombre', title: 'Nombre del Agente de Salud'},
                 {data: 'Agentedesalud.Persona.apellido', title: 'Apellido del Agente de Salud'},
                 {data: 'Loteinterno.numeroDeSerie', title: 'Número de Serie de la Vacuna'},
                 {data: 'fechaDeAplicacion', title: 'Fecha de Aplicacion'},
+                { data: 'activo', title: 'Estado de la aplicación', createdCell: agregarMensajeSiActivoOInactivo },
                 {
                     data: 'opciones', title: 'Opciones',
-                    render: function(data, type, row) {
-                        return `<button title="Editar" class="btn btn-primary btn-sm fa-solid fa-pencil me-2"></button>
-                        <button class="btn btn-success btn-sm fa-solid fa-check-circle"></button>`;
+                    render: function (data, type, row) {
+                        const editBtn = `<button title='Editar' class='btn btn-primary btn-sm fa-solid fa-pencil me-2'></button>`
+                        const deactivateBtn = `<button title='Dar de baja' class='btn btn-warning btn-sm fa-solid fa-exclamation-circle'></button>`
+                        const activateBtn = `<button title='Dar de alta' class='btn btn-success btn-sm fa-solid fa-check-circle'></button>`
+                        if (row.activo == 1) {
+                            return `${editBtn} ${deactivateBtn}`
+                        } else {
+                            return `${editBtn} ${activateBtn}`
+                        }
                     }
                 }
             ],
             columnDefs: [
-                {orderable: false, targets:[7]}, // Columna de "Opciones"
-                {className: "dt-center", targets: [0, 1, 2, 3, 4, 5, 6, 7]},
+                {orderable: false, targets:[7]},
+                {className: 'dt-center', targets: [0, 1, 2, 3, 4, 5, 6, 7, 8]},
                 { width: '12%', targets: [0, 1, 2] },
                 { width: '14%', targets: [3, 4, 5] },	
                 { width: '10%', targets: [6] },
             ]
-        });
+        })
 
-        $('.flash-message').addClass('fade-in');
+        function agregarMensajeSiActivoOInactivo(td, cellData, rowData, row, col) {
+            if (cellData == 1) {
+                $(td).text('Activo')
+            } else {
+                $(td).text('Inactivo')
+            }
+        }
+    })
+
+    $(document).ready(function() {
+        $('.flash-message').addClass('fade-in')
         setTimeout(function() {
-            $('.flash-message').removeClass('fade-in');
-        }, 3000);
+            $('.flash-message').removeClass('fade-in')
+        }, 3000)
 
         tabla.on('click', 'button', function (f) {
-            let data = tabla.row(f.target.closest('tr')).data();
-            if ($(event.target).hasClass('fa-trash-can')) {
-                $('#confirmDeleteModal').modal('show');
-                $('#confirmDeleteBtn').on('click', function() {
-            // Realizar la acción de eliminación
+            const data = tabla.row(f.target.closest('tr')).data()
+            if ($(event.target).hasClass('fa-exclamation-circle')) {
+                $(confirmBajaModal).modal('show')
+                $(confirmBajaBtn).on('click', function() {
                     $.ajax({
-                        url: '/aplicaciones/' + data.idAplicacion + '?_method=DELETE',
-                        type: 'POST',
+                        url: `/aplicaciones/${data.idAplicacion}/baja`,
+                        type: 'PUT',
                         success: function(data) {
                             if (data.success) {
-                                window.location.href = "/aplicaciones";
+                                location.reload(true)
                             } else {
-                                console.error(data.message);
+                                console.error(data.message)
                             }
                         },
                         error: function(error) {
-                            console.error(error);
+                            console.error(error)
                         }
-                    });
+                    })
+                    $(confirmBajaModal).modal('hide')
+                })
 
-                    $('#confirmDeleteModal').modal('hide');
-                });
-
-                $('#cancelDeleteBtn, .modal-header button.close').on('click', function() {
-                    $('#confirmDeleteModal').modal('hide');
-                });
+                $('#cancelBajaBtn, .modal-header button.close').on('click', function() {
+                    $(confirmBajaModal).modal('hide')
+                })
 
                 $(document).on('keydown', function(e) {
-                    if (e.key === 'Enter' && $('#confirmDeleteModal').is(':visible')) {
-                        // Disparar el evento de click en el botón de confirmación
-                        $('#confirmDeleteBtn').trigger('click');
+                    if (e.key === 'Enter' && $(confirmBajaModal).is(':visible')) {
+                        $(confirmBajaBtn).trigger('click')
                     }
-                });
+                })
+            } else if ($(event.target).hasClass('fa-check-circle')) {
+                $(confirmAltaModal).modal('show')
+                $(confirmAltaBtn).on('click', function() {
+                    $.ajax({
+                        url: `/aplicaciones/${data.idAplicacion}/alta`,
+                        type: 'PUT',
+                        success: function(data) {
+                            if (data.success) {
+                                location.reload(true)
+                            } else {
+                                console.error(data.message)
+                            }
+                        },
+                        error: function(error) {
+                            console.error(error)
+                        }
+                    })
+                    $(confirmAltaModal).modal('hide')
+                })
+
+                $('#cancelAltaBtn, .modal-header button.close').on('click', function() {
+                    $(confirmAltaModal).modal('hide')
+                })
+
+                $(document).on('keydown', function(e) {
+                    if (e.key === 'Enter' && $(confirmAltaModal).is(':visible')) {
+                        $(confirmAltaBtn).trigger('click')
+                    }
+                })
             } else {
-                window.location.href = "/aplicaciones/" + data.idAplicacion;
+                window.location.href = `/aplicaciones/${data.idAplicacion}`
             }
-        });
-    });
+        })
+    })

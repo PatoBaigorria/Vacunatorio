@@ -1,54 +1,42 @@
-- var title = 'Listado de descartes'
+- const title = 'Listado de descartes'
 include ..\includes\layout
 block content
 body
     div.container.my-4
         div.row
             div.col-sm-13.col-md-13.col-lg-13.col-xl-13
-            section#viewDescartes
-                h2 Listado de los descartes
-                br
-                br
-                if messages.success
-                    .alert.alert-success.flash-message.fade-in
-                        = messages.success
-                if messages.error
-                    .alert.alert-danger.flash-message.fade-in
-                        = messages.error
-                div.modal#confirmBajaModal(tabindex="-1" role="dialog")
-                    div.modal-dialog(role="document")
-                        div.modal-content
-                            div.modal-header
-                                h5.modal-title Confirmar la baja del descarte
-                                button.close(type="button" data-dismiss="modal" aria-label="Close")
-                                    span(aria-hidden="true") &times;
-                            div.modal-body
-                                p#mensajeAlerta.text-center ¿Está seguro de que desea dar de baja este descarte?
-                            div.modal-footer
-                                button.btn.btn-secondary(id="cancelBajaBtn" type="button" data-dismiss="modal") Cancelar
-                                button.btn.btn-danger(id="confirmBajaBtn" type="button") Confirmar
-                div.modal#confirmAltaModal(tabindex="-1" role="dialog")
-                    div.modal-dialog(role="document")
-                        div.modal-content
-                            div.modal-header
-                                h5.modal-title Confirmar el alta del descarte
-                                button.close(type="button" data-dismiss="modal" aria-label="Close")
-                                    span(aria-hidden="true") &times;
-                            div.modal-body
-                                p#mensajeAlerta.text-center ¿Está seguro de que desea dar de alta este descarte?
-                            div.modal-footer
-                                button.btn.btn-secondary(id="cancelAltaBtn" type="button" data-dismiss="modal") Cancelar
-                                button.btn.btn-danger(id="confirmAltaBtn" type="button") Confirmar
-                div(style="text-align: left;")
-                    a.btn.btn-primary.btn-lg(href="/descartes/crear") Crear
+                section#viewDescartes
+                    h2 Listado de los descartes
                     br
                     br
-                    div.table.responsive
-                        table#descartes.table.table-striped.table-bordered
+                    if messages.success
+                        .alert.alert-success.flash-message.fade-in
+                            = messages.success
+                    if messages.error
+                        .alert.alert-danger.flash-message.fade-in
+                            = messages.error
+                    div.modal#confirmBajaModal(tabindex='-1' role='dialog')
+                        div.modal-dialog(role='document')
+                            div.modal-content
+                                div.modal-header
+                                    h5.modal-title Confirmar la baja del descarte
+                                    button.close(type='button' data-dismiss='modal' aria-label='Close')
+                                        span(aria-hidden='true') &times;
+                                div.modal-body
+                                    p#mensajeAlerta.text-center ¿Está seguro de que desea dar de baja este descarte?
+                                div.modal-footer
+                                    button.btn.btn-secondary#cancelBajaBtn(type='button' data-dismiss='modal') Cancelar
+                                    button.btn.btn-danger#confirmBajaBtn(type='button') Confirmar
+                    div(style='text-align: left')
+                        a.btn.btn-primary.btn-lg(href='/descartes/crear') Alta
+                        br
+                        br
+                        div.table.responsive
+                            table#descartes.table.table-striped.table-bordered
 script.
     let tabla
     $(document).ready(function(){
-        tabla = $('#descartes').DataTable({
+        tabla = $(descartes).DataTable({
             data: !{JSON.stringify(descartes)},
             pageLength:5,
             lengthMenu:[5,10,15,20],
@@ -68,104 +56,101 @@ script.
                 {
                     data: 'opciones', title: 'Opciones',
                     render: function (data, type, row) {
-                        let editBtn = `<button title="Editar" class="btn btn-primary btn-sm fa-solid fa-pencil me-2"></button>`;
-                        let deactivateBtn = `<button title="Dar de baja" class="btn btn-warning btn-sm fa-solid fa-exclamation-circle"></button>`;
-                        let activateBtn = `<button title="Dar de alta" class="btn btn-success btn-sm fa-solid fa-check-circle"></button>`;
+                        const editBtn = `<button title='Editar' class='btn btn-primary btn-sm fa-solid fa-pencil me-2'></button>`
+                        const deactivateBtn = `<button title='Dar de baja' class='btn btn-warning btn-sm fa-solid fa-exclamation-circle'></button>`
+                        const activateBtn = `<button title='Dar de alta' class='btn btn-success btn-sm fa-solid fa-check-circle'></button>`
                         if (row.activo == 1) {
-                            return `${editBtn} ${deactivateBtn}`;
+                            return `${editBtn} ${deactivateBtn}`
                         } else {
-                            return `${editBtn} ${activateBtn}`;
+                            return `${editBtn} ${activateBtn}`
                         }
                     }
                 }
             ],
             columnDefs: [
-                {orderable: false, targets:[9]}, // Columna de "Opciones"
-                {className: "dt-center", targets: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]},
+                {orderable: false, targets:[9]}, 
+                {className: 'dt-center', targets: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]},
                 { width: '10%', targets: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9] },
             ]
-        });
-        
+        })
         function agregarMensajeSiActivoOInactivo(td, cellData, rowData, row, col) {
-            // Verificar si la celda está vacía y agregar el mensaje
             if (cellData == 1) {
-                $(td).text("Activo");
+                $(td).text('Activo')
             } else {
-                $(td).text("Inactivo");
+                $(td).text('Inactivo')
             }
         }
     })
 
     $(document).ready(function() {
-        $('.flash-message').addClass('fade-in');
+        $('.flash-message').addClass('fade-in')
         setTimeout(function() {
-            $('.flash-message').removeClass('fade-in');
-        }, 3000);
+            $('.flash-message').removeClass('fade-in')
+        }, 3000)
 
         tabla.on('click', 'button', function (f) {
-            let data = tabla.row(f.target.closest('tr')).data();
-
+            const data = tabla.row(f.target.closest('tr')).data()
             if ($(event.target).hasClass('fa-exclamation-circle')) {
-                // Código para dar de baja (lo mantengo igual)
-                $('#confirmBajaModal').modal('show');
-                $('#confirmBajaBtn').on('click', function() {
+                $(confirmBajaModal).modal('show')
+                $(confirmBajaBtn).on('click', function() {
+                    //¿Tiene sentido dar de baja un descarte o tiene más sentido eliminarlo? ¿Deberia poderse?
                     $.ajax({
-                        url: '/descartes/' + data.idDescarte + '/baja',
+                        url: `/descartes/${data.idDescarte}/baja`,
                         type: 'PUT',
                         success: function(data) {
                             if (data.success) {
-                                window.location.href = "/descartes";
+                                location.reload(true)
                             } else {
-                                console.error(data.message);
+                                console.error(data.message)
                             }
                         },
                         error: function(error) {
-                            console.error(error);
+                            console.error(error)
                         }
-                    });
-                    $('#confirmBajaModal').modal('hide');
-                });
+                    })
+                    $(confirmBajaModal).modal('hide')
+                })
 
-                // Configurar el botón de cancelar y la 'X' para cerrar el modal
                 $('#cancelBajaBtn, .modal-header button.close').on('click', function() {
-                    $('#confirmBajaModal').modal('hide');
-                });
+                    $(confirmBajaModal).modal('hide')
+                })
 
-                // Agregar evento al documento para escuchar la tecla 'Enter'
                 $(document).on('keydown', function(e) {
-                    if (e.key === 'Enter' && $('#confirmBajaModal').is(':visible')) {
-                        // Disparar el evento de click en el botón de confirmación
-                        $('#confirmBajaBtn').trigger('click');
+                    if (e.key === 'Enter' && $(confirmBajaModal).is(':visible')) {
+                        $(confirmBajaBtn).trigger('click')
                     }
-                });
+                })
             } else if ($(event.target).hasClass('fa-check-circle')) {
-            // Código para dar de alta
-                $('#confirmAltaModal').modal('show');
-                $('#confirmAltaBtn').on('click', function() {
+                $(confirmAltaModal).modal('show')
+                $(confirmAltaBtn).on('click', function() {
                     $.ajax({
-                        url: '/descartes/' + data.idDescarte + '/alta',
-                        type: 'PUT',  // Cambiado a PUT, ya que es una acción de activación
+                        url: `/descartes/${data.idDescarte}/alta`,
+                        type: 'PUT',
                         success: function(data) {
                             if (data.success) {
-                                window.location.href = "/descartes";
+                                location.reload(true)
                             } else {
-                                console.error(data.message);
+                                console.error(data.message)
                             }
                         },
                         error: function(error) {
-                            console.error(error);
+                            console.error(error)
                         }
-                    });
-                    $('#confirmAltaModal').modal('hide');
+                    })
+                    $(confirmAltaModal).modal('hide')
                 })
+
+                $('#cancelAltaBtn, .modal-header button.close').on('click', function() {
+                    $(confirmAltaModal).modal('hide')
+                })
+                
                 $(document).on('keydown', function(e) {
-                    if (e.key === 'Enter' && $('#confirmAltaModal').is(':visible')) {
-                        // Disparar el evento de click en el botón de confirmación
-                        $('#confirmAltaBtn').trigger('click');
+                    if (e.key === 'Enter' && $(confirmAltaModal).is(':visible')) {
+                        $(confirmAltaBtn).trigger('click')
                     }
-                });
+                })
             } else {
-                window.location.href = "/descartes/" + data.idDescarte;
+                window.location.href = `/descartes/${data.idDescarte}`
             }
-        });
-    });
+        })
+    })

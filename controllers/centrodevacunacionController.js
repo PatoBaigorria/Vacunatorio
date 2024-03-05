@@ -1,114 +1,96 @@
-const { CentroDeVacunacion } = require("../models/relaciones");
+const { CentroDeVacunacion } = require('../models/relaciones')
 
-// Obtener todos los centros de vacunación
 const listarCentrosDeVacunacion = async (req, res) => {
-  try {
-    let centrosVac = await CentroDeVacunacion.findAll({
-      raw: true
-    });
-    res.render("centrodevacunacion/viewCentroDeVacunacion", { centrosVac: centrosVac });
-  } catch (error) {
-    res
-      .status(500)
-      .json({ message: "Error al obtener los Centros De Vacunacion." });
-  }
-};
+	try {
+		const centrosVac = await CentroDeVacunacion.findAll({ raw: true })
+		res.render('centrodevacunacion/viewCentroDeVacunacion', {
+			centrosVac: centrosVac,
+		})
+	} catch (error) { 
+		req.flash( 'error', `Hubo un error al intentar listar los centros de vacunación. ${error.message}`)
+		res.json({ success: false})
+	}
+}
 
-// Muestra formulario de creacion de Centro de Vacunacion
 const formCentroVac = async (req, res) => {
-  try {
-    res.render("centrodevacunacion/formCentroDeVacunacion");
-  } catch (error) {
-    res.status(500).json({
-      message: "Error al crear un Centro De Vacunacion.",
-    });
-  }
+	try {
+		res.render('centrodevacunacion/formCentroDeVacunacion')
+	} catch (error) { 
+		req.flash( 'error', `Hubo un error al intentar mostrar el formulario del centro de vacunación. ${error.message}`)
+		res.json({ success: false})
+	}
 }
-// Crear un nuevo Centro De Vacunacion desde el Formulario
+
 const createCentroVac = async (req, res) => {
-  try {
-    const { longitud, latitud } = req.body;
-
-    // Crear una nueva instancia de Centro De Vacunacion utilizando Sequelize
-    await CentroDeVacunacion.create({
-      longitud,
-      latitud,
-      activo: 1,
-    });
-    req.flash("success", "Centro de Vacunación creado exitosamente");
-    res.redirect("/centrosdevacunacion");
-  } catch (error) {
-    console.error("Error al insertar datos:", error);
-    res.status(500).send("Error al insertar datos en el Centro de Vacunacion");
-  }
-};
-// Editar Centro de Vacunacion por ID
-const editCentroVac = async (req, res) => {
-  try {
-    const centroV = await CentroDeVacunacion.findByPk(req.params.id);
-    res.render("centrodevacunacion/editCentroDeVacunacion", { centroV: centroV });
-  } catch (error) {
-    res.status(500).json({
-      message: "Error al obtener el Centro De Vacunacion." + error.message,
-    });
-  }
+	try {
+		const { longitud, latitud } = req.body
+		await CentroDeVacunacion.create({
+			longitud,
+			latitud,
+			activo: 1,
+		})
+		req.flash('success', 'El centro de vacunación fue dado de alta exitosamente')
+		res.redirect('/centrosdevacunacion')
+	} catch (error) { 
+		req.flash( 'error', `Hubo un error al intentar dar de alta el centro de vacunación. ${error.message}`)
+		res.json({ success: false})
+	}
 }
 
-// Actualizar un Centro de Vacunacion por su ID
-const updateCentroDeVacunacion = async (req, res) => {
-  try {
-    await CentroDeVacunacion.update(req.body,
-      {
-        where: { idCentroDeVacunacion: req.params.id, },
-      }
-    );
-    req.flash('success', 'Centro de Vacunación actualizado exitosamente.');
-    res.redirect("/centrosdevacunacion");
-  } catch (error) {
-    res
-      .status(500)
-      .json({ message: "Error al actualizar el centro de vacunacion." });
-  }
-};
+const editCentroVac = async (req, res) => {
+	try {
+		const centroV = await CentroDeVacunacion.findByPk(req.params.id)
+		res.render('centrodevacunacion/editCentroDeVacunacion', { centroV: centroV })
+	} catch (error) { 
+		req.flash( 'error', `Hubo un error al intentar editar el centro de vacunación. ${error.message}`)
+		res.json({ success: false})
+	}
+}
 
-// Eliminar un Centro de Vacunacion por su ID
+
+const updateCentroDeVacunacion = async (req, res) => {
+	try {
+		await CentroDeVacunacion.update(req.body,
+			{ where: { idCentroDeVacunacion: req.params.id, }}
+		)
+		req.flash('success', 'El centro de vacunación fue actualizado exitosamente.')
+		res.redirect('/centrosdevacunacion')
+	} catch (error) {
+		req.flash( 'error', `Hubo un error al intentar actualizar el centro de vacunación. ${error.message}`)
+		res.json({ success: false})
+	}
+}
+
+
 const deleteCentroDeVacunacion = async (req, res) => {
-  try {
-    await CentroDeVacunacion.destroy({
-      where:
-      {
-        idCentroDeVacunacion: req.params.id,
-      },
-    });
-    req.flash('success', 'Centro de Vacunación eliminado exitosamente.');
-    res.json({ success: true });
-  } catch (error) {
-    res
-      .status(500)
-      .json({
-        message: "Error al eliminar el centro de vacunacion."
-      });
-  }
-};
+	try {
+		await CentroDeVacunacion.destroy(
+			{ where: { idCentroDeVacunacion: req.params.id } }
+		)
+		req.flash('success', 'El centro de vacunación fue eliminado exitosamente.')
+		res.json({ success: true })
+	} catch (error) {
+		req.flash( 'error', `Hubo un error al intentar eliminar el centro de vacunación. ${error.message}`)
+		res.json({ success: false})
+	}
+}
 
 const bajaCentroDeVacunacion = async (req, res) => {
-  try {
-    await CentroDeVacunacion.update(
-      { activo: 0 },
-      {
-        where: {
-          idCentroDeVacunacion: req.params.id,
-        },
-      }
-    );
-    req.flash("success", "Centro de vacunación dado de baja exitosamente.");
-    res.json({ success: true });
-  } catch (error) {
-    console.error("Error al dar de baja el centro de vacunacion:", error);
-    req.flash("error", "Error al dar de baja el centro de vacunacion.");
-    res.status(500).json({ success: false, message: error.message });
-  }
-};
+	try {
+		await CentroDeVacunacion.update(
+		{ activo: 0 },
+		{ where: {
+			idCentroDeVacunacion: req.params.id,
+			},
+		}
+		)
+		req.flash('success', 'El centro de vacunación dado de baja exitosamente.')
+		res.json({ success: true })
+	} catch (error) {
+		req.flash( 'error', `Hubo un error al intentar dar de baja el centro de vacunación. ${error.message}`)
+		res.json({ success: false})
+	}
+}
 
 const altaCentroDeVacunacion = async (req, res) => {
   try {
@@ -119,23 +101,22 @@ const altaCentroDeVacunacion = async (req, res) => {
           idCentroDeVacunacion: req.params.id,
         },
       }
-    );
-    req.flash("success", "Centro de vacunación dado de alta exitosamente.");
-    res.json({ success: true });
+    )
+    req.flash('success', 'El centro de vacunación dado de alta exitosamente.')
+    res.json({ success: true })
   } catch (error) {
-    console.error("Error al dar de alta el centro de vacunacion:", error);
-    req.flash("error", "Error al dar de alta el centro de vacunacion.");
-    res.status(500).json({ success: false, message: error.message });
+    req.flash( 'error', `Hubo un error al intentar dar de baja el centro de vacunación. ${error.message}`)
+	res.json({ success: false})
   }
-};
+}
 
 module.exports = {
-  listarCentrosDeVacunacion,
-  formCentroVac,
-  createCentroVac,
-  editCentroVac,
-  updateCentroDeVacunacion,
-  deleteCentroDeVacunacion,
-  bajaCentroDeVacunacion,
-  altaCentroDeVacunacion
-};
+	listarCentrosDeVacunacion,
+	formCentroVac,
+	createCentroVac,
+	editCentroVac,
+	updateCentroDeVacunacion,
+	deleteCentroDeVacunacion,
+	bajaCentroDeVacunacion,
+	altaCentroDeVacunacion
+}

@@ -50,47 +50,63 @@ const formLoteInterno = async (req, res) => {
 // Crear un nuevo lote interno
 const createLoteInterno = async (req, res) => {
 	try {
-		let { numeroDeSerie, numeroDeLote, idLaboratorio, cantidadDeVacunas, fechaDeLlegadaDepositoNacional, idDepositoNacional, fechaDeSalidaDepositoNacional, fechaDeLlegadaDepositoProvincial, idDepositoProvincial, fechaDeSalidaDepositoProvincial, fechaDeLlegadaCentroDeVacunacion, idCentroDeVacunacion } = req.body;
-		if (idDepositoNacional == '') {
+		let { numeroDeSerie, nombreLaboratorio, numeroDeLote, cantidadDeVacunas, fechaDeLlegadaDepositoNacional, idDepositoNacional, fechaDeSalidaDepositoNacional, fechaDeLlegadaDepositoProvincial, idDepositoProvincial, fechaDeSalidaDepositoProvincial, fechaDeLlegadaCentroDeVacunacion, idCentroDeVacunacion } = req.body;
+		const laboratorio = await Laboratorio.findOne({ where: { nombreLaboratorio: nombreLaboratorio } })
+
+		if (idDepositoNacional === '') {
 			idDepositoNacional = null;
+		} else {
+			idDepositoNacional = idDepositoNacional
 		}
-		if (idDepositoProvincial == '') {
+
+		if(idDepositoProvincial === '') {
 			idDepositoProvincial = null;
+		} else {
+			idDepositoProvincial = idDepositoProvincial
 		}
-		if (idCentroDeVacunacion == '') {
+
+		if (idCentroDeVacunacion === '') {
 			idCentroDeVacunacion = null;
+		} else {
+			idCentroDeVacunacion = idCentroDeVacunacion
 		}
+
 		if (fechaDeLlegadaDepositoNacional === '') {
 			fechaDeLlegadaDepositoNacional = null;
 		}
+
 		if (fechaDeSalidaDepositoNacional === '') {
 			fechaDeSalidaDepositoNacional = null;
 		}
+
 		if (fechaDeLlegadaDepositoProvincial === '') {
 			fechaDeLlegadaDepositoProvincial = null;
 		}
+
 		if (fechaDeSalidaDepositoProvincial === '') {
 			fechaDeSalidaDepositoProvincial = null;
 		}
+
 		if (fechaDeLlegadaCentroDeVacunacion === '') {
 			fechaDeLlegadaCentroDeVacunacion = null;
 		}
+
 		await LoteInterno.create({
-      numeroDeSerie,
-      numeroDeLote,
-      idLaboratorio,
-      cantidadDeVacunasTotales: cantidadDeVacunas,
-      cantidadDeVacunasRestantes: cantidadDeVacunas,
-      fechaDeLlegadaDepositoNacional,
-      idDepositoNacional,
-      fechaDeSalidaDepositoNacional,
-      fechaDeLlegadaDepositoProvincial,
-      idDepositoProvincial,
-      fechaDeSalidaDepositoProvincial,
-      fechaDeLlegadaCentroDeVacunacion,
-      idCentroDeVacunacion,
-      activo: 1,
-    });
+			numeroDeSerie,
+			numeroDeLote,
+			idLaboratorio: laboratorio.idLaboratorio,
+			cantidadDeVacunasTotales: cantidadDeVacunas,
+			cantidadDeVacunasRestantes: cantidadDeVacunas,
+			fechaDeLlegadaDepositoNacional,
+			idDepositoNacional,
+			fechaDeSalidaDepositoNacional,
+			fechaDeLlegadaDepositoProvincial,
+			idDepositoProvincial,
+			fechaDeSalidaDepositoProvincial,
+			fechaDeLlegadaCentroDeVacunacion,
+			idCentroDeVacunacion,
+			activo: 1,
+		});
 		req.flash('success', 'Lote Interno creado exitosamente.');
 		res.redirect("/lotesinternos");
 	} catch (error) {

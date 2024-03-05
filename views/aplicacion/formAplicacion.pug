@@ -1,18 +1,13 @@
-- var title ='Crear la aplicación de una vacuna'
+- const title ='Crear la aplicación de una vacuna'
 include ..\includes\layout
 block content
 html(lang="es")
-head
-    style.
-        #formAplicacion {
-            max-width: 600px;
-            margin: auto;
-        }
 body
     h2.text-center Ingresar los datos de la aplicación de la vacuna
     if messages.error
         .alert.alert-danger
             = messages.error
+    br
     div.modal#alertModal(tabindex="-1" role="dialog" aria-labelledby="alertModalLabel" aria-hidden="true")
         div.modal-dialog(role="document")
             div.modal-content
@@ -21,119 +16,222 @@ body
                     button.close(type="button" data-bs-dismiss="modal" aria-label="Close")
                         span(aria-hidden="true") ×
                 div.modal-body
-                    p#mensajeAlerta.text-center Mensaje de alerta
-    form#formAplicacion(action="/aplicaciones" method="post")
+                    p#mensajeAlerta.text-center
+    form#form(action="/aplicaciones" method="post")
         .form-group
-            label.form-label(for="DNIPaciente") Paciente:
+            label.form-label(for="DNIPaciente") Paciente que recibio la aplicación de la vacuna:
             .input-group.has-validation
-                select.form-select.is-invalid(name="DNIPaciente" id="DNIPaciente" onchange=`agenteS(${JSON.stringify(agentes)}, ${JSON.stringify(personas)})` required)
-                    option(value="") Seleccione un Paciente
-                        each persona in personas
-                            option(value=persona.DNI) #{persona.nombre} #{persona.apellido}
-                    .invalid-feedback.d-none(id="DNIPacienteSinSeleccionar") Seleccione un paciente
+                select.form-select.is-valid#DNIPaciente(name="DNIPaciente" required)
+                .invalid-feedback.d-none#DNIPacienteSinPacientes No hay pacientes cargadas en la BD, dé de alta alguno antes de generar una aplicación
         .form-group
-            label.form-label(for="DNIAgente") Agente de Salud:
+            label.form-label(for="DNIAgente") Agente de Salud que aplico la vacuna:
             .input-group.has-validation
-                select.form-select.is-invalid(name="DNIAgente" id="DNIAgente" class="DNIAgente" required)
-                    option(value="") Seleccione un Agente de Salud
-                .invalid-feedback.d-none(id="DNIAgenteSinSeleccionar") Seleccione un agente
+                select.form-select.is-valid#DNIAgente(name="DNIAgente" required)
+                .invalid-feedback.d-none#DNIAgenteSinSeleccionar Seleccione un paciente primero
+                .invalid-feedback.d-none#DNIAgenteSinAgentes No hay agentes cargados en la BD, dé de alta alguno antes de generar una aplicación
         .form-group    
-            label.form-label(for="numeroDeSerie") Lote de vacunas que se aplicará al Paciente:
+            label.form-label(for="numeroDeSerie") Lote de vacunas que se aplico al Paciente:
             .input-group.has-validation
-                select.form-select.is-invalid(name="numeroDeSerie" id="numeroDeSerie" required)
-                    option(value="") Seleccione un Lote
-                        each lote in lotes
-                            option(value=lote.numeroDeSerie) #{lote.numeroDeSerie}
-                    .invalid-feedback.d-none(id="numeroDeSerieSinSeleccionar") Seleccione un paciente
-        .form-group
-            label.form-label(for="fechaDeAplicacion") Fecha de Aplicación:
+                select.form-select.is-valid#numeroDeSerie(name="numeroDeSerie" required)
+                .invalid-feedback.d-none#numeroDeSerieSinSeleccionar Seleccione un lote interno de vacunas
+                .invalid-feedback.d-none#numeroDeSerieNoLlegadaACentro El centro de vacunación aún no tiene vacunas para aplicar
+        //.form-group
+            label.form-label(for="fechaDeAplicacion") Fecha en la que se aplico la vacuna:
             .input-group.has-validation
-                input.form-control.is-invalid(type="date" name="fechaDeAplicacion" id="fechaDeAplicacion" required)
-                .invalid-feedback.d-none(id="fechaDeAplicacionVacio") El campo no puede estar vacío
-                .invalid-feedback.d-none(id="fechaDeAplicacionSuperior") La fecha de aplicación es superior a la actual
-                .invalid-feedback.d-none(id="fechaDeAplicacionNumeroDeSerie") Debe seleccionar un lote interno antes de ingresar una fecha de aplicación
-                .invalid-feedback.d-none(id="fechaDeAplicacionVencimiento") ADVERTENCIA: El lote seleccionado se encuentra vencido, se recomienda discreción en la aplicación de la vacuna
+                input.form-control.is-invalid#fechaDeAplicacion(type="date" name="fechaDeAplicacion" required)
+                .invalid-feedback#fechaDeAplicacionVacio El campo no puede estar vacío
+                .invalid-feedback.d-none#fechaDeAplicacionSuperior La fecha de aplicación es superior a la actual
+                .invalid-feedback.d-none#fechaDeAplicacionLlegadaACentro La fecha de aplicación no puede ser anterior a la llegada al centro de vacunación
         br
         div.text-center
-            button(type="submit" class="btn btn-primary") Crear
+            button.btn.btn-primary(type="submit") Crear
             | &nbsp;&nbsp;&nbsp;&nbsp;
-            button(type="button" class="btn btn-primary" onclick="window.history.back()") Volver
+            button.btn.btn-primary(type="button" onclick="window.history.back()") Volver
 script.
     $(function(){
-        function mostrarAlerta() {
-            $('#mensajeAlerta').text("¡Datos incorrectos! Por favor, verifica la información ingresada.");
-            $('#alertModal').modal('show');
+        function mostrarAlerta(mensaje) {
+            $(mensajeAlerta).text(mensaje)
+            $(alertModal).modal('show')
         }
 
         function mostrarError(campo, error) {
-            campo.addClass('is-invalid').removeClass('is-valid').addClass();
-            $('#' + campo.attr('id') + error).removeClass('d-none');
+            campo.addClass('is-invalid').removeClass('is-valid')
+            $(`#${campo.attr('id')}${error}`).removeClass('d-none')
         }
 
         function quitarError(campo) {
-            campo.addClass('is-valid').removeClass('is-invalid');
-            $('div[id^=' + campo.attr('id') + '].invalid-feedback').addClass('d-none');
+            campo.addClass('is-valid').removeClass('is-invalid')
+            $(`div[id^=${campo.attr('id')}].invalid-feedback`).addClass('d-none')
         }
 
-        function validarComboBox(campo){
-            if(!campo.val()){
-                mostrarError(campo, 'SinSeleccionar');
-                $('#' + campo.attr('id') + 'SinSeleccionar').removeClass('d-none');
+        function cargarPacientes(){
+            const pacientes = !{JSON.stringify(personas)}.filter(paciente => paciente.activo == 1)
+            if(pacientes.length == 0){
+                $(DNIPaciente).append(`<option disabled selected hidden value="">No hay pacientes dados de alta</option>`).prop('disabled', true)
+                $(DNIAgente).append(`<option disabled selected hidden value="">No hay agentes dados de alta</option>`).prop('disabled', true)
+                mostrarError($(DNIPaciente), 'SinPacientes')
+                mostrarError($(DNIAgente), 'SinAgentes')
             } else {
-                quitarError(campo);
+                pacientes.forEach(paciente => {
+                    $(DNIPaciente).append(`<option value="${paciente.DNI}">${paciente.nombre} ${paciente.apellido}</option>`)
+                })
             }
         }
 
-        function agenteS(agentes, pacientes) {
-            let paciente = null
-            let pacienteSelect = document.getElementById("DNIPaciente").value;
-            let agenteSelect = document.getElementById("DNIAgente");
-            agenteSelect.innerHTML = "";  // Limpiar el contenido actual
-            for (let i = 0; i < agentes.length; i++) {
-                if (agentes[i].DNI != pacienteSelect) {
-                    paciente = pacientes.filter(paciente => paciente.DNI===agentes[i].DNI);
-                    agenteSelect.innerHTML += `<option value=${paciente[0].DNI}>${paciente[0].nombre} ${paciente[0].apellido}</option>`;
-                }
-            }
-        }
-
-        function validarFechaDeAplicacion() {
-            quitarError($('#fechaDeAplicacion'))
-            if (!$('#fechaDeAplicacion').val()) {
-                mostrarError($('#fechaDeAplicacion'), 'Vacio');
+        function cargarAgentes() {
+            let agentes = !{JSON.stringify(personas)}.filter(agente => agente.activo == 1 && agente.ocupacion == 'agente de salud' && agente.DNI != $(DNIPaciente).val())
+            if(agentes.length == 0) {
+                $(DNIAgente).empty().append(`<option disabled selected hidden value="">No hay agentes dados de alta</option>`).prop('disabled', true)
+                mostrarError($(DNIAgente), 'SinAgentes')
             } else {
-                let fechaIngresada = new Date($('#fechaDeAplicacion').val())
-                let fechaActual = new Date()
-                fechaIngresada.setHours(24, 0, 0, 0)
-                fechaActual.setHours(0, 0, 0, 0)
-                if (((fechaIngresada - fechaActual) / (1000 * 60 * 60 * 24)) > 0) {
-                    mostrarError($('#fechaDeAplicacion'), 'Superior');
-                } else {
-                    if(!$('#numeroDeSerie')){
-                        mostrarError($('#fechaDeAplicacion'), 'NumeroDeSerie')
-                    } else {
-                        let fecha
+                quitarError($(DNIAgente))
+                $(DNIAgente).empty().prop('disabled', false)
+                agentes.filter(agente => {
+                    if(agente.DNI != $(DNIPaciente)){
+                        $(DNIAgente).append(`<option value=${agente.DNI}>${agente.nombre} ${agente.apellido}</option>`)
                     }
+                })
+            }
+        }
 
-                    if (fechaIngresada < fechaActual) {
-                        mostrarError($('#fechaDeAplicacion'), `Antiguo`);
-                    } 
-                }
+        function cargarLotes(){
+            const lotes = !{JSON.stringify(lotes)}.filter(lote => lote.fechaDeLlegadaCentroDeVacunacion != null)
+            if(lotes.length == 0){
+                $(numeroDeSerie).append('<option selected hidden value="">Sin vacunas</option>')
+                mostrarError($(numeroDeSerie), 'NoLlegadaACentro')
+            } else {
+                quitarError($(numeroDeSerie))
+                $(numeroDeSerie).prop('disabled', false)
+                $(fechaDeAplicacion).prop('disabled', false)
+                lotes.forEach(lote => {
+                    $(numeroDeSerie).append(`<option value=${lote.numeroDeSerie}> ${lote.numeroDeSerie} </option>`)
+                })
             }
         }
 
         function validarFormulario() {
-            let inputs = $('#formLoteProveedor input, #formLoteProveedor select');
-            let camposInvalidos = false;
+            
+            const inputs = $('#form input, #form select')
+            let camposInvalidos = false
             inputs.each(function () {
                 if ($(this).hasClass('is-invalid')) {
-                    camposInvalidos = true;
+                    camposInvalidos = true
                 }
-            });
+            })
             if (camposInvalidos) {
-                mostrarAlerta();
-                return false;
+                mostrarAlerta("¡Datos incorrectos! Por favor, verifica la información ingresada.")
+                return false
             }
-            return true;
+            return true
         }
+
+        cargarPacientes()
+        cargarAgentes()
+        $(DNIPaciente).on('change', function(){
+            cargarAgentes()
+        })
+
+        /*$(fechaDeAplicacion).on('keyup focusout', function(){
+            validarFechaDeAplicacion()
+        })*/
+
+        let press = 0
+        $(alertModal).on('keyup', function (event) {
+            
+            if(event.key === 'Enter'){
+                press = press+1
+            }
+            if (event.key === 'Escape' || press == 2) {
+                $(alertModal).modal('hide')
+                press = 0
+            }
+        })
+
+        $(alertModal).on('hidden.bs.modal', function () {
+            const primerInvalido = $('.is-invalid:first')
+            if (primerInvalido.length > 0) {
+                primerInvalido.focus()
+            }
+        })
+
+        $(alertModal).on('hidden.bs.modal', function () {
+            
+            const primerInvalido = $('.is-invalid:first')
+            if (primerInvalido.length > 0) {
+                primerInvalido.focus()
+            }
+        })
+
+        $(DNIPaciente).trigger('focus')
+
+        $('#form input').on('keypress', function (event) {
+            if (event.which === 13) {
+                if(!validarFormulario()){
+                    event.preventDefault()
+                }
+            }
+        })
+
+        $('#form button[type="submit"]').on('click', function (event) {
+            if (!validarFormulario()) {
+                event.preventDefault()
+            }
+        })
     })
+
+    /*function validarCampos(){
+            cargarAgentes()
+            cargarLotes()
+            if($(DNIPaciente).val() && $(DNIAgente).hasClass('is-invalid')){
+                $(DNIAgente).prop('disabled', false)
+                quitarError($(DNIAgente))
+                quitarError($(DNIPaciente))
+            }
+        }
+
+        function cargarAgentes(){
+            $(DNIAgente).empty()
+            if(!$(DNIPaciente).val()){
+                $(DNIAgente).append('<option disabled selected hidden value="">Seleccione un agente de salud</option>')
+            } else {
+                !{JSON.stringify(personas)}.filter(persona => persona.ocupacion == 'agente de salud').forEach(agente => {
+                    if($(DNIPaciente).val() != agente.DNI){
+                        $(DNIAgente).append('<option value="' + agente.DNI + '">' + agente.nombre + ' ' + agente.apellido + '</option>')
+                    }
+                })
+            }
+        }
+
+        
+
+        function validarFechaDeAplicacion() {
+            quitarError($(fechaDeAplicacion))
+            if (!$(fechaDeAplicacion).val()) {
+                mostrarError($(fechaDeAplicacion), 'Vacio')
+            } else {
+                const fechaIngresada = new Date($(fechaDeAplicacion).val())
+                const fechaActual = new Date()
+                fechaIngresada.setHours(24, 0, 0, 0)
+                fechaActual.setHours(0, 0, 0, 0)
+
+                const loteInterno = !{JSON.stringify(lotes)}.find(lote => lote.numeroDeSerie == $(numeroDeSerie).val())
+                const fechaVencimiento = new Date(loteInterno.Loteproveedor.fechaDeVencimiento)
+                if(loteInterno.fechaDeLlegadaCentroDeVacunacion != null){
+                    const fechaDeLlegadaACentro = new Date(loteInterno.fechaDeLlegadaCentroDeVacunacion)
+                    if(fechaIngresada < fechaDeLlegadaACentro){
+                        mostrarError($(fechaDeAplicacion), 'LlegadaACentro')
+                    } else if (fechaIngresada > fechaActual) {
+                        mostrarError($(fechaDeAplicacion), 'Superior')
+                    } else if (fechaIngresada > fechaVencimiento) {
+                        mostrarAlerta('ADVERTENCIA: El lote seleccionado se encuentra vencido. Puede continuar, pero se recomienda precaución')
+                    }
+                } else {
+                    mostrarError($(fechaDeAplicacion), 'LlegadaACentro')
+                }
+            }
+        }
+
+        function mostrarAdvertencia() {
+            $(mensajeAlerta).text('ADVERTENCIA: El lote seleccionado se encuentra vencido. Puede continuar, pero se recomienda precaución.')
+            $(alertModal).modal('show')
+        }*/

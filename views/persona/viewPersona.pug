@@ -84,23 +84,21 @@ script.
                 }
             ],
             columnDefs: [
-                // {orderable: false, targets:[13]}, // Columna de "Opciones"
+                    //{orderable: false, targets:[13]}, // Columna de "Opciones"
                     {searchable: false, targets:[11, 12, 14]},
-                    {className: "dt-center", targets: [0, 3, 4, 5, 9, 13]},
-                    { width: "7%", targets: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11] },
-                    { width: "10%", targets: [13] }
+                    {className: "dt-center", targets: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]},
+                    //{ width: "7%", targets: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11] },
+                    //{ width: "5%", targets: [14] }
             ]
         });
 
         function agregarMensajeSiVacio(td, cellData, rowData, row, col) {
-            // Verificar si la celda está vacía y agregar el mensaje
             if (!cellData) {
                 $(td).text("No posee");
             }
         }
 
         function agregarMensajeSiActivoOInactivo(td, cellData, rowData, row, col) {
-            // Verificar si la celda está vacía y agregar el mensaje
             if (cellData == 1) {
                 $(td).text("Activo");
             } else {
@@ -119,7 +117,6 @@ script.
             let data = tabla.row(f.target.closest('tr')).data();
 
             if ($(event.target).hasClass('fa-exclamation-circle')) {
-                // Código para dar de baja (lo mantengo igual)
                 $('#confirmBajaModal').modal('show');
                 $('#confirmBajaBtn').on('click', function() {
                     $.ajax({
@@ -127,7 +124,7 @@ script.
                         type: 'PUT',
                         success: function(data) {
                             if (data.success) {
-                                window.location.href = "/personas";
+                                location.reload(true)
                             } else {
                                 console.error(data.message);
                             }
@@ -139,28 +136,24 @@ script.
                     $('#confirmBajaModal').modal('hide');
                 });
 
-                // Configurar el botón de cancelar y la 'X' para cerrar el modal
                 $('#cancelBajaBtn, .modal-header button.close').on('click', function() {
                     $('#confirmBajaModal').modal('hide');
                 });
 
-                // Agregar evento al documento para escuchar la tecla 'Enter'
                 $(document).on('keydown', function(e) {
                     if (e.key === 'Enter' && $('#confirmBajaModal').is(':visible')) {
-                        // Disparar el evento de click en el botón de confirmación
                         $('#confirmBajaBtn').trigger('click');
                     }
                 });
             } else if ($(event.target).hasClass('fa-check-circle')) {
-            // Código para dar de alta
                 $('#confirmAltaModal').modal('show');
                 $('#confirmAltaBtn').on('click', function() {
                     $.ajax({
                         url: '/personas/' + data.DNI + '/alta',
-                        type: 'PUT',  // Cambiado a PUT, ya que es una acción de activación
+                        type: 'PUT',
                         success: function(data) {
                             if (data.success) {
-                                window.location.href = "/personas";
+                                location.reload(true)
                             } else {
                                 console.error(data.message);
                             }
@@ -171,9 +164,13 @@ script.
                     });
                     $('#confirmAltaModal').modal('hide');
                 })
+
+                $('#cancelAltaBtn, .modal-header button.close').on('click', function() {
+                    $('#confirmAltaModal').modal('hide');
+                });
+                
                 $(document).on('keydown', function(e) {
                     if (e.key === 'Enter' && $('#confirmAltaModal').is(':visible')) {
-                        // Disparar el evento de click en el botón de confirmación
                         $('#confirmAltaBtn').trigger('click');
                     }
                 });

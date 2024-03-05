@@ -1,15 +1,9 @@
-- var title ='Actualizar el lote proveedor';
+- const title ='Actualización del lote proveedor'
 include ..\includes\layout
 block content
 html(lang="es")
-head
-    style.
-        #formLoteProveedor {
-            max-width: 600px;
-            margin: auto;
-        }
 body
-    h2.text-center Actualizar el lote proveedor
+    h2.text-center Actualice los datos del lote proveedor
     if messages.error
         .alert.alert-danger
             = messages.error
@@ -22,57 +16,52 @@ body
                     button.close(type="button" data-bs-dismiss="modal" aria-label="Close")
                         span(aria-hidden="true") ×
                 div.modal-body
-                    p#mensajeAlerta Mensaje de alerta
-    form#formLoteProveedor(action="/lotesproveedores/"+loteProveedor.numeroDeLote+"?_method=PUT" method="post")
+                    p#mensajeAlerta.text-center
+    form#form(action="/lotesproveedores/"+loteProveedor.numeroDeLote+"?_method=PUT" method="post")
         .form-group
             label.form-label(for="numeroDeLote") Lote N°:
             .input-group.has-validation
-                input.form-control.is-valid(type="text" name="numeroDeLote" id="numeroDeLote" value=loteProveedor.numeroDeLote disabled)
+                input.form-control.is-valid#numeroDeLote(type="text" name="numeroDeLote" value=loteProveedor.numeroDeLote disabled)
         .form-group
-            label.form-label(for="idLaboratorio") Laboratorio:
+            label.form-label(for="idLaboratorio") Laboratorio de origen del lote:
             .input-group.has-validation
-                select.form-select.is-valid(name="idLaboratorio" id="idLaboratorio" required)
-                    each lab in laboratorios
-                        if(lab.idLaboratorio==loteProveedor.idLaboratorio)
-                            option(value=lab.idLaboratorio selected)= lab.nombreLaboratorio
-                        else 
-                            option(value=lab.idLaboratorio)= lab.nombreLaboratorio
+                select.form-select.is-valid#idLaboratorio(name="idLaboratorio" required)
         .form-group
-            label.form-label(for="tipoDeVacuna") Tipo de Vacuna:
+            label.form-label(for="tipoDeVacuna") Tipo de vacuna que trae el lote:
             .input-group.has-validation
-                select.form-select.is-valid(name="tipoDeVacuna" id="tipoDeVacuna" required)
+                select.form-select.is-valid#tipoDeVacuna(name="tipoDeVacuna" required)
         .form-group
-            label.form-label(for="nombreComercial") Nombre Comercial de la Vacuna:
+            label.form-label(for="nombreComercial") Nombre comercial de la vacuna:
             .input-group.has-validation
-                select.form-select.is-valid(name="nombreComercial" id="nombreComercial" required)
+                select.form-select.is-valid#nombreComercial(name="nombreComercial" required)
         .form-group
-            label.form-label(for="cantidadDeLotesInternos") Cantidad de Lotes Internos:
+            label.form-label(for="cantidadDeLotesInternos") Cantidad de lotes internos que trae el lote :
             .input-group.has-validation
-                input.form-control(type="text" id="cantidadDeLotesInternos" name="cantidadDeLotesInternos" value=loteProveedor.cantidadDeLotesInternos required)
-                .invalid-feedback.d-none(id="cantidadDeLotesInternosVacio") El campo no puede estar vacío
-                .invalid-feedback.d-none(id="cantidadDeLotesInternosNumeros") Ingrese solo números positivos
+                input.form-control.is-valid#cantidadDeLotesInternos(type="text" title="Ingrese la cantidad de cajas que posee el lote" placeholder="Ingrese la cantidad de cajas que posee el lote" name="cantidadDeLotesInternos" value=loteProveedor.cantidadDeLotesInternos required)
+                .invalid-feedback.d-none#cantidadDeLotesInternosVacio El campo no puede estar vacío
+                .invalid-feedback.d-none#cantidadDeLotesInternosNumeros Ingrese solo números positivos
         .form-group
-            label.form-label(for="fechaDeFabricacion") Fecha de Fabricación de la Vacuna:
+            label.form-label(for="fechaDeFabricacion") Fecha de fabricación de la vacuna:
             .input-group.has-validation
-                input.form-control(type="date" id="fechaDeFabricacion" name="fechaDeFabricacion" value=loteProveedor.fechaDeFabricacion required)
-                .invalid-feedback.d-none(id="fechaDeFabricacionVacio") El campo no puede estar vacío
-                .invalid-feedback.d-none(id="fechaDeFabricacionSuperior") La fecha de fabricación es superior a la fecha actual
-                .invalid-feedback.d-none(id="fechaDeFabricacionAntiguo") La fecha ingresada no puede ser anterior a tres años del actual
+                input.form-control.is-valid#fechaDeFabricacion(type="date" name="fechaDeFabricacion" value=loteProveedor.fechaDeFabricacion required)
+                .invalid-feedback.d-none#fechaDeFabricacionVacio El campo no puede estar vacío
+                .invalid-feedback.d-none#fechaDeFabricacionSuperior La fecha de fabricación es superior a la fecha actual
+                .invalid-feedback.d-none#fechaDeFabricacionAntiguo La fecha ingresada no puede ser anterior a tres años del actual
         .form-group
-            label.form-label(for="fechaDeCompra") Fecha de Compra de la Vacuna:
+            label.form-label(for="fechaDeCompra") Fecha de compra de la vacuna:
             .input-group.has-validation
-                input.form-control(type="date" id="fechaDeCompra" name="fechaDeCompra" value=loteProveedor.fechaDeCompra required)
-                .invalid-feedback.d-none(id="fechaDeCompraVacio") El campo no puede estar vacío
-                .invalid-feedback.d-none(id="fechaDeCompraSuperior") La fecha de compra es superior a la fecha actual
-                .invalid-feedback.d-none(id="fechaDeCompraImposible") La fecha de fabricación está vacia
-                .invalid-feedback.d-none(id="fechaDeCompraAntiguo") La fecha ingresada no puede ser anterior a la fecha de fabricación
+                input.form-control.is-valid#fechaDeCompra(type="date" name="fechaDeCompra" value=loteProveedor.fechaDeCompra required)
+                .invalid-feedback.d-none#fechaDeCompraVacio El campo no puede estar vacío
+                .invalid-feedback.d-none#fechaDeCompraSuperior La fecha de compra es superior a la fecha actual
+                .invalid-feedback.d-none#fechaDeCompraImposible La fecha de fabricación está vacia
+                .invalid-feedback.d-none#fechaDeCompraAntiguo La fecha ingresada no puede ser anterior a la fecha de fabricación
         .form-group
-            label.form-label(for="fechaDeVencimiento") Fecha de Vencimiento de la Vacuna:
+            label.form-label(for="fechaDeVencimiento") Fecha de vencimiento de la vacuna:
             .input-group.has-validation
-                input.form-control(type="date" id="fechaDeVencimiento" name="fechaDeVencimiento" value=loteProveedor.fechaDeVencimiento required)
-                .invalid-feedback.d-none(id="fechaDeVencimientoVacio") El campo no puede estar vacío
-                .invalid-feedback.d-none(id="fechaDeVencimientoImposible") La fecha de fabricación está vacia
-                .invalid-feedback.d-none(id="fechaDeVencimientoAntiguo") La fecha de vencimiento debe tener una diferencia mayor de cinco años con la fecha de fabricación
+                input.form-control.is-valid#fechaDeVencimiento(type="date" name="fechaDeVencimiento" value=loteProveedor.fechaDeVencimiento required)
+                .invalid-feedback.d-none#fechaDeVencimientoVacio El campo no puede estar vacío
+                .invalid-feedback.d-none#fechaDeVencimientoImposible La fecha de fabricación está vacia
+                .invalid-feedback.d-none#fechaDeVencimientoAntiguo La fecha de vencimiento debe tener una diferencia mayor de cinco años con la fecha de fabricación
         br
         div.text-center
             button(type="submit" class="btn btn-primary") Actualizar
@@ -80,23 +69,33 @@ body
             button(type="button" class="btn btn-primary" onclick="window.history.back()") Volver
 script.
     $(function (){
-        function mostrarAlerta(mensaje) {
-            $('#mensajeAlerta').text(mensaje);
-            $('#alertModal').modal('show');
+        function mostrarAlerta() {
+            $(mensajeAlerta).text("¡Datos incorrectos! Por favor, verifica la información ingresada.")
+            $(alertModal).modal('show')
         }
 
-        // Funciones para mostrar y quitar errores
         function mostrarError(campo, error) {
-            campo.addClass('is-invalid').removeClass('is-valid').addClass();
-            $('#' + campo.attr('id') + error).removeClass('d-none');
+            campo.addClass('is-invalid').removeClass('is-valid')
+            $(`#${campo.attr('id')}${error}`).removeClass('d-none')
         }
 
         function quitarError(campo) {
-            campo.addClass('is-valid').removeClass('is-invalid');
-            $('div[id^=' + campo.attr('id') + '].invalid-feedback').addClass('d-none');
+            campo.addClass('is-valid').removeClass('is-invalid')
+            $(`div[id^=${campo.attr('id')}].invalid-feedback`).addClass('d-none')
         }
 
-        function cargarTipoDeVacuna(){
+        function cargarLaboratorios(){
+            const laboratorios = !{JSON.stringify(laboratorios)}.filter(laboratorio => laboratorio.activo == 1)
+            const lote = !{JSON.stringify(loteProveedor)}
+            laboratorios.forEach(laboratorio => {
+                if(laboratorio.idLaboratorio==lote.idLaboratorio)
+                    $(idLaboratorio).append('<option selected value="' + laboratorio.idLaboratorio + '">' + laboratorio.nombreLaboratorio + '</option>')
+                else 
+                    $(idLaboratorio).append('<option value="' + laboratorio.idLaboratorio + '">' + laboratorio.nombreLaboratorio + '</option>')
+            })
+        }
+
+        function cargarTiposDeVacunas(){
             [
                 "Tuberculosis",
                 "Meningitis-Neumonía",
@@ -110,17 +109,15 @@ script.
                 "Varicela",
                 "HPV"
             ].forEach(tipo => {
-                console.log(tipo)
-                console.log(!{JSON.stringify(loteProveedor)}.tipoDeVacuna)
                 if(tipo == !{JSON.stringify(loteProveedor)}.tipoDeVacuna){
-                    $('#tipoDeVacuna').append(`<option selected value="${tipo}">${tipo}</option>`)
+                    $(tipoDeVacuna).append(`<option selected value="${tipo}">${tipo}</option>`)
                 } else {
-                    $('#tipoDeVacuna').append(`<option value="${tipo}">${tipo}</option>`)
+                    $(tipoDeVacuna).append(`<option value="${tipo}">${tipo}</option>`)
                 }
             })
         }
 
-        function cargarNombreComercial(){
+        function cargarNombresComerciales(){
             [
                 "BCG",
                 "Neumococo Conjugada",
@@ -133,170 +130,152 @@ script.
                 "Doble Bacteriana",
                 "Virus Papiloma Humano"
             ].forEach(nombre => {
-                console.log(nombre)
-                console.log(!{JSON.stringify(loteProveedor)}.nombreComercial)
                 if(nombre == !{JSON.stringify(loteProveedor)}.nombreComercial){
-                    $('#nombreComercial').append(`<option selected value="${nombre}">${nombre}</option>`)
+                    $(nombreComercial).append(`<option selected value="${nombre}">${nombre}</option>`)
                 } else {
-                    $('#nombreComercial').append(`<option value="${nombre}">${nombre}</option>`)
+                    $(nombreComercial).append(`<option value="${nombre}">${nombre}</option>`)
                 }
             })
         }
 
         function validarCantidadDeLotesInternos() {
-            quitarError($('#cantidadDeLotesInternos'))
-            if ($('#cantidadDeLotesInternos').val() == '') {
-                mostrarError($('#cantidadDeLotesInternos'), 'Vacio')
-            } else if(!/^[0-9]{1,}$/.test($('#cantidadDeLotesInternos').val()) || $('#cantidadDeLotesInternos').val() < 0 || $('#cantidadDeLotesInternos').val()[0] == 0){
-                mostrarError($('#cantidadDeLotesInternos'), 'Numeros')
+            quitarError($(cantidadDeLotesInternos))
+            if ($(cantidadDeLotesInternos).val() == '') {
+                mostrarError($(cantidadDeLotesInternos), 'Vacio')
+            } else if(!/^[0-9]{1,}$/.test($(cantidadDeLotesInternos).val()) || $(cantidadDeLotesInternos).val() < 0 || $(cantidadDeLotesInternos).val()[0] == 0){
+                mostrarError($(cantidadDeLotesInternos), 'Numeros')
             }
         }
 
         function validarFechaDeFabricacion() {
-            quitarError($('#fechaDeFabricacion'))
-            if (!$('#fechaDeFabricacion').val()) {
-                mostrarError($('#fechaDeFabricacion'), 'Vacio');
+            quitarError($(fechaDeFabricacion))
+            if (!$(fechaDeFabricacion).val()) {
+                mostrarError($(fechaDeFabricacion), 'Vacio')
             } else {
-                let fechaIngresada = new Date($('#fechaDeFabricacion').val())
-                let fechaActual = new Date()
+                const fechaIngresada = new Date($(fechaDeFabricacion).val())
+                const fechaActual = new Date()
                 fechaIngresada.setHours(24, 0, 0, 0)
                 fechaActual.setHours(0, 0, 0, 0)
                 if (((fechaIngresada - fechaActual) / (1000 * 60 * 60 * 24)) > 0) {
-                    mostrarError($('#fechaDeFabricacion'), 'Superior');
+                    mostrarError($(fechaDeFabricacion), 'Superior')
                 } else {
-                    fechaActual.setFullYear(fechaActual.getFullYear()-3);
+                    fechaActual.setFullYear(fechaActual.getFullYear()-3)
                     if (fechaIngresada < fechaActual) {
-                        mostrarError($('#fechaDeFabricacion'), `Antiguo`);
+                        mostrarError($(fechaDeFabricacion), `Antiguo`)
                     } 
                 }
             }
         }
 
         function validarFechaDeCompra() {
-            quitarError($('#fechaDeCompra'))
-            if (!$('#fechaDeCompra').val()) {
-                mostrarError($('#fechaDeCompra'), 'Vacio');
+            quitarError($(fechaDeCompra))
+            if (!$(fechaDeCompra).val()) {
+                mostrarError($(fechaDeCompra), 'Vacio')
             } else {
-                let fechaIngresada = new Date($('#fechaDeCompra').val())
-                let fechaActual = new Date()
+                const fechaIngresada = new Date($(fechaDeCompra).val())
+                const fechaActual = new Date()
                 fechaIngresada.setHours(24, 0, 0, 0)
                 fechaActual.setHours(0, 0, 0, 0)
                 if (((fechaIngresada - fechaActual) / (1000 * 60 * 60 * 24)) > 0) {
-                    mostrarError($('#fechaDeCompra'), 'Superior');
-                } else if (!$('#fechaDeFabricacion').val()) {
-                    mostrarError($('#fechaDeCompra'), `Imposible`);
+                    mostrarError($(fechaDeCompra), 'Superior')
+                } else if (!$(fechaDeFabricacion).val()) {
+                    mostrarError($(fechaDeCompra), `Imposible`)
                 } else {
-                    let fechaFabricacion = new Date($('#fechaDeFabricacion').val())
+                    const fechaFabricacion = new Date($(fechaDeFabricacion).val())
                     if(fechaIngresada < fechaFabricacion) {
-                        mostrarError($('#fechaDeCompra'), `Antiguo`);
+                        mostrarError($(fechaDeCompra), `Antiguo`)
                     }
                 } 
             }
         }
 
         function validarFechaDeVencimiento() {
-            quitarError($('#fechaDeVencimiento'))
-            if (!$('#fechaDeVencimiento').val()) {
-                mostrarError($('#fechaDeVencimiento'), 'Vacio');
+            quitarError($(fechaDeVencimiento))
+            if (!$(fechaDeVencimiento).val()) {
+                mostrarError($(fechaDeVencimiento), 'Vacio')
             } else {
-                let fechaIngresada = new Date($('#fechaDeVencimiento').val())
-                if (!$('#fechaDeFabricacion').val()) {
-                    mostrarError($('#fechaDeVencimiento'), `Imposible`);
+                const fechaIngresada = new Date($(fechaDeVencimiento).val())
+                if (!$(fechaDeFabricacion).val()) {
+                    mostrarError($(fechaDeVencimiento), `Imposible`)
                 } else {
-                    let fechaFabricacion = new Date($('#fechaDeFabricacion').val())
-                    fechaIngresada.setFullYear(fechaIngresada.getFullYear()-5);
+                    const fechaFabricacion = new Date($(fechaDeFabricacion).val())
+                    fechaIngresada.setFullYear(fechaIngresada.getFullYear()-5)
                     if(fechaIngresada < fechaFabricacion) {
-                        mostrarError($('#fechaDeVencimiento'), `Antiguo`);
+                        mostrarError($(fechaDeVencimiento), `Antiguo`)
                     }
                 } 
             }
         }
 
         function validarFormulario() {
-            let inputs = $('#formLoteProveedor input, #formLoteProveedor select');
-            let camposInvalidos = false;
+            const inputs = $('#form input, #form select')
+            let camposInvalidos = false
             inputs.each(function () {
                 if ($(this).hasClass('is-invalid')) {
-                    camposInvalidos = true;
+                    camposInvalidos = true
                 }
-            });
+            })
             if (camposInvalidos) {
-                mostrarAlerta("¡Datos incorrectos! Por favor, verifica la información ingresada.");
-                return false;
+                mostrarAlerta("¡Datos incorrectos! Por favor, verifica la información ingresada.")
+                return false
             }
-            return true;
+            return true
         }
 
-        // Eventos
-        $('#tipoDeVacuna').on('change', function () {
-            cargarTipoDeVacuna();
-        });
+        cargarLaboratorios()
+        cargarTiposDeVacunas()
+        cargarNombresComerciales()
 
-        $('#nombreComercial').on('change', function () {
-            cargarNombreComercial();
-        });
+        $(cantidadDeLotesInternos).on('keyup focusout', function () {
+            validarCantidadDeLotesInternos()
+        })
 
-        $('#cantidadDeLotesInternos').on('keyup focusout', function () {
-            validarCantidadDeLotesInternos();
-        });
-
-        $('#fechaDeFabricacion').on('keyup focusout', function () {
-            validarFechaDeFabricacion();
+        $(fechaDeFabricacion).on('keyup focusout', function () {
+            validarFechaDeFabricacion()
             validarFechaDeCompra()
             validarFechaDeVencimiento()
-        });
+        })
 
-        $('#fechaDeCompra').on('keyup focusout', function () {
-            validarFechaDeCompra();
-        });
+        $(fechaDeCompra).on('keyup focusout', function () {
+            validarFechaDeCompra()
+        })
 
-        $('#fechaDeVencimiento').on('keyup focusout', function () {
-            validarFechaDeVencimiento();
-        });
+        $(fechaDeVencimiento).on('keyup focusout', function () {
+            validarFechaDeVencimiento()
+        })
 
         let press = 0
-        $('#alertModal').on('keypress', function (event) {
-            // Si la tecla presionada es "Enter", oculta el modal
+        $(alertModal).on('keypress', function (event) {
             if(event.key === 'Enter'){
                 press = press + 1
             }
             if (event.key === 'Escape' || press == 2) {
-                $('#alertModal').modal('hide');
+                $(alertModal).modal('hide')
                 press = 0
             }
-        });            
+        })
 
-        // Evento cuando se oculta el modal
-        $('#alertModal').on('hidden.bs.modal', function () {
-            // Buscar el primer elemento con la clase 'is-invalid' y hacer foco en él
-            var primerInvalido = $('.is-invalid:first');
+        $(alertModal).on('hidden.bs.modal', function () {
+            const primerInvalido = $('.is-invalid:first')
             if (primerInvalido.length > 0) {
-                primerInvalido.focus();
+                primerInvalido.focus()
             }
-        });
+        })
 
-        $('#tipoDeVacuna, #nombreComercial').trigger('change');
-        $('#cantidadDeLotesInternos, #fechaDeFabricacion, #fechaDeVencimiento, #fechaDeCompra').trigger('focusout')
-        $('#idLaboratorio').trigger('focus')
+        $(cantidadDeLotesInternos).trigger('focus')
 
-        // Asociar el evento submit al formulario
-        $('#formLoteProveedor input').on('keypress', function (event) {
+        $('#form input').on('keypress', function (event) {
             if (event.which === 13) {
-                console.log("Formulario enviado por teclado");
-                //console.log(validarFormulario());
                 if(!validarFormulario()){
-                    event.preventDefault();
+                    event.preventDefault()
                 }
-                // Puedes agregar lógica adicional aquí si es necesario
             }
-        });
+        })
 
-        $('#formLoteProveedor button[type="submit"]').on('click', function (event) {
-            console.log("Botón de envío clicado");
+        $('#form button[type="submit"]').on('click', function (event) {
             if (!validarFormulario()) {
-                event.preventDefault();
-                console.log("Envío no exitoso");
+                event.preventDefault()
                 press = 1
             }
-        });
-    });
+        })
+    })
