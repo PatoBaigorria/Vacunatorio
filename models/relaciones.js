@@ -20,6 +20,7 @@ const PatologiaBase = require("./patologiabase");
 const Persona = require("./persona");
 const Telefono = require("./telefono");
 const Traslado = require("./traslado");
+const Usuario = require("./usuario");
 
 // Relaciones entre los modelos
 Laboratorio.hasMany(LoteProveedor, {
@@ -186,4 +187,5 @@ module.exports = {
 	Persona,
 	Telefono,
 	Traslado,
+	Usuario,
 };

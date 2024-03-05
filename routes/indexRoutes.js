@@ -19,6 +19,7 @@ const loteinternoRoutes = require("./loteinternoRoutes");
 const loteproveedorRoutes = require("./loteproveedorRoutes");
 const personaRoutes = require("./personaRoutes");
 const trasladoRoutes = require("./trasladoRoutes");
+const usuarioRoutes = require("./usuarioRoutes");
 
 // Configurar las rutas principales
 router.use("/aplicaciones", aplicacionRoutes);
@@ -31,5 +32,6 @@ router.use("/lotesinternos", loteinternoRoutes);
 router.use("/lotesproveedores", loteproveedorRoutes);
 router.use("/personas", personaRoutes);
 router.use("/traslados", trasladoRoutes);
+router.use("/usuarios", usuarioRoutes);
 
 module.exports = router;
