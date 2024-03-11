@@ -1,0 +1,181 @@
+- var title = 'Listado de personas'
+include ..\includes\layout
+block content
+body
+    div.container.my-4
+        div.row
+            div.col-sm-13.col-md-13.col-lg-13.col-xl-13
+                section#viewPersonas
+                    h2 Listado de las personas
+                    br
+                    if messages.success
+                        .alert.alert-success.flash-message.fade-in
+                            = messages.success
+                    if messages.error
+                        .alert.alert-danger.flash-message.fade-in
+                            = messages.error
+                    div.modal#confirmBajaModal(tabindex="-1" role="dialog")
+                        div.modal-dialog(role="document")
+                            div.modal-content
+                                div.modal-header
+                                    h5.modal-title Confirmar la baja de la persona
+                                    button.close(type="button" data-dismiss="modal" aria-label="Close")
+                                        span(aria-hidden="true") &times;
+                                div.modal-body
+                                    p#mensajeAlerta.text-center ¿Está seguro que desea dar de baja a esta persona?
+                                div.modal-footer
+                                    button.btn.btn-secondary(id="cancelBajaBtn" type="button" data-dismiss="modal") Cancelar
+                                    button.btn.btn-danger(id="confirmBajaBtn" type="button") Confirmar
+                    div.modal#confirmAltaModal(tabindex="-1" role="dialog")
+                        div.modal-dialog(role="document")
+                            div.modal-content
+                                div.modal-header
+                                    h5.modal-title Confirmar el alta de la persona
+                                    button.close(type="button" data-dismiss="modal" aria-label="Close")
+                                        span(aria-hidden="true") &times;
+                                div.modal-body
+                                    p#mensajeAlerta.text-center ¿Está seguro que desea dar de alta a esta persona?
+                                div.modal-footer
+                                    button.btn.btn-secondary(id="cancelAltaBtn" type="button" data-dismiss="modal") Cancelar
+                                    button.btn.btn-danger(id="confirmAltaBtn" type="button") Confirmar
+                    div(style="text-align: left;")
+                        a.btn.btn-primary.btn-lg(href="/personas/alta") Alta
+                        br
+                        br
+                        div.table.responsive 
+                            table#personas.table.table-striped.table-bordered
+script.
+    let tabla 
+    $(document).ready(function() {
+        tabla = $('#personas').DataTable({
+            data: !{JSON.stringify(personas)},
+            pageLength:5,
+            lengthMenu:[5,10,15,20],
+            language: {
+                url: '//cdn.datatables.net/plug-ins/1.13.7/i18n/es-AR.json'
+            },
+            columns:[
+                {data: 'DNI', title:'DNI'},
+                {data: 'nombre', title: 'Nombre'},
+                {data: 'apellido', title: 'Apellido'},
+                {data: 'email', title: 'Email'},
+                {data: 'fechaDeNacimiento', title: 'Fecha de Nacimiento'},
+                {data: 'ocupacion', title: 'Ocupación'},
+                {data: 'genero', title: 'Género'},
+                {data: 'Telefono.celular1', title: 'Celular 1', createdCell: agregarMensajeSiVacio },
+                {data: 'Telefono.celular2', title: 'Celular 2', createdCell: agregarMensajeSiVacio },
+                {data: 'Patologiabase.patologiaBase', title: 'Patología Base' },
+                {data: 'Agentedesalud.matricula', title: 'Matrícula', createdCell: agregarMensajeSiVacio },
+                {data: 'longitud', title: 'Longitud'},
+                {data: 'latitud', title: 'Latitud'},
+                { data: 'activo', title: 'Estado de la persona', createdCell: agregarMensajeSiActivoOInactivo },
+                {
+                    data: 'opciones', title: 'Opciones',
+                    render: function (data, type, row) {
+                        let editBtn = `<button title="Editar" class="btn btn-primary btn-sm fa-solid fa-pencil me-2"></button>`;
+                        let deactivateBtn = `<button title="Dar de baja" class="btn btn-warning btn-sm fa-solid fa-exclamation-circle"></button>`;
+                        let activateBtn = `<button title="Dar de alta" class="btn btn-success btn-sm fa-solid fa-check-circle"></button>`;
+                        if (row.activo == 1) {
+                            return `${editBtn} ${deactivateBtn}`;
+                        } else {
+                            return `${editBtn} ${activateBtn}`;
+                        }
+                    }
+                }
+            ],
+            columnDefs: [
+                //{orderable: false, targets:[13]}, // Columna de "Opciones"
+                {searchable: false, targets:[11, 12, 14]},
+                {className: "dt-center", targets: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]},
+                //{ width: "7%", targets: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11] },
+                //{ width: "5%", targets: [14] }
+            ]
+        });
+
+        function agregarMensajeSiVacio(td, cellData, rowData, row, col) {
+            if (!cellData) {
+                $(td).text("No posee");
+            }
+        }
+
+        function agregarMensajeSiActivoOInactivo(td, cellData, rowData, row, col) {
+            if (cellData == 1) {
+                $(td).text("Activo");
+            } else {
+                $(td).text("Inactivo");
+            }
+        }
+    });
+
+    $(document).ready(function() {
+        $('.flash-message').addClass('fade-in');
+        setTimeout(function() {
+            $('.flash-message').removeClass('fade-in');
+        }, 3000);
+
+        tabla.on('click', 'button', function (f) {
+            let data = tabla.row(f.target.closest('tr')).data();
+
+            if ($(event.target).hasClass('fa-exclamation-circle')) {
+                $('#confirmBajaModal').modal('show');
+                $('#confirmBajaBtn').on('click', function() {
+                    $.ajax({
+                        url: '/personas/' + data.DNI + '/baja',
+                        type: 'PUT',
+                        success: function(data) {
+                            if (data.success) {
+                                location.reload(true)
+                            } else {
+                                console.error(data.message);
+                            }
+                        },
+                        error: function(error) {
+                            console.error(error);
+                        }
+                    });
+                    $('#confirmBajaModal').modal('hide');
+                });
+
+                $('#cancelBajaBtn, .modal-header button.close').on('click', function() {
+                    $('#confirmBajaModal').modal('hide');
+                });
+
+                $(document).on('keydown', function(e) {
+                    if (e.key === 'Enter' && $('#confirmBajaModal').is(':visible')) {
+                        $('#confirmBajaBtn').trigger('click');
+                    }
+                });
+            } else if ($(event.target).hasClass('fa-check-circle')) {
+                $('#confirmAltaModal').modal('show');
+                $('#confirmAltaBtn').on('click', function() {
+                    $.ajax({
+                        url: '/personas/' + data.DNI + '/alta',
+                        type: 'PUT',
+                        success: function(data) {
+                            if (data.success) {
+                                location.reload(true)
+                            } else {
+                                console.error(data.message);
+                            }
+                        },
+                        error: function(error) {
+                            console.error(error);
+                        }
+                    });
+                    $('#confirmAltaModal').modal('hide');
+                })
+
+                $('#cancelAltaBtn, .modal-header button.close').on('click', function() {
+                    $('#confirmAltaModal').modal('hide');
+                });
+
+                $(document).on('keydown', function(e) {
+                    if (e.key === 'Enter' && $('#confirmAltaModal').is(':visible')) {
+                        $('#confirmAltaBtn').trigger('click');
+                    }
+                });
+            } else {
+                window.location.href = "/personas/" + data.DNI;
+            }
+        });
+    });

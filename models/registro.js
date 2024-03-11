@@ -12,6 +12,10 @@ const registro = Registro.init({
         primaryKey: true,
         autoIncrement: true,
     },
+    idUsuario: {
+        type: DataTypes.INTEGER,
+        allowNull: false
+    },
     idFila: {
         type: DataTypes.INTEGER,
         allowNull: false

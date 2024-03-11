@@ -11,6 +11,10 @@ const usuario = Usuario.init(
             autoIncrement: true,
             primaryKey: true
         },
+        idRol: {
+            type: DataTypes.INTEGER,
+            allowNull: false
+        },
         nombreUsuario: {
             type: DataTypes.STRING,
             allowNull: false
@@ -23,12 +27,11 @@ const usuario = Usuario.init(
             type: DataTypes.STRING,
             allowNull: false
         },
-        rol: {
-            type: DataTypes.STRING,
+        activo: {
+            type: DataTypes.BOOLEAN,
             allowNull: false
-        },
+        }
     },
-
     {
         sequelize,
         freezeTableName: true,

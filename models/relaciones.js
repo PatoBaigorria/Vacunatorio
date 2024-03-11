@@ -22,6 +22,7 @@ const Telefono = require("./telefono");
 const Traslado = require("./traslado");
 const Registro = require('./registro');
 const Usuario = require("./usuario");
+const Rol = require('./rol');
 
 // Relaciones entre los modelos
 Laboratorio.hasMany(LoteProveedor, {
@@ -156,6 +157,14 @@ Descarte.belongsTo(LoteInterno, {
 Descarte.belongsTo(AgenteDeSalud, {
 	foreignKey: 'DNIAgente'
 });
+
+Rol.hasMany(Usuario, {
+	foreignKey: 'idRol'
+})
+
+Usuario.hasMany(Registro, {
+	foreignKey: 'idUsuario'
+})
 
 async function sincronizarModelos() {
 	try {
