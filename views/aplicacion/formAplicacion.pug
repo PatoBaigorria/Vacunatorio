@@ -110,7 +110,6 @@ script.
         }
 
         function validarFormulario() {
-            
             const inputs = $('#form input, #form select')
             let camposInvalidos = false
             inputs.each(function () {
@@ -137,7 +136,7 @@ script.
 
         let press = 0
         $(alertModal).on('keyup', function (event) {
-            
+
             if(event.key === 'Enter'){
                 press = press+1
             }
@@ -155,7 +154,7 @@ script.
         })
 
         $(alertModal).on('hidden.bs.modal', function () {
-            
+
             const primerInvalido = $('.is-invalid:first')
             if (primerInvalido.length > 0) {
                 primerInvalido.focus()
@@ -180,13 +179,13 @@ script.
     })
 
     /*function validarCampos(){
-            cargarAgentes()
-            cargarLotes()
-            if($(DNIPaciente).val() && $(DNIAgente).hasClass('is-invalid')){
-                $(DNIAgente).prop('disabled', false)
-                quitarError($(DNIAgente))
-                quitarError($(DNIPaciente))
-            }
+        cargarAgentes()
+        cargarLotes()
+        if($(DNIPaciente).val() && $(DNIAgente).hasClass('is-invalid')){
+            $(DNIAgente).prop('disabled', false)
+            quitarError($(DNIAgente))
+            quitarError($(DNIPaciente))
+        }
         }
 
         function cargarAgentes(){
@@ -202,7 +201,7 @@ script.
             }
         }
 
-        
+
 
         function validarFechaDeAplicacion() {
             quitarError($(fechaDeAplicacion))

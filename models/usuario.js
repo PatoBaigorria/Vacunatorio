@@ -6,7 +6,7 @@ class Usuario extends Model { }
 
 const usuario = Usuario.init(
     {
-        id: {
+        idUsuario: {
             type: DataTypes.INTEGER,
             autoIncrement: true,
             primaryKey: true
@@ -20,6 +20,10 @@ const usuario = Usuario.init(
             allowNull: false
         },
         password: {
+            type: DataTypes.STRING,
+            allowNull: false
+        },
+        rol: {
             type: DataTypes.STRING,
             allowNull: false
         },

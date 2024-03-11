@@ -5,7 +5,7 @@ const {
 } = require("sequelize");
 const sequelize = require("../database/db");
 
-class Laboratorio extends Model {}
+class Laboratorio extends Model { }
 const laboratorio = Laboratorio.init({
 	idLaboratorio: {
 		type: DataTypes.INTEGER,

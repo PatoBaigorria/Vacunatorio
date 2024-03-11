@@ -3,7 +3,9 @@ const {
   LoteInterno,
   CentroDeVacunacion,
 } = require("../models/relaciones");
-
+const {
+  createRegistro
+} = require('./registroController');
 // Obtener todos los traslados
 const listarTraslados = async (req, res) => {
   try {
@@ -45,39 +47,41 @@ const altaTraslado = async (req, res) => {
 };
 
 const createTraslados = async (req, res) => {
-  	try {
-    	const { numeroDeSerie, idCentroDeVacunacion, fechaDeSalida } = req.body;
-		let fechaDeLlegada = req.body.fechaDeLlegada
-		if (req.body.fechaDeLlegada == "") {
-			fechaDeLlegada = null
-		} else {
-			fechaDeLlegada = req.body.fechaDeLlegada
-		}
-		await Traslado.create({
-			numeroDeSerie,
-			idCentroDeVacunacion,
-			fechaDeSalida,
-			fechaDeLlegada,
-			activo: 1,
-		});
-    	if (fechaDeLlegada != null) {
-			const loteEncontrado = await LoteInterno.findOne({
-				where: { numeroDeSerie: numeroDeSerie },
-			});
-			console.log(loteEncontrado);
-			if (loteEncontrado) {
-       			await loteEncontrado.update({
-       				idCentroDeVacunacion: idCentroDeVacunacion,
-       			});
-   			}
-   		}
-		req.flash("success", "Traslado creado exitosamente");
-		res.redirect("/traslados");
-  	} catch (error) {
-		res.status(500).json({
-			message: "Error al crear el traslado. " + error.message,
-		});
-  	}
+  try {
+    const { numeroDeSerie, idCentroDeVacunacion, fechaDeSalida } = req.body;
+    let fechaDeLlegada = req.body.fechaDeLlegada
+    if (req.body.fechaDeLlegada == "") {
+      fechaDeLlegada = null
+    } else {
+      fechaDeLlegada = req.body.fechaDeLlegada
+    }
+    const traslado = await Traslado.create({
+      numeroDeSerie,
+      idCentroDeVacunacion,
+      fechaDeSalida,
+      fechaDeLlegada,
+      activo: 1,
+    });
+    if (fechaDeLlegada != null) {
+      const loteEncontrado = await LoteInterno.findOne({
+        where: { numeroDeSerie: numeroDeSerie },
+      });
+      console.log(loteEncontrado);
+      if (loteEncontrado) {
+        await loteEncontrado.update({
+          idCentroDeVacunacion: idCentroDeVacunacion,
+        });
+      }
+    }
+    await createRegistro('Traslado', traslado.dataValues.idTraslado, 'Creacion')
+    await createRegistro('Traslado', traslado.dataValues.idTraslado, 'Alta')
+    req.flash("success", "Traslado creado exitosamente");
+    res.redirect("/traslados");
+  } catch (error) {
+    res.status(500).json({
+      message: "Error al crear el traslado. " + error.message,
+    });
+  }
 };
 
 // Editar Traslado por ID
@@ -97,6 +101,7 @@ const editTraslado = async (req, res) => {
     });
   }
 };
+
 // Actualizar un traslado por su ID
 const updateTraslado = async (req, res) => {
   try {
@@ -105,6 +110,7 @@ const updateTraslado = async (req, res) => {
         idTraslado: req.params.id,
       },
     });
+    await createRegistro('Traslado', req.params.id, 'Modificacion')
     req.flash("success", "Traslado de Vacuna actualizado exitosamente.");
     res.redirect("/traslados");
   } catch (error) {
@@ -143,6 +149,7 @@ const deleteTrasladoLogica = async (req, res) => {
         },
       }
     );
+    await createRegistro('Traslado', req.params.id, 'Baja')
     req.flash("success", "Traslado dado de baja exitosamente.");
     res.redirect("/traslados");
   } catch (error) {

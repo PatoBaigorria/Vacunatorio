@@ -2,7 +2,9 @@ const {
 	LoteProveedor,
 	Laboratorio,
 } = require("../models/relaciones");
-
+const {
+	createRegistro
+} = require('./registroController');
 // Obtener todos los lotes proveedores
 const listarLotesProveedores = async (req, res) => {
 	try {
@@ -36,16 +38,18 @@ const formLoteProveedor = async (req, res) => {
 const createLoteProveedor = async (req, res) => {
 	try {
 		const { idLaboratorio, tipoDeVacuna, nombreComercial, cantidadDeLotesInternos, fechaDeFabricacion, fechaDeVencimiento, fechaDeCompra } = req.body;
-		await LoteProveedor.create({
-      idLaboratorio,
-      tipoDeVacuna,
-      nombreComercial,
-      cantidadDeLotesInternos,
-      fechaDeFabricacion,
-      fechaDeVencimiento,
-      fechaDeCompra,
-      activo: 1,
-    });
+		const lote = await LoteProveedor.create({
+			idLaboratorio,
+			tipoDeVacuna,
+			nombreComercial,
+			cantidadDeLotesInternos,
+			fechaDeFabricacion,
+			fechaDeVencimiento,
+			fechaDeCompra,
+			activo: 1,
+		});
+		await createRegistro('Lote proveeedor', lote.dataValues.numeroDeLote, 'Creacion')
+		await createRegistro('Lote proveeedor', lote.dataValues.numeroDeLote, 'Alta')
 		req.flash('success', 'Lote Proveedor creado exitosamente.');
 		res.redirect("/lotesproveedores");
 	} catch (error) {
@@ -74,6 +78,7 @@ const updateLoteProveedor = async (req, res) => {
 				numeroDeLote: req.params.id
 			},
 		});
+		await createRegistro('Lote proveedor', req.params.id, 'Modificacion')
 		req.flash('success', 'Lote Proveedor actualizado exitosamente.');
 		res.redirect("/lotesproveedores");
 	} catch (error) {
@@ -99,50 +104,52 @@ const deleteLoteProveedor = async (req, res) => {
 };
 
 const bajaLoteProveedor = async (req, res) => {
-  try {
-    await LoteProveedor.update(
-      { activo: 0 },
-      {
-        where: {
-          numeroDeLote: req.params.id,
-        },
-      }
-    );
-    req.flash("success", "Lote proveedor dado de baja exitosamente.");
-    res.json({ success: true });
-  } catch (error) {
-    console.error("Error al dar de baja el lote proveedor:", error);
-    req.flash("error", "Error al dar de baja el lote proveedor.");
-    res.status(500).json({ success: false, message: error.message });
-  }
+	try {
+		await LoteProveedor.update(
+			{ activo: 0 },
+			{
+				where: {
+					numeroDeLote: req.params.id,
+				},
+			}
+		);
+		await createRegistro('Lote proveedor', req.params.id, 'Baja')
+		req.flash("success", "Lote proveedor dado de baja exitosamente.");
+		res.json({ success: true });
+	} catch (error) {
+		console.error("Error al dar de baja el lote proveedor:", error);
+		req.flash("error", "Error al dar de baja el lote proveedor.");
+		res.status(500).json({ success: false, message: error.message });
+	}
 };
 
 const altaLoteProveedor = async (req, res) => {
-  try {
-    await LoteProveedor.update(
-      { activo: 1 },
-      {
-        where: {
-          numeroDeLote: req.params.id,
-        },
-      }
-    );
-    req.flash("success", "Lote proveedor dado de alta exitosamente.");
-    res.json({ success: true });
-  } catch (error) {
-    console.error("Error al dar de alta el lote proveedor:", error);
-    req.flash("error", "Error al dar de alta el lote proveedor.");
-    res.status(500).json({ success: false, message: error.message });
-  }
+	try {
+		await LoteProveedor.update(
+			{ activo: 1 },
+			{
+				where: {
+					numeroDeLote: req.params.id,
+				},
+			}
+		);
+		await createRegistro('Lote proveedor', req.params.id, 'Alta')
+		req.flash("success", "Lote proveedor dado de alta exitosamente.");
+		res.json({ success: true });
+	} catch (error) {
+		console.error("Error al dar de alta el lote proveedor:", error);
+		req.flash("error", "Error al dar de alta el lote proveedor.");
+		res.status(500).json({ success: false, message: error.message });
+	}
 };
 
 module.exports = {
-  listarLotesProveedores,
-  formLoteProveedor,
-  createLoteProveedor,
-  editLoteProveedor,
-  updateLoteProveedor,
-  deleteLoteProveedor,
-  bajaLoteProveedor,
-  altaLoteProveedor
+	listarLotesProveedores,
+	formLoteProveedor,
+	createLoteProveedor,
+	editLoteProveedor,
+	updateLoteProveedor,
+	deleteLoteProveedor,
+	bajaLoteProveedor,
+	altaLoteProveedor
 };

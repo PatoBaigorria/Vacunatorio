@@ -1,5 +1,7 @@
 const { DepositoNacional } = require("../models/relaciones");
-
+const {
+  createRegistro
+} = require('./registroController');
 // Obtener todos los depósitos nacionales
 const listarDepositosNacionales = async (req, res) => {
   try {
@@ -32,11 +34,13 @@ const createDepNac = async (req, res) => {
     const { longitud, latitud } = req.body;
 
     // Crear una nueva instancia de Deposito Provincial utilizando Sequelize
-    await DepositoNacional.create({
+    const deposito = await DepositoNacional.create({
       longitud,
       latitud,
       activo: 1,
     });
+    await createRegistro('Deposito Nacional', deposito.dataValues.idDepositoNacional, 'Creacion')
+    await createRegistro('Deposito Nacional', deposito.dataValues.idDepositoNacional, 'Alta')
     req.flash("success", "Depósito Nacional creado exitosamente");
     res.redirect("/depositosnacionales");
   } catch (error) {
@@ -44,6 +48,7 @@ const createDepNac = async (req, res) => {
     res.status(500).send("Error al insertar datos en el Deposito Nacional");
   }
 };
+3
 // Editar Deposito Nacional por ID
 const editDepNac = async (req, res) => {
   try {
@@ -64,6 +69,7 @@ const updateDepositoNacional = async (req, res) => {
     await DepositoNacional.update(req.body, {
       where: { idDepositoNacional: req.params.id },
     });
+    await createRegistro('Deposito Nacional', req.params.id, 'Modificacion')
     req.flash("success", "Depósito Nacional actualizado exitosamente.");
     res.redirect("/depositosnacionales");
   } catch (error) {
@@ -100,6 +106,7 @@ const bajaDepositoNacional = async (req, res) => {
         },
       }
     );
+    await createRegistro('Deposito Nacional', req.params.id, 'Baja')
     req.flash("success", "Depósito nacional dado de baja exitosamente.");
     res.json({ success: true });
   } catch (error) {
@@ -119,6 +126,7 @@ const altaDepositoNacional = async (req, res) => {
         },
       }
     );
+    await createRegistro('Deposito Nacional', req.params.id, 'Alta')
     req.flash("success", "Depósito nacional dado de alta exitosamente.");
     res.json({ success: true });
   } catch (error) {

@@ -1,5 +1,7 @@
 const { Usuario } = require("../models/relaciones");
-
+const {
+    createRegistro
+} = require('./registroController');
 const listarUsuarios = async (req, res) => {
     try {
         const usuarios = await Usuario.findAll();

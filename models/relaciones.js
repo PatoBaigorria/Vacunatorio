@@ -20,6 +20,7 @@ const PatologiaBase = require("./patologiabase");
 const Persona = require("./persona");
 const Telefono = require("./telefono");
 const Traslado = require("./traslado");
+const Registro = require('./registro');
 const Usuario = require("./usuario");
 
 // Relaciones entre los modelos
@@ -187,5 +188,6 @@ module.exports = {
 	Persona,
 	Telefono,
 	Traslado,
+	Registro,
 	Usuario,
 };

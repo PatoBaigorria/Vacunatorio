@@ -6,13 +6,17 @@ const {
 	LoteProveedor,
 } = require('../models/relaciones')
 
+const {
+	createRegistro
+} = require('./registroController');
+
 const listarAplicacion = async (req, res) => {
 	try {
 		const aplicaciones = await Aplicacion.findAll({
 			include: [
 				{
 					model: AgenteDeSalud,
-					attributes: ['DNI'], 
+					attributes: ['DNI'],
 					include: [
 						{
 							model: Persona, attributes: ['DNI', 'nombre', 'apellido'],
@@ -30,7 +34,7 @@ const listarAplicacion = async (req, res) => {
 		res.render('aplicacion/viewAplicacion', { aplicaciones: aplicaciones })
 	} catch (error) {
 		req.flash('error', `Hubo un error al intentar listar las aplicaciones. ${error.message}`)
-		res.json({ success: false})
+		res.json({ success: false })
 	}
 }
 
@@ -39,7 +43,7 @@ const formAplicacion = async (req, res) => {
 		const lotes = await LoteInterno.findAll({
 			include: [{ model: LoteProveedor, attributes: ['fechaDeVencimiento'] }],
 		})
-			const personas = await Persona.findAll({
+		const personas = await Persona.findAll({
 			include: [{ model: AgenteDeSalud, attributes: ['matricula'] }],
 		})
 		res.render('aplicacion/formAplicacion', {
@@ -48,25 +52,27 @@ const formAplicacion = async (req, res) => {
 		})
 	} catch (error) {
 		req.flash('error', `Hubo un error al intentar mostrar el formulario de la aplicación de la vacuna. ${error.message}`)
-		res.json({ success: false})
+		res.json({ success: false })
 	}
 }
 
 const createAplicacion = async (req, res) => {
-  	try {
+	try {
 		const { DNIPaciente, DNIAgente, numeroDeSerie, fechaDeAplicacion } = req.body
-		await Aplicacion.create({
+		const aplicacion = await Aplicacion.create({
 			DNIPaciente,
 			DNIAgente,
 			numeroDeSerie,
 			fechaDeAplicacion,
 			activo: 1,
-		})
+		});
+		await createRegistro('Aplicacion', aplicacion.dataValues.idAplicacion, 'Creacion')
+		await createRegistro('Aplicacion', aplicacion.dataValues.idAplicacion, 'Alta')
 		req.flash('success', 'La aplicación fue creada exitosamente.')
 		res.redirect('/aplicaciones')
-  	} catch (error) {
+	} catch (error) {
 		req.flash('error', `Hubo un error al intentar crear la aplicación. ${error.message}`)
-		res.json({ success: false})
+		res.json({ success: false })
 	}
 }
 
@@ -84,7 +90,7 @@ const editAplicacion = async (req, res) => {
 		})
 	} catch (error) {
 		req.flash('error', `Hubo un error al intentar editar la aplicación. ${error.message}`)
-		res.json({ success: false})
+		res.json({ success: false })
 	}
 }
 
@@ -93,11 +99,12 @@ const updateAplicacion = async (req, res) => {
 		Aplicacion.update(req.body, {
 			where: { idAplicacion: req.params.id },
 		})
+		await createRegistro('Aplicacion', req.params.id, 'Modificacion')
 		req.flash('success', 'La aplicación de la vacuna fue actualizada exitosamente.')
 		res.redirect('/aplicaciones')
 	} catch (error) {
 		req.flash('error', `Hubo un error al intentar actualizar la aplicación de la vacuna. ${error.message}`)
-		res.json({ success: false})
+		res.json({ success: false })
 	}
 }
 
@@ -110,21 +117,22 @@ const deleteAplicacion = async (req, res) => {
 		res.json({ success: true })
 	} catch (error) {
 		req.flash('error', `Hubo un error al intentar eliminar la aplicación. ${error.message}`)
-		res.json({ success: false})
+		res.json({ success: false })
 	}
 }
 
 const bajaAplicacion = async (req, res) => {
 	try {
-			await Aplicacion.update(
-				{ activo: 0 },
-				{ where: { idAplicacion: req.params.id }}
-			)
-			req.flash('success', 'La aplicación fue dada de baja exitosamente.')
-			res.json({ success: true })
+		await Aplicacion.update(
+			{ activo: 0 },
+			{ where: { idAplicacion: req.params.id } }
+		)
+		await createRegistro('Aplicacion', req.params.id, 'Baja')
+		req.flash('success', 'La aplicación fue dada de baja exitosamente.')
+		res.json({ success: true })
 	} catch (error) {
 		req.flash('error', `Hubo un error al intentar dar de baja la aplicación. ${error.message}`)
-		res.json({ success: false})
+		res.json({ success: false })
 	}
 }
 
@@ -134,11 +142,12 @@ const altaAplicacion = async (req, res) => {
 			{ activo: 1 },
 			{ where: { idAplicacion: req.params.id }, }
 		)
+		await createRegistro('Aplicacion', req.params.id, 'Alta')
 		req.flash('success', 'La aplicación fue dada de alta exitosamente.')
 		res.json({ success: true })
 	} catch (error) {
 		req.flash('error', `Hubo un error al intentar dar de alta la aplicación. ${error.message}`)
-		res.json({ success: false})
+		res.json({ success: false })
 	}
 }
 

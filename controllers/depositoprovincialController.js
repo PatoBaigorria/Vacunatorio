@@ -1,7 +1,9 @@
 const {
   DepositoProvincial
 } = require("../models/relaciones");
-
+const {
+  createRegistro
+} = require('./registroController');
 // Obtener todos los depósitos provinciales
 const listarDepositosProvinciales = async (req, res) => {
   try {
@@ -30,11 +32,13 @@ const formDepProv = async (req, res) => {
 const createDepProv = async (req, res) => {
   try {
     const { longitud, latitud } = req.body;
-    await DepositoProvincial.create({
+    const deposito = await DepositoProvincial.create({
       longitud,
       latitud,
       activo: 1,
     });
+    await createRegistro('Deposito Provincial', deposito.dataValues.idDepositoProvincial, 'Creacion')
+    await createRegistro('Deposito Provincial', deposito.dataValues.idDepositoProvincial, 'Alta')
     req.flash("success", "Depósito Provincial creado exitosamente");
     res.redirect("/depositosprovinciales");
   } catch (error) {
@@ -62,6 +66,7 @@ const updateDepositoProvincial = async (req, res) => {
         where: { idDepositoProvincial: req.params.id, },
       }
     );
+    await createRegistro('Deposito Provincial', req.params.id, 'Modificacion')
     req.flash('success', 'Depósito Provincial actualizado exitosamente.');
     res.redirect("/depositosprovinciales");
   } catch (error) {
@@ -98,6 +103,7 @@ const bajaDepositoProvincial = async (req, res) => {
         },
       }
     );
+    await createRegistro('Deposito Provincial', req.params.id, 'Baja')
     req.flash("success", "Depósito provincial dado de baja exitosamente.");
     res.json({ success: true });
   } catch (error) {
@@ -117,6 +123,7 @@ const altaDepositoProvincial = async (req, res) => {
         },
       }
     );
+    await createRegistro('Deposito Provincial', req.params.id, 'Alta')
     req.flash("success", "Depósito provincial dado de alta exitosamente.");
     res.json({ success: true });
   } catch (error) {

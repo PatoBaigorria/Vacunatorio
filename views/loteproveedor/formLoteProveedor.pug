@@ -22,17 +22,17 @@ body
             label.form-label(for='idLaboratorio') Laboratorio de origen del lote:
             .input-group.has-validation
                 select.form-select.is-valid#idLaboratorio(name='idLaboratorio' required)
-                .invalid-feedback.d-none#idLaboratorioSinLaboratorios Debe dar de alta un laboratorio antes de generar un lote proveedore
+                .invalid-feedback.d-none#idLaboratorioSinLaboratorios Debe dar de alta un laboratorio antes de generar un lote proveedor
         .form-group
             label.form-label(for='tipoDeVacuna') Tipo de vacuna que trae el lote:
             .input-group.has-validation
                 select.form-select.is-valid#tipoDeVacuna(name='tipoDeVacuna' required)
-                .invalid-feedback.d-none#tipoDeVacunaSinLaboratorios Debe dar de alta un laboratorio antes de generar un lote proveedore
+                .invalid-feedback.d-none#tipoDeVacunaSinLaboratorios Debe dar de alta un laboratorio antes de generar un lote proveedor
         .form-group
             label.form-label(for='nombreComercial') Nombre comercial de la vacuna:
             .input-group.has-validation
                 select.form-select.is-valid#nombreComercial(name='nombreComercial' required)
-                .invalid-feedback.d-none#nombreComercialSinLaboratorios Debe dar de alta un laboratorio antes de generar un lote proveedore
+                .invalid-feedback.d-none#nombreComercialSinLaboratorios Debe dar de alta un laboratorio antes de generar un lote proveedor
         .form-group
             label.form-label(for='cantidadDeLotesInternos') Cantidad de lotes internos que trae el lote :
             .input-group.has-validation
@@ -230,7 +230,7 @@ script.
             }
             return true
         }
-        
+
         cargarLaboratorios()
         cargarTiposDeVacunas()
         cargarNombresComerciales()
@@ -282,7 +282,7 @@ script.
             }
         })
 
-        $('#form button[type='submit']').on('click', function (event) {
+        $(`#form button[type='submit']`).on('click', function (event) {
             if (!validarFormulario()) {
                 event.preventDefault()
                 press = 1

@@ -6,7 +6,9 @@ const {
 	DepositoProvincial,
 	CentroDeVacunacion,
 } = require("../models/relaciones");
-
+const {
+	createRegistro
+} = require('./registroController');
 // Obtener todos los lotes internos
 const listarLotesInternos = async (req, res) => {
 	try {
@@ -59,7 +61,7 @@ const createLoteInterno = async (req, res) => {
 			idDepositoNacional = idDepositoNacional
 		}
 
-		if(idDepositoProvincial === '') {
+		if (idDepositoProvincial === '') {
 			idDepositoProvincial = null;
 		} else {
 			idDepositoProvincial = idDepositoProvincial
@@ -91,7 +93,7 @@ const createLoteInterno = async (req, res) => {
 			fechaDeLlegadaCentroDeVacunacion = null;
 		}
 
-		await LoteInterno.create({
+		const lote = await LoteInterno.create({
 			numeroDeSerie,
 			numeroDeLote,
 			idLaboratorio: laboratorio.idLaboratorio,
@@ -107,6 +109,8 @@ const createLoteInterno = async (req, res) => {
 			idCentroDeVacunacion,
 			activo: 1,
 		});
+		await createRegistro('Lote interno', lote.dataValues.numeroDeSerie, 'Creacion')
+		await createRegistro('Lote interno', lote.dataValues.numeroDeSerie, 'Alta')
 		req.flash('success', 'Lote Interno creado exitosamente.');
 		res.redirect("/lotesinternos");
 	} catch (error) {
@@ -187,6 +191,7 @@ const updateLoteInterno = async (req, res) => {
 				numeroDeSerie: req.params.id
 			},
 		});
+		await createRegistro('Lote interno', req.params.id, 'Modificacion')
 		req.flash('success', 'Lote Interno actualizado exitosamente.');
 		res.redirect("/lotesinternos");
 	} catch (error) {
@@ -212,54 +217,56 @@ const deleteLoteInterno = async (req, res) => {
 };
 
 const bajaLoteInterno = async (req, res) => {
-  try {
-    await LoteInterno.update(
-      {
-        activo: 0,
-      },
-      {
-        where: {
-          numeroDeSerie: req.params.id,
-        },
-      }
-    );
-    req.flash("success", "Lote interno dado de baja exitosamente.");
-    res.json({ success: true });
-  } catch (error) {
-    console.error("Error al dar de baja el lote interno:", error);
-    req.flash("error", "Error al dar de baja el lote interno.");
-    res.status(500).json({ success: false, message: error.message });
-  }
+	try {
+		await LoteInterno.update(
+			{
+				activo: 0,
+			},
+			{
+				where: {
+					numeroDeSerie: req.params.id,
+				},
+			}
+		);
+		await createRegistro('Lote interno', req.params.id, 'Baja')
+		req.flash("success", "Lote interno dado de baja exitosamente.");
+		res.json({ success: true });
+	} catch (error) {
+		console.error("Error al dar de baja el lote interno:", error);
+		req.flash("error", "Error al dar de baja el lote interno.");
+		res.status(500).json({ success: false, message: error.message });
+	}
 };
 
 const altaLoteInterno = async (req, res) => {
-  try {
-    await LoteInterno.update(
-      {
-        activo: 1,
-      },
-      {
-        where: {
-          numeroDeSerie: req.params.id,
-        },
-      }
-    );
-    req.flash("success", "Lote interno dado de alta exitosamente.");
-    res.json({ success: true });
-  } catch (error) {
-    console.error("Error al dar de baja el lote interno:", error);
-    req.flash("error", "Error al dar de baja el lote interno.");
-    res.status(500).json({ success: false, message: error.message });
-  }
+	try {
+		await LoteInterno.update(
+			{
+				activo: 1,
+			},
+			{
+				where: {
+					numeroDeSerie: req.params.id,
+				},
+			}
+		);
+		await createRegistro('Lote interno', req.params.id, 'Alta')
+		req.flash("success", "Lote interno dado de alta exitosamente.");
+		res.json({ success: true });
+	} catch (error) {
+		console.error("Error al dar de baja el lote interno:", error);
+		req.flash("error", "Error al dar de baja el lote interno.");
+		res.status(500).json({ success: false, message: error.message });
+	}
 };
 
 module.exports = {
-  listarLotesInternos,
-  formLoteInterno,
-  createLoteInterno,
-  editLoteInterno,
-  updateLoteInterno,
-  deleteLoteInterno,
-  bajaLoteInterno,
-  altaLoteInterno
+	listarLotesInternos,
+	formLoteInterno,
+	createLoteInterno,
+	editLoteInterno,
+	updateLoteInterno,
+	deleteLoteInterno,
+	bajaLoteInterno,
+	altaLoteInterno
 };
