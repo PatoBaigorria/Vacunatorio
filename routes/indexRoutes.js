@@ -1,14 +1,6 @@
 const express = require("express");
 const router = express.Router();
-//var aut = require("../middleware/auth");
-
-/* GET home page. */
-router.get("/", function (req, res, next) {
-  res.render("index", { title: "Express" });
-});
-
-
-// Importar los archivos de rutas específicos
+const isAuthenticated = require("../auth");
 const aplicacionRoutes = require("./aplicacionRoutes");
 const centrodevacunacionRoutes = require("./centrodevacunacionRoutes");
 const depositonacionalRoutes = require("./depositonacionalRoutes");
@@ -21,17 +13,54 @@ const personaRoutes = require("./personaRoutes");
 const trasladoRoutes = require("./trasladoRoutes");
 const usuarioRoutes = require("./usuarioRoutes");
 
-// Configurar las rutas principales
-router.use("/aplicaciones", aplicacionRoutes);
-router.use("/centrosdevacunacion", centrodevacunacionRoutes);
-router.use("/depositosnacionales", depositonacionalRoutes);
-router.use("/depositosprovinciales", depositoprovincialRoutes);
-router.use("/descartes", descarteRoutes);
-router.use("/laboratorios", laboratorioRoutes);
-router.use("/lotesinternos", loteinternoRoutes);
-router.use("/lotesproveedores", loteproveedorRoutes);
-router.use("/personas", personaRoutes);
-router.use("/traslados", trasladoRoutes);
-router.use("/usuarios", usuarioRoutes);
+// Ruta de la página de inicio (pública)
+router.get("/", (req, res) => {
+  res.render("index");
+});
+
+// Rutas protegidas (requieren autenticación)
+router.get("/aplicaciones", isAuthenticated, (req, res) => {
+  	router.use("/aplicaciones", aplicacionRoutes);
+});
+
+router.get("/centrosdevacunacion", isAuthenticated, (req, res) => {
+  	router.use("/centrosdevacunacion", centrodevacunacionRoutes);
+});
+
+router.get("/depositosnacionales", isAuthenticated, (req, res) => {
+  	router.use("/depositosnacionales", depositonacionalRoutes);
+})
+
+router.get("/depositosprovinciales", isAuthenticated, (req, res) => {
+  	router.use("/depositosprovinciales", depositoprovincialRoutes);
+})
+
+router.get("/descartes", isAuthenticated, (req, res) => {
+  	router.use("/descartes", descarteRoutes);
+})
+
+router.get("/laboratorios", isAuthenticated, (req, res) => {
+  	router.use("/laboratorios", laboratorioRoutes);
+})
+
+router.get("/lotesinternos", isAuthenticated, (req, res) => {
+  	router.use("/lotesinternos", loteinternoRoutes);
+})
+
+router.get("/lotesproveedor", isAuthenticated, (req, res) => {
+  	router.use("/lotesproveedor", loteproveedorRoutes);
+})
+
+router.get("/personas", isAuthenticated, (req, res) => {
+  	router.use("/personas", personaRoutes);
+})
+
+router.get("/traslados", isAuthenticated, (req, res) => {
+  	router.use("/traslados", trasladoRoutes);
+})
+
+router.get("/usuarios", isAuthenticated, (req, res) => {
+  	router.use("/usuarios", usuarioRoutes);
+})
 
 module.exports = router;
