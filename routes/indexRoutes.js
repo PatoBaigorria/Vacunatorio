@@ -18,8 +18,20 @@ router.get("/", (req, res) => {
   res.render("index");
 });
 
+router.use("/aplicaciones", aplicacionRoutes);
+router.use("/centrosdevacunacion", centrodevacunacionRoutes);
+router.use("/depositosnacionales", depositonacionalRoutes);
+router.use("/depositosprovinciales", depositoprovincialRoutes);
+router.use("/descartes", descarteRoutes);
+router.use("/laboratorios", laboratorioRoutes);
+router.use("/lotesinternos", loteinternoRoutes);
+router.use("/lotesproveedor", loteproveedorRoutes);
+router.use("/personas", personaRoutes);
+router.use("/traslados", trasladoRoutes);
+router.use("/usuarios", usuarioRoutes);
+
 // Rutas protegidas (requieren autenticación)
-router.get("/aplicaciones", isAuthenticated, (req, res) => {
+/*router.get("/aplicaciones", isAuthenticated, (req, res) => {
   	router.use("/aplicaciones", aplicacionRoutes);
 });
 
@@ -61,6 +73,6 @@ router.get("/traslados", isAuthenticated, (req, res) => {
 
 router.get("/usuarios", isAuthenticated, (req, res) => {
   	router.use("/usuarios", usuarioRoutes);
-})
+})*/
 
 module.exports = router;
