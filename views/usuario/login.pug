@@ -5,22 +5,22 @@ html(lang="es")
 head
 
 body
-    section(class="vh-100 gradient-custom overflow-hidden")
-      .container.py-1.h-100
-        .row.d-flex.justify-content-center.align-items-center.h-100
-          .col-12.col-md-6.col-lg-4.col-xl-3
-            .card.bg-dark.text-white(style="border-radius: 1rem;")
-              .card-body.p-3.text-center
-                .mb-md-2.mt-md-2.pb-1
-                  form(action="/usuario/" method="post")
-                    h3.fw-bold.mb-2.text-uppercase
-                      u Ingreso
-                    br
-                    .form-outline.form-white.mb-4
-                      input.form-control-lg(type="email", name="emailLogin", placeholder="Email")
-                    .form-outline.form-white.mb-4
-                      input.form-control-lg(type="password", name="contraseñaLogin", placeholder="Contraseña")
-                      p.small.mb-2.pb-lg-2
-                        br
-                        a.text-white-50(href="#") ¿Olvidaste tu contraseña?
-                    button.btn.btn-outline-light.btn-lg.px-5(type="submit") Ingresar
+	section(class="vh-100 gradient-custom overflow-hidden")
+		.container.py-1.h-100
+			.row.d-flex.justify-content-center.align-items-center.h-100
+				.col-12.col-md-6.col-lg-4.col-xl-3
+					.card.bg-dark.text-white(style="border-radius: 1rem;")
+						.card-body.p-3.text-center
+							.mb-md-2.mt-md-2.pb-1
+								form(action="/usuario/" method="post")
+									h3.fw-bold.mb-2.text-uppercase
+										u Ingreso
+									br
+									.form-outline.form-white.mb-4
+										input.form-control-lg(type="email" name="emailLogin" placeholder="Email")
+									.form-outline.form-white.mb-4
+										input.form-control-lg(type="password" name="contraseñaLogin" placeholder="Contraseña")
+										p.small.mb-2.pb-lg-2
+											br
+											a.text-white-50(href="#") ¿Olvidaste tu contraseña?
+									button.btn.btn-outline-light.btn-lg.px-5(type="submit") Ingresar

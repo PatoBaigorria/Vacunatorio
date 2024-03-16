@@ -22,7 +22,6 @@ const Telefono = require("./telefono");
 const Traslado = require("./traslado");
 const Registro = require('./registro');
 const Usuario = require("./usuario");
-const Rol = require('./rol');
 
 // Relaciones entre los modelos
 Laboratorio.hasMany(LoteProveedor, {
@@ -158,10 +157,6 @@ Descarte.belongsTo(AgenteDeSalud, {
 	foreignKey: 'DNIAgente'
 });
 
-Rol.hasMany(Usuario, {
-	foreignKey: 'idRol'
-})
-
 Usuario.hasMany(Registro, {
 	foreignKey: 'idUsuario'
 })
@@ -169,7 +164,7 @@ Usuario.hasMany(Registro, {
 async function sincronizarModelos() {
 	try {
 		await sequelize.sync({
-			//force: true,
+			force: true,
 		}); // La opción force: true creará las tablas borrando los datos existentes
 		console.log("Modelos sincronizados con la base de datos.");
 	} catch (error) {

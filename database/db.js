@@ -2,16 +2,15 @@ const { Sequelize } = require("sequelize");
 
 // Conexión a la base de datos MySQL
 const sequelizeInstance = new Sequelize("vacunatorio2", "root", "", {
-  host: "localhost",
-  dialect: "mysql",
-
+	host: "localhost",
+	dialect: "mysql",
 });
 
 /*
 sequelize
-  .authenticate()
-  .then(() => {})
-  .catch((error) => {});
+	.authenticate()
+	.then(() => {})
+	.catch((error) => {});
 */
 
 // Exportar instancia de Sequelize

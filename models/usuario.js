@@ -11,8 +11,8 @@ const usuario = Usuario.init(
             autoIncrement: true,
             primaryKey: true
         },
-        idRol: {
-            type: DataTypes.INTEGER,
+        rol: {
+            type: DataTypes.STRING,
             allowNull: false
         },
         nombreUsuario: {
