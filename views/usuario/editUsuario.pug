@@ -25,10 +25,8 @@ body
             label.form-label(for="rol") Rol del usuario:
             .input-group.has-validation
                 select.form-select(name="rol" id="rol" required)
-                    option(value="Super Admin") Super Admin
-                    option(value="Usuario Común") Usuario Común
-                    option(value="Invitado") Invitado
-                    option(value="Agente") Agente
+                    each rolOpcion in ['Super Admin', 'Usuario Común', 'Invitado', 'Agente']
+                        option(value=rolOpcion, selected=(rolOpcion === usuario.rol)) #{rolOpcion}
         .form-group
             label.form-label(for="nombreUsuario") Nombre de usuario:
             .input-group.has-validation
@@ -107,21 +105,6 @@ script.
             } else {
                 quitarError($('#rol'));
             }
-        }
-
-        function cargarRoles(){
-            [
-                "Super Admin"
-                "Usuario Común"
-                "Invitado"
-                "Agente"
-            ].forEach(rol => {
-                if(rol == !{JSON.stringify(usuario)}.rol){
-                    $('#rol').append('<option value="' + rol + '" selected>' + rol + '</option>');
-                } else {
-                    $('#rol').append('<option value="' + rol + '">' + rol + '</option>');
-                }
-            })
         }
 
         function validarFormulario() {
