@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const isAuthenticated = require("../auth");
+//const isAuthenticated = require("../auth");
 const aplicacionRoutes = require("./aplicacionRoutes");
 const centrodevacunacionRoutes = require("./centrodevacunacionRoutes");
 const depositonacionalRoutes = require("./depositonacionalRoutes");
@@ -18,7 +18,7 @@ router.get("/", (req, res) => {
 	res.render("index");
 });
 
-const bcrypt = require("bcrypt");
+/*const bcrypt = require("bcrypt");
 const User = require("../models/usuario");
 
 // registrarse
@@ -58,7 +58,7 @@ router.post("/login", async (req, res) => {
 			error: 'El usuario no existe'
 		});
 	}
-});
+});*/
 
 router.use("/aplicaciones", aplicacionRoutes);
 router.use("/centrosdevacunacion", centrodevacunacionRoutes);

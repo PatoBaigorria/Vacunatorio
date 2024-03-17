@@ -1,11 +1,3 @@
-/*const { Sequelize } = require("sequelize");
-
-const sequelize = new Sequelize("vacunatorio2", "root", "", {
-  host: "localhost",
-  dialect: "mysql",
-});
-*/
-
 const sequelize = require("../database/db");
 const AgenteDeSalud = require("./agentedesalud");
 const Aplicacion = require("./aplicacion");
@@ -164,7 +156,7 @@ Usuario.hasMany(Registro, {
 async function sincronizarModelos() {
 	try {
 		await sequelize.sync({
-			force: true,
+			//force: true,
 		}); // La opción force: true creará las tablas borrando los datos existentes
 		console.log("Modelos sincronizados con la base de datos.");
 	} catch (error) {

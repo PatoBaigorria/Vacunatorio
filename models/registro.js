@@ -3,6 +3,7 @@ const {
     Model,
     DataTypes
 } = require("sequelize");
+const usuario = require("./usuario");
 const sequelize = require("../database/db");
 
 class Registro extends Model { }
@@ -14,7 +15,11 @@ const registro = Registro.init({
     },
     idUsuario: {
         type: DataTypes.INTEGER,
-        allowNull: false
+        allowNull: false,
+        references: {
+            model: usuario,
+            key: "idUsuario",
+        },
     },
     idFila: {
         type: DataTypes.INTEGER,
@@ -25,7 +30,7 @@ const registro = Registro.init({
         allowNull: false
     },
     tipoDeAccion: {
-        type: DataTypes.ENUM('Creacion', 'Alta', 'Baja', 'Modificacion'),
+        type: DataTypes.STRING,
         allowNull: false
     },
     fecha: {

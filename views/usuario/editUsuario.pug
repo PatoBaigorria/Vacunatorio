@@ -16,28 +16,30 @@ body
                         span(aria-hidden="true") ×
                 div.modal-body
                     p#mensajeAlerta.text-center Mensaje de alerta
-    form#form(action="/usuarios" method="post")
+    form#form(action="/usuarios/"+usuario.idUsuario+"?_method=PUT" method="post")
+        .form-group
+            label.form-label(for="idUsuario") ID del usuario:
+            .input-group.has-validation
+                input.form-select(type="text" id="idUsuario" name="idUsuario" value=usuario.idUsuario readonly)
         .form-group
             label.form-label(for="rol") Rol del usuario:
             .input-group.has-validation
                 select.form-select(name="rol" id="rol" required)
-                    option(disabled selected hidden value="") Selecciona un rol
                     option(value="Super Admin") Super Admin
                     option(value="Usuario Común") Usuario Común
                     option(value="Invitado") Invitado
                     option(value="Agente") Agente
-                .invalid-feedback.d-none(id="rolSinSeleccionar") Seleccione un rol
         .form-group
             label.form-label(for="nombreUsuario") Nombre de usuario:
             .input-group.has-validation
-                input.form-control(type="text" id="nombreUsuario" name="nombreUsuario" placeholder="Ingrese un nombre de usuario" required)
+                input.form-control(type="text" id="nombreUsuario" name="nombreUsuario" placeholder="Ingrese un nombre de usuario" value=usuario.nombreUsuario required)
                 .invalid-feedback.d-none(id="nombreVacio") El campo no puede estar vacío
                 .invalid-feedback.d-none(id="nombreInvalido") El nombre debe contener más de dos y menos de cincuenta y un caracteres
                 .invalid-feedback.d-none(id="nombreNumeros") El nombre solo puede contener letras
         .form-group
             label.form-label(for="email") Email:
             .input-group.has-validation
-                input.form-control(type="email" id="email" name="email" placeholder="Ingrese el email del usuario" title="Ingrese un email válido" required)
+                input.form-control(type="email" id="email" name="email" placeholder="Ingrese el email del usuario" title="Ingrese un email válido" value=usuario.email required)
                 .invalid-feedback.d-none(id="emailVacio") El campo no puede estar vacío
                 .invalid-feedback.d-none(id="emailInvalido") El email no es válido
         .form-group
@@ -47,7 +49,7 @@ body
                 .invalid-feedback.d-none(id="passwordVacio") El campo no puede estar vacío
         br
         div.text-center
-            button(type="submit" class="btn btn-primary") Alta
+            button(type="submit" class="btn btn-primary") Actualizar
             | &nbsp;&nbsp;&nbsp;&nbsp;
             button(type="button" class="btn btn-primary" onclick="window.history.back()") Volver
 
@@ -105,6 +107,21 @@ script.
             } else {
                 quitarError($('#rol'));
             }
+        }
+
+        function cargarRoles(){
+            [
+                "Super Admin"
+                "Usuario Común"
+                "Invitado"
+                "Agente"
+            ].forEach(rol => {
+                if(rol == !{JSON.stringify(usuario)}.rol){
+                    $('#rol').append('<option value="' + rol + '" selected>' + rol + '</option>');
+                } else {
+                    $('#rol').append('<option value="' + rol + '">' + rol + '</option>');
+                }
+            })
         }
 
         function validarFormulario() {
@@ -183,7 +200,6 @@ script.
                 console.log("Formulario enviado por teclado");
                 //console.log(validarFormulario());
                 if(!validarFormulario()){
-                    console.log("Formulario no valido 1")
                     event.preventDefault();
                 }
                 // Puedes agregar lógica adicional aquí si es necesario
@@ -191,9 +207,8 @@ script.
         });
 
         $('#form button[type="submit"]').on('click', function (event) {
-            console.log("Botón de envío clicado");
+            console.log("Botón de envío clickeado");
             if (!validarFormulario()) {
-                console.log("Formulario no valido 2")
                 event.preventDefault();
                 press = 1
             }
