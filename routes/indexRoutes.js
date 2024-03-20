@@ -1,6 +1,8 @@
 const express = require("express");
+const bcrypt = require("bcrypt");
 const router = express.Router();
-//const isAuthenticated = require("../auth");
+const passport = require("passport");
+const Usuario = require('../models/usuario')
 const aplicacionRoutes = require("./aplicacionRoutes");
 const centrodevacunacionRoutes = require("./centrodevacunacionRoutes");
 const depositonacionalRoutes = require("./depositonacionalRoutes");
@@ -18,47 +20,30 @@ router.get("/", (req, res) => {
 	res.render("index");
 });
 
-/*const bcrypt = require("bcrypt");
-const User = require("../models/usuario");
-
-// registrarse
-router.post("/signup", async (req, res) => {
-	const body = req.body;
-	if (!(body.email && body.password)) {
-		return res.status(400).send({
-			error: 'Datos no tienen formato apropiado'
-		});
-	}
-	// Creando un nuevo usuario
-	const user = User.create(body);
-	// generar salt para hashear el password
-	const salt = await bcrypt.genSalt(10);
-	// hasheamos el password con salt anexado
-	user.password = await bcrypt.hash(user.password, salt);
-	user.save().then((doc) => res.status(201).send(doc));
-});
-
 // login route
 router.post("/login", async (req, res) => {
-	const body = req.body;
-	const user = await User.findOne({ email: body.email });
-	if (user) {
-		// compara password del usuario con password hasheado en la BD
-		const validPassword = await bcrypt.compare(body.password, user.password);
-		if (validPassword) {
-			res.status(200).json({
-				message: 'Usuario Autenticado'
-			});
-			//configurar la session para no autenticar en cada requerimiento
-		} else {
-			res.status(400).json({ error: "Password Inválido" });
-		}
-	} else {
-		res.status(401).json({
-			error: 'El usuario no existe'
-		});
-	}
-});*/
+	const email = req.body.emailLogin;
+	const pass = req.body.passwordLogin
+	console.log(email);
+	console.log(pass);
+	const usuario = await Usuario.findOne({where: { email: email }});
+	if (usuario) {
+    // compara password del usuario con password hasheado en la BD
+    const validPassword = await bcrypt.compare(pass, usuario.password);
+    if (validPassword) {
+      res.status(200).json({
+        message: "Usuario Autenticado",
+      });
+      //configurar la session para no autenticar en cada requerimiento
+    } else {
+      res.status(400).json({ error: "Password Inválido" });
+    }
+  } else {
+    res.status(401).json({
+      error: "El usuario no existe",
+    });
+  }
+});
 
 router.use("/aplicaciones", aplicacionRoutes);
 router.use("/centrosdevacunacion", centrodevacunacionRoutes);
