@@ -1,0 +1,8 @@
+- var title ='Perfil'
+include ..\includes\layout
+block content
+html(lang="es")
+body
+    h1 Perfil de Usuario
+    p ¡Bienvenido, #{user.idUsuario}!
+    a(href="/logout") Cerrar Sesión

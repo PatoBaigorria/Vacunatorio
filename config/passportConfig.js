@@ -28,7 +28,7 @@ passport.use(
 );
 
 passport.serializeUser((usuario, done) => {
-  done(null, usuario.idUsuario);
+  done(null, usuario.email);
 });
 
 passport.deserializeUser(async (idUsuario, done) => {

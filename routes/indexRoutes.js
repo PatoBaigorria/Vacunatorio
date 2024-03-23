@@ -1,8 +1,8 @@
 const express = require("express");
-const bcrypt = require("bcrypt");
+//const bcrypt = require("bcrypt");
 const router = express.Router();
-const passport = require("passport");
-const Usuario = require('../models/usuario')
+//const passport = require("passport");
+//const Usuario = require("../models/usuario");
 const aplicacionRoutes = require("./aplicacionRoutes");
 const centrodevacunacionRoutes = require("./centrodevacunacionRoutes");
 const depositonacionalRoutes = require("./depositonacionalRoutes");
@@ -14,35 +14,39 @@ const loteproveedorRoutes = require("./loteproveedorRoutes");
 const personaRoutes = require("./personaRoutes");
 const trasladoRoutes = require("./trasladoRoutes");
 const usuarioRoutes = require("./usuarioRoutes");
+//const { passport } = require('../config/passportConfig');
 
+const { passport } = require("../app");
 // Ruta de la página de inicio (pública)
 router.get("/", (req, res) => {
-	res.render("index");
+  res.render("index");
 });
 
 // login route
 router.post("/login", async (req, res) => {
-	const email = req.body.emailLogin;
-	const pass = req.body.passwordLogin
-	console.log(email);
-	console.log(pass);
-	const usuario = await Usuario.findOne({where: { email: email }});
-	if (usuario) {
-    // compara password del usuario con password hasheado en la BD
-    const validPassword = await bcrypt.compare(pass, usuario.password);
-    if (validPassword) {
-      res.status(200).json({
-        message: "Usuario Autenticado",
-      });
-      //configurar la session para no autenticar en cada requerimiento
-    } else {
-      res.status(400).json({ error: "Password Inválido" });
+  // passport.authenticate se encarga de realizar la autenticación
+  // y de redirigir al usuario a la ruta correspondiente
+  passport.authenticate("local", {
+	successRedirect: "/laboratorios",
+	successMessage: "logueado",
+	successFlash: true,
+    failureRedirect: "/",
+    failureFlash: true,
+  })(req, res);
+  console.log("authenticated")
+  console.log(req.user)
+});
+
+router.get("/usuarios/viewUsuario", function (req, res, next) {
+  passport.authenticate("local", function (err, user, info, status) {
+    if (err) {
+      return next(err);
     }
-  } else {
-    res.status(401).json({
-      error: "El usuario no existe",
-    });
-  }
+    if (!user) {
+      return res.redirect("/signin");
+    }
+    res.redirect("/usuarios/viewUsuario");
+  })(req, res, next);
 });
 
 router.use("/aplicaciones", aplicacionRoutes);

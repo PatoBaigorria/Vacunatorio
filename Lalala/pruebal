@@ -1,0 +1,591 @@
+//Descarte
+/*
+- const title ='Crear el descarte de vacuna'
+include ..\includes\layout
+block content
+html(lang='es')
+body
+    h2.text-center Ingrese los datos para generar un descarte
+    if messages.error
+        .alert.alert-danger
+            = messages.error
+    br
+    div.modal#alertModal(tabindex='-1' role='dialog' aria-labelledby='alertModalLabel' aria-hidden='true')
+        div.modal-dialog(role='document')
+            div.modal-content
+                div.modal-header
+                    h5.modal-title#alertModalLabel Alerta
+                    button.close(type='button' data-bs-dismiss='modal' aria-label='Close')
+                        span(aria-hidden='true') ×
+                div.modal-body
+                    p#mensajeAlerta.text-center
+    form#form(action='/descartes' method='post')
+        .form-group
+            label.form-label(for='DNIAgente') Seleccione un Agente de Salud Existente:
+            .input-group.has-validation
+                select.form-select.is-valid#DNIAgente(name='DNIAgente' required)
+                    option(disabled selected hidden value='') Seleccione un Agente de Salud
+                        each persona in personas
+                            if(persona.ocupacion=='agente de salud')
+                                option(value=persona.DNI)= persona.nombre + ' ' + persona.apellido
+                .invalid-feedback.d-none(id='DNIAgenteSinSeleccionar') Seleccione un agente de salud
+        .form-group
+            label.form-label(for='numeroDeSerie') Nº de Serie de Lote Interno:
+            .input-group.has-validation
+                select.form-select.is-valid#numeroDeSerie(name='numeroDeSerie' required disabled)
+                .invalid-feedback.d-none(id='numeroDeSerieSinAgente') Seleccione un agente
+        .form-group
+            label.form-label(for='empresaDescartante') Empresa Descartante:
+            .input-group.has-validation
+                select.form-select.is-valid#empresaDescartante(name='empresaDescartante' required)
+                    option(disabled selected hidden value='') Seleccione una Empresa Descartante
+                    option(value='Veolia') Veolia
+                    option(value='Clean Harbors') Clean Harbors
+                    option(value='Waste Management') Waste Management
+                    option(value='Stericycle') Stericycle
+                .invalid-feedback.d-none(id='empresaDescartanteSinSeleccionar') Seleccione una empresa descartante
+        .form-group
+            label.form-label(for='motivo') Motivo de descarte:
+            .input-group.has-validation
+                select.form-select.is-valid#motivo(name='motivo' required)
+                    option(disabled selected hidden value='') Seleccione un Motivo
+                    option(value='Vencida') Vencida
+                    option(value='Rotura') Rotura
+                    option(value='Cadena Pérdida de Frío') Cadena Pérdida de Frío
+                    option(value='Contaminación') Contaminación
+                .invalid-feedback.d-none(id='motivoSinSeleccionar') Seleccione un motivo de descarte
+        .form-group
+            label.form-label(for='cantidadDeVacunas') Cantidad de Vacunas:
+            .input-group.has-validation
+                input.form-control.is-invalid#cantidadDeVacunas(type='text' name='cantidadDeVacunas' required)
+                .invalid-feedback.d-none(id='cantidadDeVacunasVacio') El campo no puede estar vacío
+                .invalid-feedback.d-none(id='cantidadDeVacunasNumeros') Ingrese solo números positivos
+        .form-group
+            label.form-label(for='fechaDeDescarte') Fecha de descarte:
+            .input-group.has-validation
+                input.form-control.is-invalid#fechaDeDescarte(type='date' name='fechaDeDescarte' required)
+                .invalid-feedback.d-none(id='fechaDeDescarteVacio') El campo no puede estar vacío
+                .invalid-feedback.d-none(id='fechaDeDescarteSuperior') La fecha seleccionada es superior a la fecha actual
+                .invalid-feedback.d-none(id='fechaDeDescarteNumeroDeSerie') Debe seleccionar un lote interno antes de elegir una fecha de descarte
+                .invalid-feedback.d-none(id='fechaDeDescarteNulo') El lote aún no ha llegado al depósito nacional
+                .invalid-feedback.d-none(id='fechaDeDescarteLlegada') La fecha de descarte no puede ser previa a la fecha de llegada al depósito nacional
+        br
+        div.text-center
+            button(type='submit' class='btn btn-primary') Crear
+            | &nbsp;&nbsp;&nbsp;&nbsp;
+            button(type='button' class='btn btn-primary' onclick='window.history.back()') Volver
+script.
+    $(function () {
+        function mostrarAlerta() {
+            $(mensajeAlerta).text('¡Datos incorrectos! Por favor, verifica la información ingresada.')
+            $(alertModal).modal('show')
+        }
+
+        function mostrarError(campo, error) {
+            campo.addClass('is-invalid').removeClass('is-valid')
+            $(`#${campo.attr('id')}${error}`).removeClass('d-none')
+        }
+
+        function quitarError(campo) {
+            campo.addClass('is-valid').removeClass('is-invalid')
+            $(`div[id^=${campo.attr('id')}].invalid-feedback`).addClass('d-none')
+        }
+
+        /*function cargarAgente(){
+            let agentes = ${JSON.stringify(personas)}.filter(agente => agente.activo == 1 && agente.ocupacion == 'agente de salud')
+            if(agentes.length == 0){
+                $(DNIAgente).prop('disabled', true).append(`<option hidden disabled selected value=''>No hay ningún laboratorio que pueda proveer lotes</option>`)
+                mostrarError($(DNIAgente), 'SinAgentes')
+            } else {
+                agentes.forEach(agente => {
+                    $(DNIAgente).append(`<option value='${agente.DNI}'>${agente.nombre} ${agente.apellido}</option>`)
+                })
+            }
+        }
+
+        function validarDNIAgente(){
+            if(!$(DNIAgente).val()){
+                mostrarError($(DNIAgente), 'SinSeleccionar')
+                mostrarError($(numeroDeSerie), 'SinAgente')
+                cargarLote()
+            } else if($(numeroDeSerie).hasClass('is-invalid')){
+                $(numeroDeSerie).prop('disabled', false)
+                quitarError($(DNIAgente))
+                quitarError($(numeroDeSerie))
+                cargarLote()
+            }
+        }
+
+        function cargarLote(){
+            $(numeroDeSerie).empty()
+            if(!$(DNIAgente).val()){
+                $(numeroDeSerie).append('<option disabled selected hidden value="">Seleccione un lote interno</option>')
+            } else {
+                !{JSON.stringify(lotesInternos)}.filter(lote => lote.fechaDeLlegadaDepositoNacional != null).forEach(lote => {
+                    $(numeroDeSerie).append(`<option value=${lote.numeroDeSerie}>${lote.numeroDeSerie}</option>`)
+                })  
+            }
+        }
+
+        function validarComboBox(campo){
+            if(campo.val() === null){
+                mostrarError(campo, 'SinSeleccionar')
+                $(`#${campo.attr('id')}SinSeleccionar`).removeClass('d-none')
+            } else {
+                quitarError(campo)
+            }
+        }
+
+
+        function validarCantidadDeVacunas() {
+            quitarError($(cantidadDeVacunas))
+            if ($(cantidadDeVacunas).val() == '') {
+                mostrarError($(cantidadDeVacunas), 'Vacio')
+            } else if(!/^[0-9]{1,}$/.test($(cantidadDeVacunas).val()) || $(cantidadDeVacunas).val() < 0 || $(cantidadDeVacunas).val()[0] == 0){
+                mostrarError($(cantidadDeVacunas), 'Numeros')
+            }
+        }
+
+        function cantidadDeVacunasTotales() {
+            if ($(numeroDeSerie).hasClass('is-valid') && $(cantidadDeVacunas).hasClass('is-valid')) {
+                let numeroDeSerie = $(numeroDeSerie).val()
+                let cantidadDeVacunasIngresadas = parseInt($(cantidadDeVacunas).val(), 10)
+                let loteEncontrado = !{JSON.stringify(lotesInternos)}.find(lote => lote.numeroDeSerie == numeroDeSerie)
+                if (loteEncontrado) {
+                    let vacunasOriginales = loteEncontrado.cantidadDeVacunas
+                    let vacunasTotales = vacunasOriginales - cantidadDeVacunasIngresadas
+                    loteEncontrado.cantidadDeVacunas = vacunasTotales
+                    console.log('Cantidad de vacunas originales:', vacunasOriginales)
+                    console.log('Cantidad de vacunas ingresadas:', cantidadDeVacunasIngresadas)
+                    console.log('Nueva cantidad de vacunas:', vacunasTotales)
+                    console.log('Objeto actualizado:', loteEncontrado)
+                } else {
+                    console.log('No se encontró un lote con el número de serie proporcionado.')
+                }
+            }
+        }
+
+        function validarFechaDeDescarte() {
+            quitarError($(fechaDeDescarte))
+            if(!$(fechaDeDescarte).val()) {
+                mostrarError($(fechaDeDescarte), 'Vacio')
+            } else {
+                let fechaIngresada = new Date($(fechaDeDescarte).val())
+                let fechaActual = new Date()
+                fechaIngresada.setHours(24, 0, 0, 0)
+                fechaActual.setHours(0, 0, 0, 0)
+                if (((fechaIngresada - fechaActual) / (1000 * 60 * 60 * 24)) > 0) {
+                    mostrarError($(fechaDeDescarte), 'Superior')
+                } else if(!$(numeroDeSerie).val()){
+                    mostrarError($(fechaDeDescarte), 'NumeroDeSerie')
+                } else {
+                    let fechaLlegada = !{JSON.stringify(lotesInternos)}.find(lote => lote.numeroDeSerie == $(numeroDeSerie).val())
+                    if(!fechaLlegada.fechaDeLlegadaDepositoNacional){
+                        mostrarError($(fechaDeDescarte), 'Nulo')
+                    } else {
+                        fechaLlegada = new Date(fechaLlegada.fechaDeLlegadaDepositoNacional)
+                        fechaLlegada.setHours(24, 0, 0, 0)
+                        if(fechaLlegada > fechaIngresada){
+                            mostrarError($(fechaDeDescarte), 'Llegada')
+                        }
+                    }
+                }
+            }
+        }
+
+        function validarFormulario() {
+            let inputs = $('#form input, #form select')
+            let camposInvalidos = false
+            inputs.each(function () {
+                if ($(this).hasClass('is-invalid')) {
+                    camposInvalidos = true
+                }
+            })
+            if (camposInvalidos) {
+                mostrarAlerta()
+                return false
+            }
+            return true
+        }
+
+        cargarLote()
+        $(DNIAgente).on('change', function(){
+            validarDNIAgente()
+            validarComboBox($(this))
+        })
+
+        $(numeroDeSerie).on('change', function(){
+            validarFechaDeDescarte()
+        })
+
+        $('#empresaDescartante, #motivo').on('change', function(){
+            validarComboBox($(this))
+        })
+
+
+        $(cantidadDeVacunas).on('keyup focusout', function(){
+            validarCantidadDeVacunas()
+            cantidadDeVacunasTotales()
+        })
+
+        $(fechaDeDescarte).on('keyup focusout', function(){
+            validarFechaDeDescarte()
+        })
+
+        let press = 0
+        $(alertModal).on('keypress', function (event) {
+            if(event.key === 'Enter'){
+                press = press + 1
+            }
+            if (event.key === 'Escape' || press == 2) {
+                $(alertModal).modal('hide')
+                press = 0
+            }
+        })            
+
+        
+        $(alertModal).on('hidden.bs.modal', function () {
+            let primerInvalido = $('.is-invalid:first')
+            if (primerInvalido.length > 0) {
+                primerInvalido.focus()
+            }
+        })
+
+        $('#DNIAgente, #numeroDeSerie, #empresaDescartante, #motivo').trigger('change')
+        $('#cantidadDeVacunas, #fechaDeDescarte').trigger('focusout')
+        $(DNIAgente).trigger('focus')
+
+        
+        $('#form input').on('keypress', function (event) {
+            if (event.which === 13) {
+                console.log('Formulario enviado por teclado')
+                
+                if(!validarFormulario()){
+                    event.preventDefault()
+                }
+                
+            }
+        })
+
+        $('#form button[type='submit']').on('click', function (event) {
+            console.log('Botón de envío clicado')
+            if (!validarFormulario()) {
+                event.preventDefault()
+                console.log('Envío no exitoso')
+                press = 1
+            }
+        })
+    })
+
+*/
+
+//Lote Interno
+/*
+function validarFechaDeSalidaDepositoNacional(){
+            quitarError($(fechaDeSalidaDepositoNacional))
+            if($(fechaDeSalidaDepositoNacional).val() == '' && $(idDepositoProvincial).val() != ''){
+                mostrarError($(fechaDeSalidaDepositoNacional), 'FaltaFecha')
+                console.log('FSN: 1')
+            } else if($(fechaDeSalidaDepositoNacional).val() != '') {
+                const fechaIngresada = new Date($(fechaDeSalidaDepositoNacional).val())
+                if (comprobarFechaValida(fechaIngresada)) {
+                    mostrarError($(fechaDeSalidaDepositoNacional), 'Superior')
+                    console.log('FSN: 2')
+                } else {
+                    //const fechaCompra = new Date(!{JSON.stringify(lotesProveedores)}.find(lote => lote.numeroDeLote == $(numeroDeLote).val()).fechaDeCompra)
+                    if (fechaIngresada < $(fechaDeLlegadaDepositoNacional).val()) {
+                        mostrarError($(fechaDeSalidaDepositoNacional), 'Anterior')
+                        console.log('FSN: 3')
+                    }
+                }
+            }
+            //mostrarFechasYCentroDeVacunacion()
+        }
+
+        function validarFechaDeLlegadaDepositoProvincial() {
+            quitarError($(fechaDeLlegadaDepositoProvincial))
+            if($(fechaDeLlegadaDepositoProvincial).val() == '' && $(idDepositoProvincial).val() != ''){
+                mostrarError($(fechaDeLlegadaDepositoProvincial), 'FaltaFecha')
+                console.log('FLP: 1')
+            } else if($(fechaDeLlegadaDepositoProvincial).val() != '') {
+                const fechaIngresada = new Date($(fechaDeLlegadaDepositoProvincial).val())
+                if (comprobarFechaValida(fechaIngresada)) {
+                    mostrarError($(fechaDeLlegadaDepositoProvincial), 'Superior')
+                    console.log('FLP: 2')
+                } else {
+                    if (fechaIngresada < $(fechaDeSalidaDepositoNacional).val()) {
+                        mostrarError($(fechaDeLlegadaDepositoProvincial), 'Anterior')
+                        console.log('FLP: 3')
+                    }
+                }
+            }
+            //mostrarFechasYCentroDeVacunacion()
+        }
+
+        function mostrarFechasYDepositoProvincial(){
+            if(($(idDepositoNacional).val() != '') && ($(fechaDeLlegadaDepositoNacional).val() != '') && ($(fechaDeLlegadaDepositoNacional).hasClass('is-valid'))){
+                $(fechasDivPro).removeClass('d-none')
+                cargarComboDP()
+            } else {
+                $(fechasDivPro).addClass('d-none')
+                $(idDepositoProvincial).val('')
+                $(fechaDeSalidaDepositoNacional).val('')
+                $(fechaDeLlegadaDepositoProvincial).val('')
+            }
+        }
+
+        function mostrarFechasYCentroDeVacunacion(){
+            console.log(`ID depósito provincial: ${($(idDepositoProvincial).val())}`)
+            console.log(`ID depósito provincial vacio: ${($(idDepositoProvincial).val() != '')}`)
+            console.log(`Fecha de salida DN: ${($(fechaDeSalidaDepositoNacional).val())}`)
+            console.log(`Fecha de salida DN vacio: ${($(fechaDeSalidaDepositoNacional).val() != '')}`)
+            console.log(`Fecha de salida DN es válido: ${($(fechaDeSalidaDepositoNacional).hasClass('is-valid'))}`)
+            console.log(`Fecha de llegada DP: ${($(fechaDeLlegadaDepositoProvincial).val())}`)
+            console.log(`Fecha de llegada DP vacio: ${($(fechaDeLlegadaDepositoProvincial).val() != '')}`)
+            console.log(`Fecha de llegada DP es válido: ${($(fechaDeLlegadaDepositoProvincial).hasClass('is-valid'))}`)
+            if(($(idDepositoProvincial).val() != '')){
+                if($(fechaDeSalidaDepositoNacional).val() != '' && ($(fechaDeSalidaDepositoNacional).val() != '')){
+                    $(fechasDivCen).removeClass('d-none')
+                    //cargarComboCDV()
+                }
+            } else {
+                console.log(1)
+                $(fechasDivCen).addClass('d-none')
+                $(idDepositoProvincial).val('')
+                $(fechaDeSalidaDepositoNacional).val('')
+                $(fechaDeLlegadaDepositoProvincial).val('')
+            }
+        }
+
+        function cargarComboDN(){
+            const depNac = !{JSON.stringify(depositosNacionales)}.filter(deposito => deposito.activo == 1)
+            if(depNac.length == 0) {
+                $(idDepositoNacional).append(`<option selected value=''>No hay ningún depósito nacional al que enviar el lote</option>`).prop('disabled', true)
+            } else {
+                $(idDepositoNacional).append(`<option selected value=''>Seleccione un depósito nacional si corresponde</option>`)
+                depNac.forEach(deposito => $(idDepositoNacional).append(`<option value=${deposito.idDepositoNacional}>${deposito.idDepositoNacional}</option>`))
+            }
+        }
+
+        function cargarComboDP(){
+            const depPro = !{JSON.stringify(depositosProvinciales)}.filter(deposito => deposito.activo == 1)
+            if(depPro.length == 0) {
+                $(idDepositoProvincial).append(`<option selected value=''>No hay ningún depósito provincial al que enviar el lote</option>`).prop('disabled', true)
+            } else {
+                if(!$(idDepositoProvincial).val()){
+                    $(idDepositoProvincial).empty().append(`<option selected value="">Seleccione un depósito nacional si corresponde</option>`)
+                    depPro.forEach(deposito => $(idDepositoProvincial).append(`<option value=${deposito.idDepositoProvincial}>${deposito.idDepositoProvincial}</option>`))
+                    console.log(!$(idDepositoProvincial).val())
+                }
+            }
+        }
+*/
+    
+    
+    /*function cargarComboDP(){
+            const depPro = !{JSON.stringify(depositosProvinciales)}.filter(deposito => deposito.activo == 1)
+            if(depPro.length == 0) {
+                $(idDepositoProvincial).append(`<option selected value="">No hay ningún depósito provincial al que enviar el lote</option>`).prop('disabled', true)
+                $(idCentroDeVacunacion).prop('disabled', true)
+                $(fechaDeSalidaDepositoNacional).prop('disabled', true)
+                $(fechaDeLlegadaDepositoProvincial).prop('disabled', true)
+                $(fechaDeSalidaDepositoProvincial).prop ('disabled', true)
+                $(fechaDeLlegadaCentroDeVacunacion).prop ('disabled', true)
+                mostrarError($(idDepositoProvincial), 'SinDepositos')
+                mostrarError($(idCentroDeVacunacion), 'SinCentros')
+                mostrarError($(fechaDeLlegadaDepositoNacional), 'Seleccion')
+                mostrarError($(fechaDeSalidaDepositoNacional), 'Seleccion')
+                mostrarError($(fechaDeLlegadaDepositoProvincial), 'Seleccion')
+                mostrarError($(fechaDeSalidaDepositoProvincial), 'Seleccion')
+                mostrarError($(fechaDeLlegadaCentroDeVacunacion), 'Seleccion')
+            } else {
+                $(idDepositoProvincial).append(`<option selected value="">Seleccione un depósito provincial si corresponde</option>`)
+                depPro.forEach(deposito => $(idDepositoProvincial).append(`<option value=${deposito.idDepositoProvincial}>${deposito.idDepositoProvincial}</option>`))
+            }
+        }
+
+        function cargarComboCDV(){
+            const centros = !{JSON.stringify(centrosDeVacunaciones)}.filter(centro => centro.activo == 1)
+            if(centros.length == 0) {
+                $(idCentroDeVacunacion).append(`<option selected value="">No hay ningún centro de vacunación al que enviar el lote</option>`).prop('disabled', true)
+                $(fechaDeSalidaDepositoProvincial).prop ('disabled', true)
+                $(fechaDeLlegadaCentroDeVacunacion).prop ('disabled', true)
+                mostrarError($(idCentroDeVacunacion), 'SinCentros')
+                mostrarError($(fechaDeSalidaDepositoProvincial), 'Seleccion')
+                mostrarError($(fechaDeLlegadaCentroDeVacunacion), 'Seleccion')
+            } else {
+                $(idCentroDeVacunacion).append(`<option selected value="">Seleccione un centro de vacunacion si corresponde</option>`)
+                centros.forEach(centro => $(idCentroDeVacunacion).append(`<option value=${centro.idCentroDeVacunacion}>${centro.idCentroDeVacunacion}</option>`))
+            }
+        }
+
+        function comprobarFechaValida(fecha){
+            console.log(fecha)
+            const fechaActual = new Date()
+            fecha.setHours(24, 0, 0, 0)
+            fechaActual.setHours(0, 0, 0, 0)
+            return ((fecha - fechaActual) / (1000 * 60 * 60 * 24)) > 0
+        }
+
+        function mostrarFechaDeLlegadaDepNac(){
+            if($(idDepositoNacional).val() == ''){
+                $(fechaDeLlegadaDepositoNacional).prop('readonly', true).val('')
+            } else {
+                $(fechaDeLlegadaDepositoNacional).prop('readonly', false)
+            }
+        }
+
+        function validarFechaDeLlegadaAlDepNac() {
+            quitarError($(fechaDeLlegadaDepositoNacional))
+            if($(fechaDeLlegadaDepositoNacional).val() == '' && $(idDepositoNacional).val() != ''){
+                mostrarError($(fechaDeLlegadaDepositoNacional), 'FaltaFecha')
+            } else if($(fechaDeLlegadaDepositoNacional).val() != '') {
+                const fechaIngresada = new Date($(fechaDeLlegadaDepositoNacional).val())
+                if (comprobarFechaValida(fechaIngresada)) {
+                    mostrarError($(fechaDeLlegadaDepositoNacional), 'Superior')
+                } else {
+                    const fechaCompra = new Date(!{JSON.stringify(lotesProveedores)}.find(lote => lote.numeroDeLote == $(numeroDeLote).val()).fechaDeCompra)
+                    if (fechaIngresada < fechaCompra) {
+                        mostrarError($(fechaDeLlegadaDepositoNacional), 'Anterior')
+                    }
+                }
+            }
+        }
+
+        function mostrarFechaDeSalidaDepNac(){
+            if($(idDepositoProvincial).val() == ''){
+                $(fechaDeSalidaDepositoNacional).prop('readonly', true).val('')
+                $(fechaDeLlegadaDepositoProvincial).prop('readonly', true).val('')
+            } else {
+                $(fechaDeSalidaDepositoNacional).prop('readonly', false)
+                $(fechaDeLlegadaDepositoProvincial).prop('readonly', false)
+            }
+        }
+
+        function validarFechaDeSalidaAlDepPro() {
+            quitarError($(fechaDeSalidaDepositoNacional))
+            if(($(fechaDeSalidaDepositoNacional).val() != '' || $(fechaDeLlegadaDepositoProvincial).val() != '') && ($(idDepositoProvincial).val() == '' || $(idDepositoNacional).val() == '')) {
+                mostrarError($(fechaDeSalidaDepositoNacional), 'Seleccion')
+            } else if($(fechaDeSalidaDepositoNacional).val() == '' && $(idDepositoProvincial).val() != ''){
+                mostrarError($(fechaDeSalidaDepositoNacional), 'FaltaFecha')
+            } else if($(fechaDeSalidaDepositoNacional).val() != '') {
+                const fechaIngresada = new Date($(fechaDeSalidaDepositoNacional).val())
+                const fechaActual = new Date()
+                fechaIngresada.setHours(24, 0, 0, 0)
+                fechaActual.setHours(0, 0, 0, 0)
+                if (((fechaIngresada - fechaActual) / (1000 * 60 * 60 * 24)) > 0) {
+                    mostrarError($(fechaDeSalidaDepositoNacional), 'Superior')
+                } else {
+                    const fechaLlegada = new Date($(fechaDeLlegadaDepositoNacional).val())
+                    console.log($(fechaDeLlegadaDepositoNacional).val())
+                    console.log($(fechaDeSalidaDepositoNacional).val())
+                    console.log($(fechaDeLlegadaDepositoNacional).val() < $(fechaDeSalidaDepositoNacional).val())
+                    if ($(fechaDeLlegadaDepositoNacional).val() > $(fechaDeSalidaDepositoNacional).val()) {
+                        mostrarError($(fechaDeSalidaDepositoNacional), 'Anterior')
+                    }
+                }
+            }
+        }
+
+        function validarFechaDeLlegadaAlDepPro() {
+            quitarError($(fechaDeLlegadaDepositoProvincial))
+            if(($(fechaDeSalidaDepositoNacional).val() != '' || $(fechaDeLlegadaDepositoProvincial).val() != '') && ($(idDepositoProvincial).val() == '' || $(idDepositoNacional).val() == '')) {
+                mostrarError($(fechaDeLlegadaDepositoProvincial), 'Seleccion')
+            /*} else if($(fechaDeLlegadaDepositoProvincial).val() == '' && $(idDepositoProvincial).val() != ''){
+                mostrarError($(fechaDeLlegadaDepositoProvincial), 'FaltaFecha')
+            } else if($(fechaDeLlegadaDepositoProvincial).val() != '') {
+                const fechaIngresada = new Date($(fechaDeLlegadaDepositoProvincial).val())
+                const fechaActual = new Date()
+                fechaIngresada.setHours(24, 0, 0, 0)
+                fechaActual.setHours(0, 0, 0, 0)
+                if (((fechaIngresada - fechaActual) / (1000 * 60 * 60 * 24)) > 0) {
+                    mostrarError($(fechaDeLlegadaDepositoProvincial), 'Superior')
+                } else {
+                    const fechaLlegada = new Date($(fechaDeLlegadaDepositoNacional).val())
+                    console.log($(fechaDeLlegadaDepositoNacional).val())
+                    console.log($(fechaDeLlegadaDepositoProvincial).val())
+                    console.log($(fechaDeLlegadaDepositoNacional).val() < $(fechaDeLlegadaDepositoProvincial).val())
+                    if ($(fechaDeLlegadaDepositoNacional).val() > $(fechaDeLlegadaDepositoProvincial).val()) {
+                        mostrarError($(fechaDeLlegadaDepositoProvincial), 'Anterior')
+                    }
+                }
+            }
+        }
+
+        /*function validarFechaDeSalidaAlCen() {
+            quitarError($(fechaDeSalidaDepositoProvincial))
+            if($(fechaDeSalidaDepositoProvincial).val() != '' && !$(idCentroDeVacunacion).val()) {
+                mostrarError($(fechaDeSalidaDepositoProvincial), 'Vacio')
+            } else if($(fechaDeSalidaDepositoProvincial).val() != '') {
+                const fechaIngresada = new Date($(fechaDeSalidaDepositoProvincial).val())
+                const fechaActual = new Date()
+                fechaIngresada.setHours(24, 0, 0, 0)
+                fechaActual.setHours(0, 0, 0, 0)
+                if (((fechaIngresada - fechaActual) / (1000 * 60 * 60 * 24)) > 0) {
+                    mostrarError($(fechaDeSalidaDepositoProvincial), 'Superior')
+                }
+            }
+        }
+
+        function validarFechaDeLlegadaAlCen() {
+            quitarError($(fechaDeLlegadaCentroDeVacunacion))
+            if($(fechaDeLlegadaCentroDeVacunacion).val() != '' && !$(idCentroDeVacunacion).val()) {
+                mostrarError($(fechaDeLlegadaCentroDeVacunacion), 'Vacio')
+            } else if($(fechaDeLlegadaCentroDeVacunacion).val() != '') {
+                const fechaIngresada = new Date($(fechaDeLlegadaCentroDeVacunacion).val())
+                const fechaActual = new Date()
+                fechaIngresada.setHours(24, 0, 0, 0)
+                fechaActual.setHours(0, 0, 0, 0)
+                if (((fechaIngresada - fechaActual) / (1000 * 60 * 60 * 24)) > 0) {
+                    mostrarError($(fechaDeLlegadaCentroDeVacunacion), 'Superior')
+                } else if(!$(idDepositoNacional).val() || !$(idDepositoProvincial).val()) {
+                    mostrarError($(fechaDeLlegadaCentroDeVacunacion), 'Seleccion')
+                } else if ($(fechaDeLlegadaCentroDeVacunacion).val() < $(fechaDeLlegadaDepositoNacional).val() || $(fechaDeLlegadaCentroDeVacunacion).val() < $(fechaDeSalidaDepositoNacional).val() || $(fechaDeLlegadaCentroDeVacunacion).val() < $(fechaDeLlegadaDepositoProvincial).val() || $(fechaDeLlegadaCentroDeVacunacion).val() < $(fechaDeSalidaDepositoProvincial).val()) {
+                    mostrarError($(fechaDeLlegadaCentroDeVacunacion), 'Antiguo')
+                }
+            }
+        }
+        
+        /*$(fechaDeSalidaDepositoNacional).on('keyup focusout', function(){
+            validarFechaDeLlegadaAlDepNac()
+            validarFechaDeSalidaAlDepPro()
+            validarFechaDeLlegadaAlDepPro()
+        })
+
+        $(fechaDeLlegadaDepositoProvincial).on('keyup focusout', function(){
+            validarFechaDeSalidaAlDepPro()
+            validarFechaDeLlegadaAlDepPro()
+        })
+
+        $(idDepositoProvincial).on('change', function () {
+            if(!$(this).hasClass('is-valid')) {
+                quitarError($(this))
+            }
+            validarFechaDeSalidaAlDepPro()
+            validarFechaDeLlegadaAlDepPro()
+        })
+
+        $('#fechaDeSalidaDepositoProvincial, #fechaDeLlegadaCentroDeVacunacion').on('keyup focusout', function () {
+            //validarFechaDeSalidaAlCen()
+            //validarFechaDeLlegadaAlCen()
+        })
+
+        /*$('#idDepositoProvincial, #idCentroDeVacunacion').on('change', function () {
+            if(!$(this).hasClass('is-valid')) {
+                quitarError($(this))
+            }
+            //validarFechaDeLlegadaAlDepPro()
+            validarFechaDeSalidaAlDepPro()
+            validarFechaDeSalidaAlCen()
+            validarFechaDeLlegadaAlCen()
+        })
+        
+        
+         /*function mostrarFechasYCentroDeVacunacion(){
+            if($(idDepositoProvincial).val() != '' && $(fechaDeSalidaDepositoNacional).val() != '' && $(fechaDeLlegadaDepositoProvincial).val() != '') {
+                $(fechasDivCen).removeClass('d-none')
+                //cargarComboCDV()
+            } else {
+                $(fechasDivCen).addClass('d-none')
+            }
+        }*/

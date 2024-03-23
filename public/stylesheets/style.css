@@ -1,59 +1,92 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f2f2f2;
+}
+
 h2 {
-	text-align: center;
-	text-decoration: underline;
-	text-underline-offset: 4px;
-	margin-top: 10px;
+  text-align: center;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  margin-top: 10px;
 }
+
 label {
-	margin-top: 5px;
-	margin-bottom: 5px;
+  display: block;
+  margin-top: 5px;
+  margin-bottom: 5px;
 }
+
+input[type="submit"] {
+  background-color: #007bff;
+  color: #ffffff;
+  cursor: pointer;
+}
+
+.container {
+  margin: 50px auto;
+  border-radius: 5px;
+  padding: 20px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
 .modal-content {
-	background-color: #f1f1f1;
-	padding: 20px;
-	border-radius: 10px;
-	box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  background-color: #f1f1f1;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
 }
+
 .modal-header {
-	background-color: #dc3545;
-	color: white;
+  background-color: #dc3545;
+  color: white;
 }
+
 .modal-body {
-	padding: 20px;
+  padding: 20px;
 }
+
 .modal-footer {
-	background-color: #f1f1f1;
+  background-color: #f1f1f1;
 }
+
 .navbar-nav .nav-item:hover .nav-link {
-	cursor: pointer;
-	color: #0000ff;
+  cursor: pointer;
+  color: #0000ff;
 }
-#form {
-	max-width: 600px;
-	margin: auto;
-}
-#map {
-	height: 300px;
-	width: 100%;
-	border: 1px solid #000;
-}
-#mensajeAlerta {
-	color: #721c24;
-}
+
 .flash-message {
-	display: none;
-	opacity: 1;
-	transition: opacity 1s ease-out;
+  display: none;
+  opacity: 1;
+  transition: opacity 1s ease-out;
 }
+
 .fade-in {
-	display: block;
-	animation: fadeOut 3s 1s; /* fadeIn dura 3 segundos, fadeOut comienza después de 3 segundos y dura 2 segundos */
+  display: block;
+  animation: fadeOut 3s 1s; /* fadeIn dura 3 segundos, fadeOut comienza después de 3 segundos y dura 2 segundos */
 }
+
+#form {
+  max-width: 600px;
+  margin: auto;
+}
+
+#map {
+  height: 300px;
+  width: 100%;
+  border: 1px solid #000;
+}
+
+#mensajeAlerta {
+  color: #721c24;
+}
+
 @keyframes fadeOut {
-	from {
-		opacity: 1;
-	}
-	to {
-		opacity: 0;
-	}
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
 }

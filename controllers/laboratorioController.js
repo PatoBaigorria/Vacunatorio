@@ -8,6 +8,8 @@ const listarLaboratorios = async (req, res) => {
 		let laboratorios = await Laboratorio.findAll({
 			raw: true,
 		});
+		console.log("Estoy en index de lab")
+		console.log(req.user)
 
 		res.render("laboratorio/viewLaboratorio", { laboratorios: laboratorios });
 	} catch (error) {
