@@ -1,3 +1,14 @@
+/*
+- Corregir todas las tablas para que tengan menos columnas
+- Dividir las vistas por rol
+- Que el navegador se adapate a cada rol y a los usuarios no autenticados
+- Corregir el redireccionamiento para que muestre las acciones correspondientes
+- Mover el perfil del usuario al nav
+- Corregir modificar Lote interno para que quede como alta lote interno
+- Modificar registro para que se refleje el usuario que realiza las acciones
+- Terminar de corregir alta aplicación
+- 
+*/
 const createError = require("http-errors");
 const express = require("express");
 const path = require("path");
@@ -31,10 +42,10 @@ app.use(override("_method"));
 const indexRouter = require("./routes/indexRoutes");
 app.use(flash());
 app.use(session({
-    secret: "secreto", // Cambia esto por una cadena secreta para firmar las cookies
-    resave: false,
-    saveUninitialized: false,
-  })
+  secret: "secreto", // Cambia esto por una cadena secreta para firmar las cookies
+  resave: false,
+  saveUninitialized: false,
+})
 );
 app.use(passport.initialize());
 app.use(passport.session());
@@ -55,10 +66,10 @@ db.authenticate()
     console.error("Error al conectar a la base de datos:", error);
   });
 
-// catch 404 and forward to error handler
+/* catch 404 and forward to error handler
 app.use(function (req, res, next) {
   next(createError(404));
-});
+});*/
 
 // error handler
 app.use(function (err, req, res, next) {

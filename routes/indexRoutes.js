@@ -19,7 +19,7 @@ const usuarioRoutes = require("./usuarioRoutes");
 const { passport } = require("../app");
 // Ruta de la página de inicio (pública)
 router.get("/", (req, res) => {
-  res.render("index");
+	res.render("index");
 });
 
 // login route
@@ -27,20 +27,20 @@ router.post("/login", passport.authenticate("local", {
 	successRedirect: "/usuarios/profile",
 	successMessage: "logueado",
 	successFlash: true,
-    failureRedirect: "/",
-    failureFlash: true,
-  }));
+	failureRedirect: "/",
+	failureFlash: true,
+}));
 
 router.get("/usuarios/viewUsuario", function (req, res, next) {
-  passport.authenticate("local", function (err, user, info, status) {
-    if (err) {
-      return next(err);
-    }
-    if (!user) {
-      return res.redirect("/signin");
-    }
-    res.redirect("/usuarios/viewUsuario");
-  })(req, res, next);
+	passport.authenticate("local", function (err, user, info, status) {
+		if (err) {
+			return next(err);
+		}
+		if (!user) {
+			return res.redirect("/signin");
+		}
+		res.redirect("/usuarios/viewUsuario");
+	})(req, res, next);
 });
 
 router.use("/aplicaciones", aplicacionRoutes);
@@ -50,7 +50,7 @@ router.use("/depositosprovinciales", depositoprovincialRoutes);
 router.use("/descartes", descarteRoutes);
 router.use("/laboratorios", laboratorioRoutes);
 router.use("/lotesinternos", loteinternoRoutes);
-router.use("/lotesproveedor", loteproveedorRoutes);
+router.use("/lotesproveedores", loteproveedorRoutes);
 router.use("/personas", personaRoutes);
 router.use("/traslados", trasladoRoutes);
 router.use("/usuarios", usuarioRoutes);

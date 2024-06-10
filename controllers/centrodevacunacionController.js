@@ -5,7 +5,7 @@ const {
 
 const listarCentrosDeVacunacion = async (req, res) => {
 	try {
-		console.log("Hola "+ req.user.nombreUsuario);
+		//console.log("Hola "+ req.user.nombreUsuario);
 		const centrosVac = await CentroDeVacunacion.findAll({ raw: true })
 		res.render('centrodevacunacion/viewCentroDeVacunacion', {
 			centrosVac: centrosVac,

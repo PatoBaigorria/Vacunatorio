@@ -96,14 +96,16 @@ script.
 
         function cargarLotes(){
             const lotes = !{JSON.stringify(lotes)}.filter(lote => lote.fechaDeLlegadaCentroDeVacunacion != null)
+            console.log(lotes.length)
             if(lotes.length == 0){
                 $(numeroDeSerie).append('<option selected hidden value="">Sin vacunas</option>')
                 mostrarError($(numeroDeSerie), 'NoLlegadaACentro')
             } else {
                 quitarError($(numeroDeSerie))
                 $(numeroDeSerie).prop('disabled', false)
-                $(fechaDeAplicacion).prop('disabled', false)
+                //$(fechaDeAplicacion).prop('disabled', false)
                 lotes.forEach(lote => {
+                    console.log(lote.numeroDeSerie)
                     $(numeroDeSerie).append(`<option value=${lote.numeroDeSerie}> ${lote.numeroDeSerie} </option>`)
                 })
             }
@@ -126,6 +128,7 @@ script.
 
         cargarPacientes()
         cargarAgentes()
+        cargarLotes()
         $(DNIPaciente).on('change', function(){
             cargarAgentes()
         })
