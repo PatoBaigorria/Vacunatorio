@@ -1,14 +1,14 @@
 const express = require("express");
 const router = express.Router();
-const controllers = require("../controllers/indexController");
+const descarteController = require("../controllers/descarteController");
 
-router.get("/", controllers.descarteController.listarDescartes);
-router.get("/crear", controllers.descarteController.formDescarte);
-router.post("/", controllers.descarteController.createDescarte);
-router.get("/:id", controllers.descarteController.editDescarte);
-router.put("/:id", controllers.descarteController.updateDescarte);
-router.delete("/:id", controllers.descarteController.deleteDescarte);
-router.put("/:id/baja", controllers.descarteController.bajaDescarte);
-router.put("/:id/alta", controllers.descarteController.altaDescarte);
+router.get("/", descarteController.listarDescartes);
+router.get("/crear", descarteController.formDescarte);
+router.post("/", descarteController.createDescarte);
+router.get("/:id", descarteController.editDescarte);
+router.put("/:id", descarteController.updateDescarte);
+router.delete("/:id", descarteController.deleteDescarte);
+router.put("/:id/baja", descarteController.bajaDescarte);
+router.put("/:id/alta", descarteController.altaDescarte);
 
 module.exports = router;

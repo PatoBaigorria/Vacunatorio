@@ -1,14 +1,14 @@
 const express = require("express");
 const router = express.Router();
-const controllers = require("../controllers/indexController");
+const laboratorioController = require("../controllers/laboratorioController");
 
-router.get("/",controllers.laboratorioController.listarLaboratorios);
-router.get("/alta",controllers.laboratorioController.formLaboratorio);
-router.post("/",controllers.laboratorioController.createLaboratorio);
-router.get("/:id",controllers.laboratorioController.editLaboratorio);
-router.put("/:id",controllers.laboratorioController.updateLaboratorio);
-router.delete("/:id",controllers.laboratorioController.deleteLaboratorio);
-router.put("/:id/baja",controllers.laboratorioController.bajaLaboratorio);
-router.put("/:id/alta",controllers.laboratorioController.altaLaboratorio);
+router.get("/", laboratorioController.listarLaboratorios);
+router.get("/alta", laboratorioController.formLaboratorio);
+router.post("/", laboratorioController.createLaboratorio);
+router.get("/:id", laboratorioController.editLaboratorio);
+router.put("/:id", laboratorioController.updateLaboratorio);
+router.delete("/:id", laboratorioController.deleteLaboratorio);
+router.put("/:id/baja", laboratorioController.bajaLaboratorio);
+router.put("/:id/alta", laboratorioController.altaLaboratorio);
 
 module.exports = router;

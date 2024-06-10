@@ -1,14 +1,14 @@
 const express = require("express");
 const router = express.Router();
-const controllers = require("../controllers/indexController");
+const depositoNacionalController = require("../controllers/depositoNacionalController");
 
-router.get("/", controllers.depositoNacionalController.listarDepositosNacionales);
-router.get("/alta", controllers.depositoNacionalController.formDepNac);
-router.post("/", controllers.depositoNacionalController.createDepNac);
-router.get("/:id", controllers.depositoNacionalController.editDepNac);
-router.put("/:id", controllers.depositoNacionalController.updateDepositoNacional);
-router.delete("/:id", controllers.depositoNacionalController.deleteDepositoNacional);
-router.put("/:id/baja", controllers.depositoNacionalController.bajaDepositoNacional);
-router.put("/:id/alta", controllers.depositoNacionalController.altaDepositoNacional);
+router.get("/", depositoNacionalController.listarDepositosNacionales);
+router.get("/alta", depositoNacionalController.formDepNac);
+router.post("/", depositoNacionalController.createDepNac);
+router.get("/:id", depositoNacionalController.editDepNac);
+router.put("/:id", depositoNacionalController.updateDepositoNacional);
+router.delete("/:id", depositoNacionalController.deleteDepositoNacional);
+router.put("/:id/baja", depositoNacionalController.bajaDepositoNacional);
+router.put("/:id/alta", depositoNacionalController.altaDepositoNacional);
 
 module.exports = router;

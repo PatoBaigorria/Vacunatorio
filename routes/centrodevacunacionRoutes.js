@@ -1,14 +1,14 @@
 const express = require("express");
 const router = express.Router();
-const controllers = require("../controllers/indexController");
+const centroDeVacunacionController = require("../controllers/centroDeVacunacionController");
 
-router.get("/", controllers.centroDeVacunacionController.listarCentrosDeVacunacion);
-router.get("/alta", controllers.centroDeVacunacionController.formCentroVac);
-router.post("/", controllers.centroDeVacunacionController.createCentroVac);
-router.get("/:id", controllers.centroDeVacunacionController.editCentroVac);
-router.put("/:id", controllers.centroDeVacunacionController.updateCentroDeVacunacion);
-router.delete("/:id", controllers.centroDeVacunacionController.deleteCentroDeVacunacion);
-router.put("/:id/baja", controllers.centroDeVacunacionController.bajaCentroDeVacunacion);
-router.put("/:id/alta", controllers.centroDeVacunacionController.altaCentroDeVacunacion);
+router.get("/", centroDeVacunacionController.listarCentrosDeVacunacion);
+router.get("/alta", centroDeVacunacionController.formCentroVac);
+router.post("/", centroDeVacunacionController.createCentroVac);
+router.get("/:id", centroDeVacunacionController.editCentroVac);
+router.put("/:id", centroDeVacunacionController.updateCentroDeVacunacion);
+router.delete("/:id", centroDeVacunacionController.deleteCentroDeVacunacion);
+router.put("/:id/baja", centroDeVacunacionController.bajaCentroDeVacunacion);
+router.put("/:id/alta", centroDeVacunacionController.altaCentroDeVacunacion);
 
 module.exports = router;
