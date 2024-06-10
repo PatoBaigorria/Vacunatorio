@@ -5,13 +5,14 @@ const {
 
 const listarCentrosDeVacunacion = async (req, res) => {
 	try {
+		console.log("Hola "+ req.user.nombreUsuario);
 		const centrosVac = await CentroDeVacunacion.findAll({ raw: true })
 		res.render('centrodevacunacion/viewCentroDeVacunacion', {
 			centrosVac: centrosVac,
 		})
 	} catch (error) {
 		req.flash('error', `Hubo un error al intentar listar los centros de vacunación. ${error.message}`)
-		res.json({ success: false })
+		res.json({ success: `Hubo un error al intentar listar los centros de vacunación. ${error.message}` });
 	}
 }
 

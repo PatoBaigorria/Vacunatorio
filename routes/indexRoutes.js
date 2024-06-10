@@ -23,19 +23,13 @@ router.get("/", (req, res) => {
 });
 
 // login route
-router.post("/login", async (req, res) => {
-  // passport.authenticate se encarga de realizar la autenticación
-  // y de redirigir al usuario a la ruta correspondiente
-  passport.authenticate("local", {
-	successRedirect: "/laboratorios",
+router.post("/login", passport.authenticate("local", {
+	successRedirect: "/usuarios/profile",
 	successMessage: "logueado",
 	successFlash: true,
     failureRedirect: "/",
     failureFlash: true,
-  })(req, res);
-  console.log("authenticated")
-  console.log(req.user)
-});
+  }));
 
 router.get("/usuarios/viewUsuario", function (req, res, next) {
   passport.authenticate("local", function (err, user, info, status) {

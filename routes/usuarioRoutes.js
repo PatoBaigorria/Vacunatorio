@@ -1,11 +1,8 @@
 const express = require("express");
 const router = express.Router();
 const controllers = require("../controllers/indexController");
-const {check} = require('../app')
 router.get("/", controllers.usuarioController.listarUsuarios);
-router.get('/profile', check, (req, res) => {
-	console.log("Estoy en profile: ")
-	console.log(req.user);
+router.get('/profile', (req, res) => {
 	res.render("usuario/profile", { user: req.user });
 })
 router.get("/alta", controllers.usuarioController.formUsuario);
