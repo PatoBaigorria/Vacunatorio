@@ -133,16 +133,13 @@ const createPersona = async (req, res) => {
 
 const detailsPersona = async (req, res) => {
   try {
-    const DNI = req.params.DNI; // Obtén el DNI de la solicitud
-    console.log(DNI);
-
-    // Verifica si el DNI está presente en la solicitud
-    if (!DNI) {
-      res.status(400).json({ message: "DNI no proporcionado" });
-      return;
-    }
-
-    const persona = await Persona.findOne({ where: { DNI } }); // Busca la persona por DNI
+    const persona = await Persona.findByPk(req.params.id, {
+      include: [
+        { model: Telefono, attributes: ["celular1", "celular2"] },
+        { model: PatologiaBase, attributes: ["patologiaBase"] },
+        { model: AgenteDeSalud, attributes: ["matricula"] },
+      ],
+    });
 
     if (!persona) {
       // Si la persona no existe, responde con un error 404

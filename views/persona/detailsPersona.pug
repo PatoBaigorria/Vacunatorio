@@ -1,15 +1,114 @@
-extends layout
-
+- var title ='Actualización de persona'
+include ..\includes\layout
 block content
-  h1 Detalles de la Persona
-  
-  p DNI: #{persona.DNI}
-  p Nombre: #{persona.nombre}
-  p Apellido: #{persona.apellido}
-  p Email: #{persona.email}
-  p Fecha de Nacimiento: #{persona.fechaDeNacimiento}
-  p Ocupación: #{persona.ocupacion}
-  p Género: #{persona.genero}
-  p Latitud: #{persona.latitud}
-  p Longitud: #{persona.longitud}
-  p Activo: #{persona.activo ? 'Sí' : 'No'}
+html(lang="es")
+head
+    link(rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="")
+    script(src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin="")
+body
+    h2.text-center Detalle de los datos de la persona
+    if messages.error
+        .alert.alert-danger
+            = messages.error
+    div.modal#alertModal(tabindex="-1" role="dialog" aria-labelledby="alertModalLabel" aria-hidden="true")
+        div.modal-dialog(role="document")
+            div.modal-content
+                div.modal-header
+                    h5.modal-title#alertModalLabel Alerta
+                    button.close(type="button" data-bs-dismiss="modal" aria-label="Close")
+                        span(aria-hidden="true") ×
+                div.modal-body
+                    p#mensajeAlerta Mensaje de alerta
+    form#form(action="/personas/"+persona.DNI+"?_method=PUT" method="post")
+        .form-group
+            label.form-label.text-center(for="dni") DNI:
+            .input-group
+                input.form-control(type="text" id="dni" name="DNI" value=persona.DNI disabled)
+        .form-group
+            label.form-label.text-center(for="nombre") Nombre:
+            .input-group.has-validation
+                input.form-control(type="text" id="nombre" name="nombre" placeholder="Ingrese un nombre de 3 a 50 caracteres" title="El nombre solo puede contener un máximo de cincuenta caracteres" value=persona.nombre disabled)
+        .form-group
+            label.form-label.text-center(for="apellido") Apellido:
+            .input-group.has-validation
+                input.form-control(type="text" id="apellido" name="apellido" placeholder="Ingrese un nombre de 3 a 50 caracteres" title="El apellido solo puede contener un máximo de cincuenta caracteres" value=persona.apellido disabled)
+        .form-group
+            label.form-label.text-center(for="email") Email:
+            .input-group.has-validation
+                input.form-control(type="email" id="email" name="email" placeholder="Ingrese un email válido" title="El email debe ser válido" value=persona.email disabled)
+        .form-group
+            label.form-label.text-center(for="fechaDeNacimiento") Fecha de Nacimiento:
+            .input-group.has-validation
+                input.form-control(type="date" id="fechaDeNacimiento" name="fechaDeNacimiento" value=persona.fechaDeNacimiento disabled)
+        .form-group
+            label.form-label.text-center(for="ocupacion") Ocupación:
+            if(persona.ocupacion=="agente de salud")
+                select.form-select(name="ocupacion" id="ocupacion" disabled)
+                    option(value="agente de salud" selected) Agente de Salud
+                    option(value="otro") Otro
+                .form-group.d-inline#matriculaDiv
+                    label.form-label.text-center(for="matricula" id="matriculaLabel") Matrícula:
+                    .input-group.has-validation
+                        input.form-control(type="number" id="matricula" name="matricula" placeholder="Ingrese una matrícula de 8 digitos" title="La matrícula debe contener 8 digitos" value=persona.Agentedesalud.matricula)
+            else 
+                select.form-select(name="ocupacion" id="ocupacion" disabled)
+                    option(value="agente de salud") Agente de Salud
+                    option(value="otro" selected) Otro
+                .form-group.d-none#matriculaDiv
+                    label.form-label.text-center(for="matricula" id="matriculaLabel") Matrícula:
+                    .input-group.has-validation
+                        input.form-control(type="number" id="matricula" name="matricula" placeholder="Ingrese una matrícula de 8 digitos" title="La matrícula debe contener 8 digitos")
+        .form-group
+            label.form-label.text-center(for="genero") Género:
+            select.form-select(name="genero" id="genero" disabled)
+                option(value="Masculino" selected=persona.genero === 'Masculino') Masculino
+                option(value="Femenino" selected=persona.genero === 'Femenino') Femenino
+                option(value="Otro" selected=persona.genero === 'Otro') Otro
+        .form-group
+            label.form-label.text-center(for="celular1") Celular 1:
+            .input-group.has-validation
+                input.form-control(type="tel" id="celular1" name="celular1" placeholder="No posee" title="El celular debe contener 10 digitos" value=persona.Telefono.celular1 disabled)
+        .form-group
+            label.form-label.text-center(for="celular2") Celular 2:
+            .input-group.has-validation
+                input.form-control(type="tel" id="celular2" name="celular2" placeholder="No posee" title="El celular debe contener 10 digitos" value=persona.Telefono.celular2 disabled)
+        .form-group
+            label.form-label.text-center(for="patologiaBase") Patologia Base:
+            .input-group.has-validation
+                input.form-control(name="patologiaBase" id="patologiaBase" value=persona.Patologiabase.patologiaBase disabled)
+        .form-group
+            label.form-label.text-center Seleccione ubicación en el mapa:
+            #map
+        .form-group
+            label.form-label.text-center(for="longitud") Longitud:
+            input.form-control(type="text" id="longitud" name="longitud" value=persona.longitud disabled)
+        .form-group
+            label.form-label.text-center(for="latitud") Latitud:
+            input.form-control(type="text" id="latitud" name="latitud" value=persona.latitud disabled)
+        br
+script.
+    $(function () {"¡Datos incorrectos! Por favor, verifica la información ingresada."
+        $('#map').css('width', $('#form').outerWidth() + 'px');
+        $().ready(function () {
+            initMap();
+        });
+
+        function initMap() {
+            let map = L.map('map');
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap contributors'
+            }).addTo(map);
+
+            if ("geolocation" in navigator) {
+                navigator.geolocation.getCurrentPosition(function (position) {
+                    var userLocation = [!{JSON.stringify(persona)}.latitud, !{JSON.stringify(persona)}.longitud];
+                    map.setView(userLocation, 15);
+                    var marker = L.marker(userLocation, { draggable: true }).addTo(map);
+                    marker.on('dragend', function (event) {
+                        actualizarCoordenadas(event.target.getLatLng());
+                    });
+                    actualizarCoordenadas(map.getCenter());
+                });
+            }
+        }
+    });

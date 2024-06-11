@@ -47,7 +47,7 @@ body
 script.
     let tabla 
     $(document).ready(function() {
-        tabla = $('#personas').DataTable({
+        tabla = $(personas).DataTable({
             data: !{JSON.stringify(personas)},
             pageLength:5,
             lengthMenu:[5,10,15,20],
@@ -63,7 +63,7 @@ script.
                     data: 'opciones', title: 'Opciones',
                     render: function (data, type, row) {
                         let detailsBtn = `<button title="Detalle" class="btn btn-primary btn-sm fa fa-info-circle detalle"></button>`;
-                        let editBtn = `<button title="Editar" class="btn btn-primary btn-sm fa-solid fa-pencil me-2"></button>`;
+                        let editBtn = `<button title="Editar" class="btn btn-primary btn-sm fa-solid fa-pencil"></button>`;
                         let deactivateBtn = `<button title="Dar de baja" class="btn btn-warning btn-sm fa-solid fa-exclamation-circle"></button>`;
                         let activateBtn = `<button title="Dar de alta" class="btn btn-success btn-sm fa-solid fa-check-circle"></button>`;
                         if (row.activo == 1) {
@@ -77,7 +77,7 @@ script.
             columnDefs: [
                     //{orderable: false, targets:[13]}, // Columna de "Opciones"
                     {searchable: false, targets:[3, 4]},
-                    {className: "dt-center", targets: [0, 1, 2]},
+                    {className: "dt-center", targets: [0, 1, 2, 3, 4]},
                     //{ width: "7%", targets: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11] },
                     //{ width: "5%", targets: [14] }
             ]
