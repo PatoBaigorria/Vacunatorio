@@ -50,8 +50,9 @@ const createLaboratorio = async (req, res) => {
 			latitud,
 			activo: 1,
 		});
-		await createRegistro('Laboratorio', laboratorio.dataValues.idLaboratorio, 'Creacion')
-		await createRegistro('Laboratorio', laboratorio.dataValues.idLaboratorio, 'Alta')
+		console.log(req.user)
+		await createRegistro(req.user.idUsuario, 'Laboratorio', laboratorio.dataValues.idLaboratorio, 'Creacion')
+		await createRegistro(req.user.idUsuario, 'Laboratorio', laboratorio.dataValues.idLaboratorio, 'Alta')
 		req.flash("success", "Laboratorio creado exitosamente");
 		res.redirect("/laboratorios");
 	} catch (error) {
@@ -84,7 +85,7 @@ const updateLaboratorio = async (req, res) => {
 				idLaboratorio: req.params.id,
 			},
 		});
-		await createRegistro('Laboratorio', req.params.id, 'Modificacion')
+		await createRegistro(req.user.idUsuario, 'Laboratorio', req.params.id, 'Modificacion')
 		req.flash("success", "Laboratorio actualizado exitosamente.");
 		res.redirect("/laboratorios");
 	} catch (error) {
@@ -119,7 +120,7 @@ const bajaLaboratorio = async (req, res) => {
 				},
 			}
 		);
-		await createRegistro('Laboratorio', req.params.id, 'Baja')
+		await createRegistro(req.user.idUsuario, 'Laboratorio', req.params.id, 'Baja')
 		req.flash("success", "Laboratorio dado de baja exitosamente.");
 		res.json({ success: true });
 	} catch (error) {
@@ -139,7 +140,7 @@ const altaLaboratorio = async (req, res) => {
 				},
 			}
 		);
-		await createRegistro('Laboratorio', req.params.id, 'Alta')
+		await createRegistro(req.user.idUsuario, 'Laboratorio', req.params.id, 'Alta')
 		req.flash("success", "Laboratorio dado de alta exitosamente.");
 		res.json({ success: true });
 	} catch (error) {

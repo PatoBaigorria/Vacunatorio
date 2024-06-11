@@ -1,13 +1,12 @@
 /*
-- Corregir todas las tablas para que tengan menos columnas
+- Corregir todas las tablas para que tengan menos columnas ✔ (Eze)
 - Dividir las vistas por rol
 - Que el navegador se adapate a cada rol y a los usuarios no autenticados
 - Corregir el redireccionamiento para que muestre las acciones correspondientes
 - Mover el perfil del usuario al nav
 - Corregir modificar Lote interno para que quede como alta lote interno
-- Modificar registro para que se refleje el usuario que realiza las acciones
-- Terminar de corregir alta aplicación
-- 
+- Modificar registro para que se refleje el usuario que realiza las acciones ✔ (Eze)
+- Terminar de corregir alta aplicación ✔ (Eze)
 */
 const createError = require("http-errors");
 const express = require("express");

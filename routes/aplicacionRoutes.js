@@ -5,6 +5,7 @@ const aplicacionController = require("../controllers/aplicacionController");
 router.get("/", aplicacionController.listarAplicacion);
 router.get("/crear", aplicacionController.formAplicacion);
 router.post("/", aplicacionController.createAplicacion);
+//router.get("/details/:id", aplicacionController.detailsCentroDeVacunacion);
 router.get("/:id", aplicacionController.editAplicacion);
 router.put("/:id", aplicacionController.updateAplicacion);
 router.delete("/:id", aplicacionController.deleteAplicacion);

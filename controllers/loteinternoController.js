@@ -109,8 +109,8 @@ const createLoteInterno = async (req, res) => {
 			idCentroDeVacunacion,
 			activo: 1,
 		});
-		await createRegistro('Lote interno', lote.dataValues.numeroDeSerie, 'Creacion')
-		await createRegistro('Lote interno', lote.dataValues.numeroDeSerie, 'Alta')
+		await createRegistro(req.user.idUsuario, 'Lote interno', lote.dataValues.numeroDeSerie, 'Creacion')
+		await createRegistro(req.user.idUsuario, 'Lote interno', lote.dataValues.numeroDeSerie, 'Alta')
 		req.flash('success', 'Lote Interno creado exitosamente.');
 		res.redirect("/lotesinternos");
 	} catch (error) {
@@ -191,7 +191,7 @@ const updateLoteInterno = async (req, res) => {
 				numeroDeSerie: req.params.id
 			},
 		});
-		await createRegistro('Lote interno', req.params.id, 'Modificacion')
+		await createRegistro(req.user.idUsuario, 'Lote interno', req.params.id, 'Modificacion')
 		req.flash('success', 'Lote Interno actualizado exitosamente.');
 		res.redirect("/lotesinternos");
 	} catch (error) {
@@ -228,7 +228,7 @@ const bajaLoteInterno = async (req, res) => {
 				},
 			}
 		);
-		await createRegistro('Lote interno', req.params.id, 'Baja')
+		await createRegistro(req.user.idUsuario, 'Lote interno', req.params.id, 'Baja')
 		req.flash("success", "Lote interno dado de baja exitosamente.");
 		res.json({ success: true });
 	} catch (error) {
@@ -250,7 +250,7 @@ const altaLoteInterno = async (req, res) => {
 				},
 			}
 		);
-		await createRegistro('Lote interno', req.params.id, 'Alta')
+		await createRegistro(req.user.idUsuario, 'Lote interno', req.params.id, 'Alta')
 		req.flash("success", "Lote interno dado de alta exitosamente.");
 		res.json({ success: true });
 	} catch (error) {

@@ -39,8 +39,8 @@ const createDepNac = async (req, res) => {
 			latitud,
 			activo: 1,
 		});
-		await createRegistro('Deposito Nacional', deposito.dataValues.idDepositoNacional, 'Creacion')
-		await createRegistro('Deposito Nacional', deposito.dataValues.idDepositoNacional, 'Alta')
+		await createRegistro(req.user.idUsuario, 'Deposito Nacional', deposito.dataValues.idDepositoNacional, 'Creacion')
+		await createRegistro(req.user.idUsuario, 'Deposito Nacional', deposito.dataValues.idDepositoNacional, 'Alta')
 		req.flash("success", "Depósito Nacional creado exitosamente");
 		res.redirect("/depositosnacionales");
 	} catch (error) {
@@ -69,7 +69,7 @@ const updateDepositoNacional = async (req, res) => {
 		await DepositoNacional.update(req.body, {
 			where: { idDepositoNacional: req.params.id },
 		});
-		await createRegistro('Deposito Nacional', req.params.id, 'Modificacion')
+		await createRegistro(req.user.idUsuario, 'Deposito Nacional', req.params.id, 'Modificacion')
 		req.flash("success", "Depósito Nacional actualizado exitosamente.");
 		res.redirect("/depositosnacionales");
 	} catch (error) {
@@ -106,7 +106,7 @@ const bajaDepositoNacional = async (req, res) => {
 				},
 			}
 		);
-		await createRegistro('Deposito Nacional', req.params.id, 'Baja')
+		await createRegistro(req.user.idUsuario, 'Deposito Nacional', req.params.id, 'Baja')
 		req.flash("success", "Depósito nacional dado de baja exitosamente.");
 		res.json({ success: true });
 	} catch (error) {
@@ -126,7 +126,7 @@ const altaDepositoNacional = async (req, res) => {
 				},
 			}
 		);
-		await createRegistro('Deposito Nacional', req.params.id, 'Alta')
+		await createRegistro(req.user.idUsuario, 'Deposito Nacional', req.params.id, 'Alta')
 		req.flash("success", "Depósito nacional dado de alta exitosamente.");
 		res.json({ success: true });
 	} catch (error) {

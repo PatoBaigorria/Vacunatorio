@@ -37,8 +37,8 @@ const createDepProv = async (req, res) => {
 			latitud,
 			activo: 1,
 		});
-		await createRegistro('Deposito Provincial', deposito.dataValues.idDepositoProvincial, 'Creacion')
-		await createRegistro('Deposito Provincial', deposito.dataValues.idDepositoProvincial, 'Alta')
+		await createRegistro(req.user.idUsuario, 'Deposito Provincial', deposito.dataValues.idDepositoProvincial, 'Creacion')
+		await createRegistro(req.user.idUsuario, 'Deposito Provincial', deposito.dataValues.idDepositoProvincial, 'Alta')
 		req.flash("success", "Depósito Provincial creado exitosamente");
 		res.redirect("/depositosprovinciales");
 	} catch (error) {
@@ -66,7 +66,7 @@ const updateDepositoProvincial = async (req, res) => {
 				where: { idDepositoProvincial: req.params.id, },
 			}
 		);
-		await createRegistro('Deposito Provincial', req.params.id, 'Modificacion')
+		await createRegistro(req.user.idUsuario, 'Deposito Provincial', req.params.id, 'Modificacion')
 		req.flash('success', 'Depósito Provincial actualizado exitosamente.');
 		res.redirect("/depositosprovinciales");
 	} catch (error) {
@@ -103,7 +103,7 @@ const bajaDepositoProvincial = async (req, res) => {
 				},
 			}
 		);
-		await createRegistro('Deposito Provincial', req.params.id, 'Baja')
+		await createRegistro(req.user.idUsuario, 'Deposito Provincial', req.params.id, 'Baja')
 		req.flash("success", "Depósito provincial dado de baja exitosamente.");
 		res.json({ success: true });
 	} catch (error) {
@@ -123,7 +123,7 @@ const altaDepositoProvincial = async (req, res) => {
 				},
 			}
 		);
-		await createRegistro('Deposito Provincial', req.params.id, 'Alta')
+		await createRegistro(req.user.idUsuario, 'Deposito Provincial', req.params.id, 'Alta')
 		req.flash("success", "Depósito provincial dado de alta exitosamente.");
 		res.json({ success: true });
 	} catch (error) {

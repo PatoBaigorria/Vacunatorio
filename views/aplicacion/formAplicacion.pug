@@ -35,7 +35,7 @@ body
                 select.form-select.is-valid#numeroDeSerie(name="numeroDeSerie" required)
                 .invalid-feedback.d-none#numeroDeSerieSinSeleccionar Seleccione un lote interno de vacunas
                 .invalid-feedback.d-none#numeroDeSerieNoLlegadaACentro El centro de vacunación aún no tiene vacunas para aplicar
-        //.form-group
+        .form-group
             label.form-label(for="fechaDeAplicacion") Fecha en la que se aplico la vacuna:
             .input-group.has-validation
                 input.form-control.is-invalid#fechaDeAplicacion(type="date" name="fechaDeAplicacion" required)
@@ -102,6 +102,7 @@ script.
                 mostrarError($(numeroDeSerie), 'NoLlegadaACentro')
             } else {
                 quitarError($(numeroDeSerie))
+                quitarError($(fechaDeAplicacion))
                 $(numeroDeSerie).prop('disabled', false)
                 //$(fechaDeAplicacion).prop('disabled', false)
                 lotes.forEach(lote => {
@@ -133,9 +134,9 @@ script.
             cargarAgentes()
         })
 
-        /*$(fechaDeAplicacion).on('keyup focusout', function(){
+        $(fechaDeAplicacion).on('keyup focusout', function(){
             validarFechaDeAplicacion()
-        })*/
+        })
 
         let press = 0
         $(alertModal).on('keyup', function (event) {
@@ -157,7 +158,6 @@ script.
         })
 
         $(alertModal).on('hidden.bs.modal', function () {
-
             const primerInvalido = $('.is-invalid:first')
             if (primerInvalido.length > 0) {
                 primerInvalido.focus()
@@ -202,7 +202,7 @@ script.
                     }
                 })
             }
-        }
+        }*/
 
 
 
@@ -236,4 +236,4 @@ script.
         function mostrarAdvertencia() {
             $(mensajeAlerta).text('ADVERTENCIA: El lote seleccionado se encuentra vencido. Puede continuar, pero se recomienda precaución.')
             $(alertModal).modal('show')
-        }*/
+        }

@@ -28,8 +28,8 @@ const createUsuario = async (req, res) => {
 		const { rol, nombreUsuario, email, password } = req.body;
 		const hashedPassword = await bcrypt.hash(password, 5);
 		const usuario = await Usuario.create({ rol, nombreUsuario, email, password: hashedPassword, activo: 1, });
-		await createRegistro('Usuario', usuario.dataValues.idUsuario, 'Creacion');
-		await createRegistro('Usuario', usuario.dataValues.idUsuario, 'Alta');
+		await createRegistro(req.user.idUsuario, 'Usuario', usuario.dataValues.idUsuario, 'Creacion');
+		await createRegistro(req.user.idUsuario, 'Usuario', usuario.dataValues.idUsuario, 'Alta');
 
 		req.flash("success", "Usuario creado exitosamente");
 		res.redirect("/usuarios");
@@ -65,7 +65,7 @@ const updateUsuario = async (req, res) => {
 				idUsuario: req.params.id
 			}
 		}
-		await createRegistro('Usuario', req.params.id, 'Modificacion');
+		await createRegistro(req.user.idUsuario, 'Usuario', req.params.id, 'Modificacion');
 		req.flash("success", "Usuario actualizado exitosamente");
 		res.redirect("/usuarios");
 	} catch (error) {
@@ -81,7 +81,7 @@ const deleteUsuario = async (req, res) => {
 				idUsuario: req.params.id
 			}
 		})
-		await createRegistro('Usuario', req.params.id, 'Baja');
+		await createRegistro(req.user.idUsuario, 'Usuario', req.params.id, 'Baja');
 		req.flash("success", "Usuario eliminado exitosamente");
 	} catch (error) {
 		req.flash("error", "Error al eliminar el usuario.");
@@ -99,7 +99,7 @@ const altaUsuario = async (req, res) => {
 				}
 			}
 		)
-		await createRegistro('Usuario', req.params.id, 'Alta');
+		await createRegistro(req.user.idUsuario, 'Usuario', req.params.id, 'Alta');
 		req.flash("success", "Usuario dado de alta exitosamente");
 		res.json({ success: true })
 	} catch (error) {
@@ -118,7 +118,7 @@ const bajaUsuario = async (req, res) => {
 				}
 			}
 		)
-		await createRegistro('Usuario', req.params.id, 'Baja');
+		await createRegistro(req.user.idUsuario, 'Usuario', req.params.id, 'Baja');
 		req.flash("success", "Usuario dado de baja exitosamente");
 		res.json({ success: true })
 	} catch (error) {

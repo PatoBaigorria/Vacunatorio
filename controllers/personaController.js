@@ -79,8 +79,8 @@ const createPersona = async (req, res) => {
       latitud,
       activo: 1,
     });
-    await createRegistro("Persona", persona.dataValues.DNI, "Creacion");
-    await createRegistro("Persona", persona.dataValues.DNI, "Alta");
+    await createRegistro(req.user.idUsuario, "Persona", persona.dataValues.DNI, "Creacion");
+    await createRegistro(req.user.idUsuario, "Persona", persona.dataValues.DNI, "Alta");
     if (ocupacion === "agente de salud") {
       await AgenteDeSalud.create({
         DNI,
@@ -301,7 +301,7 @@ const updatePersona = async (req, res) => {
         },
       }
     );
-    await createRegistro("Persona", req.params.id, "Modificacion");
+    await createRegistro(req.user.idUsuario, "Persona", req.params.id, "Modificacion");
     req.flash("success", "Persona actualizada exitosamente");
     res.redirect("/personas");
   } catch (error) {
@@ -336,7 +336,7 @@ const bajaPersona = async (req, res) => {
         },
       }
     );
-    await createRegistro("Persona", req.params.id, "Baja");
+    await createRegistro(req.user.idUsuario, "Persona", req.params.id, "Baja");
     req.flash("success", "Persona dada de baja exitosamente.");
     res.json({ success: true });
   } catch (error) {
@@ -356,7 +356,7 @@ const altaPersona = async (req, res) => {
         },
       }
     );
-    await createRegistro("Persona", req.params.id, "Alta");
+    await createRegistro(req.user.idUsuario, "Persona", req.params.id, "Alta");
     req.flash("success", "Persona dada de alta exitosamente.");
     res.json({ success: true });
   } catch (error) {

@@ -56,32 +56,29 @@ script.
                 url: '//cdn.datatables.net/plug-ins/1.13.7/i18n/es-AR.json'
             },
             columns:[
-                {data: 'idTraslado', title: 'ID del Traslado'},
                 {data: 'numeroDeSerie', title: 'Número de Serie'},
                 {data: 'idCentroDeVacunacion', title: 'ID del Centro de Vacunación'},
-                {data: 'fechaDeSalida', title: 'Fecha de Salida'},
-                {data: 'fechaDeLlegada', title: 'Fecha de Llegada'},
                 { data: 'activo', title: 'Estado del traslado', createdCell: agregarMensajeSiActivoOInactivo },
                 {
                     data: 'opciones', title: 'Opciones',
                     render: function (data, type, row) {
-                        let editBtn = `<button title="Editar" class="btn btn-primary btn-sm fa-solid fa-pencil me-2"></button>`;
-                        let deactivateBtn = `<button title="Dar de baja" class="btn btn-warning btn-sm fa-solid fa-exclamation-circle"></button>`;
-                        let activateBtn = `<button title="Dar de alta" class="btn btn-success btn-sm fa-solid fa-check-circle"></button>`;
-                        if (row.activo == 1) {
-                            return `${editBtn} ${deactivateBtn}`;
-                        } else {
-                            return `${editBtn} ${activateBtn}`;
-                        }
+                        const detailsBtn = `<button title="Detalle" class="btn btn-primary btn-sm fa fa-info-circle detalle"></button>`;
+                        const editBtn = `<button title="Editar" class="btn btn-primary btn-sm fa-solid fa-pencil"></button>`;
+                        const deactivateBtn = `<button title="Dar de baja" class="btn btn-warning btn-sm fa-solid fa-exclamation-circle"></button>`;
+                        const activateBtn = `<button title="Dar de alta" class="btn btn-success btn-sm fa-solid fa-check-circle"></button>`;
+                        if (row.activo == 1)
+                            return `${detailsBtn} | ${editBtn} | ${deactivateBtn}`;
+                        else
+                            return `${detailsBtn} | ${editBtn} | ${activateBtn}`;
                     }
                 }
             ],
             columnDefs: [
-                {orderable: false, targets:[6]}, // Columna de "Opciones"
-                {searchable: false, targets:[6]},
-                {className: "dt-center", targets: [0, 1, 2, 3, 4, 5, 6]},
+                {orderable: false, targets:[3]}, // Columna de "Opciones"
+                {searchable: false, targets:[3]},
+                {className: "dt-center", targets: [0, 1, 2, 3]},
                 //{ width: '14%', targets: [0, 1, 2, 3, 4, 5] },
-                { width: '10%', targets: [6] },
+                { width: '15%', targets: [3] },
             ]
         });
 

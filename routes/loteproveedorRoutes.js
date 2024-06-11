@@ -5,6 +5,7 @@ const loteProveedorController = require("../controllers/loteProveedorController"
 router.get("/", loteProveedorController.listarLotesProveedores);
 router.get("/alta", loteProveedorController.formLoteProveedor);
 router.post("/", loteProveedorController.createLoteProveedor);
+//router.get("/details/:id", loteProveedorController.detailsCentroDeVacunacion);
 router.get("/:id", loteProveedorController.editLoteProveedor);
 router.put("/:id", loteProveedorController.updateLoteProveedor);
 router.delete("/:id", loteProveedorController.deleteLoteProveedor);

@@ -57,33 +57,29 @@ script.
             },
             columns:[
                 {data: 'idAplicacion', title: 'ID de la aplicación'},
-                {data: 'Persona.nombre', title: 'Nombre del Paciente'},
                 {data: 'Persona.apellido', title: 'Apellido del Paciente'},
-                {data: 'Agentedesalud.Persona.nombre', title: 'Nombre del Agente de Salud'},
                 {data: 'Agentedesalud.Persona.apellido', title: 'Apellido del Agente de Salud'},
                 {data: 'Loteinterno.numeroDeSerie', title: 'Número de Serie de la Vacuna'},
-                {data: 'fechaDeAplicacion', title: 'Fecha de Aplicacion'},
-                { data: 'activo', title: 'Estado de la aplicación', createdCell: agregarMensajeSiActivoOInactivo },
                 {
                     data: 'opciones', title: 'Opciones',
                     render: function (data, type, row) {
-                        const editBtn = `<button title='Editar' class='btn btn-primary btn-sm fa-solid fa-pencil me-2'></button>`
+                        const detailsBtn = `<button title="Detalle" class="btn btn-primary btn-sm fa fa-info-circle detalle"></button>`;
+                        const editBtn = `<button title='Editar' class='btn btn-primary btn-sm fa-solid fa-pencil'></button>`
                         const deactivateBtn = `<button title='Dar de baja' class='btn btn-warning btn-sm fa-solid fa-exclamation-circle'></button>`
                         const activateBtn = `<button title='Dar de alta' class='btn btn-success btn-sm fa-solid fa-check-circle'></button>`
-                        if (row.activo == 1) {
-                            return `${editBtn} ${deactivateBtn}`
-                        } else {
-                            return `${editBtn} ${activateBtn}`
-                        }
+                        if (row.activo == 1)
+                            return `${detailsBtn} | ${editBtn} | ${deactivateBtn}`;
+                        else
+                            return `${detailsBtn} | ${editBtn} | ${activateBtn}`;
                     }
                 }
             ],
             columnDefs: [
-                {orderable: false, targets:[7]},
-                {className: 'dt-center', targets: [0, 1, 2, 3, 4, 5, 6, 7, 8]},
-                { width: '12%', targets: [0, 1, 2] },
-                { width: '14%', targets: [3, 4, 5] },	
-                { width: '10%', targets: [6] },
+                {orderable: false, targets:[4]},
+                {className: 'dt-center', targets: [0, 1, 2, 3, 4]},
+                { width: '12%', targets: [0] },
+                { width: '14%', targets: [1, 2, 3] },	
+                { width: '10%', targets: [4] },
             ]
         })
 

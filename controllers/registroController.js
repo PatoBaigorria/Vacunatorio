@@ -1,9 +1,9 @@
 const { Registro } = require("../models/relaciones");
 
-exports.createRegistro = async (tabla, fila, accion) => {
+exports.createRegistro = async (id, tabla, fila, accion) => {
     try {
         await Registro.create({
-            idUsuario: 1,
+            idUsuario: id,
             idFila: fila,
             nombreDeTabla: tabla,
             tipoDeAccion: accion,

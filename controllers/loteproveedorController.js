@@ -53,12 +53,12 @@ const createLoteProveedor = async (req, res) => {
       fechaDeCompra,
       activo: 1,
     });
-    await createRegistro(
+    await createRegistro(req.user.idUsuario, 
       "Lote proveeedor",
       lote.dataValues.numeroDeLote,
       "Creacion"
     );
-    await createRegistro(
+    await createRegistro(req.user.idUsuario, 
       "Lote proveeedor",
       lote.dataValues.numeroDeLote,
       "Alta"
@@ -94,7 +94,7 @@ const updateLoteProveedor = async (req, res) => {
         numeroDeLote: req.params.id,
       },
     });
-    await createRegistro("Lote proveedor", req.params.id, "Modificacion");
+    await createRegistro(req.user.idUsuario, "Lote proveedor", req.params.id, "Modificacion");
     req.flash("success", "Lote Proveedor actualizado exitosamente.");
     res.redirect("/lotesproveedores");
   } catch (error) {
@@ -129,7 +129,7 @@ const bajaLoteProveedor = async (req, res) => {
         },
       }
     );
-    await createRegistro("Lote proveedor", req.params.id, "Baja");
+    await createRegistro(req.user.idUsuario, "Lote proveedor", req.params.id, "Baja");
     req.flash("success", "Lote proveedor dado de baja exitosamente.");
     res.json({ success: true });
   } catch (error) {
@@ -149,7 +149,7 @@ const altaLoteProveedor = async (req, res) => {
         },
       }
     );
-    await createRegistro("Lote proveedor", req.params.id, "Alta");
+    await createRegistro(req.user.idUsuario, "Lote proveedor", req.params.id, "Alta");
     req.flash("success", "Lote proveedor dado de alta exitosamente.");
     res.json({ success: true });
   } catch (error) {

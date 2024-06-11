@@ -33,8 +33,8 @@ const createCentroVac = async (req, res) => {
 			latitud,
 			activo: 1,
 		})
-		await createRegistro('Centro de vacunacion', centroDeVacunacion.dataValues.idCentroDeVacunacion, 'Creacion')
-		await createRegistro('Centro de vacunacion', centroDeVacunacion.dataValues.idCentroDeVacunacion, 'Alta')
+		await createRegistro(req.user.idUsuario, 'Centro de vacunacion', centroDeVacunacion.dataValues.idCentroDeVacunacion, 'Creacion')
+		await createRegistro(req.user.idUsuario, 'Centro de vacunacion', centroDeVacunacion.dataValues.idCentroDeVacunacion, 'Alta')
 		req.flash('success', 'El centro de vacunación fue dado de alta exitosamente')
 		res.redirect('/centrosdevacunacion')
 	} catch (error) {
@@ -59,7 +59,7 @@ const updateCentroDeVacunacion = async (req, res) => {
 		await CentroDeVacunacion.update(req.body,
 			{ where: { idCentroDeVacunacion: req.params.id, } }
 		)
-		await createRegistro('Centro de vacunacion', req.params.id, 'Modificacion')
+		await createRegistro(req.user.idUsuario, 'Centro de vacunacion', req.params.id, 'Modificacion')
 		req.flash('success', 'El centro de vacunación fue actualizado exitosamente.')
 		res.redirect('/centrosdevacunacion')
 	} catch (error) {
@@ -92,7 +92,7 @@ const bajaCentroDeVacunacion = async (req, res) => {
 				},
 			}
 		)
-		await createRegistro('Centro de vacunacion', req.params.id, 'Baja')
+		await createRegistro(req.user.idUsuario, 'Centro de vacunacion', req.params.id, 'Baja')
 		req.flash('success', 'El centro de vacunación dado de baja exitosamente.')
 		res.json({ success: true })
 	} catch (error) {
@@ -111,7 +111,7 @@ const altaCentroDeVacunacion = async (req, res) => {
 				},
 			}
 		)
-		await createRegistro('Centro de vacunacion', req.params.id, 'Alta')
+		await createRegistro(req.user.idUsuario, 'Centro de vacunacion', req.params.id, 'Alta')
 		req.flash('success', 'El centro de vacunación dado de alta exitosamente.')
 		res.json({ success: true })
 	} catch (error) {

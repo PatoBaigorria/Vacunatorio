@@ -45,32 +45,27 @@ script.
             },
             columns:[
                 {data: 'idDescarte', title: 'ID Descarte'},
-                {data: 'Agentedesalud.Persona.nombre', title:'Nombre del Agente'},
                 {data: 'Agentedesalud.Persona.apellido', title: 'Apellido del Agente'},
                 {data: 'numeroDeSerie', title: 'N° de Serie del Lote'},
-                {data: 'empresaDescartante', title: 'Empresa Descartante'},
-                {data: 'motivo', title: 'Motivo del Descarte'},
-                {data: 'cantidadDeVacunas', title: 'Cant. de Vacunas Descartadas'},
-                {data: 'fechaDeDescarte', title: 'Fecha de Descarte'},
                 {data: 'activo', title: 'Estado del descarte', createdCell: agregarMensajeSiActivoOInactivo },
                 {
                     data: 'opciones', title: 'Opciones',
                     render: function (data, type, row) {
-                        const editBtn = `<button title='Editar' class='btn btn-primary btn-sm fa-solid fa-pencil me-2'></button>`
+                        const detailsBtn = `<button title="Detalle" class="btn btn-primary btn-sm fa fa-info-circle detalle"></button>`;
+                        const editBtn = `<button title='Editar' class='btn btn-primary btn-sm fa-solid fa-pencil'></button>`
                         const deactivateBtn = `<button title='Dar de baja' class='btn btn-warning btn-sm fa-solid fa-exclamation-circle'></button>`
                         const activateBtn = `<button title='Dar de alta' class='btn btn-success btn-sm fa-solid fa-check-circle'></button>`
-                        if (row.activo == 1) {
-                            return `${editBtn} ${deactivateBtn}`
-                        } else {
-                            return `${editBtn} ${activateBtn}`
-                        }
+                        if (row.activo == 1)
+                            return `${detailsBtn} | ${editBtn} | ${deactivateBtn}`;
+                        else
+                            return `${detailsBtn} | ${editBtn} | ${activateBtn}`;
                     }
                 }
             ],
             columnDefs: [
-                {orderable: false, targets:[9]}, 
-                {className: 'dt-center', targets: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]},
-                { width: '10%', targets: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9] },
+                {orderable: false, targets:[4]}, 
+                {className: 'dt-center', targets: [0, 1, 2, 3, 4]},
+                { width: '10%', targets: [0, 1, 2, 3, 4] },
             ]
         })
         function agregarMensajeSiActivoOInactivo(td, cellData, rowData, row, col) {

@@ -78,8 +78,8 @@ const createDescarte = async (req, res) => {
 				cantidadDeVacunasRestantes: vacunasTotales,
 			});
 		}
-		await createRegistro('Descarte', descarte.dataValues.idDescarte, 'Creacion')
-		await createRegistro('Descarte', descarte.dataValues.idDescarte, 'Alta')
+		await createRegistro(req.user.idUsuario, 'Descarte', descarte.dataValues.idDescarte, 'Creacion')
+		await createRegistro(req.user.idUsuario, 'Descarte', descarte.dataValues.idDescarte, 'Alta')
 		req.flash("success", "Descarte creado exitosamente.");
 		res.redirect("/descartes");
 	} catch (error) {
@@ -124,7 +124,7 @@ const updateDescarte = async (req, res) => {
 		await Descarte.update(req.body, {
 			where: { idDescarte: req.params.id },
 		});
-		await createRegistro('Descarte', req.params.id, 'Modificacion')
+		await createRegistro(req.user.idUsuario, 'Descarte', req.params.id, 'Modificacion')
 		req.flash("success", "Descarte de vacunas actualizado exitosamente.");
 		res.redirect("/descartes");
 	} catch (error) {
@@ -159,7 +159,7 @@ const bajaDescarte = async (req, res) => {
 				},
 			}
 		);
-		await createRegistro('Descarte', req.params.id, 'Baja')
+		await createRegistro(req.user.idUsuario, 'Descarte', req.params.id, 'Baja')
 		req.flash("success", "Descarte dado de baja exitosamente.");
 		res.json({ success: true });
 	} catch (error) {
@@ -179,7 +179,7 @@ const altaDescarte = async (req, res) => {
 				},
 			}
 		);
-		await createRegistro('Descarte', req.params.id, 'Alta')
+		await createRegistro(req.user.idUsuario, 'Descarte', req.params.id, 'Alta')
 		req.flash("success", "Descarte dado de alta exitosamente.");
 		res.json({ success: true });
 	} catch (error) {

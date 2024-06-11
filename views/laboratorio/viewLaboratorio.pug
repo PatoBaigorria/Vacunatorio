@@ -59,32 +59,27 @@ script.
             columns: [
                 { data: 'nombreLaboratorio', title: 'Nombre del laboratorio' },
                 { data: 'pais', title: 'País de origen' },
-                { data: 'email', title: 'Email' },
-                { data: 'telefono', title: 'Telefono del laboratorio' },
-                { data: 'longitud', title: 'Longitud' },
-                { data: 'latitud', title: 'Latitud' },
                 { data: 'activo', title: 'Estado del laboratorio', createdCell: agregarMensajeSiActivoOInactivo },
                 {
                     data: 'opciones', title: 'Opciones',
                     render: function (data, type, row) {
-                        const editBtn = `<button title="Editar" class="btn btn-primary btn-sm fa-solid fa-pencil me-2"></button>`
+                        const detailsBtn = `<button title="Detalle" class="btn btn-primary btn-sm fa fa-info-circle detalle"></button>`;
+                        const editBtn = `<button title="Editar" class="btn btn-primary btn-sm fa-solid fa-pencil"></button>`
                         const deactivateBtn = `<button title="Dar de baja" class="btn btn-warning btn-sm fa-solid fa-exclamation-circle"></button>`
                         const activateBtn = `<button title="Dar de alta" class="btn btn-success btn-sm fa-solid fa-check-circle"></button>`
                         if (row.activo == 1)
-                            return `${editBtn} ${deactivateBtn}`
+                            return `${detailsBtn} | ${editBtn} | ${deactivateBtn}`
                         else
-                            return `${editBtn} ${activateBtn}`
+                            return `${detailsBtn} | ${editBtn} | ${activateBtn}`
                     }
                 }
             ],
             columnDefs: [
-                { orderable: false, targets: [7] },
-                { searchable: false, targets: [4, 5, 6, 7] },
-                { className: "dt-center", targets: [0, 1, 2, 3, 4, 5, 6, 7] },
-                { width: '5%', targets: [0] },
-                { width: '10%', targets: [3, 4, 5, 6] },
-                { width: '15%', targets: [0, 1, 2] },
-                { width: '8%', targets: [7] },
+                { orderable: false, targets: [3] },
+                { searchable: false, targets: [3] },
+                { className: "dt-center", targets: [0, 1, 2, 3] },
+                //{ width: '15%', targets: [0, 1, 2] },
+                //{ width: '8%', targets: [3] },
             ]
         })
 

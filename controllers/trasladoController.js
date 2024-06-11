@@ -73,8 +73,8 @@ const createTraslados = async (req, res) => {
 				});
 			}
 		}
-		await createRegistro('Traslado', traslado.dataValues.idTraslado, 'Creacion')
-		await createRegistro('Traslado', traslado.dataValues.idTraslado, 'Alta')
+		await createRegistro(req.user.idUsuario, 'Traslado', traslado.dataValues.idTraslado, 'Creacion')
+		await createRegistro(req.user.idUsuario, 'Traslado', traslado.dataValues.idTraslado, 'Alta')
 		req.flash("success", "Traslado creado exitosamente");
 		res.redirect("/traslados");
 	} catch (error) {
@@ -110,7 +110,7 @@ const updateTraslado = async (req, res) => {
 				idTraslado: req.params.id,
 			},
 		});
-		await createRegistro('Traslado', req.params.id, 'Modificacion')
+		await createRegistro(req.user.idUsuario, 'Traslado', req.params.id, 'Modificacion')
 		req.flash("success", "Traslado de Vacuna actualizado exitosamente.");
 		res.redirect("/traslados");
 	} catch (error) {
@@ -149,7 +149,7 @@ const deleteTrasladoLogica = async (req, res) => {
 				},
 			}
 		);
-		await createRegistro('Traslado', req.params.id, 'Baja')
+		await createRegistro(req.user.idUsuario, 'Traslado', req.params.id, 'Baja')
 		req.flash("success", "Traslado dado de baja exitosamente.");
 		res.redirect("/traslados");
 	} catch (error) {

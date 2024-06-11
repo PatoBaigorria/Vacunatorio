@@ -63,21 +63,21 @@ script.
                 {
                     data: 'opciones', title: 'Opciones',
                     render: function (data, type, row) {
-                        let editBtn = `<button title="Editar" class="btn btn-primary btn-sm fa-solid fa-pencil me-2"></button>`;
-                        let deactivateBtn = `<button title="Dar de baja" class="btn btn-warning btn-sm fa-solid fa-exclamation-circle"></button>`;
-                        let activateBtn = `<button title="Dar de alta" class="btn btn-success btn-sm fa-solid fa-check-circle"></button>`;
-                        if (row.activo == 1) {
-                            return `${editBtn} ${deactivateBtn}`;
-                        } else {
-                            return `${editBtn} ${activateBtn}`;
-                        }
+                        const detailsBtn = `<button title="Detalle" class="btn btn-primary btn-sm fa fa-info-circle detalle"></button>`;
+                        const editBtn = `<button title="Editar" class="btn btn-primary btn-sm fa-solid fa-pencil"></button>`;
+                        const deactivateBtn = `<button title="Dar de baja" class="btn btn-warning btn-sm fa-solid fa-exclamation-circle"></button>`;
+                        const activateBtn = `<button title="Dar de alta" class="btn btn-success btn-sm fa-solid fa-check-circle"></button>`;
+                        if (row.activo == 1)
+                            return `${detailsBtn} | ${editBtn} | ${deactivateBtn}`;
+                        else
+                            return `${detailsBtn} | ${editBtn} | ${activateBtn}`;
                     }
                 }
             ],
             columnDefs: [
-                {orderable: false, targets:[4]}, // Columna de "Opciones"
+                {orderable: false, targets:[4, 5]}, // Columna de "Opciones"
                 {searchable: true, targets:[0,1,2,3]},
-                {className: "dt-center", targets: [0, 1, 2, 3, 4]},
+                {className: "dt-center", targets: [0, 1, 2, 3, 4, 5]},
                 //{ width: "7%", targets: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11] },
                 //{ width: "5%", targets: [14] }
             ]

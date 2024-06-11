@@ -66,13 +66,14 @@ const createAplicacion = async (req, res) => {
 			fechaDeAplicacion,
 			activo: 1,
 		});
-		await createRegistro('Aplicacion', aplicacion.dataValues.idAplicacion, 'Creacion')
-		await createRegistro('Aplicacion', aplicacion.dataValues.idAplicacion, 'Alta')
+		await createRegistro(req.user.idUsuario, 'Aplicacion', aplicacion.dataValues.idAplicacion, 'Creacion')
+		await createRegistro(req.user.idUsuario, 'Aplicacion', aplicacion.dataValues.idAplicacion, 'Alta')
 		req.flash('success', 'La aplicación fue creada exitosamente.')
 		res.redirect('/aplicaciones')
 	} catch (error) {
 		req.flash('error', `Hubo un error al intentar crear la aplicación. ${error.message}`)
-		res.json({ success: false })
+		console.log(error.message);
+		res.json({success: false })
 	}
 }
 
@@ -99,7 +100,12 @@ const updateAplicacion = async (req, res) => {
 		Aplicacion.update(req.body, {
 			where: { idAplicacion: req.params.id },
 		})
-		await createRegistro('Aplicacion', req.params.id, 'Modificacion')
+		await createRegistro(
+      req.user.idUsuario,
+      "Aplicacion",
+      req.params.id,
+      "Modificacion"
+    );
 		req.flash('success', 'La aplicación de la vacuna fue actualizada exitosamente.')
 		res.redirect('/aplicaciones')
 	} catch (error) {
@@ -127,7 +133,12 @@ const bajaAplicacion = async (req, res) => {
 			{ activo: 0 },
 			{ where: { idAplicacion: req.params.id } }
 		)
-		await createRegistro('Aplicacion', req.params.id, 'Baja')
+		await createRegistro(
+      req.user.idUsuario,
+      "Aplicacion",
+      req.params.id,
+      "Baja"
+    );
 		req.flash('success', 'La aplicación fue dada de baja exitosamente.')
 		res.json({ success: true })
 	} catch (error) {
@@ -142,7 +153,12 @@ const altaAplicacion = async (req, res) => {
 			{ activo: 1 },
 			{ where: { idAplicacion: req.params.id }, }
 		)
-		await createRegistro('Aplicacion', req.params.id, 'Alta')
+		await createRegistro(
+      req.user.idUsuario,
+      "Aplicacion",
+      req.params.id,
+      "Alta"
+    );
 		req.flash('success', 'La aplicación fue dada de alta exitosamente.')
 		res.json({ success: true })
 	} catch (error) {
