@@ -58,35 +58,26 @@ script.
                 {data: 'DNI', title:'DNI'},
                 {data: 'nombre', title: 'Nombre'},
                 {data: 'apellido', title: 'Apellido'},
-                {data: 'email', title: 'Email'},
-                {data: 'fechaDeNacimiento', title: 'Fecha de Nacimiento'},
-                {data: 'ocupacion', title: 'Ocupación'},
-                {data: 'genero', title: 'Género'},
-                {data: 'Telefono.celular1', title: 'Celular 1', createdCell: agregarMensajeSiVacio },
-                {data: 'Telefono.celular2', title: 'Celular 2', createdCell: agregarMensajeSiVacio },
-                {data: 'Patologiabase.patologiaBase', title: 'Patología Base' },
-                {data: 'Agentedesalud.matricula', title: 'Matrícula', createdCell: agregarMensajeSiVacio },
-                {data: 'longitud', title: 'Longitud'},
-                {data: 'latitud', title: 'Latitud'},
-                { data: 'activo', title: 'Estado de la persona', createdCell: agregarMensajeSiActivoOInactivo },
+                {data: 'activo', title: 'Estado de la persona', createdCell: agregarMensajeSiActivoOInactivo},
                 {
                     data: 'opciones', title: 'Opciones',
                     render: function (data, type, row) {
+                        let detailsBtn = `<button title="Detalle" class="btn btn-primary btn-sm fa fa-info-circle detalle"></button>`;
                         let editBtn = `<button title="Editar" class="btn btn-primary btn-sm fa-solid fa-pencil me-2"></button>`;
                         let deactivateBtn = `<button title="Dar de baja" class="btn btn-warning btn-sm fa-solid fa-exclamation-circle"></button>`;
                         let activateBtn = `<button title="Dar de alta" class="btn btn-success btn-sm fa-solid fa-check-circle"></button>`;
                         if (row.activo == 1) {
-                            return `${editBtn} ${deactivateBtn}`;
+                            return `${detailsBtn} | ${editBtn} | ${deactivateBtn}`;
                         } else {
-                            return `${editBtn} ${activateBtn}`;
+                            return `${detailsBtn} | ${editBtn} | ${activateBtn}`;
                         }
                     }
                 }
             ],
             columnDefs: [
                     //{orderable: false, targets:[13]}, // Columna de "Opciones"
-                    {searchable: false, targets:[11, 12, 14]},
-                    {className: "dt-center", targets: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]},
+                    {searchable: false, targets:[3, 4]},
+                    {className: "dt-center", targets: [0, 1, 2]},
                     //{ width: "7%", targets: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11] },
                     //{ width: "5%", targets: [14] }
             ]
@@ -174,6 +165,8 @@ script.
                         $('#confirmAltaBtn').trigger('click');
                     }
                 });
+            } else if ($(event.target).hasClass('detalle')) {
+                window.location.href = "/personas/details/" + data.DNI;
             } else {
                 window.location.href = "/personas/" + data.DNI;
             }

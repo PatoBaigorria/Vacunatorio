@@ -10,4 +10,5 @@ router.put("/:id", loteProveedorController.updateLoteProveedor);
 router.delete("/:id", loteProveedorController.deleteLoteProveedor);
 router.put("/:id/baja", loteProveedorController.bajaLoteProveedor);
 router.put("/:id/alta", loteProveedorController.altaLoteProveedor);
+
 module.exports = router;

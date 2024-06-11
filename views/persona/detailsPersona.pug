@@ -1,0 +1,15 @@
+extends layout
+
+block content
+  h1 Detalles de la Persona
+  
+  p DNI: #{persona.DNI}
+  p Nombre: #{persona.nombre}
+  p Apellido: #{persona.apellido}
+  p Email: #{persona.email}
+  p Fecha de Nacimiento: #{persona.fechaDeNacimiento}
+  p Ocupación: #{persona.ocupacion}
+  p Género: #{persona.genero}
+  p Latitud: #{persona.latitud}
+  p Longitud: #{persona.longitud}
+  p Activo: #{persona.activo ? 'Sí' : 'No'}
