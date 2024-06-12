@@ -43,3 +43,7 @@ function isLoggedIn(req, res, next) {
   }
   res.redirect("/login");
 }
+app.get("/logout", (req, res) => {
+  req.logout(); // Desautenticar al usuario
+  res.redirect("/"); // Redirigir a la página de inicio u otra página deseada
+});

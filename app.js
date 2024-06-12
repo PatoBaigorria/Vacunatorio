@@ -49,6 +49,13 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
+// Middleware para pasar datos de usuario a las vistas
+app.use((req, res, next) => {
+  res.locals.isAuthenticated = req.isAuthenticated();
+  res.locals.user = req.user;
+  next();
+});
+
 app.use("/", indexRouter);
 
 // Verificar la conexión a la base de datos

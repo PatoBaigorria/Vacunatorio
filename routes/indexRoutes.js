@@ -40,7 +40,7 @@ router.get("/", (req, res) => {
 router.post(
   "/login",
   passport.authenticate("local", {
-    successRedirect: "/usuarios/profile",
+    successRedirect: "/",
     successMessage: "logueado",
     successFlash: true,
     failureRedirect: "/",
@@ -59,6 +59,18 @@ router.get("/usuarios/viewUsuario", function (req, res, next) {
     res.redirect("/usuarios/viewUsuario");
   })(req, res, next);
 });
+
+// Agrega esta ruta al final de tu archivo indexRoutes.js
+router.get("/logout", (req, res) => {
+  req.logout((err) => { // Proporciona una función callback para errores
+    if (err) {
+      console.error("Error durante el cierre de sesión:", err);
+      return res.redirect("/login"); // O maneja el error de otra manera
+    }
+    res.redirect("/"); // Redirecciona a la página de inicio después del cierre de sesión exitoso
+  });
+});
+
 
 // Rutas protegidas (requieren autenticación)
 router.use("/aplicaciones", isAuthenticated, aplicacionRoutes);

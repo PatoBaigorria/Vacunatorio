@@ -1,44 +1,46 @@
 include .\includes\layout
 
 block content
-	head
-		title Argentina Vacuna
-		style.
-			body {
-				background-image: url('images/fondo2.jpg');
-				background-size: cover;
-			}
+  head
+    title Argentina Vacuna
+    style.
+      body {
+        background-image: url('images/fondo2.jpg');
+        background-size: cover;
+      }
 
-			h1 {
-				color: black;
-				font-size: 6em;
-				text-align: center;
-			}
+      h1 {
+        color: black;
+        font-size: 6em;
+        text-align: center;
+      }
 
-	body
-		h1 Argentina Vacuna
-		section(class="vh-100 gradient-custom overflow-hidden")
-			.container.py-1.h-100
-				if messages.success
-					.alert.alert-success.flash-message.fade-in
-						= messages.success
-				if messages.error
-					.alert.alert-danger.flash-message.fade-in
-						= messages.error
-				.row.d-flex.justify-content-center.align-items-center.h-50
-					.col-12.col-md-6.col-lg-4.col-xl-3
-						.card.bg-dark.text-white(style="border-radius: 1rem;")
-							.card-body.p-3.text-center
-								.mb-md-2.mt-md-2.pb-1
-									form(action="/login" method="POST")
-										h3.fw-bold.mb-2.text-uppercase
-											u Ingreso
-										br
-										.form-outline.form-white.mb-4
-											input.form-control-lg(type="email" name="emailLogin" placeholder="Email")
-										.form-outline.form-white.mb-4
-											input.form-control-lg(type="password" name="passwordLogin" placeholder="Contraseña")
-											p.small.mb-2.pb-lg-2
-												br
-												a.text-white-50(href="#") ¿Olvidaste tu contraseña?
-										button.btn.btn-outline-light.btn-lg.px-5(type="submit") Ingresar
+  body
+    h1 Argentina Vacuna
+    section(class="vh-100 gradient-custom overflow-hidden")
+      .container.py-1.h-100
+        if isAuthenticated  
+        else
+          if messages.success
+            .alert.alert-success.flash-message.fade-in
+              = messages.success
+          if messages.error
+            .alert.alert-danger.flash-message.fade-in
+              = messages.error
+          .row.d-flex.justify-content-center.align-items-center.h-50
+            .col-12.col-md-6.col-lg-4.col-xl-3
+              .card.bg-dark.text-white(style="border-radius: 1rem;")
+                .card-body.p-3.text-center
+                  .mb-md-2.mt-md-2.pb-1
+                    form(action="/login" method="POST")
+                      h3.fw-bold.mb-2.text-uppercase
+                        u Ingreso
+                      br
+                      .form-outline.form-white.mb-4
+                        input.form-control-lg(type="email" name="emailLogin" placeholder="Email")
+                      .form-outline.form-white.mb-4
+                        input.form-control-lg(type="password" name="passwordLogin" placeholder="Contraseña")
+                        p.small.mb-2.pb-lg-2
+                          br
+                          a.text-white-50(href="#") ¿Olvidaste tu contraseña?
+                      button.btn.btn-outline-light.btn-lg.px-5(type="submit") Ingresar

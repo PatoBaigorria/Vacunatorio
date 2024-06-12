@@ -33,3 +33,12 @@ nav.navbar.navbar-expand-md.bg-dark
                                 a.nav-link.text-light(href="/lotesproveedores") Proveedores
                     li.nav-item
                         a.nav-link.text-light(href="/usuarios") Usuarios
+                // Añade el mensaje de bienvenida con el nombre de usuario
+                if user
+                    li.nav-item.dropdown
+                        a.nav-link.dropdown-toggle.text-light#toggleBienvenido(data-bs-toggle="dropdown" aria-expanded="false")
+                            i.fas.fa-user-tie
+                            |  Bienvenid@ #{user.nombreUsuario}
+                        ul.dropdown-menu.dropdown-menu-end.bg-dark
+                            li
+                                a.dropdown-item.text-light(href="/logout") Cerrar Sesión
