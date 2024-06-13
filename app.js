@@ -1,12 +1,15 @@
 /*
 - Corregir todas las tablas para que tengan menos columnas ✔ (Eze)
 - Dividir las vistas por rol
-- Que el navegador se adapate a cada rol y a los usuarios no autenticados
-- Corregir el redireccionamiento para que muestre las acciones correspondientes
+- Corregir el redireccionamiento para que muestre las acciones correspondientes ¿?
 - Mover el perfil del usuario al nav ✔ (Pato)
 - Corregir modificar Lote interno para que quede como alta lote interno
 - Modificar registro para que se refleje el usuario que realiza las acciones ✔ (Eze)
 - Terminar de corregir alta aplicación ✔ (Eze)
+- Agregar tablas permiso y rol ✔ (Pato y Eze)
+- Hacer modelos y relaciones de permiso, rol y rolpermiso ✔ (Pato y Eze)
+- Hacer el controlador, las rutas y las vistas de registro
+- Roles: SuperAdmin, Gestor de compras, Operador de logística y Agente de salud
 */
 const createError = require("http-errors");
 const express = require("express");

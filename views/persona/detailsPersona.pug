@@ -23,68 +23,57 @@ body
         .form-group
             label.form-label.text-center(for="dni") DNI:
             .input-group
-                input.form-control(type="text" id="dni" name="DNI" value=persona.DNI disabled)
+                input.form-control.text-center(type="text" id="dni" name="DNI" value=persona.DNI disabled)
         .form-group
             label.form-label.text-center(for="nombre") Nombre:
             .input-group.has-validation
-                input.form-control(type="text" id="nombre" name="nombre" placeholder="Ingrese un nombre de 3 a 50 caracteres" title="El nombre solo puede contener un máximo de cincuenta caracteres" value=persona.nombre disabled)
+                input.form-control.text-center(type="text" id="nombre" name="nombre" placeholder="Ingrese un nombre de 3 a 50 caracteres" title="El nombre solo puede contener un máximo de cincuenta caracteres" value=persona.nombre disabled)
         .form-group
             label.form-label.text-center(for="apellido") Apellido:
             .input-group.has-validation
-                input.form-control(type="text" id="apellido" name="apellido" placeholder="Ingrese un nombre de 3 a 50 caracteres" title="El apellido solo puede contener un máximo de cincuenta caracteres" value=persona.apellido disabled)
+                input.form-control.text-center(type="text" id="apellido" name="apellido" placeholder="Ingrese un nombre de 3 a 50 caracteres" title="El apellido solo puede contener un máximo de cincuenta caracteres" value=persona.apellido disabled)
         .form-group
             label.form-label.text-center(for="email") Email:
             .input-group.has-validation
-                input.form-control(type="email" id="email" name="email" placeholder="Ingrese un email válido" title="El email debe ser válido" value=persona.email disabled)
+                input.form-control.text-center(type="email" id="email" name="email" placeholder="Ingrese un email válido" title="El email debe ser válido" value=persona.email disabled)
         .form-group
             label.form-label.text-center(for="fechaDeNacimiento") Fecha de Nacimiento:
             .input-group.has-validation
-                input.form-control(type="date" id="fechaDeNacimiento" name="fechaDeNacimiento" value=persona.fechaDeNacimiento disabled)
+                input.form-control.text-center(type="date" id="fechaDeNacimiento" name="fechaDeNacimiento" value=persona.fechaDeNacimiento disabled)
         .form-group
             label.form-label.text-center(for="ocupacion") Ocupación:
             if(persona.ocupacion=="agente de salud")
-                select.form-select(name="ocupacion" id="ocupacion" disabled)
-                    option(value="agente de salud" selected) Agente de Salud
-                    option(value="otro") Otro
+                input.form-control.text-center(type="text" name="ocupacion" id="ocupacion" value=persona.ocupacion disabled)
                 .form-group.d-inline#matriculaDiv
                     label.form-label.text-center(for="matricula" id="matriculaLabel") Matrícula:
                     .input-group.has-validation
-                        input.form-control(type="number" id="matricula" name="matricula" placeholder="Ingrese una matrícula de 8 digitos" title="La matrícula debe contener 8 digitos" value=persona.Agentedesalud.matricula)
+                        input.form-control.text-center(type="number" id="matricula" name="matricula" placeholder="Ingrese una matrícula de 8 digitos" title="La matrícula debe contener 8 digitos" disabled value=persona.Agentedesalud.matricula)
             else 
-                select.form-select(name="ocupacion" id="ocupacion" disabled)
-                    option(value="agente de salud") Agente de Salud
-                    option(value="otro" selected) Otro
-                .form-group.d-none#matriculaDiv
-                    label.form-label.text-center(for="matricula" id="matriculaLabel") Matrícula:
-                    .input-group.has-validation
-                        input.form-control(type="number" id="matricula" name="matricula" placeholder="Ingrese una matrícula de 8 digitos" title="La matrícula debe contener 8 digitos")
+                input.form-control.text-center(type="text" name="ocupacion" id="ocupacion" value=persona.ocupacion disabled) 
         .form-group
             label.form-label.text-center(for="genero") Género:
-            select.form-select(name="genero" id="genero" disabled)
-                option(value="Masculino" selected=persona.genero === 'Masculino') Masculino
-                option(value="Femenino" selected=persona.genero === 'Femenino') Femenino
-                option(value="Otro" selected=persona.genero === 'Otro') Otro
+            input.form-control.text-center(type="text" name="genero" id="genero" value=persona.genero disabled)
         .form-group
             label.form-label.text-center(for="celular1") Celular 1:
             .input-group.has-validation
-                input.form-control(type="tel" id="celular1" name="celular1" placeholder="No posee" title="El celular debe contener 10 digitos" value=persona.Telefono.celular1 disabled)
+                input.form-control.text-center(type="tel" id="celular1" name="celular1" placeholder="No posee" title="El celular debe contener 10 digitos" value=persona.Telefono.celular1 disabled)
         .form-group
             label.form-label.text-center(for="celular2") Celular 2:
             .input-group.has-validation
-                input.form-control(type="tel" id="celular2" name="celular2" placeholder="No posee" title="El celular debe contener 10 digitos" value=persona.Telefono.celular2 disabled)
+                input.form-control.text-center(type="tel" id="celular2" name="celular2" placeholder="No posee" title="El celular debe contener 10 digitos" value=persona.Telefono.celular2 disabled)
         .form-group
             label.form-label.text-center(for="patologiaBase") Patologia Base:
             .input-group.has-validation
-                input.form-control(name="patologiaBase" id="patologiaBase" value=persona.Patologiabase.patologiaBase disabled)
+                input.form-control.text-center(name="patologiaBase" id="patologiaBase" value=persona.Patologiabase.patologiaBase disabled)
         .form-group
             label.form-label.text-center Seleccione ubicación en el mapa:
             #map
         .form-group
             label.form-label.text-center(for="longitud") Longitud:
-            input.form-control(type="text" id="longitud" name="longitud" value=persona.longitud disabled)
+            input.form-control.text-center(type="text" id="longitud" name="longitud" value=persona.longitud disabled)
         .form-group
             label.form-label.text-center(for="latitud") Latitud:
-            input.form-control(type="text" id="latitud" name="latitud" value=persona.latitud disabled)
+            input.form-control.text-center(type="text" id="latitud" name="latitud" value=persona.latitud disabled)
         br
 script.
     $(function () {"¡Datos incorrectos! Por favor, verifica la información ingresada."
