@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 10-01-2024 a las 01:24:45
+-- Tiempo de generación: 13-06-2024 a las 22:51:11
 -- Versión del servidor: 10.4.18-MariaDB
 -- Versión de PHP: 8.0.5
 
@@ -18,10 +18,10 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Base de datos: `vacunatorio3`
+-- Base de datos: `vacunatorio2`
 --
-CREATE DATABASE IF NOT EXISTS `vacunatorio3` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
-USE `vacunatorio3`;
+CREATE DATABASE IF NOT EXISTS `vacunatorio2` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+USE `vacunatorio2`;
 
 -- --------------------------------------------------------
 
@@ -39,7 +39,8 @@ CREATE TABLE `agentedesalud` (
 --
 
 INSERT INTO `agentedesalud` (`DNI`, `matricula`) VALUES
-(37716730, 10000000);
+(34229421, NULL),
+(37716731, 10000000);
 
 -- --------------------------------------------------------
 
@@ -52,8 +53,16 @@ CREATE TABLE `aplicacion` (
   `DNIPaciente` int(11) NOT NULL,
   `DNIAgente` int(11) NOT NULL,
   `numeroDeSerie` int(11) NOT NULL,
-  `fechaDeAplicacion` date NOT NULL
+  `fechaDeAplicacion` date NOT NULL,
+  `activo` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Volcado de datos para la tabla `aplicacion`
+--
+
+INSERT INTO `aplicacion` (`idAplicacion`, `DNIPaciente`, `DNIAgente`, `numeroDeSerie`, `fechaDeAplicacion`, `activo`) VALUES
+(1, 34229421, 37716731, 1, '2024-01-01', 1);
 
 -- --------------------------------------------------------
 
@@ -64,16 +73,17 @@ CREATE TABLE `aplicacion` (
 CREATE TABLE `centrodevacunacion` (
   `idCentroDeVacunacion` int(11) NOT NULL,
   `longitud` double NOT NULL,
-  `latitud` double NOT NULL
+  `latitud` double NOT NULL,
+  `activo` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Volcado de datos para la tabla `centrodevacunacion`
 --
 
-INSERT INTO `centrodevacunacion` (`idCentroDeVacunacion`, `longitud`, `latitud`) VALUES
-(1, -66.307769, -33.270915),
-(2, -66.283736, -33.307111);
+INSERT INTO `centrodevacunacion` (`idCentroDeVacunacion`, `longitud`, `latitud`, `activo`) VALUES
+(1, -65.453582, -33.675319, 1),
+(2, -66.28365, -33.307057, 1);
 
 -- --------------------------------------------------------
 
@@ -84,16 +94,17 @@ INSERT INTO `centrodevacunacion` (`idCentroDeVacunacion`, `longitud`, `latitud`)
 CREATE TABLE `depositonacional` (
   `idDepositoNacional` int(11) NOT NULL,
   `longitud` double NOT NULL,
-  `latitud` double NOT NULL
+  `latitud` double NOT NULL,
+  `activo` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Volcado de datos para la tabla `depositonacional`
 --
 
-INSERT INTO `depositonacional` (`idDepositoNacional`, `longitud`, `latitud`) VALUES
-(1, -66.304722, -33.296243),
-(2, -58.385468, -34.623038);
+INSERT INTO `depositonacional` (`idDepositoNacional`, `longitud`, `latitud`, `activo`) VALUES
+(1, -66.319155, -33.292288, 1),
+(2, -66.319155, -33.292288, 1);
 
 -- --------------------------------------------------------
 
@@ -104,15 +115,17 @@ INSERT INTO `depositonacional` (`idDepositoNacional`, `longitud`, `latitud`) VAL
 CREATE TABLE `depositoprovincial` (
   `idDepositoProvincial` int(11) NOT NULL,
   `longitud` double NOT NULL,
-  `latitud` double NOT NULL
+  `latitud` double NOT NULL,
+  `activo` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Volcado de datos para la tabla `depositoprovincial`
 --
 
-INSERT INTO `depositoprovincial` (`idDepositoProvincial`, `longitud`, `latitud`) VALUES
-(1, -66.370468, -33.333397);
+INSERT INTO `depositoprovincial` (`idDepositoProvincial`, `longitud`, `latitud`, `activo`) VALUES
+(1, -66.319155, -33.292288, 1),
+(2, -66.331844, -33.298216, 1);
 
 -- --------------------------------------------------------
 
@@ -127,17 +140,16 @@ CREATE TABLE `descarte` (
   `empresaDescartante` varchar(255) NOT NULL,
   `motivo` varchar(255) NOT NULL,
   `cantidadDeVacunas` int(11) NOT NULL,
-  `fechaDeDescarte` date NOT NULL
+  `fechaDeDescarte` date NOT NULL,
+  `activo` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Volcado de datos para la tabla `descarte`
 --
 
-INSERT INTO `descarte` (`idDescarte`, `DNIAgente`, `numeroDeSerie`, `empresaDescartante`, `motivo`, `cantidadDeVacunas`, `fechaDeDescarte`) VALUES
-(1, 37716730, 1, 'Clean Harbors', 'Vencida', 50, '2024-01-01'),
-(2, 37716730, 1, 'Clean Harbors', 'Vencida', 50, '2024-01-01'),
-(3, 37716730, 1, 'Veolia', 'Rotura', 50, '2024-01-01');
+INSERT INTO `descarte` (`idDescarte`, `DNIAgente`, `numeroDeSerie`, `empresaDescartante`, `motivo`, `cantidadDeVacunas`, `fechaDeDescarte`, `activo`) VALUES
+(1, 37716731, 1, 'Veolia', 'Vencida', 10, '2024-01-01', 1);
 
 -- --------------------------------------------------------
 
@@ -161,10 +173,11 @@ CREATE TABLE `laboratorio` (
 --
 
 INSERT INTO `laboratorio` (`idLaboratorio`, `nombreLaboratorio`, `pais`, `email`, `telefono`, `longitud`, `latitud`, `activo`) VALUES
-(1, 'Johnnson', 'Argentina', 'jonharg@gmail.com', '1111333333', -66.306048, -33.275904, 1),
-(2, 'Pfizer', 'EEUU', 'pfizereeuu@gmail.com', '1212121212', -66.306048, -33.275904, 1),
-(3, 'Bago', 'Alemania', 'bagoal@gmail.com', '1313131313', -66.306048, -33.275904, 1),
-(11, 'd', 'Argentina', 'long.eze7773@gmail.com', '1132185230', -66.306048, -33.275904, 0);
+(1, 'Johnnson', 'Argentina', 'long.eze7773@gmail.com', '0111532184', -66.309325, -33.279181, 1),
+(2, 'Bago', 'Argentina', 'bayerargentina@gmail.com', '1159487659', -58.392334, -34.633208, 1),
+(3, 'Pampa', 'Argentina', 'pampargentina@gmail.com', '1234445678', -66.319155, -33.292288, 1),
+(4, 'Johnnso', 'A', 'a@gm.com', '1234567890', -66.319155, -33.292288, 1),
+(5, 'dsadsa', 'asadsa', 'a@gm.com', '1234567890', -66.319155, -33.292288, 1);
 
 -- --------------------------------------------------------
 
@@ -185,20 +198,24 @@ CREATE TABLE `loteinterno` (
   `idDepositoProvincial` int(11) DEFAULT NULL,
   `fechaDeSalidaDepositoProvincial` date DEFAULT NULL,
   `fechaDeLlegadaCentroDeVacunacion` date DEFAULT NULL,
-  `idCentroDeVacunacion` int(11) DEFAULT NULL
+  `idCentroDeVacunacion` int(11) DEFAULT NULL,
+  `activo` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Volcado de datos para la tabla `loteinterno`
 --
 
-INSERT INTO `loteinterno` (`numeroDeSerie`, `numeroDeLote`, `idLaboratorio`, `cantidadDeVacunasTotales`, `cantidadDeVacunasRestantes`, `fechaDeLlegadaDepositoNacional`, `idDepositoNacional`, `fechaDeSalidaDepositoNacional`, `fechaDeLlegadaDepositoProvincial`, `idDepositoProvincial`, `fechaDeSalidaDepositoProvincial`, `fechaDeLlegadaCentroDeVacunacion`, `idCentroDeVacunacion`) VALUES
-(1, 1, 1, 500, 400, '2024-01-01', 1, NULL, NULL, NULL, NULL, NULL, NULL),
-(2, 2, 1, 500, 500, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
-(3, 3, 2, 500, 500, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
-(4, 4, 2, 500, 500, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
-(5, 5, 3, 500, 500, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
-(6, 6, 3, 500, 500, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO `loteinterno` (`numeroDeSerie`, `numeroDeLote`, `idLaboratorio`, `cantidadDeVacunasTotales`, `cantidadDeVacunasRestantes`, `fechaDeLlegadaDepositoNacional`, `idDepositoNacional`, `fechaDeSalidaDepositoNacional`, `fechaDeLlegadaDepositoProvincial`, `idDepositoProvincial`, `fechaDeSalidaDepositoProvincial`, `fechaDeLlegadaCentroDeVacunacion`, `idCentroDeVacunacion`, `activo`) VALUES
+(1, 1, 1, 50, 40, '2024-01-01', 1, '2024-02-01', '2024-03-01', 1, '2024-04-01', '2024-05-01', 1, 1),
+(2, 1, 1, 50, 50, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1),
+(3, 2, 1, 50, 50, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1),
+(4, 2, 1, 50, 50, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1),
+(5, 4, 3, 50, 50, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1),
+(6, 1, 1, 50, 50, '2024-01-01', 1, NULL, NULL, NULL, NULL, NULL, NULL, 1),
+(7, 4, 3, 50, 50, '2024-01-01', 1, '2024-01-01', '2024-01-01', 1, NULL, NULL, NULL, 1),
+(8, 1, 1, 123, 123, '2024-01-01', 1, '2024-01-01', '2024-01-01', 1, '2024-01-01', '2024-01-01', 1, 1),
+(9, 1, 1, 123, 123, '2024-01-01', 1, '2024-01-01', '2024-01-01', 1, '2024-01-01', '2024-01-01', 2, 1);
 
 -- --------------------------------------------------------
 
@@ -214,20 +231,19 @@ CREATE TABLE `loteproveedor` (
   `cantidadDeLotesInternos` int(11) NOT NULL,
   `fechaDeFabricacion` date NOT NULL,
   `fechaDeCompra` date NOT NULL,
-  `fechaDeVencimiento` date NOT NULL
+  `fechaDeVencimiento` date NOT NULL,
+  `activo` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Volcado de datos para la tabla `loteproveedor`
 --
 
-INSERT INTO `loteproveedor` (`numeroDeLote`, `idLaboratorio`, `tipoDeVacuna`, `nombreComercial`, `cantidadDeLotesInternos`, `fechaDeFabricacion`, `fechaDeCompra`, `fechaDeVencimiento`) VALUES
-(1, 1, 'Tuberculosis', 'BCG', 50, '2024-01-01', '2024-01-03', '2029-01-01'),
-(2, 1, 'Meningitis-Neumonía', 'Neumococo Conjugada', 50, '2024-01-01', '2024-01-03', '2029-01-01'),
-(3, 2, 'Difteria-Tétanos-Hepatitis B', 'Quíntuple', 50, '2024-01-01', '2024-01-03', '2029-01-01'),
-(4, 2, 'Antipoliomelítica', 'IPV', 50, '2024-01-01', '2024-01-03', '2029-01-01'),
-(5, 3, 'Sarampión-Rubéola-Paperas', 'Triple Viral', 50, '2024-01-01', '2024-01-03', '2029-01-01'),
-(6, 3, 'Rotavirus', 'Triple Bacteriana Celular', 50, '2024-01-01', '2024-01-03', '2029-01-01');
+INSERT INTO `loteproveedor` (`numeroDeLote`, `idLaboratorio`, `tipoDeVacuna`, `nombreComercial`, `cantidadDeLotesInternos`, `fechaDeFabricacion`, `fechaDeCompra`, `fechaDeVencimiento`, `activo`) VALUES
+(1, 1, 'Tuberculosis', 'BCG', 500, '2024-01-01', '2024-01-01', '2029-01-01', 1),
+(2, 1, 'Tuberculosis', 'BCG', 500, '2024-01-01', '2024-01-01', '2029-02-03', 1),
+(3, 2, 'Tuberculosis', 'BCG', 500, '2024-01-01', '2024-01-01', '2029-01-01', 1),
+(4, 3, 'Tuberculosis', 'BCG', 500, '2024-01-01', '2024-01-01', '2029-01-02', 1);
 
 -- --------------------------------------------------------
 
@@ -245,7 +261,8 @@ CREATE TABLE `patologiabase` (
 --
 
 INSERT INTO `patologiabase` (`DNI`, `patologiaBase`) VALUES
-(37716730, 'Ninguna');
+(34229421, 'Obesidad'),
+(37716731, 'Ninguna');
 
 -- --------------------------------------------------------
 
@@ -262,15 +279,107 @@ CREATE TABLE `persona` (
   `ocupacion` varchar(255) NOT NULL,
   `genero` varchar(255) NOT NULL,
   `longitud` double NOT NULL,
-  `latitud` double NOT NULL
+  `latitud` double NOT NULL,
+  `activo` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Volcado de datos para la tabla `persona`
 --
 
-INSERT INTO `persona` (`DNI`, `nombre`, `apellido`, `email`, `fechaDeNacimiento`, `ocupacion`, `genero`, `longitud`, `latitud`) VALUES
-(37716730, 'Federico Ivan', 'Cruceño', 'fedeicru@gmail.com', '1994-03-20', 'agente de salud', 'Masculino', -66.306048, -33.275904);
+INSERT INTO `persona` (`DNI`, `nombre`, `apellido`, `email`, `fechaDeNacimiento`, `ocupacion`, `genero`, `longitud`, `latitud`, `activo`) VALUES
+(34229421, 'Jorge Ezequiel', 'Diaz', 'diazezequiel777@gmail.com', '1988-11-09', 'otro', 'Masculino', -66.31088, -33.26451, 1),
+(37716731, 'Federico Ivan', 'Cruceño', 'fedeicru@gmail.com', '1994-03-20', 'agente de salud', 'Masculino', -66.310912, -33.264501, 1);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `registro`
+--
+
+CREATE TABLE `registro` (
+  `idRegistro` int(11) NOT NULL,
+  `idUsuario` int(11) NOT NULL,
+  `idFila` int(11) NOT NULL,
+  `nombreDeTabla` varchar(255) NOT NULL,
+  `tipoDeAccion` varchar(255) NOT NULL,
+  `fecha` date NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Volcado de datos para la tabla `registro`
+--
+
+INSERT INTO `registro` (`idRegistro`, `idUsuario`, `idFila`, `nombreDeTabla`, `tipoDeAccion`, `fecha`) VALUES
+(3, 1, 1, 'Usuario', 'Creacion', '2024-03-20'),
+(4, 1, 1, 'Usuario', 'Alta', '2024-03-20'),
+(5, 1, 1, 'Laboratorio', 'Modificacion', '2024-03-22'),
+(6, 1, 34229421, 'Persona', 'Creacion', '2024-03-23'),
+(7, 1, 34229421, 'Persona', 'Alta', '2024-03-23'),
+(8, 1, 2, 'Laboratorio', 'Creacion', '2024-03-24'),
+(9, 1, 2, 'Laboratorio', 'Alta', '2024-03-24'),
+(10, 1, 1, 'Centro de vacunacion', 'Creacion', '2024-03-24'),
+(11, 1, 1, 'Centro de vacunacion', 'Alta', '2024-03-24'),
+(12, 1, 2, 'Centro de vacunacion', 'Creacion', '2024-03-24'),
+(13, 1, 2, 'Centro de vacunacion', 'Alta', '2024-03-24'),
+(18, 1, 5, 'Laboratorio', 'Creacion', '2024-06-11'),
+(19, 1, 5, 'Laboratorio', 'Alta', '2024-06-11'),
+(20, 1, 2, 'Usuario', 'Creacion', '2024-06-11'),
+(21, 1, 2, 'Usuario', 'Alta', '2024-06-11'),
+(22, 1, 1, 'Lote proveeedor', 'Creacion', '2024-06-11'),
+(23, 1, 1, 'Lote proveeedor', 'Alta', '2024-06-11'),
+(24, 2, 1, 'Deposito Provincial', 'Creacion', '2024-06-11'),
+(25, 2, 1, 'Deposito Provincial', 'Alta', '2024-06-11'),
+(26, 2, 2, 'Deposito Provincial', 'Creacion', '2024-06-11'),
+(27, 2, 2, 'Deposito Provincial', 'Alta', '2024-06-11'),
+(28, 2, 1, 'Deposito Nacional', 'Creacion', '2024-06-11'),
+(29, 2, 1, 'Deposito Nacional', 'Alta', '2024-06-11'),
+(30, 2, 2, 'Deposito Nacional', 'Creacion', '2024-06-11'),
+(31, 2, 2, 'Deposito Nacional', 'Alta', '2024-06-11'),
+(32, 2, 2, 'Lote proveeedor', 'Creacion', '2024-06-11'),
+(33, 2, 2, 'Lote proveeedor', 'Alta', '2024-06-11'),
+(34, 2, 1, 'Lote interno', 'Creacion', '2024-06-11'),
+(35, 2, 1, 'Lote interno', 'Alta', '2024-06-11'),
+(36, 2, 2, 'Lote interno', 'Creacion', '2024-06-11'),
+(37, 2, 2, 'Lote interno', 'Alta', '2024-06-11'),
+(38, 2, 3, 'Lote interno', 'Creacion', '2024-06-11'),
+(39, 2, 3, 'Lote interno', 'Alta', '2024-06-11'),
+(40, 2, 4, 'Lote interno', 'Creacion', '2024-06-11'),
+(41, 2, 4, 'Lote interno', 'Alta', '2024-06-11'),
+(42, 2, 37716731, 'Persona', 'Creacion', '2024-06-11'),
+(43, 2, 37716731, 'Persona', 'Alta', '2024-06-11'),
+(44, 2, 1, 'Traslado', 'Creacion', '2024-06-11'),
+(45, 2, 1, 'Traslado', 'Alta', '2024-06-11'),
+(46, 2, 1, 'Descarte', 'Creacion', '2024-06-11'),
+(47, 2, 1, 'Descarte', 'Alta', '2024-06-11'),
+(48, 2, 1, 'Lote interno', 'Modificacion', '2024-06-11'),
+(49, 2, 1, 'Aplicacion', 'Creacion', '2024-06-11'),
+(50, 2, 1, 'Aplicacion', 'Alta', '2024-06-11'),
+(51, 2, 3, 'Lote proveeedor', 'Creacion', '2024-06-12'),
+(52, 2, 3, 'Lote proveeedor', 'Alta', '2024-06-12'),
+(53, 2, 4, 'Lote proveeedor', 'Creacion', '2024-06-12'),
+(54, 2, 4, 'Lote proveeedor', 'Alta', '2024-06-12'),
+(55, 1, 5, 'Lote interno', 'Creacion', '2024-06-13'),
+(56, 1, 5, 'Lote interno', 'Alta', '2024-06-13'),
+(57, 1, 6, 'Lote interno', 'Creacion', '2024-06-13'),
+(58, 1, 6, 'Lote interno', 'Alta', '2024-06-13'),
+(59, 1, 7, 'Lote interno', 'Creacion', '2024-06-13'),
+(60, 1, 7, 'Lote interno', 'Alta', '2024-06-13'),
+(61, 1, 8, 'Lote interno', 'Creacion', '2024-06-13'),
+(62, 1, 8, 'Lote interno', 'Alta', '2024-06-13'),
+(63, 1, 9, 'Lote interno', 'Creacion', '2024-06-13'),
+(64, 1, 9, 'Lote interno', 'Alta', '2024-06-13');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `rol`
+--
+
+CREATE TABLE `rol` (
+  `idRol` int(11) NOT NULL,
+  `nombre` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -289,7 +398,8 @@ CREATE TABLE `telefono` (
 --
 
 INSERT INTO `telefono` (`DNI`, `celular1`, `celular2`) VALUES
-(37716730, '2657312733', NULL);
+(34229421, '1132185230', NULL),
+(37716731, '2657312733', NULL);
 
 -- --------------------------------------------------------
 
@@ -301,9 +411,40 @@ CREATE TABLE `traslado` (
   `idTraslado` int(11) NOT NULL,
   `numeroDeSerie` int(11) NOT NULL,
   `idCentroDeVacunacion` int(11) NOT NULL,
-  `fechaDeSalida` date DEFAULT NULL,
-  `fechaDeLlegada` date DEFAULT NULL
+  `fechaDeSalida` date NOT NULL,
+  `fechaDeLlegada` date DEFAULT NULL,
+  `activo` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Volcado de datos para la tabla `traslado`
+--
+
+INSERT INTO `traslado` (`idTraslado`, `numeroDeSerie`, `idCentroDeVacunacion`, `fechaDeSalida`, `fechaDeLlegada`, `activo`) VALUES
+(1, 1, 1, '2024-01-01', '2024-02-01', 1);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `usuario`
+--
+
+CREATE TABLE `usuario` (
+  `idUsuario` int(11) NOT NULL,
+  `rol` varchar(255) NOT NULL,
+  `nombreUsuario` varchar(255) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `password` varchar(255) NOT NULL,
+  `activo` tinyint(1) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Volcado de datos para la tabla `usuario`
+--
+
+INSERT INTO `usuario` (`idUsuario`, `rol`, `nombreUsuario`, `email`, `password`, `activo`) VALUES
+(1, 'Super Admin', 'Eze', 'diazezequiel777@gmail.com', '$2b$05$lftFascR2MOppJMHgkj1iu.SE7Y2LDMfDVi5tvCgNTMlyFdKUp8hG', 1),
+(2, 'Agente', 'Federico', 'fedeicru@gmail.com', '$2b$05$x4NmUn8n9JnNCYfzUpRVTODOX3cuqqSGbWHLShQpfnq7WjwSc./l6', 1);
 
 --
 -- Índices para tablas volcadas
@@ -388,6 +529,19 @@ ALTER TABLE `persona`
   ADD PRIMARY KEY (`DNI`);
 
 --
+-- Indices de la tabla `registro`
+--
+ALTER TABLE `registro`
+  ADD PRIMARY KEY (`idRegistro`),
+  ADD KEY `idUsuario` (`idUsuario`);
+
+--
+-- Indices de la tabla `rol`
+--
+ALTER TABLE `rol`
+  ADD PRIMARY KEY (`idRol`);
+
+--
 -- Indices de la tabla `telefono`
 --
 ALTER TABLE `telefono`
@@ -402,6 +556,12 @@ ALTER TABLE `traslado`
   ADD KEY `idCentroDeVacunacion` (`idCentroDeVacunacion`);
 
 --
+-- Indices de la tabla `usuario`
+--
+ALTER TABLE `usuario`
+  ADD PRIMARY KEY (`idUsuario`);
+
+--
 -- AUTO_INCREMENT de las tablas volcadas
 --
 
@@ -409,7 +569,7 @@ ALTER TABLE `traslado`
 -- AUTO_INCREMENT de la tabla `aplicacion`
 --
 ALTER TABLE `aplicacion`
-  MODIFY `idAplicacion` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `idAplicacion` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT de la tabla `centrodevacunacion`
@@ -427,37 +587,49 @@ ALTER TABLE `depositonacional`
 -- AUTO_INCREMENT de la tabla `depositoprovincial`
 --
 ALTER TABLE `depositoprovincial`
-  MODIFY `idDepositoProvincial` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `idDepositoProvincial` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de la tabla `descarte`
 --
 ALTER TABLE `descarte`
-  MODIFY `idDescarte` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `idDescarte` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT de la tabla `laboratorio`
 --
 ALTER TABLE `laboratorio`
-  MODIFY `idLaboratorio` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `idLaboratorio` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT de la tabla `loteinterno`
 --
 ALTER TABLE `loteinterno`
-  MODIFY `numeroDeSerie` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `numeroDeSerie` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT de la tabla `loteproveedor`
 --
 ALTER TABLE `loteproveedor`
-  MODIFY `numeroDeLote` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `numeroDeLote` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT de la tabla `registro`
+--
+ALTER TABLE `registro`
+  MODIFY `idRegistro` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=65;
 
 --
 -- AUTO_INCREMENT de la tabla `traslado`
 --
 ALTER TABLE `traslado`
-  MODIFY `idTraslado` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `idTraslado` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT de la tabla `usuario`
+--
+ALTER TABLE `usuario`
+  MODIFY `idUsuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- Restricciones para tablas volcadas
@@ -505,6 +677,12 @@ ALTER TABLE `loteproveedor`
 --
 ALTER TABLE `patologiabase`
   ADD CONSTRAINT `patologiabase_ibfk_1` FOREIGN KEY (`DNI`) REFERENCES `persona` (`DNI`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Filtros para la tabla `registro`
+--
+ALTER TABLE `registro`
+  ADD CONSTRAINT `registro_ibfk_1` FOREIGN KEY (`idUsuario`) REFERENCES `usuario` (`idUsuario`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Filtros para la tabla `telefono`
