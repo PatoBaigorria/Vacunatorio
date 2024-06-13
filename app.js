@@ -6,10 +6,9 @@
 - Corregir modificar Lote interno para que quede como alta lote interno
 - Modificar registro para que se refleje el usuario que realiza las acciones ✔ (Eze)
 - Terminar de corregir alta aplicación ✔ (Eze)
-- Agregar tablas permiso y rol ✔ (Pato y Eze)
-- Hacer modelos y relaciones de permiso, rol y rolpermiso ✔ (Pato y Eze)
 - Hacer el controlador, las rutas y las vistas de registro
-- Roles: SuperAdmin, Gestor de compras, Operador de logística y Agente de salud
+- Roles: SuperAdmin, Gestor de compras, Operador de logística y Agente de salud (Todos)
+- Hacer detailes de todas las vistas necesarias
 */
 const createError = require("http-errors");
 const express = require("express");

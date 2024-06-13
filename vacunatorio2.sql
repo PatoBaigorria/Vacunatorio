@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 13-06-2024 a las 22:51:11
+-- Tiempo de generación: 14-06-2024 a las 00:09:36
 -- Versión del servidor: 10.4.18-MariaDB
 -- Versión de PHP: 8.0.5
 
@@ -368,7 +368,11 @@ INSERT INTO `registro` (`idRegistro`, `idUsuario`, `idFila`, `nombreDeTabla`, `t
 (61, 1, 8, 'Lote interno', 'Creacion', '2024-06-13'),
 (62, 1, 8, 'Lote interno', 'Alta', '2024-06-13'),
 (63, 1, 9, 'Lote interno', 'Creacion', '2024-06-13'),
-(64, 1, 9, 'Lote interno', 'Alta', '2024-06-13');
+(64, 1, 9, 'Lote interno', 'Alta', '2024-06-13'),
+(65, 1, 3, 'Usuario', 'Creacion', '2024-06-13'),
+(66, 1, 3, 'Usuario', 'Alta', '2024-06-13'),
+(67, 1, 4, 'Usuario', 'Creacion', '2024-06-13'),
+(68, 1, 4, 'Usuario', 'Alta', '2024-06-13');
 
 -- --------------------------------------------------------
 
@@ -444,7 +448,9 @@ CREATE TABLE `usuario` (
 
 INSERT INTO `usuario` (`idUsuario`, `rol`, `nombreUsuario`, `email`, `password`, `activo`) VALUES
 (1, 'Super Admin', 'Eze', 'diazezequiel777@gmail.com', '$2b$05$lftFascR2MOppJMHgkj1iu.SE7Y2LDMfDVi5tvCgNTMlyFdKUp8hG', 1),
-(2, 'Agente', 'Federico', 'fedeicru@gmail.com', '$2b$05$x4NmUn8n9JnNCYfzUpRVTODOX3cuqqSGbWHLShQpfnq7WjwSc./l6', 1);
+(2, 'Agente de salud', 'Federico', 'fedeicru@gmail.com', '$2b$05$x4NmUn8n9JnNCYfzUpRVTODOX3cuqqSGbWHLShQpfnq7WjwSc./l6', 1),
+(3, 'Gestor de compras', 'Patricia', 'patobaigorria@gmail.com', '$2b$05$ifOf6qUi1UnStcHGPd9oruu.H1cVoDgUDrH/jiVW7HS6kcPttTzQu', 1),
+(4, 'Operador de logistica', 'Lautaro', 'lauchasaucedo@gmail.com', '$2b$05$6jigAHw3HE6ZiOQWv4WBieOOLE27xfHmsrh/wukTxCXbJcvVUCdDG', 1);
 
 --
 -- Índices para tablas volcadas
@@ -617,7 +623,7 @@ ALTER TABLE `loteproveedor`
 -- AUTO_INCREMENT de la tabla `registro`
 --
 ALTER TABLE `registro`
-  MODIFY `idRegistro` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=65;
+  MODIFY `idRegistro` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=69;
 
 --
 -- AUTO_INCREMENT de la tabla `traslado`
@@ -629,7 +635,7 @@ ALTER TABLE `traslado`
 -- AUTO_INCREMENT de la tabla `usuario`
 --
 ALTER TABLE `usuario`
-  MODIFY `idUsuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `idUsuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- Restricciones para tablas volcadas
