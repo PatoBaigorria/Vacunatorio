@@ -60,7 +60,7 @@ router.post(
   })(req, res, next);
 });*/
 
-// Agrega esta ruta al final de tu archivo indexRoutes.js
+// Logout route
 router.get("/logout", (req, res) => {
   req.logout((err) => { // Proporciona una función callback para errores
     if (err) {
