@@ -48,19 +48,7 @@ router.post(
   })
 );
 
-/*router.get("/usuarios/viewUsuario", function (req, res, next) {
-  passport.authenticate("local", function (err, user, info, status) {
-    if (err) {
-      return next(err);
-    }
-    if (!user) {
-      return res.redirect("/signin");
-    }
-    res.redirect("/usuarios/viewUsuario");
-  })(req, res, next);
-});*/
 
-// Logout route
 router.get("/logout", (req, res) => {
   req.logout((err) => { // Proporciona una función callback para errores
     if (err) {
