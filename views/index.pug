@@ -18,8 +18,8 @@ block content
 		section(class="vh-100 gradient-custom overflow-hidden")
 			.container.py-1.h-100
 				if user 
-					if user.rol == "Gestor de compras"
-						
+					if user.rol == "Super Admin"
+						h2="Hola Super Admin"
 				else
 					if messages.success
 						.alert.alert-success.flash-message.fade-in
