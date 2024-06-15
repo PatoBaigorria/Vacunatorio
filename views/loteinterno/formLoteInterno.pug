@@ -53,13 +53,13 @@ body
                 .input-group.has-validation
                     input.form-control.is-valid#fechaDeSalidaDepositoNacional(type="date" name="fechaDeSalidaDepositoNacional" readonly)
                     .invalid-feedback.d-none#fechaDeSalidaDepositoNacionalSuperior La fecha seleccionada es superior a la fecha actual
-                    .invalid-feedback.d-none#fechaDeSalidaDepositoNacionalAnterior La fecha ingresada debe ser posterior a la fecha de llegada del depósito nacional
+                    .invalid-feedback.d-none#fechaDeSalidaDepositoNacionalAnterior La fecha ingresada debe ser posterior a la fecha de llegada al depósito nacional
             .form-group
                 label.form-label(for="fechaDeLlegadaDepositoProvincial") Fecha de llegada al Depósito Provincial:
                 .input-group.has-validation
                     input.form-control.is-valid#fechaDeLlegadaDepositoProvincial(type="date" name="fechaDeLlegadaDepositoProvincial" readonly)
                     .invalid-feedback.d-none#fechaDeLlegadaDepositoProvincialSuperior La fecha seleccionada es superior a la fecha actual
-                    .invalid-feedback.d-none#fechaDeLlegadaDepositoProvincialAnterior La fecha ingresada debe ser posterior a la fecha de salida del depósito nacional
+                    .invalid-feedback.d-none#fechaDeLlegadaDepositoProvincialAnterior La fecha ingresada debe ser posterior a la fecha de salida al depósito provincial
             .form-group
                 label.form-label(for="idDepositoProvincial") Depósito Provincial:
                 .input-group.has-validation
@@ -77,7 +77,7 @@ body
                 .input-group.has-validation
                     input.form-control.is-valid#fechaDeLlegadaCentroDeVacunacion(type="date" name="fechaDeLlegadaCentroDeVacunacion" readonly)
                     .invalid-feedback.d-none#fechaDeLlegadaCentroDeVacunacionSuperior La fecha seleccionada es superior a la fecha actual
-                    .invalid-feedback.d-none#fechaDeLlegadaCentroDeVacunacionAnterior La fecha ingresada debe ser posterior a la fecha de salida del depósito provincial
+                    .invalid-feedback.d-none#fechaDeLlegadaCentroDeVacunacionAnterior La fecha ingresada debe ser posterior a la fecha de salida al depósito provincial
             .form-group
                 label.form-label(for="idCentroDeVacunacion") Centro de Vacunación:
                 .input-group.has-validation
@@ -139,11 +139,8 @@ script.
             }
         }
 
-        function comprobarFechaValida(fecha){
-            const fechaActual = new Date()
-            fecha.setHours(24, 0, 0, 0)
-            fechaActual.setHours(0, 0, 0, 0)
-            return ((fecha - fechaActual) / (1000 * 60 * 60 * 24)) > 0
+        function comprobarFechaValida(fechaIngresada, fechaActual) {
+            return ((fechaIngresada - fechaActual) / (1000 * 60 * 60 * 24)) > 0
         }
 
         function mostrarFechaYDepositoNacional(){
@@ -214,7 +211,10 @@ script.
             quitarError($(fechaDeLlegadaDepositoNacional))
             if($(fechaDeLlegadaDepositoNacional).val() != '' && $(idDepositoNacional).val() != ''){
                 const fechaIngresada = new Date($(fechaDeLlegadaDepositoNacional).val())
-                if (comprobarFechaValida(fechaIngresada)) {
+                const fechaActual = new Date()
+                fechaIngresada.setHours(24, 0, 0, 0)
+                fechaActual.setHours(0, 0, 0, 0)
+                if (comprobarFechaValida(fechaIngresada, fechaActual)) {
                     mostrarError($(fechaDeLlegadaDepositoNacional), 'Superior')
                 } else {
                     const fechaCompra = new Date(!{JSON.stringify(lotesProveedores)}.find(lote => lote.numeroDeLote == $(numeroDeLote).val()).fechaDeCompra)
@@ -229,11 +229,15 @@ script.
             quitarError($(fechaDeSalidaDepositoNacional))
             if($(fechaDeSalidaDepositoNacional).val() != '' && $(idDepositoProvincial).val() != ''){
                 const fechaIngresada = new Date($(fechaDeSalidaDepositoNacional).val())
-                if (comprobarFechaValida(fechaIngresada)) {
+                const fechaActual = new Date()
+                fechaIngresada.setHours(24, 0, 0, 0)
+                fechaActual.setHours(0, 0, 0, 0)
+                if (comprobarFechaValida(fechaIngresada, fechaActual)) {
                     mostrarError($(fechaDeSalidaDepositoNacional), 'Superior')
                 } else {
-                    const fechaCompra = new Date(!{JSON.stringify(lotesProveedores)}.find(lote => lote.numeroDeLote == $(numeroDeLote).val()).fechaDeCompra)
-                    if (fechaIngresada < fechaCompra) {
+                    const fechaAnterior = new Date($(fechaDeLlegadaDepositoNacional).val())
+                    fechaAnterior.setHours(24, 0, 0, 0)
+                    if (!comprobarFechaValida(fechaIngresada, fechaAnterior)) {
                         mostrarError($(fechaDeSalidaDepositoNacional), 'Anterior')
                     }
                 }
@@ -244,11 +248,15 @@ script.
             quitarError($(fechaDeLlegadaDepositoProvincial))
             if($(fechaDeLlegadaDepositoProvincial).val() != '' && $(idDepositoProvincial).val() != ''){
                 const fechaIngresada = new Date($(fechaDeLlegadaDepositoProvincial).val())
-                if (comprobarFechaValida(fechaIngresada)) {
+                const fechaActual = new Date()
+                fechaIngresada.setHours(24, 0, 0, 0)
+                fechaActual.setHours(0, 0, 0, 0)
+                if (comprobarFechaValida(fechaIngresada, fechaActual)) {
                     mostrarError($(fechaDeLlegadaDepositoProvincial), 'Superior')
                 } else {
-                    const fechaCompra = new Date(!{JSON.stringify(lotesProveedores)}.find(lote => lote.numeroDeLote == $(numeroDeLote).val()).fechaDeCompra)
-                    if (fechaIngresada < fechaCompra) {
+                    const fechaAnterior = new Date($(fechaDeSalidaDepositoNacional).val())
+                    fechaAnterior.setHours(24, 0, 0, 0)
+                    if (!comprobarFechaValida(fechaIngresada, fechaAnterior)) {
                         mostrarError($(fechaDeLlegadaDepositoProvincial), 'Anterior')
                     }
                 }
@@ -259,11 +267,15 @@ script.
             quitarError($(fechaDeSalidaDepositoProvincial))
             if($(fechaDeSalidaDepositoProvincial).val() != '' && $(idCentroDeVacunacion).val() != ''){
                 const fechaIngresada = new Date($(fechaDeSalidaDepositoProvincial).val())
-                if (comprobarFechaValida(fechaIngresada)) {
+                const fechaActual = new Date()
+                fechaIngresada.setHours(24, 0, 0, 0)
+                fechaActual.setHours(0, 0, 0, 0)
+                if (comprobarFechaValida(fechaIngresada, fechaActual)) {
                     mostrarError($(fechaDeSalidaDepositoProvincial), 'Superior')
                 } else {
-                    const fechaCompra = new Date(!{JSON.stringify(lotesProveedores)}.find(lote => lote.numeroDeLote == $(numeroDeLote).val()).fechaDeCompra)
-                    if (fechaIngresada < fechaCompra) {
+                    const fechaAnterior = new Date($(fechaDeLlegadaDepositoProvincial).val())
+                    fechaAnterior.setHours(24, 0, 0, 0)
+                    if (!comprobarFechaValida(fechaIngresada, fechaAnterior)) {
                         mostrarError($(fechaDeSalidaDepositoProvincial), 'Anterior')
                     }
                 }
@@ -274,11 +286,15 @@ script.
             quitarError($(fechaDeLlegadaCentroDeVacunacion))
             if($(fechaDeLlegadaCentroDeVacunacion).val() != '' && $(idCentroDeVacunacion).val() != ''){
                 const fechaIngresada = new Date($(fechaDeLlegadaCentroDeVacunacion).val())
-                if (comprobarFechaValida(fechaIngresada)) {
+                const fechaActual = new Date()
+                fechaIngresada.setHours(24, 0, 0, 0)
+                fechaActual.setHours(0, 0, 0, 0)
+                if (comprobarFechaValida(fechaIngresada, fechaActual)) {
                     mostrarError($(fechaDeLlegadaCentroDeVacunacion), 'Superior')
                 } else {
-                    const fechaCompra = new Date(!{JSON.stringify(lotesProveedores)}.find(lote => lote.numeroDeLote == $(numeroDeLote).val()).fechaDeCompra)
-                    if (fechaIngresada < fechaCompra) {
+                    const fechaAnterior = new Date($(fechaDeSalidaDepositoProvincial).val())
+                    fechaAnterior.setHours(24, 0, 0, 0)
+                    if (!comprobarFechaValida(fechaIngresada, fechaAnterior)) {
                         mostrarError($(fechaDeLlegadaCentroDeVacunacion), 'Anterior')
                     }
                 }

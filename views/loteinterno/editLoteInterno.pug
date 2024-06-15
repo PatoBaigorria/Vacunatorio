@@ -21,7 +21,7 @@ body
         .form-group
             label.form-label(for="numeroDeSerie") Número de serie del lote interno:
             .input-group.has-validation
-                select.form-select.is-valid#numeroDeSerie(name="numeroDeSerie" value=loteInterno.numeroDeSerie readonly)
+                input.form-control.is-valid#numeroDeSerie(name="numeroDeSerie" value=loteInterno.numeroDeSerie readonly required)
         .form-group
             label.form-label(for="numeroDeLote") Número de lote del lote proveedor:
             .input-group.has-validation
@@ -36,7 +36,7 @@ body
             .form-group
                 label.form-label(for="cantidadDeVacunas") Cantidad de Vacunas:
                 .input-group.has-validation
-                    input.form-control.is-invalid#cantidadDeVacunas(type="text" name="cantidadDeVacunas" required)
+                    input.form-control.is-invalid#cantidadDeVacunas(type="text" name="cantidadDeVacunas" value=loteInterno.cantidadDeVacunasTotales required)
                     .invalid-feedback.d-none#cantidadDeVacunasVacio El campo no puede estar vacío
                     .invalid-feedback.d-none#cantidadDeVacunasNumeros Ingrese solo números positivos
                     .invalid-feedback.d-none#cantidadDeVacunasSinLabOLotes De de alta un laboratorio y/o un lote proveedor antes de ingresar la cantidad de vacunas que tendra el lote interno
@@ -57,13 +57,13 @@ body
                 .input-group.has-validation
                     input.form-control.is-valid#fechaDeSalidaDepositoNacional(type="date" name="fechaDeSalidaDepositoNacional" readonly)
                     .invalid-feedback.d-none#fechaDeSalidaDepositoNacionalSuperior La fecha seleccionada es superior a la fecha actual
-                    .invalid-feedback.d-none#fechaDeSalidaDepositoNacionalAnterior La fecha ingresada debe ser posterior a la fecha de llegada del depósito nacional
+                    .invalid-feedback.d-none#fechaDeSalidaDepositoNacionalAnterior La fecha ingresada debe ser posterior a la fecha de llegada al depósito nacional
             .form-group
                 label.form-label(for="fechaDeLlegadaDepositoProvincial") Fecha de llegada al Depósito Provincial:
                 .input-group.has-validation
                     input.form-control.is-valid#fechaDeLlegadaDepositoProvincial(type="date" name="fechaDeLlegadaDepositoProvincial" readonly)
                     .invalid-feedback.d-none#fechaDeLlegadaDepositoProvincialSuperior La fecha seleccionada es superior a la fecha actual
-                    .invalid-feedback.d-none#fechaDeLlegadaDepositoProvincialAnterior La fecha ingresada debe ser posterior a la fecha de salida del depósito nacional
+                    .invalid-feedback.d-none#fechaDeLlegadaDepositoProvincialAnterior La fecha ingresada debe ser posterior a la fecha de salida al depósito provincial
             .form-group
                 label.form-label(for="idDepositoProvincial") Depósito Provincial:
                 .input-group.has-validation
@@ -81,7 +81,7 @@ body
                 .input-group.has-validation
                     input.form-control.is-valid#fechaDeLlegadaCentroDeVacunacion(type="date" name="fechaDeLlegadaCentroDeVacunacion" readonly)
                     .invalid-feedback.d-none#fechaDeLlegadaCentroDeVacunacionSuperior La fecha seleccionada es superior a la fecha actual
-                    .invalid-feedback.d-none#fechaDeLlegadaCentroDeVacunacionAnterior La fecha ingresada debe ser posterior a la fecha de salida del depósito provincial
+                    .invalid-feedback.d-none#fechaDeLlegadaCentroDeVacunacionAnterior La fecha ingresada debe ser posterior a la fecha de salida al depósito provincial
             .form-group
                 label.form-label(for="idCentroDeVacunacion") Centro de Vacunación:
                 .input-group.has-validation
@@ -108,21 +108,21 @@ script.
             campo.addClass('is-valid').removeClass('is-invalid')
             $(`div[id^=${campo.attr('id')}].invalid-feedback`).addClass('d-none')
         }
-        
+
         function cargarComboBoxLote() {
             const lotes = !{JSON.stringify(lotesProveedores)}.filter(lote => lote.activo == 1)
-            if(lotes.length == 0){
-                $(numeroDeLote).append(`<option selected value="">No hay ningún lote proveedor del cual se pueda generar un lote interno</option>`).prop('disabled', true)
-                mostrarError($(numeroDeLote), 'SinLotes')
-            } else {
-                $(numeroDeLote).empty()
-                lotes.forEach(lote => {
+            lotes.forEach(lote => {
+                if(lote.numeroDeLote == !{JSON.stringify(loteInterno)}.numeroDeLote){
+                    console.log(lote.numeroDeLote)
+                    $(numeroDeLote).append(`<option selected value="${lote.numeroDeLote}">${lote.numeroDeLote}</option>`)
+                } else {
                     $(numeroDeLote).append(`<option value="${lote.numeroDeLote}">${lote.numeroDeLote}</option>`)
-                })
-                const laboratorio = !{JSON.stringify(laboratorios)}.find(laboratorio => !{JSON.stringify(lotesProveedores)}.find(lote => lote.numeroDeLote == $(numeroDeLote).val()).idLaboratorio == laboratorio.idLaboratorio).nombreLaboratorio
-                $(nombreLaboratorio).val(`${laboratorio}`).prop('readonly', true)
-            }
+                }
+            })
+            const laboratorio = !{JSON.stringify(laboratorios)}.find(laboratorio => !{JSON.stringify(lotesProveedores)}.find(lote => lote.numeroDeLote == $(numeroDeLote).val()).idLaboratorio == laboratorio.idLaboratorio).nombreLaboratorio
+            $(nombreLaboratorio).val(`${laboratorio}`).prop('readonly', true)
         }
+
 
         function cargarComboBoxLab() {
             if($(numeroDeLote).val() == ''){
@@ -143,16 +143,16 @@ script.
             }
         }
 
-        function comprobarFechaValida(fecha){
-            const fechaActual = new Date()
-            fecha.setHours(24, 0, 0, 0)
-            fechaActual.setHours(0, 0, 0, 0)
-            return ((fecha - fechaActual) / (1000 * 60 * 60 * 24)) > 0
+        function comprobarFechaValida(fechaIngresada, fechaActual) {
+            return ((fechaIngresada - fechaActual) / (1000 * 60 * 60 * 24)) > 0
         }
 
         function mostrarFechaYDepositoNacional(){
             if($(numeroDeLote).hasClass('is-valid')) {
                 $(fechasDivNac).removeClass('d-none')
+                if(!{JSON.stringify(loteInterno)}.fechaDeLlegadaDepositoNacional != null){
+                    $(fechaDeLlegadaDepositoNacional).val(!{JSON.stringify(loteInterno)}.fechaDeLlegadaDepositoNacional)
+                }
                 cargarComboDN()
             }
         }
@@ -160,6 +160,12 @@ script.
         function mostrarFechaYDepositoProvincial(){
             if(($(idDepositoNacional).val() != '') && ($(fechaDeLlegadaDepositoNacional).val() != '') && ($(fechaDeLlegadaDepositoNacional).hasClass('is-valid'))){
                 $(fechasDivPro).removeClass('d-none')
+                if(!{JSON.stringify(loteInterno)}.fechaDeSalidaDepositoNacional != null){
+                    $(fechaDeSalidaDepositoNacional).val(!{JSON.stringify(loteInterno)}.fechaDeSalidaDepositoNacional)
+                }
+                if(!{JSON.stringify(loteInterno)}.fechaDeLlegadaDepositoProvincial != null){
+                    $(fechaDeLlegadaDepositoProvincial).val(!{JSON.stringify(loteInterno)}.fechaDeLlegadaDepositoProvincial)
+                }
                 $(idDepositoProvincial).empty()
                 cargarComboDP()
             } else {
@@ -177,6 +183,12 @@ script.
             ($(fechaDeSalidaDepositoNacional).val() != '') &&
             ($(fechaDeSalidaDepositoNacional).hasClass('is-valid'))){
                 $(fechasDivCen).removeClass('d-none')
+                if(!{JSON.stringify(loteInterno)}.fechaDeSalidaDepositoProvincial != null){
+                    $(fechaDeSalidaDepositoProvincial).val(!{JSON.stringify(loteInterno)}.fechaDeSalidaDepositoProvincial)
+                }
+                if(!{JSON.stringify(loteInterno)}.fechaDeLlegadaCentroDeVacunacion != null){
+                    $(fechaDeLlegadaCentroDeVacunacion).val(!{JSON.stringify(loteInterno)}.fechaDeLlegadaCentroDeVacunacion)
+                }
                 $(idCentroDeVacunacion).empty()
                 cargarComboCDV()
             } else {
@@ -190,7 +202,13 @@ script.
                 $(idDepositoNacional).append(`<option selected value=''>No hay ningún depósito nacional al que enviar el lote</option>`).prop('disabled', true)
             } else {
                 $(idDepositoNacional).append(`<option selected value=''>Seleccione un depósito nacional si corresponde</option>`)
-                depNac.forEach(deposito => $(idDepositoNacional).append(`<option value=${deposito.idDepositoNacional}>${deposito.idDepositoNacional}</option>`))
+                depNac.forEach(deposito => {
+                    if(deposito.idDepositoNacional == !{JSON.stringify(loteInterno)}.idDepositoNacional){
+                        $(idDepositoNacional).append(`<option selected value=${deposito.idDepositoNacional}>${deposito.idDepositoNacional}</option>`)
+                    } else {
+                        $(idDepositoNacional).append(`<option value=${deposito.idDepositoNacional}>${deposito.idDepositoNacional}</option>`)
+                    }
+                })
             }
         }
 
@@ -200,7 +218,13 @@ script.
                 $(idDepositoProvincial).append(`<option selected value=''>No hay ningún depósito provincial al que enviar el lote</option>`).prop('disabled', true)
             } else {
                 $(idDepositoProvincial).append(`<option selected value="">Seleccione un depósito provincial si corresponde</option>`)
-                depPro.forEach(deposito => $(idDepositoProvincial).append(`<option value=${deposito.idDepositoProvincial}>${deposito.idDepositoProvincial}</option>`))
+                depPro.forEach(deposito => {
+                    if(deposito.idDepositoProvincial == !{JSON.stringify(loteInterno)}.idDepositoProvincial){
+                        $(idDepositoProvincial).append(`<option selected value=${deposito.idDepositoProvincial}>${deposito.idDepositoProvincial}</option>`)
+                    } else {
+                        $(idDepositoProvincial).append(`<option value=${deposito.idDepositoProvincial}>${deposito.idDepositoProvincial}</option>`)
+                    }
+                })
             }
         }
 
@@ -210,7 +234,30 @@ script.
                 $(idCentroDeVacunacion).append(`<option selected value=''>No hay ningún centro de vacunación al que enviar el lote</option>`).prop('disabled', true)
             } else {
                 $(idCentroDeVacunacion).append(`<option selected value="">Seleccione un centro de vacunación si corresponde</option>`)
-                centros.forEach(c => $(idCentroDeVacunacion).append(`<option value=${c.idCentroDeVacunacion}>${c.idCentroDeVacunacion}</option>`))
+                centros.forEach(c => {
+                    if(c.idCentroDeVacunacion == !{JSON.stringify(loteInterno)}.idCentroDeVacunacion){
+                        $(idCentroDeVacunacion).append(`<option selected value=${c.idCentroDeVacunacion}>${c.idCentroDeVacunacion}</option>`)
+                    } else {
+                        $(idCentroDeVacunacion).append(`<option value=${c.idCentroDeVacunacion}>${c.idCentroDeVacunacion}</option>`)
+                    }
+                })
+            }
+        }
+
+        function cargarDatos(){
+            if(!{JSON.stringify(loteInterno)}.fechaDeSalidaDepositoProvincial != '') {
+                $(fechaDeLlegadaDepositoNacional).prop("readonly", false)
+                $(fechaDeSalidaDepositoNacional).prop("readonly", false)
+                $(fechaDeLlegadaDepositoProvincial).prop("readonly", false)
+                $(fechaDeSalidaDepositoProvincial).prop("readonly", false)
+                $(fechaDeLlegadaCentroDeVacunacion).prop("readonly", false)
+                mostrarFechaYDepositoProvincial()
+                mostrarFechaYCDV()
+            } else if(!{JSON.stringify(loteInterno)}.fechaDeSalidaDepositoNacional != ''){
+                $(fechaDeLlegadaDepositoNacional).prop("readonly", false)
+                $(fechaDeSalidaDepositoNacional).prop("readonly", false)
+                $(fechaDeLlegadaDepositoProvincial).prop("readonly", false)
+                mostrarFechaYDepositoProvincial()
             }
         }
 
@@ -218,7 +265,10 @@ script.
             quitarError($(fechaDeLlegadaDepositoNacional))
             if($(fechaDeLlegadaDepositoNacional).val() != '' && $(idDepositoNacional).val() != ''){
                 const fechaIngresada = new Date($(fechaDeLlegadaDepositoNacional).val())
-                if (comprobarFechaValida(fechaIngresada)) {
+                const fechaActual = new Date()
+                fechaIngresada.setHours(24, 0, 0, 0)
+                fechaActual.setHours(0, 0, 0, 0)
+                if (comprobarFechaValida(fechaIngresada, fechaActual)) {
                     mostrarError($(fechaDeLlegadaDepositoNacional), 'Superior')
                 } else {
                     const fechaCompra = new Date(!{JSON.stringify(lotesProveedores)}.find(lote => lote.numeroDeLote == $(numeroDeLote).val()).fechaDeCompra)
@@ -233,11 +283,15 @@ script.
             quitarError($(fechaDeSalidaDepositoNacional))
             if($(fechaDeSalidaDepositoNacional).val() != '' && $(idDepositoProvincial).val() != ''){
                 const fechaIngresada = new Date($(fechaDeSalidaDepositoNacional).val())
-                if (comprobarFechaValida(fechaIngresada)) {
+                const fechaActual = new Date()
+                fechaIngresada.setHours(24, 0, 0, 0)
+                fechaActual.setHours(0, 0, 0, 0)
+                if (comprobarFechaValida(fechaIngresada, fechaActual)) {
                     mostrarError($(fechaDeSalidaDepositoNacional), 'Superior')
                 } else {
-                    const fechaCompra = new Date(!{JSON.stringify(lotesProveedores)}.find(lote => lote.numeroDeLote == $(numeroDeLote).val()).fechaDeCompra)
-                    if (fechaIngresada < fechaCompra) {
+                    const fechaAnterior = new Date($(fechaDeLlegadaDepositoNacional).val())
+                    fechaAnterior.setHours(24, 0, 0, 0)
+                    if (!comprobarFechaValida(fechaIngresada, fechaAnterior)) {
                         mostrarError($(fechaDeSalidaDepositoNacional), 'Anterior')
                     }
                 }
@@ -248,11 +302,15 @@ script.
             quitarError($(fechaDeLlegadaDepositoProvincial))
             if($(fechaDeLlegadaDepositoProvincial).val() != '' && $(idDepositoProvincial).val() != ''){
                 const fechaIngresada = new Date($(fechaDeLlegadaDepositoProvincial).val())
-                if (comprobarFechaValida(fechaIngresada)) {
+                const fechaActual = new Date()
+                fechaIngresada.setHours(24, 0, 0, 0)
+                fechaActual.setHours(0, 0, 0, 0)
+                if (comprobarFechaValida(fechaIngresada, fechaActual)) {
                     mostrarError($(fechaDeLlegadaDepositoProvincial), 'Superior')
                 } else {
-                    const fechaCompra = new Date(!{JSON.stringify(lotesProveedores)}.find(lote => lote.numeroDeLote == $(numeroDeLote).val()).fechaDeCompra)
-                    if (fechaIngresada < fechaCompra) {
+                    const fechaAnterior = new Date($(fechaDeSalidaDepositoNacional).val())
+                    fechaAnterior.setHours(24, 0, 0, 0)
+                    if (!comprobarFechaValida(fechaIngresada, fechaAnterior)) {
                         mostrarError($(fechaDeLlegadaDepositoProvincial), 'Anterior')
                     }
                 }
@@ -263,11 +321,15 @@ script.
             quitarError($(fechaDeSalidaDepositoProvincial))
             if($(fechaDeSalidaDepositoProvincial).val() != '' && $(idCentroDeVacunacion).val() != ''){
                 const fechaIngresada = new Date($(fechaDeSalidaDepositoProvincial).val())
-                if (comprobarFechaValida(fechaIngresada)) {
+                const fechaActual = new Date()
+                fechaIngresada.setHours(24, 0, 0, 0)
+                fechaActual.setHours(0, 0, 0, 0)
+                if (comprobarFechaValida(fechaIngresada, fechaActual)) {
                     mostrarError($(fechaDeSalidaDepositoProvincial), 'Superior')
                 } else {
-                    const fechaCompra = new Date(!{JSON.stringify(lotesProveedores)}.find(lote => lote.numeroDeLote == $(numeroDeLote).val()).fechaDeCompra)
-                    if (fechaIngresada < fechaCompra) {
+                    const fechaAnterior = new Date($(fechaDeLlegadaDepositoProvincial).val())
+                    fechaAnterior.setHours(24, 0, 0, 0)
+                    if (!comprobarFechaValida(fechaIngresada, fechaAnterior)) {
                         mostrarError($(fechaDeSalidaDepositoProvincial), 'Anterior')
                     }
                 }
@@ -278,11 +340,15 @@ script.
             quitarError($(fechaDeLlegadaCentroDeVacunacion))
             if($(fechaDeLlegadaCentroDeVacunacion).val() != '' && $(idCentroDeVacunacion).val() != ''){
                 const fechaIngresada = new Date($(fechaDeLlegadaCentroDeVacunacion).val())
-                if (comprobarFechaValida(fechaIngresada)) {
+                const fechaActual = new Date()
+                fechaIngresada.setHours(24, 0, 0, 0)
+                fechaActual.setHours(0, 0, 0, 0)
+                if (comprobarFechaValida(fechaIngresada, fechaActual)) {
                     mostrarError($(fechaDeLlegadaCentroDeVacunacion), 'Superior')
                 } else {
-                    const fechaCompra = new Date(!{JSON.stringify(lotesProveedores)}.find(lote => lote.numeroDeLote == $(numeroDeLote).val()).fechaDeCompra)
-                    if (fechaIngresada < fechaCompra) {
+                    const fechaAnterior = new Date($(fechaDeSalidaDepositoProvincial).val())
+                    fechaAnterior.setHours(24, 0, 0, 0)
+                    if (!comprobarFechaValida(fechaIngresada, fechaAnterior)) {
                         mostrarError($(fechaDeLlegadaCentroDeVacunacion), 'Anterior')
                     }
                 }
@@ -308,6 +374,7 @@ script.
         cargarComboBoxLab()
         validarCantidadDeVacunas()
         mostrarFechaYDepositoNacional()
+        cargarDatos()
 
         $(numeroDeLote).on('change', function(){
             cargarComboBoxLab()
