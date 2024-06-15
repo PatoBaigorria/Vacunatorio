@@ -58,7 +58,9 @@ script.
             columns:[
                 {data: 'numeroDeSerie', title: 'Número de Serie'},
                 {data: 'idCentroDeVacunacion', title: 'ID del Centro de Vacunación'},
-                { data: 'activo', title: 'Estado del traslado', createdCell: agregarMensajeSiActivoOInactivo },
+                {data: 'fechaDeSalida', title: 'Fecha de Salida del Traslado'},
+                {data: 'fechaDeLlegada', title: 'Fecha de Llegada del Traslado'},
+                {data: 'activo', title: 'Estado del traslado', createdCell: agregarMensajeSiActivoOInactivo },
                 {
                     data: 'opciones', title: 'Opciones',
                     render: function (data, type, row) {
@@ -75,9 +77,9 @@ script.
             columnDefs: [
                 {orderable: false, targets:[3]}, // Columna de "Opciones"
                 {searchable: false, targets:[3]},
-                {className: "dt-center", targets: [0, 1, 2, 3]},
+                {className: "dt-center", targets: [0, 1, 2, 3, 4, 5]},
                 //{ width: '14%', targets: [0, 1, 2, 3, 4, 5] },
-                { width: '15%', targets: [3] },
+                { width: '20%', targets: [3] },
             ]
         });
 
