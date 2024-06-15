@@ -61,6 +61,20 @@ const createLaboratorio = async (req, res) => {
 		res.status(500).redirect("/laboratorios/alta");
 	}
 };
+const detailsLaboratorio = async (req, res) => {
+	try {
+		const laboratorio = await Laboratorio.findByPk(req.params.id);
+		const laboratorios = await Laboratorio.findAll({ raw: true });
+		res.render("laboratorio/detailsLaboratorio", {
+			laboratorio: laboratorio,
+			laboratorios: laboratorios,
+		});
+	} catch (error) {
+		res.status(500).json({
+			message: "Error al obtener el laboratorio.",
+		});
+	}
+};
 
 const editLaboratorio = async (req, res) => {
 	try {
@@ -154,6 +168,7 @@ module.exports = {
 	listarLaboratorios,
 	formLaboratorio,
 	createLaboratorio,
+	detailsLaboratorio,
 	editLaboratorio,
 	updateLaboratorio,
 	deleteLaboratorio,

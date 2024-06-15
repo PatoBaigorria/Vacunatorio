@@ -62,14 +62,14 @@ script.
                 {
                     data: 'opciones', title: 'Opciones',
                     render: function (data, type, row) {
-                        const detailsBtn = `<button title="Detalle" class="btn btn-primary btn-sm fa fa-info-circle detalle"></button>`;
+                        //const detailsBtn = `<button title="Detalle" class="btn btn-primary btn-sm fa fa-info-circle detalle"></button>`;
                         const editBtn = `<button title='Editar' class='btn btn-primary btn-sm fa-solid fa-pencil'></button>`
                         const deactivateBtn = `<button title='Dar de baja' class='btn btn-warning btn-sm fa-solid fa-exclamation-circle'></button>`
                         const activateBtn = `<button title='Dar de alta' class='btn btn-success btn-sm fa-solid fa-check-circle'></button>`
                         if (row.activo == 1)
-                            return `${detailsBtn} | ${editBtn} | ${deactivateBtn}`;
+                            return `${editBtn} | ${deactivateBtn}`;
                         else
-                            return `${detailsBtn} | ${editBtn} | ${activateBtn}`;
+                            return `${editBtn} | ${activateBtn}`;
                     }
                 }
             ],
