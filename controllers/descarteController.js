@@ -89,6 +89,21 @@ const createDescarte = async (req, res) => {
 	}
 };
 
+const detailsDescarte = async (req, res) => {
+  try {
+    const descarte = await Descarte.findByPk(req.params.id, {
+		include: [
+			{model: Persona, attributes:["Nombre", "Apellido"]},
+		],
+	});
+    res.render("descarte/detailsDescarte", {
+      descarte: descarte,
+    });
+  } catch (error) {
+    res.status(500).json({ message: "Error al obtener el descarte." });
+  }
+};
+
 const editDescarte = async (req, res) => {
 	try {
 		const descarte = await Descarte.findByPk(req.params.id);
@@ -193,6 +208,7 @@ module.exports = {
 	listarDescartes,
 	formDescarte,
 	createDescarte,
+	detailsDescarte,
 	editDescarte,
 	updateDescarte,
 	deleteDescarte,

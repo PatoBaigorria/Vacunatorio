@@ -1,4 +1,5 @@
 const { LoteProveedor, Laboratorio } = require("../models/relaciones");
+const { detailsPersona } = require("./personaController");
 const { createRegistro } = require("./registroController");
 // Obtener todos los lotes proveedores
 const listarLotesProveedores = async (req, res) => {
@@ -6,7 +7,7 @@ const listarLotesProveedores = async (req, res) => {
     const lotesProveedores = await LoteProveedor.findAll({
       include: [{ model: Laboratorio, attributes: ["nombreLaboratorio"] }],
     });
-	console.log(lotesProveedores)
+    console.log(lotesProveedores);
 
     res.render("loteproveedor/viewLoteProveedor", {
       lotesProveedores: lotesProveedores,
@@ -53,12 +54,14 @@ const createLoteProveedor = async (req, res) => {
       fechaDeCompra,
       activo: 1,
     });
-    await createRegistro(req.user.idUsuario, 
+    await createRegistro(
+      req.user.idUsuario,
       "Lote proveeedor",
       lote.dataValues.numeroDeLote,
       "Creacion"
     );
-    await createRegistro(req.user.idUsuario, 
+    await createRegistro(
+      req.user.idUsuario,
       "Lote proveeedor",
       lote.dataValues.numeroDeLote,
       "Alta"
@@ -73,11 +76,14 @@ const createLoteProveedor = async (req, res) => {
 
 const editLoteProveedor = async (req, res) => {
   try {
-    const loteProveedor = await LoteProveedor.findByPk(req.params.id);
+    const loteProveedor = await LoteProveedor.findByPk(req.params.id, {
+      include: [
+		{ model: Laboratorio, attributes: ["nombreLaboratorio"] },
+	  ],
+    });
     const laboratorios = await Laboratorio.findAll();
-    res.render("loteproveedor/editLoteProveedor", {
+    res.render("loteproveedor/detailsLoteProveedor", {
       loteProveedor: loteProveedor,
-      laboratorios: laboratorios,
     });
   } catch (error) {
     res.status(500).json({
@@ -94,7 +100,12 @@ const updateLoteProveedor = async (req, res) => {
         numeroDeLote: req.params.id,
       },
     });
-    await createRegistro(req.user.idUsuario, "Lote proveedor", req.params.id, "Modificacion");
+    await createRegistro(
+      req.user.idUsuario,
+      "Lote proveedor",
+      req.params.id,
+      "Modificacion"
+    );
     req.flash("success", "Lote Proveedor actualizado exitosamente.");
     res.redirect("/lotesproveedores");
   } catch (error) {
@@ -129,7 +140,12 @@ const bajaLoteProveedor = async (req, res) => {
         },
       }
     );
-    await createRegistro(req.user.idUsuario, "Lote proveedor", req.params.id, "Baja");
+    await createRegistro(
+      req.user.idUsuario,
+      "Lote proveedor",
+      req.params.id,
+      "Baja"
+    );
     req.flash("success", "Lote proveedor dado de baja exitosamente.");
     res.json({ success: true });
   } catch (error) {
@@ -149,7 +165,12 @@ const altaLoteProveedor = async (req, res) => {
         },
       }
     );
-    await createRegistro(req.user.idUsuario, "Lote proveedor", req.params.id, "Alta");
+    await createRegistro(
+      req.user.idUsuario,
+      "Lote proveedor",
+      req.params.id,
+      "Alta"
+    );
     req.flash("success", "Lote proveedor dado de alta exitosamente.");
     res.json({ success: true });
   } catch (error) {
@@ -163,6 +184,7 @@ module.exports = {
   listarLotesProveedores,
   formLoteProveedor,
   createLoteProveedor,
+  detailsPersona,
   editLoteProveedor,
   updateLoteProveedor,
   deleteLoteProveedor,
