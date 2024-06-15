@@ -79,8 +79,18 @@ const createPersona = async (req, res) => {
       latitud,
       activo: 1,
     });
-    await createRegistro(req.user.idUsuario, "Persona", persona.dataValues.DNI, "Creacion");
-    await createRegistro(req.user.idUsuario, "Persona", persona.dataValues.DNI, "Alta");
+    await createRegistro(
+      req.user.idUsuario,
+      "Persona",
+      persona.dataValues.DNI,
+      "Creacion"
+    );
+    await createRegistro(
+      req.user.idUsuario,
+      "Persona",
+      persona.dataValues.DNI,
+      "Alta"
+    );
     if (ocupacion === "agente de salud") {
       await AgenteDeSalud.create({
         DNI,
@@ -140,14 +150,8 @@ const detailsPersona = async (req, res) => {
         { model: AgenteDeSalud, attributes: ["matricula"] },
       ],
     });
-
-    if (!persona) {
-      // Si la persona no existe, responde con un error 404
-      res.status(404).json({ message: "Persona no encontrada" });
-    } else {
-      // Si la persona existe, renderiza la vista de detalles
-      res.render("persona/detailsPersona", { persona });
-    }
+    // Si la persona existe, renderiza la vista de detalles
+    res.render("persona/detailsPersona", { persona });
   } catch (error) {
     console.error(error);
     res
@@ -301,7 +305,12 @@ const updatePersona = async (req, res) => {
         },
       }
     );
-    await createRegistro(req.user.idUsuario, "Persona", req.params.id, "Modificacion");
+    await createRegistro(
+      req.user.idUsuario,
+      "Persona",
+      req.params.id,
+      "Modificacion"
+    );
     req.flash("success", "Persona actualizada exitosamente");
     res.redirect("/personas");
   } catch (error) {

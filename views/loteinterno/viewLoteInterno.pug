@@ -182,6 +182,8 @@ script.
                         $(confirmAltaBtn).trigger('click')
                     }
                 })
+            } else if ($(event.target).hasClass('detalle')) {
+                window.location.href = `/lotesinternos/details/${data.numeroDeSerie}`
             } else {
                 window.location.href = `/lotesinternos/${data.numeroDeSerie}`
             }
