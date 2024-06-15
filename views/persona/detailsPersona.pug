@@ -10,16 +10,7 @@ body
     if messages.error
         .alert.alert-danger
             = messages.error
-    div.modal#alertModal(tabindex="-1" role="dialog" aria-labelledby="alertModalLabel" aria-hidden="true")
-        div.modal-dialog(role="document")
-            div.modal-content
-                div.modal-header
-                    h5.modal-title#alertModalLabel Alerta
-                    button.close(type="button" data-bs-dismiss="modal" aria-label="Close")
-                        span(aria-hidden="true") ×
-                div.modal-body
-                    p#mensajeAlerta Mensaje de alerta
-    form#form(action="/personas/"+persona.DNI+"?_method=PUT" method="post")
+    div#form
         .form-group
             label.form-label.text-center(for="dni") DNI:
             .input-group
@@ -75,9 +66,14 @@ body
             label.form-label.text-center(for="latitud") Latitud:
             input.form-control.text-center(type="text" id="latitud" name="latitud" value=persona.latitud disabled)
         br
+        div.text-center
+            button.btn.btn-primary#detalle Editar
+            | &nbsp;&nbsp;&nbsp;&nbsp;
+            button.btn.btn-primary(type="button" onclick="window.history.back()") Volver
 script.
-    $(function () {"¡Datos incorrectos! Por favor, verifica la información ingresada."
+    $(function () {
         $('#map').css('width', $('#form').outerWidth() + 'px');
+        
         $().ready(function () {
             initMap();
         });
@@ -100,4 +96,9 @@ script.
                 });
             }
         }
+
+        $(detalle).on('click', function() {
+            const DNI = !{JSON.stringify(persona)}.DNI
+            window.location.href = `/personas/${DNI}`
+        });
     });
