@@ -1,0 +1,54 @@
+- const title = 'Detalle de lote proveedor'
+include ..\includes\layout
+block content
+html(lang="es")
+body
+    h2.text-center Detalle del lote proveedor
+    if messages.error
+        .alert.alert-danger
+            = messages.error
+    div#form
+        .form-group
+            label.form-label.text-center(for="numeroDeLote") Lote N°:
+            .input-group
+                input.form-control.text-center(type="text" name="numeroDeLote" value=loteProveedor.numeroDeLote disabled)
+        .form-group
+            label.form-label.text-center(for="nombreLaboratorio") Laboratorio de origen del lote
+            .input-group
+                input.form-control.text-center(name="nombreLaboratorio" value=loteProveedor.Laboratorio ? loteProveedor.Laboratorio.nombreLaboratorio : 'No disponible' disabled)
+        .form-group
+            label.form-label.text-center(for="tipoDeVacuna") Tipo de vacuna que trae el lote
+            .input-group
+                input.form-control.text-center(name="tipoDeVacuna" value=loteProveedor.tipoDeVacuna disabled)
+        .form-group
+            label.form-label.text-center(for="nombreComercial") Nombre comercial de la vacuna
+            .input-group
+                input.form-control.text-center(name="nombreComercial" value=loteProveedor.nombreComercial disabled)
+        .form-group
+            label.form-label.text-center(for="cantidadDeLotesInternos") Cantidad de lotes internos que trae el lote
+            .input-group
+                input.form-control.text-center(type="text" name="cantidadDeLotesInternos" value=loteProveedor.cantidadDeLotesInternos disabled)
+        .form-group
+            label.form-label.text-center(for="fechaDeFabricacion") Fecha de fabricación de la vacuna
+            .input-group
+                input.form-control.text-center(type="date" name="fechaDeFabricacion" value=loteProveedor.fechaDeFabricacion disabled)
+        .form-group
+            label.form-label.text-center(for="fechaDeCompra") Fecha de compra de la vacuna
+            .input-group
+                input.form-control.text-center(type="date" name="fechaDeCompra" value=loteProveedor.fechaDeCompra disabled)
+        .form-group
+            label.form-label.text-center(for="fechaDeVencimiento") Fecha de vencimiento de la vacuna
+            .input-group
+                input.form-control.text-center(type="date" name="fechaDeVencimiento" value=loteProveedor.fechaDeVencimiento disabled)
+        br
+        div.text-center
+            button.btn.btn-primary#detalle Editar
+            | &nbsp;&nbsp;&nbsp;&nbsp;
+            button(type="button" class="btn btn-primary" onclick="window.history.back()") Volver
+script.
+    $(function (){
+        $(detalle).on('click', function() {
+            const numeroDeLote = !{JSON.stringify(loteProveedor)}.numeroDeLote
+            window.location.href = `/lotesproveedores/${numeroDeLote}`
+        });
+    });

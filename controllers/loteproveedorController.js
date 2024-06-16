@@ -74,16 +74,25 @@ const createLoteProveedor = async (req, res) => {
   }
 };
 
-const editLoteProveedor = async (req, res) => {
+const detailsLoteProveedor = async (req, res) => {
   try {
     const loteProveedor = await LoteProveedor.findByPk(req.params.id, {
       include: [
-		{ model: Laboratorio, attributes: ["nombreLaboratorio"] },
-	  ],
+        { model: Laboratorio, attributes: ["nombreLaboratorio"] },
+      ],
     });
+
+    // Verificar que el lote proveedor exista
+    if (!loteProveedor) {
+      req.flash("error", "Lote proveedor no encontrado.");
+      return res.redirect("/lotesproveedores");
+    }
+
     const laboratorios = await Laboratorio.findAll();
+
     res.render("loteproveedor/detailsLoteProveedor", {
       loteProveedor: loteProveedor,
+      laboratorios: laboratorios,
     });
   } catch (error) {
     res.status(500).json({
@@ -91,6 +100,36 @@ const editLoteProveedor = async (req, res) => {
     });
   }
 };
+
+
+
+const editLoteProveedor = async (req, res) => {
+  try {
+    const loteProveedor = await LoteProveedor.findByPk(req.params.id, {
+      include: [
+        { model: Laboratorio, attributes: ["nombreLaboratorio"] },
+      ],
+    });
+
+    // Verificar que los datos estén presentes
+    if (!loteProveedor) {
+      req.flash("error", "Lote proveedor no encontrado.");
+      return res.redirect("/lotesproveedores");
+    }
+
+    const laboratorios = await Laboratorio.findAll();
+    
+    res.render("loteproveedor/editLoteProveedor", {
+      loteProveedor: loteProveedor,
+      laboratorios: laboratorios,
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: "Error al obtener el lote proveedor.",
+    });
+  }
+};
+
 
 // Actualizar un lote proveedor por su ID
 const updateLoteProveedor = async (req, res) => {
@@ -184,7 +223,7 @@ module.exports = {
   listarLotesProveedores,
   formLoteProveedor,
   createLoteProveedor,
-  detailsPersona,
+  detailsLoteProveedor,
   editLoteProveedor,
   updateLoteProveedor,
   deleteLoteProveedor,

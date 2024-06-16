@@ -5,7 +5,7 @@ const descarteController = require("../controllers/descarteController");
 router.get("/", descarteController.listarDescartes);
 router.get("/crear", descarteController.formDescarte);
 router.post("/", descarteController.createDescarte);
-router.get("/details/:id", descarteController.detailsCentroDeVacunacion);
+router.get("/details/:id", descarteController.detailsDescarte);
 router.get("/:id", descarteController.editDescarte);
 router.put("/:id", descarteController.updateDescarte);
 router.delete("/:id", descarteController.deleteDescarte);

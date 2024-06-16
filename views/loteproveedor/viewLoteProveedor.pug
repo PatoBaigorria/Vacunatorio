@@ -155,10 +155,12 @@ script.
                 
                 $(document).on('keydown', function(e) {
                     if (e.key === 'Enter' && $(confirmAltaModal).is(':visible')) {
-                        $(confirmAltaBtn).trigger('click')
+                        $(confirmAltaBtn).trigger('click');
                     }
-                })
-            } else {
+                });
+            } else if ($(event.target).hasClass('detalle')) {
+                window.location.href = "/lotesproveedores/details/" + data.numeroDeLote;
+            } else{
                 window.location.href = `/lotesproveedores/${data.numeroDeLote}`
             }
         })
