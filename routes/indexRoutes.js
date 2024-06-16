@@ -10,6 +10,7 @@ const loteinternoRoutes = require("./loteinternoRoutes");
 const loteproveedorRoutes = require("./loteproveedorRoutes");
 const personaRoutes = require("./personaRoutes");
 const trasladoRoutes = require("./trasladoRoutes");
+const registroRoutes = require("./registroRoutes");
 const usuarioRoutes = require("./usuarioRoutes");
 
 const { passport } = require("../app");
@@ -71,6 +72,7 @@ router.use("/lotesinternos", isAuthenticated, loteinternoRoutes);
 router.use("/lotesproveedores", isAuthenticated, loteproveedorRoutes);
 router.use("/personas", isAuthenticated, personaRoutes);
 router.use("/traslados", isAuthenticated, trasladoRoutes);
+router.use("/registros", isAuthenticated, registroRoutes);
 router.use("/usuarios", isAuthenticated, usuarioRoutes);
 
 module.exports = router;

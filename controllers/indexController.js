@@ -8,6 +8,7 @@ const personaController = require("./personaController");
 const aplicacionController = require("./aplicacionController");
 const trasladoController = require("./trasladoController");
 const descarteController = require("./descarteController");
+const registroController = require("./registroController");
 const usuarioController = require("./usuarioController");
 
 module.exports = {
@@ -21,5 +22,6 @@ module.exports = {
 	aplicacionController,
 	trasladoController,
 	descarteController,
+	registroController,
 	usuarioController,
 };

@@ -12,7 +12,7 @@ const PatologiaBase = require("./patologiabase");
 const Persona = require("./persona");
 const Telefono = require("./telefono");
 const Traslado = require("./traslado");
-const Registro = require('./registro');
+const Registro = require("./registro");
 const Usuario = require("./usuario");
 
 // Relaciones entre los modelos
@@ -150,8 +150,12 @@ Descarte.belongsTo(AgenteDeSalud, {
 });
 
 Usuario.hasMany(Registro, {
-	foreignKey: 'idUsuario'
-})
+	foreignKey: 'idUsuario',
+});
+  
+Registro.belongsTo(Usuario, {
+	foreignKey: 'idUsuario',
+});
 
 async function sincronizarModelos() {
 	try {

@@ -1,0 +1,49 @@
+- const title = 'Listado de registros'
+include ../includes/layout
+block content
+body
+    div.container.my-4
+        div.row
+            div.col-sm-12.col-md-12.col-lg-12.col-xl-12
+                section#viewRegistros
+                    h2 Listado de registros
+                    br
+                    br
+                    if messages.success
+                        .alert.alert-success.flash-message.fade-in
+                            = messages.success
+                    if messages.error
+                        .alert.alert-danger.flash-message.fade-in
+                            = messages.error
+                    div.table.responsive
+                        table#registros.table.table-striped.table-bordered
+script.
+    let tabla
+    $(document).ready(function() {
+        tabla = $('#registros').DataTable({
+            data: !{JSON.stringify(registros)},
+            pageLength: 5,
+            lengthMenu: [5, 10, 15, 20],
+            language: {
+                url: '//cdn.datatables.net/plug-ins/1.13.7/i18n/es-AR.json'
+            },
+            columns: [
+                { data: 'Usuario.nombreUsuario', title: 'Nombre de Usuario' },
+                { data: 'idFila', title: 'ID Fila' },
+                { data: 'nombreDeTabla', title: 'Nombre de la Tabla' },
+                { data: 'tipoDeAccion', title: 'Tipo de Acción' },
+                { data: 'fecha', title: 'Fecha', render: function (data) { return new Date(data).toLocaleString(); } }
+            ],
+            columnDefs: [
+                { className: 'dt-center', targets: [0, 1, 2, 3, 4] },
+                { width: '10%', targets: [0, 1] },
+                { width: '12%', targets: [2, 3, 4] },
+                { width: '10%', targets: [] },
+            ]
+        });
+
+        $('.flash-message').addClass('fade-in');
+        setTimeout(function() {
+            $('.flash-message').removeClass('fade-in');
+        }, 3000);
+    });

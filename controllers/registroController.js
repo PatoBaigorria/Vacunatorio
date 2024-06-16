@@ -1,4 +1,4 @@
-const { Registro } = require("../models/relaciones");
+const { Registro, Usuario, } = require("../models/relaciones");
 
 exports.createRegistro = async (id, tabla, fila, accion) => {
     try {
@@ -12,3 +12,25 @@ exports.createRegistro = async (id, tabla, fila, accion) => {
         console.log(error.message);
     }
 }
+
+const listarRegistros = async (req, res) => {
+  try { 
+    const registros = await Registro.findAll({
+      include: [
+        { model: Usuario, attributes: ['nombreUsuario'] },
+      ],
+    });
+
+    res.render('registro/viewRegistro', {
+      registros: registros,
+      
+    });
+  } catch (error) {
+    req.flash("error", "Error al obtener los registros. " + error.message);
+  }
+};
+
+module.exports = {
+  listarRegistros,
+};
+
