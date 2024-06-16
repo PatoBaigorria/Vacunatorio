@@ -144,6 +144,8 @@ script.
                         $(confirmAltaBtn).trigger('click')
                     }
                 })
+            } else if ($(event.target).hasClass('detalle')) {
+                window.location.href = "/descartes/details/" + data.idDescarte;
             } else {
                 window.location.href = `/descartes/${data.idDescarte}`
             }

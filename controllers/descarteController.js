@@ -4,9 +4,7 @@ const {
 	LoteInterno,
 	Persona,
 } = require("../models/relaciones");
-const {
-	createRegistro
-} = require('./registroController');
+const { createRegistro } = require("./registroController");
 // Obtener todos los descartes
 const listarDescartes = async (req, res) => {
 	try {
@@ -73,13 +71,24 @@ const createDescarte = async (req, res) => {
 			where: { numeroDeSerie: numeroDeSerie },
 		});
 		if (loteEncontrado) {
-			const vacunasTotales = loteEncontrado.cantidadDeVacunasRestantes - cantidadDeVacunas;
+			const vacunasTotales =
+				loteEncontrado.cantidadDeVacunasRestantes - cantidadDeVacunas;
 			await loteEncontrado.update({
 				cantidadDeVacunasRestantes: vacunasTotales,
 			});
 		}
-		await createRegistro(req.user.idUsuario, 'Descarte', descarte.dataValues.idDescarte, 'Creacion')
-		await createRegistro(req.user.idUsuario, 'Descarte', descarte.dataValues.idDescarte, 'Alta')
+		await createRegistro(
+			req.user.idUsuario,
+			"Descarte",
+			descarte.dataValues.idDescarte,
+			"Creacion"
+		);
+		await createRegistro(
+			req.user.idUsuario,
+			"Descarte",
+			descarte.dataValues.idDescarte,
+			"Alta"
+		);
 		req.flash("success", "Descarte creado exitosamente.");
 		res.redirect("/descartes");
 	} catch (error) {
@@ -90,23 +99,30 @@ const createDescarte = async (req, res) => {
 };
 
 const detailsDescarte = async (req, res) => {
-  try {
-    const descarte = await Descarte.findByPk(req.params.id, {
-		include: [
-			{model: Persona, attributes:["Nombre", "Apellido"]},
-		],
-	});
-    res.render("descarte/detailsDescarte", {
-      descarte: descarte,
-    });
-  } catch (error) {
-    res.status(500).json({ message: "Error al obtener el descarte." });
-  }
+	try {
+		const descarte = await Descarte.findByPk(req.params.id, {
+			include: [
+				{
+					model: AgenteDeSalud,
+					include: [{ model: Persona, attributes: ["nombre", "apellido"] }],
+				},
+			],
+		});
+		res.render("descarte/detailsDescarte", {
+			descarte: descarte,
+		});
+	} catch (error) {
+		res
+		.status(500)
+		.json({
+			message: "Error al obtener el descarte. Error: " + error.message,
+		});
+	}
 };
 
 const editDescarte = async (req, res) => {
 	try {
-		const descarte = await Descarte.findByPk(req.params.id);
+		const descarte = await Descarte.findByPk(req.params.id)
 		const personas = await Persona.findAll();
 		const lotesInternos = await LoteInterno.findAll();
 		const empresas = [
@@ -129,7 +145,7 @@ const editDescarte = async (req, res) => {
 			empresas: empresas,
 		});
 	} catch (error) {
-		res.status(500).json({ message: "Error al obtener el descarte." });
+		res.status(500).json({ message: "Error al obtener el descarte. Error: " + error.message });	
 	}
 };
 
@@ -139,7 +155,12 @@ const updateDescarte = async (req, res) => {
 		await Descarte.update(req.body, {
 			where: { idDescarte: req.params.id },
 		});
-		await createRegistro(req.user.idUsuario, 'Descarte', req.params.id, 'Modificacion')
+		await createRegistro(
+			req.user.idUsuario,
+			"Descarte",
+			req.params.id,
+			"Modificacion"
+		);
 		req.flash("success", "Descarte de vacunas actualizado exitosamente.");
 		res.redirect("/descartes");
 	} catch (error) {
@@ -174,7 +195,7 @@ const bajaDescarte = async (req, res) => {
 				},
 			}
 		);
-		await createRegistro(req.user.idUsuario, 'Descarte', req.params.id, 'Baja')
+		await createRegistro(req.user.idUsuario, "Descarte", req.params.id, "Baja");
 		req.flash("success", "Descarte dado de baja exitosamente.");
 		res.json({ success: true });
 	} catch (error) {
@@ -194,7 +215,7 @@ const altaDescarte = async (req, res) => {
 				},
 			}
 		);
-		await createRegistro(req.user.idUsuario, 'Descarte', req.params.id, 'Alta')
+		await createRegistro(req.user.idUsuario, "Descarte", req.params.id, "Alta");
 		req.flash("success", "Descarte dado de alta exitosamente.");
 		res.json({ success: true });
 	} catch (error) {
@@ -213,5 +234,5 @@ module.exports = {
 	updateDescarte,
 	deleteDescarte,
 	bajaDescarte,
-	altaDescarte
+	altaDescarte,
 };

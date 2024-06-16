@@ -43,7 +43,7 @@ body
         .form-group
             label.form-label(for='cantidadDeVacunas') Cantidad de Vacunas:
             .input-group.has-validation
-                input.form-control.is-invalid#cantidadDeVacunas(type='text' name='cantidadDeVacunas' value=descarte.cantidadDeVacuna required)
+                input.form-control.is-invalid#cantidadDeVacunas(type='text' name='cantidadDeVacunas' value=descarte.cantidadDeVacunas required)
                 .invalid-feedback.d-none#cantidadDeVacunasSinAgentes No hay agentes que realicen descartes de vacunas
                 .invalid-feedback.d-none#cantidadDeVacunasSinLotes No hay lotes de los cuales descartar vacunas
                 .invalid-feedback.d-none#cantidadDeVacunasVacio El campo no puede estar vacío
@@ -81,7 +81,8 @@ script.
         }
 
         function cargarAgentes(){
-            let ag = !{JSON.stringify(personas)}.find(agente => agente.DNIAgente == descarte.DNIAgente)
+            let descarte = !{JSON.stringify(descarte)}
+            let ag = !{JSON.stringify(personas)}.find(agente => agente.DNI == descarte.DNIAgente)
             let agentes = !{JSON.stringify(personas)}.filter(agente => agente.activo == 1 && agente.ocupacion == 'agente de salud')
             if(agentes.length == 0){
                 $(DNIAgente).prop('disabled', true).append(`<option hidden disabled selected value=${ag.DNIAgente}>${ag.nombre} ${ag.apellido}</option>`)
@@ -98,6 +99,7 @@ script.
         }
 
         function cargarLotes(){
+            let descarte = !{JSON.stringify(descarte)}
             let lot = !{JSON.stringify(lotesInternos)}.find(lote => lote.numeroDeSerie == descarte.numeroDeSerie)
             if($(DNIAgente).hasClass('is-invalid')){
                 $(numeroDeSerie).prop('disabled', true).append(`<option disabled selected hidden value=${lot.numeroDeSerie}>${lot.numeroDeSerie}</option>`)
@@ -120,6 +122,7 @@ script.
         }
 
         function cargarMotivos(){
+            let descarte = !{JSON.stringify(descarte)}
             if($(DNIAgente).hasClass('is-invalid')){
                 $(motivo).prop('disabled', true).append(`<option disabled selected hidden value=${descarte.motivo}>${descarte.motivo}</option>`)
                 mostrarError($(motivo), 'SinAgentes')
@@ -143,6 +146,7 @@ script.
         }
 
         function cargarEmpresasDescartantes(){
+            let descarte = !{JSON.stringify(descarte)}
             if($(DNIAgente).hasClass('is-invalid')){
                 $(empresaDescartante).prop('disabled', true).append(`<option disabled selected hidden value=${descarte.empresaDescartante}>${descarte.empresaDescartante}</option>`)
                 mostrarError($(empresaDescartante), 'SinAgentes')
@@ -166,6 +170,7 @@ script.
         }
 
         function validarCantidadDeVacunas(){
+            let descarte = !{JSON.stringify(descarte)}
             quitarError($(cantidadDeVacunas))
             if($(DNIAgente).hasClass('is-invalid')){
                 $(cantidadDeVacunas).prop('disabled', true)
@@ -191,6 +196,7 @@ script.
         }
 
         function validarFechaDeDescarte() {
+            let descarte = !{JSON.stringify(descarte)}
             quitarError($(fechaDeDescarte))
             if($(DNIAgente).hasClass('is-invalid')){
                 $(fechaDeDescarte).prop('disabled', true)
