@@ -1,9 +1,9 @@
-- const title ='Editar el lote interno'
+- const title ='Actualización del lote interno'
 include ..\includes\layout
 block content
 html(lang="es")
 body
-    h2.text-center Editar los datos del lote interno
+    h2.text-center Actualice los datos del lote interno
     if messages.error
         .alert.alert-danger
             = messages.error
@@ -91,7 +91,7 @@ body
         div.text-center
             button.btn.btn-primary(type="submit") Actualizar
             | &nbsp;&nbsp;&nbsp;&nbsp;
-            button.btn.btn-primary(type="button" onclick="window.history.back()") Volver
+            button.btn.btn-primary(type="button" onclick="window.location.href='/lotesinternos'") Volver
 script.
     $(function (){
         function mostrarAlerta() {

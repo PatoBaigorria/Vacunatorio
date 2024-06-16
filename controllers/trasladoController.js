@@ -6,6 +6,7 @@ const {
 const {
 	createRegistro
 } = require('./registroController');
+
 // Obtener todos los traslados
 const listarTraslados = async (req, res) => {
 	try {
