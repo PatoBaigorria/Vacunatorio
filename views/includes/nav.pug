@@ -1,46 +1,104 @@
 nav.navbar.navbar-expand-md.bg-dark
-    div.container-fluid
-        div.collapse.navbar-collapse
-            ul.navbar-nav.mx-auto
-                li.nav-item
-                    a.nav-link.text-light(href="/") Inicio
-                if isAuthenticated
-                    li.nav-item
-                        a.nav-link.text-light(href="/personas") Personas
-                    li.nav-item
-                        a.nav-link.text-light(href="/laboratorios") Laboratorios
-                    li.nav-item
-                        a.nav-link.text-light(href="/centrosdevacunacion") Centros de Vacunacion
-                    li.nav-item
-                        a.nav-link.text-light(href="/traslados") Traslados
-                    li.nav-item
-                        a.nav-link.text-light(href="/aplicaciones") Aplicaciones
-                    li.nav-item
-                        a.nav-link.text-light(href="/descartes") Descartes
-                    li.nav-item.dropdown
-                        a.nav-link.dropdown-toggle.text-light#toggleDepositos(data-bs-toggle="dropdown" data-bs-target="depositos" aria-haspopup="true" aria-expanded="false") Depósitos
-                        ul.dropdown-menu.bg-dark#depositos(aria-labelledby="toggleDepositos")
-                            li
-                                a.nav-link.text-light(href="/depositosprovinciales") Provinciales
-                            li
-                                a.nav-link.text-light(href="/depositosnacionales") Nacionales
-                    li.nav-item.dropdown
-                        a.nav-link.dropdown-toggle.text-light#toggleLotes(data-bs-toggle="dropdown" data-bs-target="lotes" aria-haspopup="true" aria-expanded="false") Lotes
-                        ul.dropdown-menu.bg-dark#lotes(aria-labelledby="toggleLotes")
-                            li
-                                a.nav-link.text-light(href="/lotesinternos") Internos
-                            li
-                                a.nav-link.text-light(href="/lotesproveedores") Proveedores
-                    li.nav-item
-                        a.nav-link.text-light(href="/registros") Registros
-                    li.nav-item
-                        a.nav-link.text-light(href="/usuarios") Usuarios
-                // Añade el mensaje de bienvenida con el nombre de usuario
-                if user
-                    li.nav-item.dropdown
-                        a.nav-link.dropdown-toggle.text-light#toggleBienvenido(data-bs-toggle="dropdown" aria-expanded="false")
-                            i.fas.fa-user-tie
-                            |  Bienvenid@ #{user.nombreUsuario}
-                        ul.dropdown-menu.dropdown-menu-end.bg-dark
-                            li
-                                a.nav-link.text-light(href="/logout") Cerrar Sesión
+  div.container-fluid
+    div.collapse.navbar-collapse
+      ul.navbar-nav.mx-auto
+        li.nav-item
+          a.nav-link.text-light(href="/") 
+            i.fas.fa-home
+            |  Inicio
+        if isAuthenticated
+          if user.rol === 'SuperAdmin'
+            li.nav-item
+              a.nav-link.text-light(href="/personas") 
+                i.fas.fa-users
+                |  Personas
+            li.nav-item
+              a.nav-link.text-light(href="/laboratorios") 
+                i.fas.fa-flask
+                |  Laboratorios
+            li.nav-item
+              a.nav-link.text-light(href="/centrosdevacunacion") 
+                i.fas.fa-hospital
+                |  Centros de Vacunación
+            li.nav-item
+              a.nav-link.text-light(href="/traslados") 
+                i.fas.fa-truck
+                |  Traslados
+            li.nav-item
+              a.nav-link.text-light(href="/aplicaciones") 
+                i.fas.fa-syringe
+                |  Aplicaciones
+            li.nav-item
+              a.nav-link.text-light(href="/descartes") 
+                i.fas.fa-trash-alt
+                |  Descartes
+            li.nav-item.dropdown
+              a.nav-link.dropdown-toggle.text-light#toggleDepositos(data-bs-toggle="dropdown" data-bs-target="depositos" aria-haspopup="true" aria-expanded="false") 
+                i.fas.fa-store
+                |  Depósitos
+              ul.dropdown-menu.bg-dark#depositos(aria-labelledby="toggleDepositos")
+                li
+                  a.nav-link.text-light(href="/depositosprovinciales") Provinciales
+                li
+                  a.nav-link.text-light(href="/depositosnacionales") Nacionales
+            li.nav-item.dropdown
+              a.nav-link.dropdown-toggle.text-light#toggleLotes(data-bs-toggle="dropdown" data-bs-target="lotes" aria-haspopup="true" aria-expanded="false") 
+                i.fas.fa-boxes
+                |  Lotes
+              ul.dropdown-menu.bg-dark#lotes(aria-labelledby="toggleLotes")
+                li
+                  a.nav-link.text-light(href="/lotesinternos") Internos
+                li
+                  a.nav-link.text-light(href="/lotesproveedores") Proveedores
+            li.nav-item
+              a.nav-link.text-light(href="/registros") 
+                i.fas.fa-clipboard-list
+                |  Registros
+            li.nav-item
+              a.nav-link.text-light(href="/usuarios") 
+                i.fas.fa-users-cog
+                |  Usuarios
+          else if user.rol === 'Gestor de compras'
+            li.nav-item
+              a.nav-link.text-light(href="/laboratorios") 
+                i.fas.fa-flask
+                |  Laboratorios
+            li.nav-item.dropdown
+              a.nav-link.dropdown-toggle.text-light#toggleLotes(data-bs-toggle="dropdown" data-bs-target="lotes" aria-haspopup="true" aria-expanded="false") 
+                i.fas.fa-boxes
+                |  Lotes
+              ul.dropdown-menu.bg-dark#lotes(aria-labelledby="toggleLotes")
+                li
+                  a.nav-link.text-light(href="/lotesinternos") Internos
+                li
+                  a.nav-link.text-light(href="/lotesproveedores") Proveedores
+          else if user.rol === 'Operador de logistica'
+            li.nav-item
+              a.nav-link.text-light(href="/traslados") 
+                i.fas.fa-truck
+                |  Traslados
+            li.nav-item
+              a.nav-link.text-light(href="/descartes") 
+                i.fas.fa-trash-alt
+                |  Descartes
+          else if user.rol === 'Agente de Salud'
+            li.nav-item
+              a.nav-link.text-light(href="/aplicaciones") 
+                i.fas.fa-syringe
+                |  Aplicaciones
+            li.nav-item
+              a.nav-link.text-light(href="/personas") 
+                i.fas.fa-users
+                |  Personas
+            li.nav-item
+              a.nav-link.text-light(href="/descartes") 
+                i.fas.fa-trash-alt
+                |  Descartes
+        if user
+          li.nav-item.dropdown
+            a.nav-link.dropdown-toggle.text-light#toggleBienvenido(data-bs-toggle="dropdown" aria-expanded="false")
+              i.fas.fa-user-tie
+              |  Bienvenid@ #{user.nombreUsuario} (#{user.rol})
+            ul.dropdown-menu.dropdown-menu-end.bg-dark
+              li
+                a.nav-link.text-light(href="/logout") Cerrar Sesión

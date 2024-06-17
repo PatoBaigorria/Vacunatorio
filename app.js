@@ -1,6 +1,6 @@
 /*
 - Corregir todas las tablas para que tengan menos columnas ✔ (Eze)
-- Dividir las vistas por rol
+- Dividir las vistas por rol ✔ (Pato)
 - Corregir el redireccionamiento para que muestre las acciones correspondientes ¿?
 - Mover el perfil del usuario al nav ✔ (Pato)
 - Corregir modificar Lote interno para que quede como alta lote interno ✔ (Eze)
@@ -8,7 +8,7 @@
 - Terminar de corregir alta aplicación ✔ (Eze)
 - Hacer el controlador, las rutas y las vistas de registro ✔ (Pato)
 - Roles: SuperAdmin, Gestor de compras, Operador de logística y Agente de salud (Todos)
-- Hacer detailes de todas las vistas necesarias ✔ (Eze y Pato)
+- Hacer details de todas las vistas necesarias ✔ (Eze y Pato)
 - Agregar modal en alta de aplicaciones que advierta al usuario que va a aplicar una vacuna vencida.
 - Verificar que las consultas de la realidad puedan hacerse en el proyecto
 - Consultas:
@@ -61,6 +61,7 @@ app.use(passport.session());
 app.use((req, res, next) => {
   res.locals.isAuthenticated = req.isAuthenticated();
   res.locals.user = req.user;
+  console.log('User:', req.user);
   next();
 });
 

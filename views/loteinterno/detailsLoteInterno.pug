@@ -19,53 +19,53 @@ body
 					p#mensajeAlerta.text-center Mensaje de alerta
 	div#form
 		.form-group
-			label.form-label.text-center(for="numeroDeSerie") Número de serie del lote interno:
+			label.form-label.text-center(for="numeroDeSerie") Número de serie del lote interno
 			.input-group
-				input.form-control.text-center.is-valid#numeroDeSerie(name="numeroDeSerie" value=loteInterno.numeroDeSerie disabled required)
+				input.form-control.text-center(name="numeroDeSerie" value=loteInterno.numeroDeSerie disabled required)
 		.form-group
-			label.form-label.text-center(for="numeroDeLote") Número de lote del lote proveedor:
+			label.form-label.text-center(for="numeroDeLote") Número de lote del lote proveedor
 			.input-group
-				input.form-control.text-center.is-valid#numeroDeLote(name="numeroDeLote" required value=loteInterno.numeroDeLote disabled)
+				input.form-control.text-center(name="numeroDeLote" required value=loteInterno.numeroDeLote disabled)
 		.form-group
-			label.form-label.text-center(for="nombreLaboratorio") Nombre del laboratorio del lote proveedor:
+			label.form-label.text-center(for="nombreLaboratorio") Nombre del laboratorio del lote proveedor
 			.input-group
-				input.form-control.text-center.is-valid#nombreLaboratorio(name="nombreLaboratorio" required value=loteInterno.Laboratorio.nombreLaboratorio disabled)
+				input.form-control.text-center(name="nombreLaboratorio" required value=loteInterno.Laboratorio.nombreLaboratorio disabled)
 		.form-group
-			label.form-label.text-center(for="cantidadDeVacunas") Cantidad de Vacunas:
+			label.form-label.text-center(for="cantidadDeVacunas") Cantidad de Vacunas
 			.input-group
-				input.form-control.text-center.is-valid#cantidadDeVacunas(type="text" name="cantidadDeVacunas" value=loteInterno.cantidadDeVacunasTotales required disabled)
+				input.form-control.text-center(type="text" name="cantidadDeVacunas" value=loteInterno.cantidadDeVacunasTotales required disabled)
 		.form-group
-			label.form-label.text-center(for="fechaDeLlegadaDepositoNacional") Fecha de llegada al Depósito Nacional:
+			label.form-label.text-center(for="fechaDeLlegadaDepositoNacional") Fecha de llegada al Depósito Nacional
 			.input-group
-				input.form-control.text-center.is-valid#fechaDeLlegadaDepositoNacional(type="date" name="fechaDeLlegadaDepositoNacional" disabled)
+				input.form-control.text-center#fechaDeLlegadaDepositoNacional(type="date" name="fechaDeLlegadaDepositoNacional" disabled)
 		.form-group
-			label.form-label.text-center(for="idDepositoNacional") Depósito Nacional:
+			label.form-label.text-center(for="idDepositoNacional") Depósito Nacional
 			.input-group
-				input.form-control.text-center.is-valid#idDepositoNacional(name="idDepositoNacional" disabled)
+				input.form-control.text-center#idDepositoNacional(name="idDepositoNacional" disabled)
 		.form-group
 			label.form-label.text-center(for="fechaDeSalidaDepositoNacional") Fecha de salida al Depósito Provincial:
 			.input-group
-				input.form-control.text-center.is-valid#fechaDeSalidaDepositoNacional(type="date" name="fechaDeSalidaDepositoNacional" disabled)
+				input.form-control.text-center#fechaDeSalidaDepositoNacional(type="date" name="fechaDeSalidaDepositoNacional" disabled)
 		.form-group
 			label.form-label.text-center(for="fechaDeLlegadaDepositoProvincial") Fecha de llegada al Depósito Provincial:
 			.input-group
-				input.form-control.text-center.is-valid#fechaDeLlegadaDepositoProvincial(type="date" name="fechaDeLlegadaDepositoProvincial" disabled)
+				input.form-control.text-center#fechaDeLlegadaDepositoProvincial(type="date" name="fechaDeLlegadaDepositoProvincial" disabled)
 		.form-group
 			label.form-label.text-center(for="idDepositoProvincial") Depósito Provincial:
 			.input-group
-				input.form-control.text-center.is-valid#idDepositoProvincial(name="idDepositoProvincial" disabled)
+				input.form-control.text-center#idDepositoProvincial(name="idDepositoProvincial" disabled)
 		.form-group
 			label.form-label.text-center(for="fechaDeSalidaDepositoProvincial") Fecha de salida al Centro de Vacunacion
 			.input-group
-				input.form-control.text-center.is-valid#fechaDeSalidaDepositoProvincial(type="date" name="fechaDeSalidaDepositoProvincial" disabled)
+				input.form-control.text-center#fechaDeSalidaDepositoProvincial(type="date" name="fechaDeSalidaDepositoProvincial" disabled)
 		.form-group
 			label.form-label.text-center(for="fechaDeLlegadaCentroDeVacunacion") Fecha de llegada al Centro de Vacunacion
 			.input-group
-				input.form-control.text-center.is-valid#fechaDeLlegadaCentroDeVacunacion(type="date" name="fechaDeLlegadaCentroDeVacunacion" disabled)
+				input.form-control.text-center#fechaDeLlegadaCentroDeVacunacion(type="date" name="fechaDeLlegadaCentroDeVacunacion" disabled)
 		.form-group
 			label.form-label.text-center(for="idCentroDeVacunacion") Centro de Vacunación:
 			.input-group
-				input.form-control.text-center.is-valid#idCentroDeVacunacion(name="idCentroDeVacunacion" disabled)
+				input.form-control.text-center#idCentroDeVacunacion(name="idCentroDeVacunacion" disabled)
 	br
 	div.text-center
 		button.btn.btn-primary#detalle Editar
