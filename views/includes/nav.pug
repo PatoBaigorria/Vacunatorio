@@ -7,7 +7,7 @@ nav.navbar.navbar-expand-md.bg-dark
             i.fas.fa-home
             |  Inicio
         if isAuthenticated
-          if user.rol === 'SuperAdmin'
+          if user.rol === 'Super Admin'
             li.nav-item
               a.nav-link.text-light(href="/personas") 
                 i.fas.fa-users
@@ -81,7 +81,7 @@ nav.navbar.navbar-expand-md.bg-dark
               a.nav-link.text-light(href="/descartes") 
                 i.fas.fa-trash-alt
                 |  Descartes
-          else if user.rol === 'Agente de Salud'
+          else if user.rol === 'Agente de salud'
             li.nav-item
               a.nav-link.text-light(href="/aplicaciones") 
                 i.fas.fa-syringe
