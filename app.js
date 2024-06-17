@@ -3,12 +3,17 @@
 - Dividir las vistas por rol
 - Corregir el redireccionamiento para que muestre las acciones correspondientes ¿?
 - Mover el perfil del usuario al nav ✔ (Pato)
-- Corregir modificar Lote interno para que quede como alta lote interno
+- Corregir modificar Lote interno para que quede como alta lote interno ✔ (Eze)
 - Modificar registro para que se refleje el usuario que realiza las acciones ✔ (Eze)
 - Terminar de corregir alta aplicación ✔ (Eze)
 - Hacer el controlador, las rutas y las vistas de registro ✔ (Pato)
 - Roles: SuperAdmin, Gestor de compras, Operador de logística y Agente de salud (Todos)
 - Hacer detailes de todas las vistas necesarias ✔ (Eze y Pato)
+- Agregar modal en alta de aplicaciones que advierta al usuario que va a aplicar una vacuna vencida.
+- Verificar que las consultas de la realidad puedan hacerse en el proyecto
+- Consultas:
+  - ¿Las altas de aplicaciones, descartes, etc. serán dadas por un/a secretario/a o por el propio agente?
+  - ¿Tiene sentido dar de baja un descarte o tiene más sentido eliminarlo? ¿Deberia poderse?
 */
 const createError = require("http-errors");
 const express = require("express");
@@ -22,7 +27,7 @@ const override = require("method-override");
 const passport = require("passport");
 const db = require("./database/db");
 exports.passport = passport;
-require('./config/passportConfig');
+require("./config/passportConfig");
 const app = express();
 
 // Configuraciones
@@ -42,11 +47,12 @@ app.use(override("_method"));
 
 const indexRouter = require("./routes/indexRoutes");
 app.use(flash());
-app.use(session({
-  secret: "secreto", // Cambia esto por una cadena secreta para firmar las cookies
-  resave: false,
-  saveUninitialized: false,
-})
+app.use(
+  session({
+    secret: "secreto", // Cambia esto por una cadena secreta para firmar las cookies
+    resave: false,
+    saveUninitialized: false,
+  })
 );
 app.use(passport.initialize());
 app.use(passport.session());
@@ -91,7 +97,5 @@ app.use(function (err, req, res, next) {
 });
 
 require("./models/relaciones");
-
-
 
 exports.app = app;

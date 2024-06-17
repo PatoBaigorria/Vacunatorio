@@ -60,9 +60,9 @@ body
                 .invalid-feedback.d-none#fechaDeDescarteLlegada La fecha de descarte no puede ser previa a la fecha de llegada al depósito nacional
         br
         div.text-center
-            button.btn.btn-primary(type='submit') Crear
+            button.btn.btn-primary(type='submit') Actualizar
             | &nbsp;&nbsp;&nbsp;&nbsp;
-            button.btn.btn-primary(type='button' onclick='window.history.back()') Volver
+            button.btn.btn-primary.volver Volver
 script.
     $(function () {
         function mostrarAlerta() {
@@ -89,8 +89,8 @@ script.
                 mostrarError($(DNIAgente), 'SinAgentes')
             } else {
                 agentes.forEach(agente => {
-                    if(ag.DNIAgente == agente.DNIAgente){
-                        $(DNIAgente).append(`<option selected value=${ag.DNIAgente}>${ag.nombre} ${ag.apellido}</option>`)
+                    if(descarte.DNIAgente == agente.DNI){
+                        $(DNIAgente).append(`<option selected value=${agente.DNI}>${agente.nombre} ${agente.apellido}</option>`)
                     } else {
                         $(DNIAgente).append(`<option value='${agente.DNI}'>${agente.nombre} ${agente.apellido}</option>`)
                     }
@@ -289,4 +289,8 @@ script.
                 press = 1
             }
         })
+        
+        $(volver).on('click', function() {
+            window.location.href = `/usuarios/`
+        });
     })

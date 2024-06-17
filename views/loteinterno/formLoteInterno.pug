@@ -104,7 +104,7 @@ script.
             campo.addClass('is-valid').removeClass('is-invalid')
             $(`div[id^=${campo.attr('id')}].invalid-feedback`).addClass('d-none')
         }
-        
+
         function cargarComboBoxLote() {
             const lotes = !{JSON.stringify(lotesProveedores)}.filter(lote => lote.activo == 1)
             if(lotes.length == 0){
@@ -205,6 +205,17 @@ script.
                 $(idCentroDeVacunacion).append(`<option selected value="">Seleccione un centro de vacunación si corresponde</option>`)
                 centros.forEach(c => $(idCentroDeVacunacion).append(`<option value=${c.idCentroDeVacunacion}>${c.idCentroDeVacunacion}</option>`))
             }
+        }
+
+        function controlCantidadDeLI(){
+            const cantLI = !{JSON.stringify(lotesProveedores)}.filter(l => l.numeroDeLote == $(numeroDeLote).val())[0].cantidadDeLotesInternos
+            const cantLIA = !{JSON.stringify(lotesInternos)}.filter(l => l.numeroDeLote == $(numeroDeLote).val()).length
+            console.log("Alta: " + cantLIA)
+            console.log("Alta + 1: " + cantLIA + 1)
+            console.log("Lotes: " + cantLI)
+            console.log("Comparación de cantLIA + 1 == cantLI: ")
+            console.log(cantLIA + 1 == cantLI)
+            return true
         }
 
         function validarFechaDeLlegadaDepositoNacional(){
@@ -323,6 +334,7 @@ script.
 
         $(numeroDeLote).on('change', function(){
             cargarComboBoxLab()
+            controlCantidadDeLI()
         })
 
         $(cantidadDeVacunas).on('keyup focusout', function () {
@@ -423,12 +435,21 @@ script.
             if (event.which === 13) {
                 if(!validarFormulario()){
                     event.preventDefault()
+                } else if(controlCantidadDeLI()){
+                    $(mensajeAlerta).text("Todos los lotes internos del lote proveedor han sido dados de alta, seleccione otro lote proveedor para dar de alta el lote interno")
+                    $(alertModal).modal('show')
+                    event.preventDefault()
                 }
             }
         })
 
         $('#form button[type="submit"]').on('click', function (event) {
             if (!validarFormulario()) {
+                event.preventDefault()
+                press = 1
+            } else if(controlCantidadDeLI()){
+                $(mensajeAlerta).text("Todos los lotes internos del lote proveedor han sido dados de alta, seleccione otro lote proveedor para dar de alta el lote interno")
+                $(alertModal).modal('show')
                 event.preventDefault()
                 press = 1
             }

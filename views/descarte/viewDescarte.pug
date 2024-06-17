@@ -44,9 +44,9 @@ script.
                 url: '//cdn.datatables.net/plug-ins/1.13.7/i18n/es-AR.json'
             },
             columns:[
-                {data: 'idDescarte', title: 'ID Descarte'},
                 {data: 'Agentedesalud.Persona.apellido', title: 'Apellido del Agente'},
                 {data: 'numeroDeSerie', title: 'N° de Serie del Lote'},
+                {data: 'cantidadDeVacunas', title: 'Cantidad de vacunas descartadas'},
                 {data: 'activo', title: 'Estado del descarte', createdCell: agregarMensajeSiActivoOInactivo },
                 {
                     data: 'opciones', title: 'Opciones',
@@ -82,13 +82,11 @@ script.
         setTimeout(function() {
             $('.flash-message').removeClass('fade-in')
         }, 3000)
-
         tabla.on('click', 'button', function (f) {
             const data = tabla.row(f.target.closest('tr')).data()
             if ($(event.target).hasClass('fa-exclamation-circle')) {
                 $(confirmBajaModal).modal('show')
                 $(confirmBajaBtn).on('click', function() {
-                    //¿Tiene sentido dar de baja un descarte o tiene más sentido eliminarlo? ¿Deberia poderse?
                     $.ajax({
                         url: `/descartes/${data.idDescarte}/baja`,
                         type: 'PUT',
