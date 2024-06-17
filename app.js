@@ -9,12 +9,27 @@
 - Hacer el controlador, las rutas y las vistas de registro ✔ (Pato)
 - Roles: SuperAdmin, Gestor de compras, Operador de logística y Agente de salud (Todos)
 - Hacer details de todas las vistas necesarias ✔ (Eze y Pato)
-- Agregar modal en alta de aplicaciones que advierta al usuario que va a aplicar una vacuna vencida.
-- Verificar que las consultas de la realidad puedan hacerse en el proyecto
+- Agregar modal en alta de aplicaciones que advierta al usuario que va a aplicar una vacuna vencida. ✔ (Eze y Pato)
+- Verificar que las consultas de la realidad puedan hacerse en el proyecto ✔ (Eze y Pato)
 - Verificar toda la lógica de las vistas de traslado
+- Comparar que la fecha de llegada al depósito nacional sea posterior a la fecha de compra en LI
+- No mostrar los campos que no tienen datos en detailsLI
+- Validar que las aplicaciones solo puedan hacerse con LI que esten en CDV y que si tienen traslados tengan una fecha de llegada no nula
+- Corregir el "is-valid" en la fecha de aplicación
+- Arreglar la vista editar de aplicación
+- Ordenar la lista de forma descendente de las siguientes tablas:
+  - Lote proveedor
+  - Lote interno
+  - Depósito nacional
+  - Depósito provincial
+  - Centro de salud
+  - Descarte
+  - Personas por apellido
 - Consultas:
   - ¿Las altas de aplicaciones, descartes, etc. serán dadas por un/a secretario/a o por el propio agente?
   - ¿Tiene sentido dar de baja un descarte o tiene más sentido eliminarlo? ¿Deberia poderse?
+  - ¿Los reportes deben ser vistos por los usuarios correspondientes o solo deben verlo los "Super Admin"?
+  - ¿Hace falta que agreguemos provincia y localidad en las entidades correspondientes para los reportes?
 */
 const createError = require("http-errors");
 const express = require("express");

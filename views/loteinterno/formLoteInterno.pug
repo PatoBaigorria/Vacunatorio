@@ -211,11 +211,12 @@ script.
             const cantLI = !{JSON.stringify(lotesProveedores)}.filter(l => l.numeroDeLote == $(numeroDeLote).val())[0].cantidadDeLotesInternos
             const cantLIA = !{JSON.stringify(lotesInternos)}.filter(l => l.numeroDeLote == $(numeroDeLote).val()).length
             console.log("Alta: " + cantLIA)
-            console.log("Alta + 1: " + cantLIA + 1)
+            console.log("Alta + 1: ")
+            console.log(cantLIA+1)
             console.log("Lotes: " + cantLI)
             console.log("Comparación de cantLIA + 1 == cantLI: ")
-            console.log(cantLIA + 1 == cantLI)
-            return true
+            console.log(cantLIA + 1 > cantLI)
+            return cantLIA + 1 > cantLI
         }
 
         function validarFechaDeLlegadaDepositoNacional(){

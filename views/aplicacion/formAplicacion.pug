@@ -130,6 +130,7 @@ script.
         cargarPacientes()
         cargarAgentes()
         cargarLotes()
+        
         $(DNIPaciente).on('change', function(){
             cargarAgentes()
         })
@@ -179,16 +180,16 @@ script.
                 event.preventDefault()
             }
         })
-    })
 
-    /*function validarCampos(){
-        cargarAgentes()
-        cargarLotes()
-        if($(DNIPaciente).val() && $(DNIAgente).hasClass('is-invalid')){
-            $(DNIAgente).prop('disabled', false)
-            quitarError($(DNIAgente))
-            quitarError($(DNIPaciente))
-        }
+
+        /*function validarCampos(){
+            cargarAgentes()
+            cargarLotes()
+            if($(DNIPaciente).val() && $(DNIAgente).hasClass('is-invalid')){
+                $(DNIAgente).prop('disabled', false)
+                quitarError($(DNIAgente))
+                quitarError($(DNIPaciente))
+            }
         }
 
         function cargarAgentes(){
@@ -237,3 +238,4 @@ script.
             $(mensajeAlerta).text('ADVERTENCIA: El lote seleccionado se encuentra vencido. Puede continuar, pero se recomienda precaución.')
             $(alertModal).modal('show')
         }
+    })
