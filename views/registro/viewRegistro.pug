@@ -21,15 +21,18 @@ script.
     function formatDate(dateStr) {
         if (!dateStr) return '';
         const date = new Date(dateStr);
-        const localDate = new Date(date.getTime() - date.getTimezoneOffset() * 60000);
-        const day = String(localDate.getDate()).padStart(2, '0');
-        const month = String(localDate.getMonth() + 1).padStart(2, '0'); // January is 0
-        const year = localDate.getFullYear();
-        const hours = String(localDate.getHours()).padStart(2, '0');
-        const minutes = String(localDate.getMinutes()).padStart(2, '0');
-        const seconds = String(localDate.getSeconds()).padStart(2, '0');
+        const utcDate = new Date(date.getTime() + date.getTimezoneOffset());
+        const day = String(utcDate.getDate()).padStart(2, '0');
+        const month = String(utcDate.getMonth() + 1).padStart(2, '0'); // Enero es 0
+        const year = utcDate.getFullYear();
+        const hours = String(utcDate.getHours()).padStart(2, '0');
+        const minutes = String(utcDate.getMinutes()).padStart(2, '0');
+        const seconds = String(utcDate.getSeconds()).padStart(2, '0');
+
+        // 4. Devolver la cadena de fecha y hora formateada
         return `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`;
     }
+
 
     let tabla;
     $(document).ready(function() {

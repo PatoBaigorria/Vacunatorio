@@ -68,7 +68,7 @@ script.
                 {data: 'numeroDeSerie', title: 'Número de Serie'},
                 {data: 'idCentroDeVacunacion', title: 'ID del Centro de Vacunación'},
                 {data: 'fechaDeSalida', title: 'Fecha de Salida del Traslado', render: function(data) { return formatDate(data); } },
-                {data: 'fechaDeLlegada', title: 'Fecha de Llegada del Traslado', render: function(data) { return formatDate(data); } },
+                {data: 'fechaDeLlegada', title: 'Fecha de Llegada del Traslado', createdCell: agregarMensajeLlegada, render: function(data) { return formatDate(data); } },
                 {data: 'activo', title: 'Estado del traslado', createdCell: agregarMensajeSiActivoOInactivo },
                 {
                     data: 'opciones', title: 'Opciones',
@@ -97,6 +97,12 @@ script.
                 $(td).text("Activo");
             } else {
                 $(td).text("Inactivo");
+            }
+        }
+
+        function agregarMensajeLlegada(td, cellData, rowData, row, col) {
+            if (cellData == null) {
+                $(td).text("Aún no ha llegado al Centro de Salud");
             }
         }
     });

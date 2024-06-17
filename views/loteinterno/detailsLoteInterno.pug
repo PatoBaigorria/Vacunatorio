@@ -8,15 +8,6 @@ body
 		.alert.alert-danger
 			= messages.error
 	br
-	div.modal#alertModal(tabindex="-1" role="dialog" aria-labelledby="alertModalLabel" aria-hidden="true")
-		div.modal-dialog(role="document")
-			div.modal-content
-				div.modal-header
-					h5.modal-title#alertModalLabel Alerta
-					button.close(type="button" data-bs-dismiss="modal" aria-label="Close")
-						span(aria-hidden="true") ×
-				div.modal-body
-					p#mensajeAlerta.text-center Mensaje de alerta
 	div#form
 		.form-group
 			label.form-label.text-center(for="numeroDeSerie") Número de serie del lote interno
@@ -126,6 +117,7 @@ script.
 				$(idCentroDeVacunacion).val(`El lote aún no ha llegado al centro de vacunación`)
 			}
 		}
+		
 		mostrarFechaLlegadaDN()
 		mostrarFechaSalidaDN()
 		mostrarFechaLlegadaDP()

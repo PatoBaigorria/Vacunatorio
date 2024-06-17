@@ -53,24 +53,20 @@ const editUsuario = async (req, res) => {
 
 const updateUsuario = async (req, res) => {
 	try {
-		const { rol, nombreUsuario, email, password } = req.body;
-		const hashedPassword = await bcrypt.hash(password, 10);
-		await Usuario.update(
-			rol,
-			nombreUsuario,
-			email,
-			hashedPassword,
-		), {
+		const hashedPassword = await bcrypt.hash(req.body.password, 10);
+		req.body.password = hashedPassword;
+		await Usuario.update(req.body, {
 			where: {
-				idUsuario: req.params.id
-			}
-		}
+				idUsuario: req.params.id,
+			},
+		})
 		await createRegistro(req.user.idUsuario, 'Usuario', req.params.id, 'Modificacion');
 		req.flash("success", "Usuario actualizado exitosamente");
 		res.redirect("/usuarios");
 	} catch (error) {
-		res.flash("error", "Error al actualizar el usuario.");
-		res.redirect('/usuarios/' + req.params.id);
+		res.status(500).json({ message: "Error al modificar al usuario. Error: " + error.message });
+		console.log(error.message)
+		//res.redirect('/usuarios/' + req.params.id);
 	}
 }
 

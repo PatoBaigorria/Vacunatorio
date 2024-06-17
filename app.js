@@ -11,6 +11,7 @@
 - Hacer details de todas las vistas necesarias ✔ (Eze y Pato)
 - Agregar modal en alta de aplicaciones que advierta al usuario que va a aplicar una vacuna vencida.
 - Verificar que las consultas de la realidad puedan hacerse en el proyecto
+- Verificar toda la lógica de las vistas de traslado
 - Consultas:
   - ¿Las altas de aplicaciones, descartes, etc. serán dadas por un/a secretario/a o por el propio agente?
   - ¿Tiene sentido dar de baja un descarte o tiene más sentido eliminarlo? ¿Deberia poderse?
@@ -61,7 +62,6 @@ app.use(passport.session());
 app.use((req, res, next) => {
   res.locals.isAuthenticated = req.isAuthenticated();
   res.locals.user = req.user;
-  console.log('User:', req.user);
   next();
 });
 

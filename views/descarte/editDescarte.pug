@@ -62,7 +62,7 @@ body
         div.text-center
             button.btn.btn-primary(type='submit') Actualizar
             | &nbsp;&nbsp;&nbsp;&nbsp;
-            button.btn.btn-primary.volver Volver
+            button(type="button" class="btn btn-primary" onclick="window.location.href='/descartes'") Volver
 script.
     $(function () {
         function mostrarAlerta() {
@@ -289,8 +289,4 @@ script.
                 press = 1
             }
         })
-        
-        $(volver).on('click', function() {
-            window.location.href = `/usuarios/`
-        });
     })
