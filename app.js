@@ -17,6 +17,7 @@
 - Validar que las aplicaciones solo puedan hacerse con LI que esten en CDV y que si tienen traslados tengan una fecha de llegada no nula
 - Corregir el "is-valid" en la fecha de aplicación
 - Arreglar la vista editar de aplicación
+- Corregir los endpoints de cada usuario para que solo puedan ver sus vistas
 - Ordenar la lista de forma descendente de las siguientes tablas:
   - Lote proveedor
   - Lote interno
@@ -25,11 +26,13 @@
   - Centro de salud
   - Descarte
   - Personas por apellido
+- Acordar las vistas a la provincia
 - Consultas:
   - ¿Las altas de aplicaciones, descartes, etc. serán dadas por un/a secretario/a o por el propio agente?
   - ¿Tiene sentido dar de baja un descarte o tiene más sentido eliminarlo? ¿Deberia poderse?
   - ¿Los reportes deben ser vistos por los usuarios correspondientes o solo deben verlo los "Super Admin"?
   - ¿Hace falta que agreguemos provincia y localidad en las entidades correspondientes para los reportes?
+  - tres reportes, uno en stock, otro en cuantas vacunas se enviaron a determinado centro, localidad o provincia, otro en administración de la vacunas
 */
 const createError = require("http-errors");
 const express = require("express");
