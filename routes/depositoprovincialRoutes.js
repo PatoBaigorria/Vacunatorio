@@ -1,14 +1,15 @@
 const express = require("express");
 const router = express.Router();
 const depositoProvincialController = require("../controllers/depositoProvincialController");
+const authorize = require("../middleware/authorize");
 
-router.get("/", depositoProvincialController.listarDepositosProvinciales);
-router.get("/alta", depositoProvincialController.formDepProv);
-router.post("/", depositoProvincialController.createDepProv);
-router.get("/:id", depositoProvincialController.editDepProv);
-router.put("/:id", depositoProvincialController.updateDepositoProvincial);
-router.delete("/:id", depositoProvincialController.deleteDepositoProvincial);
-router.put("/:id/baja", depositoProvincialController.bajaDepositoProvincial);
-router.put("/:id/alta", depositoProvincialController.altaDepositoProvincial);
+router.get("/", authorize(['Super Admin']), depositoProvincialController.listarDepositosProvinciales);
+router.get("/alta", authorize(['Super Admin']), depositoProvincialController.formDepProv);
+router.post("/", authorize(['Super Admin']), depositoProvincialController.createDepProv);
+router.get("/:id", authorize(['Super Admin']), depositoProvincialController.editDepProv);
+router.put("/:id", authorize(['Super Admin']), depositoProvincialController.updateDepositoProvincial);
+router.delete("/:id", authorize(['Super Admin']), depositoProvincialController.deleteDepositoProvincial);
+router.put("/:id/baja", authorize(['Super Admin']), depositoProvincialController.bajaDepositoProvincial);
+router.put("/:id/alta", authorize(['Super Admin']), depositoProvincialController.altaDepositoProvincial);
 
 module.exports = router;

@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+const authorize = require("../middleware/authorize");
 const aplicacionRoutes = require("./aplicacionRoutes");
 const centrodevacunacionRoutes = require("./centrodevacunacionRoutes");
 const depositonacionalRoutes = require("./depositonacionalRoutes");
@@ -13,7 +14,8 @@ const trasladoRoutes = require("./trasladoRoutes");
 const registroRoutes = require("./registroRoutes");
 const usuarioRoutes = require("./usuarioRoutes");
 
-const { passport } = require("../app");
+
+const { passport} = require("../app");
 
 // Middleware para verificar si el usuario está autenticado
 function isAuthenticated(req, res, next) {
@@ -62,17 +64,17 @@ router.get("/logout", (req, res) => {
 
 
 // Rutas protegidas (requieren autenticación)
-router.use("/aplicaciones", isAuthenticated, aplicacionRoutes);
-router.use("/centrosdevacunacion", isAuthenticated, centrodevacunacionRoutes);
-router.use("/depositosnacionales", isAuthenticated, depositonacionalRoutes);
-router.use("/depositosprovinciales", isAuthenticated, depositoprovincialRoutes);
-router.use("/descartes", isAuthenticated, descarteRoutes);
-router.use("/laboratorios", isAuthenticated, laboratorioRoutes);
-router.use("/lotesinternos", isAuthenticated, loteinternoRoutes);
-router.use("/lotesproveedores", isAuthenticated, loteproveedorRoutes);
-router.use("/personas", isAuthenticated, personaRoutes);
-router.use("/traslados", isAuthenticated, trasladoRoutes);
-router.use("/registros", isAuthenticated, registroRoutes);
-router.use("/usuarios", isAuthenticated, usuarioRoutes);
+router.use("/aplicaciones", isAuthenticated, authorize(['Super Admin', 'Agente de salud']), aplicacionRoutes);
+router.use("/centrosdevacunacion", isAuthenticated, authorize(['Super Admin']), centrodevacunacionRoutes);
+router.use("/depositosnacionales", isAuthenticated, authorize(['Super Admin']), depositonacionalRoutes);
+router.use("/depositosprovinciales", isAuthenticated, authorize(['Super Admin']), depositoprovincialRoutes);
+router.use("/descartes", isAuthenticated, authorize(['Super Admin', 'Operador de logistica', 'Agente de salud']), descarteRoutes);
+router.use("/laboratorios", isAuthenticated, authorize(['Super Admin', 'Gestor de compras']), laboratorioRoutes);
+router.use("/lotesinternos", isAuthenticated, authorize(['Super Admin', 'Gestor de compras']), loteinternoRoutes);
+router.use("/lotesproveedores", isAuthenticated, authorize(['Super Admin', 'Gestor de compras']), loteproveedorRoutes);
+router.use("/personas", isAuthenticated, authorize(['Super Admin', 'Agente de salud']), personaRoutes);
+router.use("/traslados", isAuthenticated, authorize(['Super Admin', 'Operador de logistica', 'Agente de salud']), trasladoRoutes);
+router.use("/registros", isAuthenticated, authorize(['Super Admin']), registroRoutes);
+router.use("/usuarios", isAuthenticated, authorize(['Super Admin']), usuarioRoutes);
 
 module.exports = router;
