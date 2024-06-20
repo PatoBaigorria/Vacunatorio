@@ -19,14 +19,14 @@
 - Arreglar la vista editar de aplicación
 - Modificar el descarte para que sea eliminado físicamente
 - Corregir los endpoints de cada usuario para que solo puedan ver sus vistas ✔ (Pato)
-- Ordenar la lista de forma descendente de las siguientes tablas:
-  - Lote proveedor
-  - Lote interno
-  - Depósito nacional
-  - Depósito provincial
-  - Centro de salud
-  - Descarte
-  - Personas por apellido
+- Ordenar la lista de forma descendente de las siguientes tablas: ✔ (Pato)
+  - Lote proveedor ✔
+  - Lote interno ✔
+  - Depósito nacional ✔
+  - Depósito provincial ✔
+  - Centro de salud ✔
+  - Descarte ✔
+  - Personas por apellido ✔
 - Acordar las vistas a la provincia y a cada usuario
 - Consultas:
   - ¿Los reportes deben ser vistos por los usuarios correspondientes o solo deben verlo los "Super Admin"?
