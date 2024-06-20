@@ -19,6 +19,11 @@ router.post(
 	centroDeVacunacionController.createCentroVac
 );
 router.get(
+	"/details/:id",
+	authorize(["Super Admin", "Gestor de compras"]),
+	centroDeVacunacionController.detailsCentroVac
+);
+router.get(
 	"/:id",
 	authorize(["Super Admin"]),
 	centroDeVacunacionController.editCentroVac

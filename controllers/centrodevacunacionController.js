@@ -68,6 +68,21 @@ const createCentroVac = async (req, res) => {
 	}
 };
 
+const detailsCentroVac = async (req, res) => {
+	try {
+		const centroV = await CentroDeVacunacion.findByPk(req.params.id);
+		res.render("centrodevacunacion/detailsCentroDeVacunacion", {
+			centroV: centroV,
+		});
+	} catch (error) {
+		req.flash(
+			"error",
+			`Hubo un error al intentar editar el centro de vacunación. ${error.message}`
+		);
+		res.json({ success: false });
+	}
+};
+
 const editCentroVac = async (req, res) => {
 	try {
 		const centroV = await CentroDeVacunacion.findByPk(req.params.id);
@@ -191,6 +206,7 @@ module.exports = {
 	listarCentrosDeVacunacion,
 	formCentroVac,
 	createCentroVac,
+	detailsCentroVac,
 	editCentroVac,
 	updateCentroDeVacunacion,
 	deleteCentroDeVacunacion,

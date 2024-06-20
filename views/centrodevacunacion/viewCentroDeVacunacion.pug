@@ -56,20 +56,20 @@ script.
             },
             columns:[
                 {data: 'idCentroDeVacunacion', title: 'ID Centro de Vacunación'},
-                {data: 'longitud', title: 'Longitud'},
-                {data: 'latitud', title: 'Latitud'},
+                {data: 'localidad', title: 'Localidad'},
+                {data: 'provincia', title: 'Provincia'},
                 { data: 'activo', title: 'Estado del centro de vacunacion', createdCell: agregarMensajeSiActivoOInactivo },
                 {
                     data: 'opciones', title: 'Opciones',
                     render: function (data, type, row) {
+                        const detailsBtn = `<button title="Detalle" class="btn btn-primary btn-sm fa fa-info-circle detalle"></button>`;
                         const editBtn = `<button title='Editar' class='btn btn-warning btn-sm fa-solid fa-pencil'></button>`
                         const deactivateBtn = `<button title='Dar de baja' class='btn btn-danger btn-sm fa-solid fa-exclamation-circle'></button>`
                         const activateBtn = `<button title='Dar de alta' class='btn btn-success btn-sm fa-solid fa-check-circle'></button>`
                         if (row.activo == 1)
-                            return `${editBtn} | ${deactivateBtn}`;
+                            return `${detailsBtn} | ${editBtn} | ${deactivateBtn}`;
                         else
-                            return `${editBtn} | ${activateBtn}`;
-
+                            return `${detailsBtn} | ${editBtn} | ${activateBtn}`;
                     }
                 }
             ],
@@ -155,10 +155,11 @@ script.
 
                 $(document).on('keydown', function(e) {
                     if (e.key === 'Enter' && $(confirmAltaModal).is(':visible')) {
-
                         $(confirmAltaBtn).trigger('click')
                     }
                 })
+            } else if ($(event.target).hasClass('detalle')) {
+                window.location.href = `/centrosdevacunacion/details/${data.idCentroDeVacunacion}`
             } else {
                 window.location.href = `/centrosdevacunacion/${data.idCentroDeVacunacion}`
             }
