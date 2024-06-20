@@ -17,7 +17,7 @@
 - Validar que las aplicaciones solo puedan hacerse con LI que esten en CDV y que si tienen traslados tengan una fecha de llegada no nula
 - Corregir el "is-valid" en la fecha de aplicación
 - Arreglar la vista editar de aplicación
-- Modificar el descarte para que sea eliminado físicamente
+- Modificar el descarte para que sea eliminado físicamente ✔ (Pato)
 - Corregir los endpoints de cada usuario para que solo puedan ver sus vistas ✔ (Pato)
 - Ordenar la lista de forma descendente de las siguientes tablas: ✔ (Pato)
   - Lote proveedor ✔

@@ -38,15 +38,5 @@ router.delete(
 	authorize(["Super Admin", "Operador de logistica", "Agente de salud"]),
 	descarteController.deleteDescarte
 );
-router.put(
-	"/:id/baja",
-	authorize(["Super Admin", "Operador de logistica", "Agente de salud"]),
-	descarteController.bajaDescarte
-);
-router.put(
-	"/:id/alta",
-	authorize(["Super Admin", "Operador de logistica", "Agente de salud"]),
-	descarteController.altaDescarte
-);
 
 module.exports = router;
