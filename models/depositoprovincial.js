@@ -2,13 +2,21 @@
 const { Model, DataTypes } = require("sequelize");
 const sequelize = require("../database/db");
 
-class Depositoprovincial extends Model { }
+class Depositoprovincial extends Model {}
 const depositoprovincial = Depositoprovincial.init(
 	{
 		idDepositoProvincial: {
 			type: DataTypes.INTEGER,
 			primaryKey: true,
 			autoIncrement: true,
+		},
+		direccion: {
+			type: DataTypes.STRING,
+			allowNull: false,
+		},
+		provincia: {
+			type: DataTypes.STRING,
+			allowNull: false,
 		},
 		longitud: {
 			type: DataTypes.DOUBLE,

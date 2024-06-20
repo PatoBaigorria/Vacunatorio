@@ -70,16 +70,16 @@ script.
                             return `${detailsBtn} | ${editBtn} | ${deactivateBtn}`;
                         else
                             return `${detailsBtn} | ${editBtn} | ${activateBtn}`;
-                        
+
                     }
                 }
             ],
             columnDefs: [
-                    //{orderable: false, targets:[13]}, // Columna de "Opciones"
-                    {searchable: false, targets:[3, 4]},
-                    {className: "dt-center", targets: [0, 1, 2, 3, 4]},
-                    //{ width: "7%", targets: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11] },
-                    //{ width: "5%", targets: [14] }
+                //{orderable: false, targets:[13]}, // Columna de "Opciones"
+                {searchable: false, targets:[3, 4]},
+                {className: "dt-center", targets: [0, 1, 2, 3, 4]},
+                //{ width: "7%", targets: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11] },
+                //{ width: "5%", targets: [14] }
             ]
         });
 
@@ -159,7 +159,7 @@ script.
                 $('#cancelAltaBtn, .modal-header button.close').on('click', function() {
                     $('#confirmAltaModal').modal('hide');
                 });
-                
+
                 $(document).on('keydown', function(e) {
                     if (e.key === 'Enter' && $('#confirmAltaModal').is(':visible')) {
                         $('#confirmAltaBtn').trigger('click');

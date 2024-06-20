@@ -4,7 +4,7 @@ const { Sequelize } = require("sequelize");
 const sequelizeInstance = new Sequelize("vacunatorio2", "root", "", {
 	host: "localhost",
 	dialect: "mysql",
-	timezone: '-03:00',
+	timezone: "-03:00",
 });
 
 /*

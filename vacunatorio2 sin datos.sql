@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 20-06-2024 a las 19:47:55
+-- Tiempo de generación: 20-06-2024 a las 19:47:17
 -- Versión del servidor: 10.4.18-MariaDB
 -- Versión de PHP: 8.0.5
 
@@ -34,17 +34,6 @@ CREATE TABLE `agentedesalud` (
   `matricula` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
---
--- Volcado de datos para la tabla `agentedesalud`
---
-
-INSERT INTO `agentedesalud` (`DNI`, `matricula`) VALUES
-(12600842, NULL),
-(34229421, NULL),
-(37716731, 10000000),
-(5919535, 10000001),
-(27013989, 10000002);
-
 -- --------------------------------------------------------
 
 --
@@ -59,17 +48,6 @@ CREATE TABLE `aplicacion` (
   `fechaDeAplicacion` date NOT NULL,
   `activo` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Volcado de datos para la tabla `aplicacion`
---
-
-INSERT INTO `aplicacion` (`idAplicacion`, `DNIPaciente`, `DNIAgente`, `numeroDeSerie`, `fechaDeAplicacion`, `activo`) VALUES
-(1, 34229421, 37716731, 1, '2024-01-01', 1),
-(2, 5919535, 27013989, 1, '2024-01-01', 1),
-(3, 5919535, 27013989, 1, '2024-05-01', 0),
-(4, 12600842, 27013989, 1, '2024-05-01', 1),
-(5, 5919535, 27013989, 1, '2024-06-16', 1);
 
 -- --------------------------------------------------------
 
@@ -87,16 +65,6 @@ CREATE TABLE `centrodevacunacion` (
   `activo` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
---
--- Volcado de datos para la tabla `centrodevacunacion`
---
-
-INSERT INTO `centrodevacunacion` (`idCentroDeVacunacion`, `direccion`, `localidad`, `provincia`, `longitud`, `latitud`, `activo`) VALUES
-(1, '', '', '', -65.453582, -33.675319, 1),
-(2, '', '', '', -66.28365, -33.307057, 1),
-(3, '', '', '', -66.306048, -33.275904, 1),
-(4, '', '', '', -66.306653, -33.281606, 0);
-
 -- --------------------------------------------------------
 
 --
@@ -112,15 +80,6 @@ CREATE TABLE `depositonacional` (
   `activo` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
---
--- Volcado de datos para la tabla `depositonacional`
---
-
-INSERT INTO `depositonacional` (`idDepositoNacional`, `direccion`, `provincia`, `longitud`, `latitud`, `activo`) VALUES
-(1, '', '', -66.319155, -33.292288, 1),
-(2, '', '', -66.319155, -33.292288, 1),
-(3, '', '', -66.294379, -33.277265, 0);
-
 -- --------------------------------------------------------
 
 --
@@ -135,15 +94,6 @@ CREATE TABLE `depositoprovincial` (
   `latitud` double NOT NULL,
   `activo` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Volcado de datos para la tabla `depositoprovincial`
---
-
-INSERT INTO `depositoprovincial` (`idDepositoProvincial`, `direccion`, `provincia`, `longitud`, `latitud`, `activo`) VALUES
-(1, '', '', -66.319155, -33.292288, 1),
-(2, '', '', -66.331844, -33.298216, 1),
-(3, '', '', -66.307726, -33.271058, 0);
 
 -- --------------------------------------------------------
 
@@ -162,18 +112,6 @@ CREATE TABLE `descarte` (
   `activo` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
---
--- Volcado de datos para la tabla `descarte`
---
-
-INSERT INTO `descarte` (`idDescarte`, `DNIAgente`, `numeroDeSerie`, `empresaDescartante`, `motivo`, `cantidadDeVacunas`, `fechaDeDescarte`, `activo`) VALUES
-(1, 37716731, 1, 'Veolia', 'Vencida', 10, '2024-01-01', 1),
-(2, 37716731, 1, 'Veolia', 'Vencida', 10, '2024-01-01', 1),
-(3, 37716731, 1, 'Veolia', 'Vencida', 10, '2024-01-01', 1),
-(4, 37716731, 9, 'Waste Management', 'Pérdida de frío', 50, '2024-03-04', 1),
-(5, 5919535, 11, 'Veolia', 'Rotura', 10, '2024-02-01', 1),
-(6, 5919535, 8, 'Veolia', 'Contaminación', 50, '2024-01-01', 1);
-
 -- --------------------------------------------------------
 
 --
@@ -190,19 +128,6 @@ CREATE TABLE `laboratorio` (
   `latitud` double NOT NULL,
   `activo` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Volcado de datos para la tabla `laboratorio`
---
-
-INSERT INTO `laboratorio` (`idLaboratorio`, `nombreLaboratorio`, `pais`, `email`, `telefono`, `longitud`, `latitud`, `activo`) VALUES
-(1, 'Johnnson', 'Argentina', 'long.eze7773@gmail.com', '0111532184', -66.309325, -33.279181, 1),
-(2, 'Bago', 'Argentina', 'bayerargentina@gmail.com', '1159487659', -58.392334, -34.633208, 0),
-(3, 'Pampa', 'Argentina', 'pampargentina@gmail.com', '1234445678', -66.319155, -33.292288, 1),
-(4, 'Johnnso', 'A', 'a@gm.com', '1234567890', -66.319155, -33.292288, 1),
-(5, 'dsadsa', 'asadsa', 'a@gm.com', '1234567890', -66.319155, -33.292288, 0),
-(6, 'Pfizer', 'EEUU', 'pfizereeuu@gmail.com', '1123456789', -66.306048, -33.275904, 1),
-(7, 'Laboratorios Puntanos', 'Argentina', 'labpuntanosarg@gmail.com', '2657123455', -66.28364, -33.307057, 1);
 
 -- --------------------------------------------------------
 
@@ -227,28 +152,6 @@ CREATE TABLE `loteinterno` (
   `activo` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
---
--- Volcado de datos para la tabla `loteinterno`
---
-
-INSERT INTO `loteinterno` (`numeroDeSerie`, `numeroDeLote`, `idLaboratorio`, `cantidadDeVacunasTotales`, `cantidadDeVacunasRestantes`, `fechaDeLlegadaDepositoNacional`, `idDepositoNacional`, `fechaDeSalidaDepositoNacional`, `fechaDeLlegadaDepositoProvincial`, `idDepositoProvincial`, `fechaDeSalidaDepositoProvincial`, `fechaDeLlegadaCentroDeVacunacion`, `idCentroDeVacunacion`, `activo`) VALUES
-(1, 1, 1, 50, 50, '2024-01-01', 1, '2024-02-01', '2024-03-01', 1, '2024-04-01', '2024-05-01', 1, 1),
-(2, 1, 1, 50, 50, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1),
-(3, 2, 1, 50, 50, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1),
-(4, 2, 1, 50, 50, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1),
-(5, 4, 3, 50, 50, '2024-01-01', 1, '2024-02-01', '2024-03-01', 1, '2024-04-01', '2024-05-01', 3, 0),
-(6, 1, 1, 50, 50, '2024-01-01', 1, NULL, NULL, NULL, NULL, NULL, NULL, 1),
-(7, 4, 3, 50, 50, '2024-01-01', 1, '2024-01-01', '2024-01-01', 1, NULL, NULL, NULL, 1),
-(8, 1, 1, 123, 73, '2024-01-01', 1, '2024-01-01', '2024-01-01', 1, '2024-01-01', '2024-01-01', 1, 1),
-(9, 1, 1, 123, 73, '2024-01-01', 1, '2024-01-01', '2024-01-01', 1, '2024-01-01', '2024-01-01', 2, 1),
-(10, 1, 1, 50, 50, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1),
-(11, 1, 1, 50, 40, '2024-01-31', 1, '2024-02-01', '2024-02-02', 1, '2024-02-03', '2024-02-04', 1, 1),
-(12, 4, 3, 50, 50, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1),
-(13, 1, 1, 50, 50, NULL, 2, NULL, NULL, NULL, NULL, NULL, NULL, 1),
-(14, 4, 3, 50, 50, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1),
-(17, 2, 1, 50, 50, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1),
-(18, 4, 3, 100, 100, '2024-01-01', 1, NULL, NULL, 1, NULL, NULL, NULL, 1);
-
 -- --------------------------------------------------------
 
 --
@@ -267,17 +170,6 @@ CREATE TABLE `loteproveedor` (
   `activo` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
---
--- Volcado de datos para la tabla `loteproveedor`
---
-
-INSERT INTO `loteproveedor` (`numeroDeLote`, `idLaboratorio`, `tipoDeVacuna`, `nombreComercial`, `cantidadDeLotesInternos`, `fechaDeFabricacion`, `fechaDeCompra`, `fechaDeVencimiento`, `activo`) VALUES
-(1, 1, 'Tuberculosis', 'BCG', 8, '2024-01-01', '2024-01-01', '2024-06-01', 1),
-(2, 1, 'Tuberculosis', 'BCG', 500, '2024-01-01', '2024-01-01', '2029-02-03', 0),
-(3, 2, 'Tuberculosis', 'BCG', 500, '2024-01-01', '2024-01-01', '2029-01-01', 1),
-(4, 3, 'Tuberculosis', 'BCG', 500, '2024-01-01', '2024-01-01', '2029-01-02', 1),
-(5, 7, 'HPV', 'Virus Papiloma Humano', 10, '2024-01-01', '2024-03-01', '2029-01-01', 1);
-
 -- --------------------------------------------------------
 
 --
@@ -288,17 +180,6 @@ CREATE TABLE `patologiabase` (
   `DNI` int(11) NOT NULL,
   `patologiaBase` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Volcado de datos para la tabla `patologiabase`
---
-
-INSERT INTO `patologiabase` (`DNI`, `patologiaBase`) VALUES
-(5919535, 'Ninguna'),
-(12600842, 'Enfermedad respiratorio cronica'),
-(27013989, 'Ninguna'),
-(34229421, 'Obesidad'),
-(37716731, 'Ninguna');
 
 -- --------------------------------------------------------
 
@@ -322,17 +203,6 @@ CREATE TABLE `persona` (
   `activo` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
---
--- Volcado de datos para la tabla `persona`
---
-
-INSERT INTO `persona` (`DNI`, `nombre`, `apellido`, `email`, `fechaDeNacimiento`, `ocupacion`, `genero`, `direccion`, `localidad`, `provincia`, `longitud`, `latitud`, `activo`) VALUES
-(5919535, 'Beatriz', 'Hernando', 'beatriz.hernando11@gmail.com', '1948-10-11', 'agente de salud', 'Femenino', 'Pampa 919', '', 'San Luis', -65.006726, -32.363778, 1),
-(12600842, 'Dora Nelida', 'Orsomarso', 'doranel50@hotmail.com', '1956-11-03', 'otro', 'Femenino', '', '', '', -58.54022, -34.590983, 1),
-(27013989, 'Monica Patricia', 'Baigorria', 'patobaigorria@gmail.com', '1978-12-01', 'agente de salud', 'Femenino', '', '', '', -65.499383, -33.690228, 1),
-(34229421, 'Jorge Ezequiel', 'Diaz', 'diazezequiel777@gmail.com', '1988-11-09', 'otro', 'Masculino', '', '', '', -66.31088, -33.26451, 1),
-(37716731, 'Federico Ivan', 'Cruceño', 'fedeicru@gmail.com', '1994-03-20', 'agente de salud', 'Masculino', '', '', '', -66.310912, -33.264501, 1);
-
 -- --------------------------------------------------------
 
 --
@@ -347,67 +217,6 @@ CREATE TABLE `registro` (
   `tipoDeAccion` varchar(255) NOT NULL,
   `fecha` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Volcado de datos para la tabla `registro`
---
-
-INSERT INTO `registro` (`idRegistro`, `idUsuario`, `idFila`, `nombreDeTabla`, `tipoDeAccion`, `fecha`) VALUES
-(142, 1, 1, 'Usuario', 'Modificacion', '2024-06-17 16:00:45'),
-(143, 1, 1, 'Descarte', 'Modificacion', '2024-06-17 16:12:28'),
-(144, 1, 1, 'Lote interno', 'Modificacion', '2024-06-17 16:13:37'),
-(145, 1, 2, 'Aplicacion', 'Creacion', '2024-06-17 16:18:10'),
-(146, 1, 2, 'Aplicacion', 'Alta', '2024-06-17 16:18:10'),
-(147, 1, 3, 'Aplicacion', 'Creacion', '2024-06-17 16:24:30'),
-(148, 1, 3, 'Aplicacion', 'Alta', '2024-06-17 16:24:30'),
-(149, 1, 4, 'Aplicacion', 'Creacion', '2024-06-17 16:27:22'),
-(150, 1, 4, 'Aplicacion', 'Alta', '2024-06-17 16:27:22'),
-(151, 1, 17, 'Lote interno', 'Creacion', '2024-06-17 16:35:22'),
-(152, 1, 17, 'Lote interno', 'Alta', '2024-06-17 16:35:22'),
-(153, 1, 7, 'Laboratorio', 'Creacion', '2024-06-17 16:39:41'),
-(154, 1, 7, 'Laboratorio', 'Alta', '2024-06-17 16:39:41'),
-(155, 1, 7, 'Laboratorio', 'Modificacion', '2024-06-17 16:42:46'),
-(156, 1, 5, 'Laboratorio', 'Baja', '2024-06-17 16:42:58'),
-(157, 1, 5, 'Laboratorio', 'Alta', '2024-06-17 16:43:02'),
-(158, 1, 5, 'Laboratorio', 'Baja', '2024-06-17 16:43:04'),
-(159, 1, 5, 'Lote proveeedor', 'Creacion', '2024-06-17 16:50:12'),
-(160, 1, 5, 'Lote proveeedor', 'Alta', '2024-06-17 16:50:12'),
-(161, 1, 5, 'Lote proveedor', 'Modificacion', '2024-06-17 16:53:44'),
-(162, 1, 3, 'Lote proveedor', 'Baja', '2024-06-17 16:53:53'),
-(163, 1, 2, 'Lote proveedor', 'Baja', '2024-06-17 16:54:09'),
-(164, 1, 3, 'Lote proveedor', 'Alta', '2024-06-17 16:54:13'),
-(165, 1, 18, 'Lote interno', 'Creacion', '2024-06-17 16:56:47'),
-(166, 1, 18, 'Lote interno', 'Alta', '2024-06-17 16:56:47'),
-(167, 1, 18, 'Lote interno', 'Modificacion', '2024-06-17 16:59:38'),
-(168, 1, 18, 'Lote interno', 'Modificacion', '2024-06-17 17:02:57'),
-(169, 1, 3, 'Deposito Provincial', 'Creacion', '2024-06-17 17:04:32'),
-(170, 1, 3, 'Deposito Provincial', 'Alta', '2024-06-17 17:04:32'),
-(171, 1, 3, 'Deposito Provincial', 'Baja', '2024-06-17 17:04:39'),
-(172, 1, 3, 'Deposito Provincial', 'Modificacion', '2024-06-17 17:04:52'),
-(173, 1, 3, 'Deposito Provincial', 'Alta', '2024-06-17 17:04:56'),
-(174, 1, 3, 'Deposito Provincial', 'Baja', '2024-06-17 17:05:00'),
-(175, 1, 3, 'Deposito Nacional', 'Creacion', '2024-06-17 17:05:22'),
-(176, 1, 3, 'Deposito Nacional', 'Alta', '2024-06-17 17:05:22'),
-(177, 1, 3, 'Deposito Nacional', 'Baja', '2024-06-17 17:05:25'),
-(178, 1, 3, 'Deposito Nacional', 'Modificacion', '2024-06-17 17:05:30'),
-(179, 1, 4, 'Centro de vacunacion', 'Creacion', '2024-06-17 17:05:53'),
-(180, 1, 4, 'Centro de vacunacion', 'Alta', '2024-06-17 17:05:54'),
-(181, 1, 4, 'Centro de vacunacion', 'Baja', '2024-06-17 17:05:56'),
-(182, 1, 4, 'Centro de vacunacion', 'Modificacion', '2024-06-17 17:06:05'),
-(183, 1, 5, 'Lote interno', 'Baja', '2024-06-17 17:07:25'),
-(184, 1, 5, 'Lote interno', 'Modificacion', '2024-06-17 17:08:29'),
-(185, 1, 6, 'Descarte', 'Creacion', '2024-06-17 17:10:59'),
-(186, 1, 6, 'Descarte', 'Alta', '2024-06-17 17:10:59'),
-(187, 1, 5, 'Traslado', 'Creacion', '2024-06-17 17:15:53'),
-(188, 1, 5, 'Traslado', 'Alta', '2024-06-17 17:15:53'),
-(189, 1, 5, 'Aplicacion', 'Creacion', '2024-06-17 17:20:25'),
-(190, 1, 5, 'Aplicacion', 'Alta', '2024-06-17 17:20:25'),
-(191, 1, 3, 'Aplicacion', 'Baja', '2024-06-17 17:22:26'),
-(192, 1, 2, 'Laboratorio', 'Baja', '2024-06-18 21:46:28'),
-(193, 1, 2, 'Laboratorio', 'Alta', '2024-06-18 21:46:36'),
-(194, 1, 2, 'Laboratorio', 'Baja', '2024-06-18 21:46:47'),
-(195, 1, 2, 'Laboratorio', 'Alta', '2024-06-18 21:46:59'),
-(196, 1, 2, 'Laboratorio', 'Baja', '2024-06-18 21:47:07');
 
 -- --------------------------------------------------------
 
@@ -432,17 +241,6 @@ CREATE TABLE `telefono` (
   `celular2` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
---
--- Volcado de datos para la tabla `telefono`
---
-
-INSERT INTO `telefono` (`DNI`, `celular1`, `celular2`) VALUES
-(5919535, '1154896435', NULL),
-(12600842, '1163213910', NULL),
-(27013989, '2657322453', NULL),
-(34229421, '1132185230', NULL),
-(37716731, '2657312733', NULL);
-
 -- --------------------------------------------------------
 
 --
@@ -457,15 +255,6 @@ CREATE TABLE `traslado` (
   `fechaDeLlegada` date DEFAULT NULL,
   `activo` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Volcado de datos para la tabla `traslado`
---
-
-INSERT INTO `traslado` (`idTraslado`, `numeroDeSerie`, `idCentroDeVacunacion`, `fechaDeSalida`, `fechaDeLlegada`, `activo`) VALUES
-(1, 1, 1, '2024-01-01', '2024-02-01', 1),
-(2, 1, 2, '2024-01-01', '2024-01-03', 1),
-(5, 1, 3, '2024-06-17', NULL, 1);
 
 -- --------------------------------------------------------
 
@@ -619,61 +408,61 @@ ALTER TABLE `usuario`
 -- AUTO_INCREMENT de la tabla `aplicacion`
 --
 ALTER TABLE `aplicacion`
-  MODIFY `idAplicacion` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `idAplicacion` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `centrodevacunacion`
 --
 ALTER TABLE `centrodevacunacion`
-  MODIFY `idCentroDeVacunacion` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `idCentroDeVacunacion` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `depositonacional`
 --
 ALTER TABLE `depositonacional`
-  MODIFY `idDepositoNacional` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `idDepositoNacional` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `depositoprovincial`
 --
 ALTER TABLE `depositoprovincial`
-  MODIFY `idDepositoProvincial` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `idDepositoProvincial` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `descarte`
 --
 ALTER TABLE `descarte`
-  MODIFY `idDescarte` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `idDescarte` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `laboratorio`
 --
 ALTER TABLE `laboratorio`
-  MODIFY `idLaboratorio` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `idLaboratorio` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `loteinterno`
 --
 ALTER TABLE `loteinterno`
-  MODIFY `numeroDeSerie` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+  MODIFY `numeroDeSerie` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `loteproveedor`
 --
 ALTER TABLE `loteproveedor`
-  MODIFY `numeroDeLote` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `numeroDeLote` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `registro`
 --
 ALTER TABLE `registro`
-  MODIFY `idRegistro` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=197;
+  MODIFY `idRegistro` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `traslado`
 --
 ALTER TABLE `traslado`
-  MODIFY `idTraslado` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `idTraslado` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `usuario`

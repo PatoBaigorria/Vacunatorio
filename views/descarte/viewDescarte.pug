@@ -136,7 +136,7 @@ script.
                 $('#cancelAltaBtn, .modal-header button.close').on('click', function() {
                     $(confirmAltaModal).modal('hide')
                 })
-                
+
                 $(document).on('keydown', function(e) {
                     if (e.key === 'Enter' && $(confirmAltaModal).is(':visible')) {
                         $(confirmAltaBtn).trigger('click')

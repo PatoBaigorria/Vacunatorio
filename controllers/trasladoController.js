@@ -3,9 +3,7 @@ const {
 	LoteInterno,
 	CentroDeVacunacion,
 } = require("../models/relaciones");
-const {
-	createRegistro
-} = require('./registroController');
+const { createRegistro } = require("./registroController");
 
 // Obtener todos los traslados
 const listarTraslados = async (req, res) => {
@@ -50,11 +48,11 @@ const altaTraslado = async (req, res) => {
 const createTraslados = async (req, res) => {
 	try {
 		const { numeroDeSerie, idCentroDeVacunacion, fechaDeSalida } = req.body;
-		let fechaDeLlegada = req.body.fechaDeLlegada
+		let fechaDeLlegada = req.body.fechaDeLlegada;
 		if (req.body.fechaDeLlegada == "") {
-			fechaDeLlegada = null
+			fechaDeLlegada = null;
 		} else {
-			fechaDeLlegada = req.body.fechaDeLlegada
+			fechaDeLlegada = req.body.fechaDeLlegada;
 		}
 		const traslado = await Traslado.create({
 			numeroDeSerie,
@@ -74,8 +72,18 @@ const createTraslados = async (req, res) => {
 				});
 			}
 		}
-		await createRegistro(req.user.idUsuario, 'Traslado', traslado.dataValues.idTraslado, 'Creacion')
-		await createRegistro(req.user.idUsuario, 'Traslado', traslado.dataValues.idTraslado, 'Alta')
+		await createRegistro(
+			req.user.idUsuario,
+			"Traslado",
+			traslado.dataValues.idTraslado,
+			"Creacion"
+		);
+		await createRegistro(
+			req.user.idUsuario,
+			"Traslado",
+			traslado.dataValues.idTraslado,
+			"Alta"
+		);
 		req.flash("success", "Traslado creado exitosamente");
 		res.redirect("/traslados");
 	} catch (error) {
@@ -111,7 +119,12 @@ const updateTraslado = async (req, res) => {
 				idTraslado: req.params.id,
 			},
 		});
-		await createRegistro(req.user.idUsuario, 'Traslado', req.params.id, 'Modificacion')
+		await createRegistro(
+			req.user.idUsuario,
+			"Traslado",
+			req.params.id,
+			"Modificacion"
+		);
 		req.flash("success", "Traslado de Vacuna actualizado exitosamente.");
 		res.redirect("/traslados");
 	} catch (error) {
@@ -150,7 +163,12 @@ const deleteTrasladoLogica = async (req, res) => {
 				},
 			}
 		);
-		await createRegistro(req.user.idUsuario, 'Traslado', req.params.id, 'Baja')
+		await createRegistro(
+			req.user.idUsuario,
+			"Traslado",
+			req.params.id,
+			"Baja"
+		);
 		req.flash("success", "Traslado dado de baja exitosamente.");
 		res.redirect("/traslados");
 	} catch (error) {

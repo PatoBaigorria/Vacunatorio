@@ -13,14 +13,14 @@ body
         .form-group
             label.form-label(for="num-serie") Nº de Serie Lote Interno:
             select.form-select#numeroDeSerieSelect(name="numeroDeSerie")
-                    each numSerie in lotesInternos
-                        if traslado.numeroDeSerie==numSerie.numeroDeSerie
-                            option(value=numSerie.numeroDeSerie)=numSerie.numeroDeSerie
-                    each numSerie in lotesInternos
-                        if traslado.numeroDeSerie==numSerie.numeroDeSerie
-                            break
-                        else
-                            option(value=numSerie.numeroDeSerie)=numSerie.numeroDeSerie
+                each numSerie in lotesInternos
+                    if traslado.numeroDeSerie==numSerie.numeroDeSerie
+                        option(value=numSerie.numeroDeSerie)=numSerie.numeroDeSerie
+                each numSerie in lotesInternos
+                    if traslado.numeroDeSerie==numSerie.numeroDeSerie
+                        break
+                    else
+                        option(value=numSerie.numeroDeSerie)=numSerie.numeroDeSerie
         br
         .form-group
             label.form-label(for="id-ctrovac") Centro de Vacunacion:

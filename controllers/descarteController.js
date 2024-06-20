@@ -24,9 +24,9 @@ const listarDescartes = async (req, res) => {
 		});
 		res.render("descarte/viewDescarte", { descartes: descartes });
 	} catch (error) {
-		res
-			.status(500)
-			.json({ message: "Error al obtener los descartes. " + error.message });
+		res.status(500).json({
+			message: "Error al obtener los descartes. " + error.message,
+		});
 	}
 };
 
@@ -39,9 +39,9 @@ const formDescarte = async (req, res) => {
 			lotesInternos: lotesInternos,
 		});
 	} catch (error) {
-		res
-			.status(500)
-			.json({ message: "Error al obtener los descartes. " + error.message });
+		res.status(500).json({
+			message: "Error al obtener los descartes. " + error.message,
+		});
 	}
 };
 
@@ -104,7 +104,9 @@ const detailsDescarte = async (req, res) => {
 			include: [
 				{
 					model: AgenteDeSalud,
-					include: [{ model: Persona, attributes: ["nombre", "apellido"] }],
+					include: [
+						{ model: Persona, attributes: ["nombre", "apellido"] },
+					],
 				},
 			],
 		});
@@ -112,9 +114,7 @@ const detailsDescarte = async (req, res) => {
 			descarte: descarte,
 		});
 	} catch (error) {
-		res
-		.status(500)
-		.json({
+		res.status(500).json({
 			message: "Error al obtener el descarte. Error: " + error.message,
 		});
 	}
@@ -122,7 +122,7 @@ const detailsDescarte = async (req, res) => {
 
 const editDescarte = async (req, res) => {
 	try {
-		const descarte = await Descarte.findByPk(req.params.id)
+		const descarte = await Descarte.findByPk(req.params.id);
 		const personas = await Persona.findAll();
 		const lotesInternos = await LoteInterno.findAll();
 		const empresas = [
@@ -145,7 +145,9 @@ const editDescarte = async (req, res) => {
 			empresas: empresas,
 		});
 	} catch (error) {
-		res.status(500).json({ message: "Error al obtener el descarte. Error: " + error.message });	
+		res.status(500).json({
+			message: "Error al obtener el descarte. Error: " + error.message,
+		});
 	}
 };
 
@@ -164,9 +166,9 @@ const updateDescarte = async (req, res) => {
 		req.flash("success", "Descarte de vacunas actualizado exitosamente.");
 		res.redirect("/descartes");
 	} catch (error) {
-		res
-			.status(500)
-			.json({ message: "Error al actualizar el descarte. " + error.message });
+		res.status(500).json({
+			message: "Error al actualizar el descarte. " + error.message,
+		});
 	}
 };
 
@@ -195,7 +197,12 @@ const bajaDescarte = async (req, res) => {
 				},
 			}
 		);
-		await createRegistro(req.user.idUsuario, "Descarte", req.params.id, "Baja");
+		await createRegistro(
+			req.user.idUsuario,
+			"Descarte",
+			req.params.id,
+			"Baja"
+		);
 		req.flash("success", "Descarte dado de baja exitosamente.");
 		res.json({ success: true });
 	} catch (error) {
@@ -215,7 +222,12 @@ const altaDescarte = async (req, res) => {
 				},
 			}
 		);
-		await createRegistro(req.user.idUsuario, "Descarte", req.params.id, "Alta");
+		await createRegistro(
+			req.user.idUsuario,
+			"Descarte",
+			req.params.id,
+			"Alta"
+		);
 		req.flash("success", "Descarte dado de alta exitosamente.");
 		res.json({ success: true });
 	} catch (error) {

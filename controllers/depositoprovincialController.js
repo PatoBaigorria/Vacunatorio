@@ -1,20 +1,18 @@
-const {
-	DepositoProvincial
-} = require("../models/relaciones");
-const {
-	createRegistro
-} = require('./registroController');
+const { DepositoProvincial } = require("../models/relaciones");
+const { createRegistro } = require("./registroController");
 // Obtener todos los depósitos provinciales
 const listarDepositosProvinciales = async (req, res) => {
 	try {
 		let depositosProv = await DepositoProvincial.findAll({
-			raw: true
+			raw: true,
 		});
-		res.render("depositoprovincial/viewDepositoProvincial", { depositosProv: depositosProv });
+		res.render("depositoprovincial/viewDepositoProvincial", {
+			depositosProv: depositosProv,
+		});
 	} catch (error) {
-		res
-			.status(500)
-			.json({ message: "Error al obtener los depósitos provinciales." });
+		res.status(500).json({
+			message: "Error al obtener los depósitos provinciales.",
+		});
 	}
 };
 
@@ -27,7 +25,7 @@ const formDepProv = async (req, res) => {
 			message: "Error al crear un Deposito Provincial.",
 		});
 	}
-}
+};
 // Crear un nuevo Deposito Provincial desde el Formulario
 const createDepProv = async (req, res) => {
 	try {
@@ -37,42 +35,59 @@ const createDepProv = async (req, res) => {
 			latitud,
 			activo: 1,
 		});
-		await createRegistro(req.user.idUsuario, 'Deposito Provincial', deposito.dataValues.idDepositoProvincial, 'Creacion')
-		await createRegistro(req.user.idUsuario, 'Deposito Provincial', deposito.dataValues.idDepositoProvincial, 'Alta')
+		await createRegistro(
+			req.user.idUsuario,
+			"Deposito Provincial",
+			deposito.dataValues.idDepositoProvincial,
+			"Creacion"
+		);
+		await createRegistro(
+			req.user.idUsuario,
+			"Deposito Provincial",
+			deposito.dataValues.idDepositoProvincial,
+			"Alta"
+		);
 		req.flash("success", "Depósito Provincial creado exitosamente");
 		res.redirect("/depositosprovinciales");
 	} catch (error) {
 		console.error("Error al insertar datos:", error);
-		res.status(500).send("Error al insertar datos en el Depósito Provincial");
+		res.status(500).send(
+			"Error al insertar datos en el Depósito Provincial"
+		);
 	}
 };
 // Editar Deposito Provincial por ID
 const editDepProv = async (req, res) => {
 	try {
 		const depositoP = await DepositoProvincial.findByPk(req.params.id);
-		res.render("depositoprovincial/editDepositoProvincial", { depositoP: depositoP });
+		res.render("depositoprovincial/editDepositoProvincial", {
+			depositoP: depositoP,
+		});
 	} catch (error) {
 		res.status(500).json({
 			message: "Error al obtener el Deposito Provincial." + error.message,
 		});
 	}
-}
+};
 
 // Actualizar un Depósito Provincial por su ID
 const updateDepositoProvincial = async (req, res) => {
 	try {
-		await DepositoProvincial.update(req.body,
-			{
-				where: { idDepositoProvincial: req.params.id, },
-			}
+		await DepositoProvincial.update(req.body, {
+			where: { idDepositoProvincial: req.params.id },
+		});
+		await createRegistro(
+			req.user.idUsuario,
+			"Deposito Provincial",
+			req.params.id,
+			"Modificacion"
 		);
-		await createRegistro(req.user.idUsuario, 'Deposito Provincial', req.params.id, 'Modificacion')
-		req.flash('success', 'Depósito Provincial actualizado exitosamente.');
+		req.flash("success", "Depósito Provincial actualizado exitosamente.");
 		res.redirect("/depositosprovinciales");
 	} catch (error) {
-		res
-			.status(500)
-			.json({ message: "Error al actualizar el depósito provincial." });
+		res.status(500).json({
+			message: "Error al actualizar el depósito provincial.",
+		});
 	}
 };
 
@@ -103,7 +118,12 @@ const bajaDepositoProvincial = async (req, res) => {
 				},
 			}
 		);
-		await createRegistro(req.user.idUsuario, 'Deposito Provincial', req.params.id, 'Baja')
+		await createRegistro(
+			req.user.idUsuario,
+			"Deposito Provincial",
+			req.params.id,
+			"Baja"
+		);
 		req.flash("success", "Depósito provincial dado de baja exitosamente.");
 		res.json({ success: true });
 	} catch (error) {
@@ -123,7 +143,12 @@ const altaDepositoProvincial = async (req, res) => {
 				},
 			}
 		);
-		await createRegistro(req.user.idUsuario, 'Deposito Provincial', req.params.id, 'Alta')
+		await createRegistro(
+			req.user.idUsuario,
+			"Deposito Provincial",
+			req.params.id,
+			"Alta"
+		);
 		req.flash("success", "Depósito provincial dado de alta exitosamente.");
 		res.json({ success: true });
 	} catch (error) {

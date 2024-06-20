@@ -2,7 +2,7 @@
 const { Model, DataTypes } = require("sequelize");
 const sequelize = require("../database/db");
 
-class Persona extends Model { }
+class Persona extends Model {}
 
 const persona = Persona.init(
 	{
@@ -31,6 +31,18 @@ const persona = Persona.init(
 			allowNull: false,
 		},
 		genero: {
+			type: DataTypes.STRING,
+			allowNull: false,
+		},
+		direccion: {
+			type: DataTypes.STRING,
+			allowNull: false,
+		},
+		localidad: {
+			type: DataTypes.STRING,
+			allowNull: false,
+		},
+		provincia: {
 			type: DataTypes.STRING,
 			allowNull: false,
 		},

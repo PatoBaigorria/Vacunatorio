@@ -4,7 +4,7 @@ const sequelize = require("../database/db");
 const loteproveedor = require("./loteproveedor");
 const laboratorio = require("./laboratorio");
 
-class Loteinterno extends Model { }
+class Loteinterno extends Model {}
 
 const loteinterno = Loteinterno.init(
 	{

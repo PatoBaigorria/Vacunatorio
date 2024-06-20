@@ -3,48 +3,48 @@ include ..\includes\layout
 block content
 body
     div.container.my-4
-      div.row
-        div.col-sm-12.col-md-12.col-lg-12.col-xl-12
-            section#viewTraslados
-                h2 Listado de los traslados
-                br
-                br
-                if messages.success
-                    .alert.alert-success.flash-message.fade-in
-                        = messages.success
-                if messages.error
-                    .alert.alert-danger.flash-message.fade-in
-                        = messages.error
-                div.modal#confirmBajaModal(tabindex="-1" role="dialog")
-                    div.modal-dialog(role="document")
-                        div.modal-content
-                            div.modal-header
-                                h5.modal-title Confirmar la baja del traslado
-                                button.close(type="button" data-dismiss="modal" aria-label="Close")
-                                    span(aria-hidden="true") &times;
-                            div.modal-body
-                                p#mensajeAlerta.text-center ¿Está seguro de que desea dar de baja este traslado?
-                            div.modal-footer
-                                button.btn.btn-secondary(id="cancelBajaBtn" type="button" data-dismiss="modal") Cancelar
-                                button.btn.btn-danger(id="confirmBajaBtn" type="button") Confirmar
-                div.modal#confirmAltaModal(tabindex="-1" role="dialog")
-                    div.modal-dialog(role="document")
-                        div.modal-content
-                            div.modal-header
-                                h5.modal-title Confirmar el alta del traslado
-                                button.close(type="button" data-dismiss="modal" aria-label="Close")
-                                    span(aria-hidden="true") &times;
-                            div.modal-body
-                                p#mensajeAlerta.text-center ¿Está seguro de que desea dar de alta este traslado?
-                            div.modal-footer
-                                button.btn.btn-secondary(id="cancelAltaBtn" type="button" data-dismiss="modal") Cancelar
-                                button.btn.btn-danger(id="confirmAltaBtn" type="button") Confirmar
-                div(style="text-align: left;")
-                    a.btn.btn-primary.btn-lg(href="/traslados/crear") Crear
+        div.row
+            div.col-sm-12.col-md-12.col-lg-12.col-xl-12
+                section#viewTraslados
+                    h2 Listado de los traslados
                     br
                     br
-                    div.table.responsive
-                        table#traslados.table.table-striped.table-bordered                    
+                    if messages.success
+                        .alert.alert-success.flash-message.fade-in
+                            = messages.success
+                    if messages.error
+                        .alert.alert-danger.flash-message.fade-in
+                            = messages.error
+                    div.modal#confirmBajaModal(tabindex="-1" role="dialog")
+                        div.modal-dialog(role="document")
+                            div.modal-content
+                                div.modal-header
+                                    h5.modal-title Confirmar la baja del traslado
+                                    button.close(type="button" data-dismiss="modal" aria-label="Close")
+                                        span(aria-hidden="true") &times;
+                                div.modal-body
+                                    p#mensajeAlerta.text-center ¿Está seguro de que desea dar de baja este traslado?
+                                div.modal-footer
+                                    button.btn.btn-secondary(id="cancelBajaBtn" type="button" data-dismiss="modal") Cancelar
+                                    button.btn.btn-danger(id="confirmBajaBtn" type="button") Confirmar
+                    div.modal#confirmAltaModal(tabindex="-1" role="dialog")
+                        div.modal-dialog(role="document")
+                            div.modal-content
+                                div.modal-header
+                                    h5.modal-title Confirmar el alta del traslado
+                                    button.close(type="button" data-dismiss="modal" aria-label="Close")
+                                        span(aria-hidden="true") &times;
+                                div.modal-body
+                                    p#mensajeAlerta.text-center ¿Está seguro de que desea dar de alta este traslado?
+                                div.modal-footer
+                                    button.btn.btn-secondary(id="cancelAltaBtn" type="button" data-dismiss="modal") Cancelar
+                                    button.btn.btn-danger(id="confirmAltaBtn" type="button") Confirmar
+                    div(style="text-align: left;")
+                        a.btn.btn-primary.btn-lg(href="/traslados/crear") Crear
+                        br
+                        br
+                        div.table.responsive
+                            table#traslados.table.table-striped.table-bordered                    
 script.
     function formatDate(dateStr) {
         if (!dateStr) return '';
@@ -135,7 +135,7 @@ script.
                     });
                     $(confirmBajaModal).modal('hide');
                 });
-                
+
                 $('#cancelBajaBtn, .modal-header button.close').on('click', function() {
                     $(confirmBajaModal).modal('hide');
                 });

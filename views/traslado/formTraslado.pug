@@ -5,8 +5,8 @@ html(lang="es")
 body
     h2.text-center Ingrese los datos del traslado
     if messages.error
-            .alert.alert-danger
-                = messages.error
+        .alert.alert-danger
+            = messages.error
     div.modal#alertModal(tabindex="-1" role="dialog" aria-labelledby="alertModalLabel" aria-hidden="true")
         div.modal-dialog(role="document")
             div.modal-content
@@ -169,14 +169,14 @@ script.
             }
         })
 
-        
+
         $(alertModal).on('hidden.bs.modal', function () {
             const primerInvalido = $('.is-invalid:first')
             if (primerInvalido.length > 0) {
                 primerInvalido.focus()
             }
         })
-        
+
         $(fechaDeSalida).trigger('focus')
         $('#form input').on('keypress', function (event) {
             if (event.which === 13) {

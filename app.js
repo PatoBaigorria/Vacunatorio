@@ -47,7 +47,7 @@ const db = require("./database/db");
 exports.passport = passport;
 require("./config/passportConfig");
 const app = express();
-const authorize = require("./middleware/authorize"); 
+const authorize = require("./middleware/authorize");
 
 // Configuraciones
 app.set("views", path.join(__dirname, "views"));
@@ -67,52 +67,52 @@ app.use(override("_method"));
 const indexRouter = require("./routes/indexRoutes");
 app.use(flash());
 app.use(
-  session({
-    secret: "secreto", // Cambia esto por una cadena secreta para firmar las cookies
-    resave: false,
-    saveUninitialized: false,
-  })
+	session({
+		secret: "secreto", // Cambia esto por una cadena secreta para firmar las cookies
+		resave: false,
+		saveUninitialized: false,
+	})
 );
 app.use(passport.initialize());
 app.use(passport.session());
 
 // Middleware para pasar datos de usuario a las vistas
 app.use((req, res, next) => {
-  res.locals.isAuthenticated = req.isAuthenticated();
-  res.locals.user = req.user;
-  next();
+	res.locals.isAuthenticated = req.isAuthenticated();
+	res.locals.user = req.user;
+	next();
 });
 
 app.use("/", indexRouter);
 
 // Verificar la conexión a la base de datos
 db.authenticate()
-  .then(() => {
-    console.log("Conexión a la base de datos establecida correctamente");
-    // Iniciar el servidor una vez que la conexión a la base de datos se haya establecido
-    const port = 3000;
-    app.listen(port, () => {
-      console.log(`Servidor escuchando en el puerto ${port}`);
-    });
-  })
-  .catch((error) => {
-    console.error("Error al conectar a la base de datos:", error);
-  });
+	.then(() => {
+		console.log("Conexión a la base de datos establecida correctamente");
+		// Iniciar el servidor una vez que la conexión a la base de datos se haya establecido
+		const port = 3000;
+		app.listen(port, () => {
+			console.log(`Servidor escuchando en el puerto ${port}`);
+		});
+	})
+	.catch((error) => {
+		console.error("Error al conectar a la base de datos:", error);
+	});
 
 /* catch 404 and forward to error handler
 app.use(function (req, res, next) {
-  next(createError(404));
+  	next(createError(404));
 });*/
 
 // error handler
 app.use(function (err, req, res, next) {
-  // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get("env") === "development" ? err : {};
+	// set locals, only providing error in development
+	res.locals.message = err.message;
+	res.locals.error = req.app.get("env") === "development" ? err : {};
 
-  // render the error page
-  res.status(err.status || 500);
-  res.render("error");
+	// render the error page
+	res.status(err.status || 500);
+	res.render("error");
 });
 
 require("./models/relaciones");

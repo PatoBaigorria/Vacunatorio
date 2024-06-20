@@ -1,7 +1,5 @@
 const { DepositoNacional } = require("../models/relaciones");
-const {
-	createRegistro
-} = require('./registroController');
+const { createRegistro } = require("./registroController");
 // Obtener todos los depósitos nacionales
 const listarDepositosNacionales = async (req, res) => {
 	try {
@@ -12,9 +10,9 @@ const listarDepositosNacionales = async (req, res) => {
 			depositosNac: depositosNac,
 		});
 	} catch (error) {
-		res
-			.status(500)
-			.json({ message: "Error al obtener los depósitos nacionales." });
+		res.status(500).json({
+			message: "Error al obtener los depósitos nacionales.",
+		});
 	}
 };
 
@@ -35,12 +33,25 @@ const createDepNac = async (req, res) => {
 
 		// Crear una nueva instancia de Deposito Provincial utilizando Sequelize
 		const deposito = await DepositoNacional.create({
+			direccion,
+			localidad,
+			provincia,
 			longitud,
 			latitud,
 			activo: 1,
 		});
-		await createRegistro(req.user.idUsuario, 'Deposito Nacional', deposito.dataValues.idDepositoNacional, 'Creacion')
-		await createRegistro(req.user.idUsuario, 'Deposito Nacional', deposito.dataValues.idDepositoNacional, 'Alta')
+		await createRegistro(
+			req.user.idUsuario,
+			"Deposito Nacional",
+			deposito.dataValues.idDepositoNacional,
+			"Creacion"
+		);
+		await createRegistro(
+			req.user.idUsuario,
+			"Deposito Nacional",
+			deposito.dataValues.idDepositoNacional,
+			"Alta"
+		);
 		req.flash("success", "Depósito Nacional creado exitosamente");
 		res.redirect("/depositosnacionales");
 	} catch (error) {
@@ -48,7 +59,7 @@ const createDepNac = async (req, res) => {
 		res.status(500).send("Error al insertar datos en el Deposito Nacional");
 	}
 };
-3
+3;
 // Editar Deposito Nacional por ID
 const editDepNac = async (req, res) => {
 	try {
@@ -69,13 +80,18 @@ const updateDepositoNacional = async (req, res) => {
 		await DepositoNacional.update(req.body, {
 			where: { idDepositoNacional: req.params.id },
 		});
-		await createRegistro(req.user.idUsuario, 'Deposito Nacional', req.params.id, 'Modificacion')
+		await createRegistro(
+			req.user.idUsuario,
+			"Deposito Nacional",
+			req.params.id,
+			"Modificacion"
+		);
 		req.flash("success", "Depósito Nacional actualizado exitosamente.");
 		res.redirect("/depositosnacionales");
 	} catch (error) {
-		res
-			.status(500)
-			.json({ message: "Error al actualizar el depósito nacional." });
+		res.status(500).json({
+			message: "Error al actualizar el depósito nacional.",
+		});
 	}
 };
 
@@ -106,7 +122,12 @@ const bajaDepositoNacional = async (req, res) => {
 				},
 			}
 		);
-		await createRegistro(req.user.idUsuario, 'Deposito Nacional', req.params.id, 'Baja')
+		await createRegistro(
+			req.user.idUsuario,
+			"Deposito Nacional",
+			req.params.id,
+			"Baja"
+		);
 		req.flash("success", "Depósito nacional dado de baja exitosamente.");
 		res.json({ success: true });
 	} catch (error) {
@@ -126,7 +147,12 @@ const altaDepositoNacional = async (req, res) => {
 				},
 			}
 		);
-		await createRegistro(req.user.idUsuario, 'Deposito Nacional', req.params.id, 'Alta')
+		await createRegistro(
+			req.user.idUsuario,
+			"Deposito Nacional",
+			req.params.id,
+			"Alta"
+		);
 		req.flash("success", "Depósito nacional dado de alta exitosamente.");
 		res.json({ success: true });
 	} catch (error) {

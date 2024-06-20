@@ -20,7 +20,10 @@ const listarLotesInternos = async (req, res) => {
 			lotesInternos: lotesInternos,
 		});
 	} catch (error) {
-		req.flash("error", "Error al obtener los lotes internos. " + error.message);
+		req.flash(
+			"error",
+			"Error al obtener los lotes internos. " + error.message
+		);
 		res.redirect("/lotesinternos");
 	}
 };
@@ -148,7 +151,9 @@ const createLoteInterno = async (req, res) => {
 const detailsLoteInterno = async (req, res) => {
 	try {
 		const loteInterno = await LoteInterno.findByPk(req.params.id, {
-			include: [{ model: Laboratorio, attributes: ["nombreLaboratorio"] }],
+			include: [
+				{ model: Laboratorio, attributes: ["nombreLaboratorio"] },
+			],
 		});
 		res.render("loteinterno/detailsLoteInterno", {
 			loteInterno: loteInterno,

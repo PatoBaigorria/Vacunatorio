@@ -1,14 +1,14 @@
 const { Laboratorio } = require("../models/relaciones");
-const {
-	createRegistro
-} = require('./registroController');
+const { createRegistro } = require("./registroController");
 // Obtener todos los laboratorios
 const listarLaboratorios = async (req, res) => {
 	try {
 		let laboratorios = await Laboratorio.findAll({
 			raw: true,
 		});
-		res.render("laboratorio/viewLaboratorio", { laboratorios: laboratorios });
+		res.render("laboratorio/viewLaboratorio", {
+			laboratorios: laboratorios,
+		});
 	} catch (error) {
 		res.status(500).json({ message: "Error al obtener los laboratorios." });
 	}
@@ -19,7 +19,9 @@ const formLaboratorio = async (req, res) => {
 		let laboratorios = await Laboratorio.findAll({
 			raw: true,
 		});
-		res.render("laboratorio/formLaboratorio", { laboratorios: laboratorios });
+		res.render("laboratorio/formLaboratorio", {
+			laboratorios: laboratorios,
+		});
 	} catch (error) {
 		res.status(500).json({
 			message: "Error al crear el laboratorio.",
@@ -50,9 +52,19 @@ const createLaboratorio = async (req, res) => {
 			latitud,
 			activo: 1,
 		});
-		console.log(req.user)
-		await createRegistro(req.user.idUsuario, 'Laboratorio', laboratorio.dataValues.idLaboratorio, 'Creacion')
-		await createRegistro(req.user.idUsuario, 'Laboratorio', laboratorio.dataValues.idLaboratorio, 'Alta')
+		console.log(req.user);
+		await createRegistro(
+			req.user.idUsuario,
+			"Laboratorio",
+			laboratorio.dataValues.idLaboratorio,
+			"Creacion"
+		);
+		await createRegistro(
+			req.user.idUsuario,
+			"Laboratorio",
+			laboratorio.dataValues.idLaboratorio,
+			"Alta"
+		);
 		req.flash("success", "Laboratorio creado exitosamente");
 		res.redirect("/laboratorios");
 	} catch (error) {
@@ -99,7 +111,12 @@ const updateLaboratorio = async (req, res) => {
 				idLaboratorio: req.params.id,
 			},
 		});
-		await createRegistro(req.user.idUsuario, 'Laboratorio', req.params.id, 'Modificacion')
+		await createRegistro(
+			req.user.idUsuario,
+			"Laboratorio",
+			req.params.id,
+			"Modificacion"
+		);
 		req.flash("success", "Laboratorio actualizado exitosamente.");
 		res.redirect("/laboratorios");
 	} catch (error) {
@@ -134,7 +151,12 @@ const bajaLaboratorio = async (req, res) => {
 				},
 			}
 		);
-		await createRegistro(req.user.idUsuario, 'Laboratorio', req.params.id, 'Baja')
+		await createRegistro(
+			req.user.idUsuario,
+			"Laboratorio",
+			req.params.id,
+			"Baja"
+		);
 		req.flash("success", "Laboratorio dado de baja exitosamente.");
 		res.json({ success: true });
 	} catch (error) {
@@ -154,7 +176,12 @@ const altaLaboratorio = async (req, res) => {
 				},
 			}
 		);
-		await createRegistro(req.user.idUsuario, 'Laboratorio', req.params.id, 'Alta')
+		await createRegistro(
+			req.user.idUsuario,
+			"Laboratorio",
+			req.params.id,
+			"Alta"
+		);
 		req.flash("success", "Laboratorio dado de alta exitosamente.");
 		res.json({ success: true });
 	} catch (error) {
@@ -173,5 +200,5 @@ module.exports = {
 	updateLaboratorio,
 	deleteLaboratorio,
 	bajaLaboratorio,
-	altaLaboratorio
+	altaLaboratorio,
 };

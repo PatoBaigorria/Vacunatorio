@@ -110,7 +110,7 @@ script.
                                 location.reload(true)
                             else
                                 console.error(data.message)
-                            
+
                         },
                         error: function(error) {
                             console.error(error)
@@ -118,7 +118,7 @@ script.
                     })
                     $(confirmBajaModal).modal('hide')
                 })
-                
+
                 $('#cancelBajaBtn, .modal-header, button.close').on('click', function() {
                     $(confirmBajaModal).modal('hide')
                 })
@@ -160,6 +160,6 @@ script.
             } else{
                 window.location.href = `/laboratorios/${data.idLaboratorio}`
             }
-                
+
         });
     });

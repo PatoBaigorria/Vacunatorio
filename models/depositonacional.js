@@ -1,7 +1,7 @@
 "use strict";
 const { Model, DataTypes } = require("sequelize");
 const sequelize = require("../database/db");
-class Depositonacional extends Model { }
+class Depositonacional extends Model {}
 
 const depositonacional = Depositonacional.init(
 	{
@@ -9,6 +9,14 @@ const depositonacional = Depositonacional.init(
 			type: DataTypes.INTEGER,
 			primaryKey: true,
 			autoIncrement: true,
+		},
+		direccion: {
+			type: DataTypes.STRING,
+			allowNull: false,
+		},
+		provincia: {
+			type: DataTypes.STRING,
+			allowNull: false,
 		},
 		longitud: {
 			type: DataTypes.DOUBLE,

@@ -17,144 +17,144 @@ const Usuario = require("./usuario");
 
 // Relaciones entre los modelos
 Laboratorio.hasMany(LoteProveedor, {
-	foreignKey: 'idLaboratorio',
+	foreignKey: "idLaboratorio",
 	//onDelete: 'RESTRICT'
 });
 
 LoteProveedor.belongsTo(Laboratorio, {
-	foreignKey: 'idLaboratorio'
+	foreignKey: "idLaboratorio",
 });
 
 LoteProveedor.hasMany(LoteInterno, {
-	foreignKey: 'idLaboratorio',
+	foreignKey: "idLaboratorio",
 	//onDelete: 'RESTRICT'
 });
 
 LoteInterno.belongsTo(LoteProveedor, {
-	foreignKey: 'numeroDeLote'
+	foreignKey: "numeroDeLote",
 });
 
 LoteInterno.belongsTo(Laboratorio, {
-	foreignKey: 'idLaboratorio'
+	foreignKey: "idLaboratorio",
 });
 
 DepositoNacional.hasMany(LoteInterno, {
-	foreignKey: 'idDepositoNacional',
+	foreignKey: "idDepositoNacional",
 	//onDelete: 'RESTRICT'
 });
 
 DepositoProvincial.hasMany(LoteInterno, {
-	foreignKey: 'idDepositoProvincial',
+	foreignKey: "idDepositoProvincial",
 	//onDelete: 'RESTRICT'
 });
 
 CentroDeVacunacion.hasMany(LoteInterno, {
-	foreignKey: 'idCentroDeVacunacion',
+	foreignKey: "idCentroDeVacunacion",
 	//onDelete: 'RESTRICT'
 });
 
 LoteInterno.belongsTo(DepositoNacional, {
-	foreignKey: 'idDepositoNacional',
+	foreignKey: "idDepositoNacional",
 });
 
 LoteInterno.belongsTo(DepositoProvincial, {
-	foreignKey: 'idDepositoProvincial',
+	foreignKey: "idDepositoProvincial",
 });
 
 LoteInterno.belongsTo(CentroDeVacunacion, {
-	foreignKey: 'idCentroDeVacunacion',
+	foreignKey: "idCentroDeVacunacion",
 });
 
 LoteInterno.belongsToMany(CentroDeVacunacion, {
 	through: Traslado,
-	foreignKey: 'numeroDeSerie',
+	foreignKey: "numeroDeSerie",
 	//onDelete: 'RESTRICT'
 });
 
 CentroDeVacunacion.belongsToMany(LoteInterno, {
 	through: Traslado,
-	foreignKey: 'idCentroDeVacunacion',
+	foreignKey: "idCentroDeVacunacion",
 	//onDelete: 'RESTRICT'
 });
 
 Persona.hasOne(Telefono, {
-	foreignKey: 'DNI',
+	foreignKey: "DNI",
 	//onDelete: 'RESTRICT'
 });
 
 Persona.hasOne(PatologiaBase, {
-	foreignKey: 'DNI',
+	foreignKey: "DNI",
 	//onDelete: 'RESTRICT'
 });
 
 Telefono.belongsTo(Persona, {
-	foreignKey: 'DNI'
+	foreignKey: "DNI",
 });
 
 PatologiaBase.belongsTo(Persona, {
-	foreignKey: 'DNI'
+	foreignKey: "DNI",
 });
 
 Persona.hasOne(AgenteDeSalud, {
-	foreignKey: 'DNI',
+	foreignKey: "DNI",
 	//onDelete: 'RESTRICT'
 });
 
 AgenteDeSalud.belongsTo(Persona, {
-	foreignKey: 'DNI',
+	foreignKey: "DNI",
 });
 
 Persona.hasMany(Aplicacion, {
-	foreignKey: 'DNIPaciente',
+	foreignKey: "DNIPaciente",
 	//onDelete: 'RESTRICT'
 });
 
 AgenteDeSalud.hasMany(Aplicacion, {
-	foreignKey: 'DNIAgente',
+	foreignKey: "DNIAgente",
 	//onDelete: 'RESTRICT'
 });
 
 LoteInterno.hasMany(Aplicacion, {
-	foreignKey: 'numeroDeSerie',
+	foreignKey: "numeroDeSerie",
 	//onDelete: 'RESTRICT'
 });
 
 Aplicacion.belongsTo(Persona, {
-	foreignKey: 'DNIPaciente'
+	foreignKey: "DNIPaciente",
 });
 
 Aplicacion.belongsTo(AgenteDeSalud, {
-	foreignKey: 'DNIAgente'
+	foreignKey: "DNIAgente",
 });
 
 Aplicacion.belongsTo(LoteInterno, {
-	foreignKey: 'numeroDeSerie'
+	foreignKey: "numeroDeSerie",
 });
 
 LoteInterno.hasMany(Descarte, {
-	foreignKey: 'numeroDeSerie',
+	foreignKey: "numeroDeSerie",
 	//onDelete: 'RESTRICT'
 });
 
 AgenteDeSalud.hasMany(Descarte, {
-	foreignKey: 'DNIAgente',
+	foreignKey: "DNIAgente",
 	//onDelete: 'RESTRICT'
 });
 
 Descarte.belongsTo(LoteInterno, {
-	foreignKey: 'numeroDeSerie'
+	foreignKey: "numeroDeSerie",
 });
 
 Descarte.belongsTo(AgenteDeSalud, {
-	foreignKey: 'DNIAgente'
+	foreignKey: "DNIAgente",
 });
 
 Usuario.hasMany(Registro, {
-	foreignKey: 'idUsuario',
+	foreignKey: "idUsuario",
 });
-  
+
 Registro.belongsTo(Usuario, {
-	foreignKey: 'idUsuario',
+	foreignKey: "idUsuario",
 });
 
 async function sincronizarModelos() {
