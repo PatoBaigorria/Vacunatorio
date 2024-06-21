@@ -34,7 +34,6 @@ const createDepNac = async (req, res) => {
 		// Crear una nueva instancia de Deposito Provincial utilizando Sequelize
 		const deposito = await DepositoNacional.create({
 			direccion,
-			localidad,
 			provincia,
 			longitud,
 			latitud,

@@ -7,11 +7,25 @@ head
     script(src='https://unpkg.com/leaflet@1.9.4/dist/leaflet.js' integrity='sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=' crossorigin='')
 body
     h2.text-center Ingrese los datos del centro de vacunación
+    if messages.success
+        .alert.alert-success.flash-message.fade-in
+            = messages.success
     if messages.error
-        .alert.alert-danger
+        .alert.alert-danger.flash-message.fade-in
             = messages.error
     br
     form#form(action='/centrosdevacunacion' method='post')
+        .form-group
+            label.form-label(for='direccion') Dirección del centro de salud:
+            .input-group.has-validation
+                input.form-control.is-invalid#direccion(type='text' name='direccion')
+                .invalid-feedback.d-none(id="direccionVacio") El campo no puede estar vacío
+        .form-group
+            label.form-label(for='localidad') Localidad del centro de salud:
+            input.form-control.is-invalid#localidad(type='text' name='localidad')
+        .form-group
+            label.form-label(for='provincia') Provincia del centro de salud:
+            input.form-control.is-invalid#provincia(type='text' name='provincia')
         .form-group
             label.form-label(for='ubicacion') Seleccione la ubicación del centro de vacunación en el mapa:
             #map

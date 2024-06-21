@@ -31,6 +31,8 @@ const createDepProv = async (req, res) => {
 	try {
 		const { longitud, latitud } = req.body;
 		const deposito = await DepositoProvincial.create({
+			direccion,
+			provincia,
 			longitud,
 			latitud,
 			activo: 1,
