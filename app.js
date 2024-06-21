@@ -11,12 +11,12 @@
 - Hacer details de todas las vistas necesarias ✔ (Eze y Pato)
 - Agregar modal en alta de aplicaciones que advierta al usuario que va a aplicar una vacuna vencida. ✔ (Eze y Pato)
 - Verificar que las consultas de la realidad puedan hacerse en el proyecto ✔ (Eze y Pato)
-- Verificar toda la lógica de las vistas de traslado
-- Comparar que la fecha de llegada al depósito nacional sea posterior a la fecha de compra en LI
-- No mostrar los campos que no tienen datos en detailsLI
+- Comparar que la fecha de llegada al depósito nacional sea posterior a la fecha de compra en LI ✔ (Pato)
+- No mostrar los campos que no tienen datos en detailsLI ✔ (Pato)
 - Validar que las aplicaciones solo puedan hacerse con LI que esten en CDV y que si tienen traslados tengan una fecha de llegada no nula
 - Corregir el "is-valid" en la fecha de aplicación
 - Arreglar la vista editar de aplicación
+- Verificar toda la lógica de las vistas de traslado
 - Modificar el descarte para que sea eliminado físicamente ✔ (Pato)
 - Corregir los endpoints de cada usuario para que solo puedan ver sus vistas ✔ (Pato)
 - Ordenar la lista de forma descendente de las siguientes tablas: ✔ (Pato)

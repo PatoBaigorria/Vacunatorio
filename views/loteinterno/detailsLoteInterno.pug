@@ -1,135 +1,161 @@
-- const title ='Detalle del lote interno'
+const title ='Detalle del lote interno'
 include ..\includes\layout
 block content
-html(lang="es")
-body
-	h2.text-center Detalle del lote interno
-	if messages.error
-		.alert.alert-danger
-			= messages.error
-	br
-	div#form
-		.form-group
-			label.form-label.text-center(for="numeroDeSerie") Número de serie del lote interno
-			.input-group
-				input.form-control.text-center(name="numeroDeSerie" value=loteInterno.numeroDeSerie disabled required)
-		.form-group
-			label.form-label.text-center(for="numeroDeLote") Número de lote del lote proveedor
-			.input-group
-				input.form-control.text-center(name="numeroDeLote" required value=loteInterno.numeroDeLote disabled)
-		.form-group
-			label.form-label.text-center(for="nombreLaboratorio") Nombre del laboratorio del lote proveedor
-			.input-group
-				input.form-control.text-center(name="nombreLaboratorio" required value=loteInterno.Laboratorio.nombreLaboratorio disabled)
-		.form-group
-			label.form-label.text-center(for="cantidadDeVacunas") Cantidad de Vacunas
-			.input-group
-				input.form-control.text-center(type="text" name="cantidadDeVacunas" value=loteInterno.cantidadDeVacunasTotales required disabled)
-		.form-group
-			label.form-label.text-center(for="fechaDeLlegadaDepositoNacional") Fecha de llegada al Depósito Nacional
-			.input-group
-				input.form-control.text-center#fechaDeLlegadaDepositoNacional(type="date" name="fechaDeLlegadaDepositoNacional" disabled)
-		.form-group
-			label.form-label.text-center(for="idDepositoNacional") Depósito Nacional
-			.input-group
-				input.form-control.text-center#idDepositoNacional(name="idDepositoNacional" disabled)
-		.form-group
-			label.form-label.text-center(for="fechaDeSalidaDepositoNacional") Fecha de salida al Depósito Provincial:
-			.input-group
-				input.form-control.text-center#fechaDeSalidaDepositoNacional(type="date" name="fechaDeSalidaDepositoNacional" disabled)
-		.form-group
-			label.form-label.text-center(for="fechaDeLlegadaDepositoProvincial") Fecha de llegada al Depósito Provincial:
-			.input-group
-				input.form-control.text-center#fechaDeLlegadaDepositoProvincial(type="date" name="fechaDeLlegadaDepositoProvincial" disabled)
-		.form-group
-			label.form-label.text-center(for="idDepositoProvincial") Depósito Provincial:
-			.input-group
-				input.form-control.text-center#idDepositoProvincial(name="idDepositoProvincial" disabled)
-		.form-group
-			label.form-label.text-center(for="fechaDeSalidaDepositoProvincial") Fecha de salida al Centro de Vacunacion
-			.input-group
-				input.form-control.text-center#fechaDeSalidaDepositoProvincial(type="date" name="fechaDeSalidaDepositoProvincial" disabled)
-		.form-group
-			label.form-label.text-center(for="fechaDeLlegadaCentroDeVacunacion") Fecha de llegada al Centro de Vacunacion
-			.input-group
-				input.form-control.text-center#fechaDeLlegadaCentroDeVacunacion(type="date" name="fechaDeLlegadaCentroDeVacunacion" disabled)
-		.form-group
-			label.form-label.text-center(for="idCentroDeVacunacion") Centro de Vacunación:
-			.input-group
-				input.form-control.text-center#idCentroDeVacunacion(name="idCentroDeVacunacion" disabled)
-	br
-	div.text-center
-		button.btn.btn-primary#detalle Editar
-		| &nbsp;&nbsp;&nbsp;&nbsp;
-		button.btn.btn-primary(type="button" onclick="window.history.back()") Volver
-script.
-	$(function (){
-		function mostrarFechaLlegadaDN(){
-			if(!{JSON.stringify(loteInterno)}.fechaDeLlegadaDepositoNacional != null){
-				$(fechaDeLlegadaDepositoNacional).val(!{JSON.stringify(loteInterno)}.fechaDeLlegadaDepositoNacional)
-			}
-		}
+  html(lang="es")
+    body
+      h2.text-center Detalle del lote interno
+      if messages.error
+        .alert.alert-danger
+          = messages.error
+      br
+      div#form
+        .form-group
+          label.form-label.text-center(for="numeroDeSerie") Número de serie del lote interno
+          .input-group
+            input.form-control.text-center(name="numeroDeSerie" value=loteInterno.numeroDeSerie disabled required)
+        .form-group
+          label.form-label.text-center(for="numeroDeLote") Número de lote del lote proveedor
+          .input-group
+            input.form-control.text-center(name="numeroDeLote" required value=loteInterno.numeroDeLote disabled)
+        .form-group
+          label.form-label.text-center(for="nombreLaboratorio") Nombre del laboratorio del lote proveedor
+          .input-group
+            input.form-control.text-center(name="nombreLaboratorio" required value=loteInterno.Laboratorio.nombreLaboratorio disabled)
+        .form-group
+          label.form-label.text-center(for="cantidadDeVacunas") Cantidad de Vacunas
+          .input-group
+            input.form-control.text-center(type="text" name="cantidadDeVacunas" value=loteInterno.cantidadDeVacunasTotales required disabled)
+        if loteInterno.fechaDeLlegadaDepositoNacional != null
+          .form-group
+            label.form-label.text-center(for="fechaDeLlegadaDepositoNacional") Fecha de llegada al Depósito Nacional
+            .input-group
+              input.form-control.text-center#fechaDeLlegadaDepositoNacional(type="date" name="fechaDeLlegadaDepositoNacional" value=loteInterno.fechaDeLlegadaDepositoNacional disabled)
+        if loteInterno.fechaDeSalidaDepositoNacional != null
+          .form-group
+            label.form-label.text-center(for="fechaDeSalidaDepositoNacional") Fecha de salida al Depósito Provincial:
+            .input-group
+              input.form-control.text-center#fechaDeSalidaDepositoNacional(type="date" name="fechaDeSalidaDepositoNacional" value=loteInterno.fechaDeSalidaDepositoNacional disabled)
+        if loteInterno.fechaDeLlegadaDepositoProvincial != null
+          .form-group
+            label.form-label.text-center(for="fechaDeLlegadaDepositoProvincial") Fecha de llegada al Depósito Provincial:
+            .input-group
+              input.form-control.text-center#fechaDeLlegadaDepositoProvincial(type="date" name="fechaDeLlegadaDepositoProvincial" value=loteInterno.fechaDeLlegadaDepositoProvincial disabled)
+        if loteInterno.idDepositoProvincial != null
+          .form-group
+            label.form-label.text-center(for="idDepositoProvincial") Depósito Provincial:
+            .input-group
+              input.form-control.text-center#idDepositoProvincial(name="idDepositoProvincial" value=loteInterno.idDepositoProvincial disabled)
+        if loteInterno.fechaDeSalidaDepositoProvincial != null
+          .form-group
+            label.form-label.text-center(for="fechaDeSalidaDepositoProvincial") Fecha de salida al Centro de Vacunacion
+            .input-group
+              input.form-control.text-center#fechaDeSalidaDepositoProvincial(type="date" name="fechaDeSalidaDepositoProvincial" value=loteInterno.fechaDeSalidaDepositoProvincial disabled)
+        if loteInterno.fechaDeLlegadaCentroDeVacunacion != null
+          .form-group
+            label.form-label.text-center(for="fechaDeLlegadaCentroDeVacunacion") Fecha de llegada al Centro de Vacunacion
+            .input-group
+              input.form-control.text-center#fechaDeLlegadaCentroDeVacunacion(type="date" name="fechaDeLlegadaCentroDeVacunacion" value=loteInterno.fechaDeLlegadaCentroDeVacunacion disabled)
+        if loteInterno.idCentroDeVacunacion != null
+          .form-group
+            label.form-label.text-center(for="idCentroDeVacunacion") Centro de Vacunación:
+            .input-group
+              input.form-control.text-center#idCentroDeVacunacion(name="idCentroDeVacunacion" value=loteInterno.idCentroDeVacunacion disabled)
+      br
+      div.text-center
+        button.btn.btn-primary#detalle Editar
+        | &nbsp;&nbsp;&nbsp;&nbsp;
+        button.btn.btn-primary(type="button" onclick="window.history.back()") Volver
+  script.
+    $(function (){
+      function mostrarFechaLlegadaDN(){
+        if(loteInterno.fechaDeLlegadaDepositoNacional != null){
+          $('#fechaDeLlegadaDepositoNacional').val(loteInterno.fechaDeLlegadaDepositoNacional);
+        }
+      }
 
-		function mostrarFechaSalidaDN(){
-			if(!{JSON.stringify(loteInterno)}.fechaDeSalidaDepositoNacional != null){
-				$(fechaDeSalidaDepositoNacional).val(!{JSON.stringify(loteInterno)}.fechaDeSalidaDepositoNacional)
-			}
-		}
+      function mostrarFechaSalidaDN(){
+        if(loteInterno.fechaDeSalidaDepositoNacional != null){
+          $('#fechaDeSalidaDepositoNacional').val(loteInterno.fechaDeSalidaDepositoNacional);
+        }
+      }
 
-		function mostrarFechaLlegadaDP(){
-			if(!{JSON.stringify(loteInterno)}.fechaDeLlegadaDepositoProvincial != null){
-				$(fechaDeLlegadaDepositoProvincial).val(!{JSON.stringify(loteInterno)}.fechaDeLlegadaDepositoProvincial)
-			}
-		}
+      function mostrarFechaLlegadaDP(){
+        if(loteInterno.fechaDeLlegadaDepositoProvincial != null){
+          $('#fechaDeLlegadaDepositoProvincial').val(loteInterno.fechaDeLlegadaDepositoProvincial);
+        }
+      }
 
-		function mostrarFechaSalidaDP(){
-			if(!{JSON.stringify(loteInterno)}.fechaDeSalidaDepositoProvincial != null){
-				$(fechaDeSalidaDepositoProvincial).val(!{JSON.stringify(loteInterno)}.fechaDeSalidaDepositoProvincial)
-			}
-		}
+      function mostrarFechaSalidaDP(){
+        if(loteInterno.fechaDeSalidaDepositoProvincial != null){
+          $('#fechaDeSalidaDepositoProvincial').val(loteInterno.fechaDeSalidaDepositoProvincial);
+        }
+      }
 
-		function mostrarFechaLlegadaCDV(){
-			if(!{JSON.stringify(loteInterno)}.fechaDeLlegadaCentroDeVacunacion != null){
-				$(fechaDeLlegadaCentroDeVacunacion).val(!{JSON.stringify(loteInterno)}.fechaDeLlegadaCentroDeVacunacion)
-			}
-		}
+      function mostrarFechaLlegadaCDV(){
+        if(loteInterno.fechaDeLlegadaCentroDeVacunacion != null){
+          $('#fechaDeLlegadaCentroDeVacunacion').val(loteInterno.fechaDeLlegadaCentroDeVacunacion);
+        }
+      }
 
-		function cargarComboDN(){
-			if(!{JSON.stringify(loteInterno)}.idDepositoNacional != null){
-				$(idDepositoNacional).val(!{JSON.stringify(loteInterno)}.idDepositoNacional)
-			} else {
-				$(idDepositoNacional).val(`El lote aún no ha llegado al depósito nacional`)
-			}
-		}
+      function cargarComboDN(){
+        if(loteInterno.idDepositoNacional != null){
+          $('#idDepositoNacional').val(loteInterno.idDepositoNacional);
+        } else {
+          $('#idDepositoNacional').val(`El lote aún no ha llegado al depósito nacional`);
+        }
+      }
 
-		function cargarComboDP(){
-			if(!{JSON.stringify(loteInterno)}.idDepositoProvincial != null){
-				$(idDepositoProvincial).val(!{JSON.stringify(loteInterno)}.idDepositoProvincial)
-			} else {
-				$(idDepositoProvincial).val(`El lote aún no ha llegado al depósito provincial`)
-			}
-		}
+      function cargarComboDP(){
+        if(loteInterno.idDepositoProvincial != null){
+          $('#idDepositoProvincial').val(loteInterno.idDepositoProvincial);
+        } else {
+          $('#idDepositoProvincial').val(`El lote aún no ha llegado al depósito provincial`);
+        }
+      }
 
-		function cargarComboCDV(){
-			if(!{JSON.stringify(loteInterno)}.idCentroDeVacunacion != null){
-				$(idCentroDeVacunacion).val(!{JSON.stringify(loteInterno)}.idCentroDeVacunacion)
-			} else {
-				$(idCentroDeVacunacion).val(`El lote aún no ha llegado al centro de vacunación`)
-			}
-		}
+      function cargarComboCDV(){
+        if(loteInterno.idCentroDeVacunacion != null){
+          $('#idCentroDeVacunacion').val(loteInterno.idCentroDeVacunacion);
+        } else {
+          $('#idCentroDeVacunacion').val(`El lote aún no ha llegado al centro de vacunación`);
+        }
+      }
 
-		mostrarFechaLlegadaDN()
-		mostrarFechaSalidaDN()
-		mostrarFechaLlegadaDP()
-		mostrarFechaSalidaDP()
-		mostrarFechaLlegadaCDV()
-		cargarComboDN()
-		cargarComboDP()
-		cargarComboCDV()
+      mostrarFechaLlegadaDN();
+      mostrarFechaSalidaDN();
+      mostrarFechaLlegadaDP();
+      mostrarFechaSalidaDP();
+      mostrarFechaLlegadaCDV();
+      cargarComboDN();
+      cargarComboDP();
+      cargarComboCDV();
 
-		$(detalle).on('click', function() {
-			const numeroDeSerie = !{JSON.stringify(loteInterno)}.numeroDeSerie
-			console.log(numeroDeSerie)
-			window.location.href = `/lotesinternos/${numeroDeSerie}`
-		});
-	});
+      // Ocultar elementos que no tienen datos
+      if (!loteInterno.fechaDeLlegadaDepositoNacional) {
+        $('#fechaDeLlegadaDepositoNacional').parent().addClass('d-none');
+      }
+      if (!loteInterno.fechaDeSalidaDepositoNacional) {
+        $('#fechaDeSalidaDepositoNacional').parent().addClass('d-none');
+      }
+      if (!loteInterno.fechaDeLlegadaDepositoProvincial) {
+        $('#fechaDeLlegadaDepositoProvincial').parent().addClass('d-none');
+      }
+      if (!loteInterno.idDepositoProvincial) {
+        $('#idDepositoProvincial').parent().addClass('d-none');
+      }
+      if (!loteInterno.fechaDeSalidaDepositoProvincial) {
+        $('#fechaDeSalidaDepositoProvincial').parent().addClass('d-none');
+      }
+      if (!loteInterno.fechaDeLlegadaCentroDeVacunacion) {
+        $('#fechaDeLlegadaCentroDeVacunacion').parent().addClass('d-none');
+      }
+      if (!loteInterno.idCentroDeVacunacion) {
+        $('#idCentroDeVacunacion').parent().addClass('d-none');
+      }
+
+      $('#detalle').on('click', function() {
+        const numeroDeSerie = loteInterno.numeroDeSerie;
+        console.log(numeroDeSerie);
+        window.location.href = `/lotesinternos/${numeroDeSerie}`;
+      });
+    });
