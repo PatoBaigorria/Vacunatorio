@@ -1,60 +1,58 @@
-- var title ='Actualizar Traslado'
+- var title = 'Actualizar Traslado'
 include ..\includes\layout
 block content
 html(lang="es")
 body
-    h2.text-center.text Actualice los datos del traslado
-    br
-    form#form(action="/traslados/"+traslado.idTraslado+"?_method=PUT" method="post")
-        .form-group
-            label.form-label(for="idTraslado") ID Traslado:
-            input.form-control.readonly-input(type="text" id="idTraslado" name="idTraslado" value=traslado.idTraslado readonly disabled)
+    if traslado
+        h2.text-center.text Actualice los datos del traslado
         br
-        .form-group
-            label.form-label(for="num-serie") Nº de Serie Lote Interno:
-            select.form-select#numeroDeSerieSelect(name="numeroDeSerie")
-                each numSerie in lotesInternos
-                    if traslado.numeroDeSerie==numSerie.numeroDeSerie
-                        option(value=numSerie.numeroDeSerie)=numSerie.numeroDeSerie
-                each numSerie in lotesInternos
-                    if traslado.numeroDeSerie==numSerie.numeroDeSerie
-                        break
-                    else
-                        option(value=numSerie.numeroDeSerie)=numSerie.numeroDeSerie
-        br
-        .form-group
-            label.form-label(for="id-ctrovac") Centro de Vacunacion:
-            select.form-select#idCentroDeVacunacion(name="idCentroDeVacunacion")
-                each cvac in centrosDeVacunacion
-                    if traslado.idCentroDeVacunacion==cvac.idCentroDeVacunacion && traslado.idCentroDeVacunacion != null
-                        option(cvac.idCentroDeVacunacion)= cvac.idCentroDeVacunacion
-                        option(value="") Ningún Centro de Vacunación
-                if traslado.idCentroDeVacunacion != null
-                    each cvac in centrosDeVacunacion
-                        if traslado.idCentroDeVacunacion==cvac.idCentroDeVacunacion
-                            break
+        form#form(action="/traslados/"+traslado.idTraslado+"?_method=PUT" method="post")
+            .form-group
+                label.form-label(for="idTraslado") ID Traslado:
+                input.form-control.readonly-input(type="text" id="idTraslado" name="idTraslado" value=traslado.idTraslado readonly disabled)
+            br
+            .form-group
+                label.form-label(for="num-serie") Nº de Serie Lote Interno:
+                select.form-select#numeroDeSerieSelect(name="numeroDeSerie")
+                    each numSerie in lotesInternos
+                        if traslado.numeroDeSerie==numSerie.numeroDeSerie
+                            option(value=numSerie.numeroDeSerie selected)=numSerie.numeroDeSerie
                         else
-                            option(value=cvac.idCentroDeVacunacion)= cvac.idCentroDeVacunacion
-                else
-                    option(value="") Selecciona un Centro de Vacunación
+                            option(value=numSerie.numeroDeSerie)=numSerie.numeroDeSerie
+            br
+            .form-group
+                label.form-label(for="id-ctrovac") Centro de Vacunacion:
+                select.form-select#idCentroDeVacunacion(name="idCentroDeVacunacion")
+                    if traslado.idCentroDeVacunacion != null
+                        each cvac in centrosDeVacunacion
+                            if traslado.idCentroDeVacunacion==cvac.idCentroDeVacunacion
+                                option(value=cvac.idCentroDeVacunacion selected)= cvac.idCentroDeVacunacion
+                            else
+                                option(value=cvac.idCentroDeVacunacion)= cvac.idCentroDeVacunacion
+                    else
+                        option(value="" selected) Ningún Centro de Vacunación
                         each cvac in centrosDeVacunacion
                             option(value=cvac.idCentroDeVacunacion)= cvac.idCentroDeVacunacion
-        br
-        .form-group
-            label.form-label(for="fecha-sal-trasl") Fecha Salida de Traslado:
-                if traslado.fechaDeSalida != null
-                    input.form-control(type="date" id="fecha-sal-trasl" name="fechaDeSalida" class="fecha-salida" value=traslado.fechaDeSalida)
-                else
-                    input.form-control(type="date" id="fecha-sal-trasl" name="fechaDeSalida" class="fecha-salida")
-        br
-        .form-group
-            label.form-label(for="fecha-lleg-trasl") Fecha Llegada de Traslado en Destino:
-                if traslado.fechaDeLlegada != null
-                    input.form-control(type="date" id="fecha-lleg-trasl" name="fechaDeLlegada" class="fecha-llegada" value=traslado.fechaDeLlegada)
-                else
-                    input.form-control(type="date" id="fecha-lleg-trasl" name="fechaDeLlegada" class="fecha-llegada")
-        br
+            br
+            .form-group
+                label.form-label(for="fecha-sal-trasl") Fecha Salida de Traslado:
+                    if traslado.fechaDeSalida != null
+                        input.form-control(type="date" id="fecha-sal-trasl" name="fechaDeSalida" class="fecha-salida" value=traslado.fechaDeSalida)
+                    else
+                        input.form-control(type="date" id="fecha-sal-trasl" name="fechaDeSalida" class="fecha-salida")
+            br
+            .form-group
+                label.form-label(for="fecha-lleg-trasl") Fecha Llegada de Traslado en Destino:
+                    if traslado.fechaDeLlegada != null
+                        input.form-control(type="date" id="fecha-lleg-trasl" name="fechaDeLlegada" class="fecha-llegada" value=traslado.fechaDeLlegada)
+                    else
+                        input.form-control(type="date" id="fecha-lleg-trasl" name="fechaDeLlegada" class="fecha-llegada")
+            br
+            div.text-center
+                button(type="submit" class="btn btn-primary") Actualizar
+                | &nbsp;&nbsp;&nbsp;&nbsp;
+                button(type="button" class="btn btn-primary" onclick="window.history.back()") Volver
+    else
+        h2.text-center.text No se encontró el traslado
         div.text-center
-            button(type="submit" class="btn btn-primary") Actualizar
-            | &nbsp;&nbsp;&nbsp;&nbsp;
-            button(type="button" class="btn btn-primary" onclick="window.history.back()") Volver
+            a.btn.btn-primary(href="/traslados") Volver al listado de traslados

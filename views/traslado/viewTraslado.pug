@@ -55,24 +55,24 @@ script.
         return `${day}/${month}/${year}`;
     }
 
-    let tabla 
+    let tabla;
     $(document).ready(function() {
-        tabla = $(traslados).DataTable({
+        tabla = $('#traslados').DataTable({
             data: !{JSON.stringify(traslados)},
-            pageLength:5,
-            lengthMenu:[5,10,15,20],
+            pageLength: 5,
+            lengthMenu: [5, 10, 15, 20],
             language: {
                 url: '//cdn.datatables.net/plug-ins/1.13.7/i18n/es-AR.json'
             },
-            columns:[
-                {data: 'numeroDeSerie', title: 'Número de Serie'},
-                {data: 'idCentroDeVacunacion', title: 'ID del Centro de Vacunación'},
-                {data: 'fechaDeSalida', title: 'Fecha de Salida del Traslado', render: function(data) { return formatDate(data); } },
-                {data: 'fechaDeLlegada', title: 'Fecha de Llegada del Traslado', createdCell: agregarMensajeLlegada, render: function(data) { return formatDate(data); } },
-                {data: 'activo', title: 'Estado del traslado', createdCell: agregarMensajeSiActivoOInactivo },
+            columns: [
+                { data: 'numeroDeSerie', title: 'Número de Serie' },
+                { data: 'idCentroDeVacunacion', title: 'ID del Centro de Vacunación' },
+                { data: 'fechaDeSalida', title: 'Fecha de Salida del Traslado', render: function(data) { return formatDate(data); } },
+                { data: 'fechaDeLlegada', title: 'Fecha de Llegada del Traslado', createdCell: agregarMensajeLlegada, render: function(data) { return formatDate(data); } },
+                { data: 'activo', title: 'Estado del traslado', createdCell: agregarMensajeSiActivoOInactivo },
                 {
                     data: 'opciones', title: 'Opciones',
-                    render: function (data, type, row) {
+                    render: function(data, type, row) {
                         const editBtn = `<button title="Editar" class="btn btn-warning btn-sm fa-solid fa-pencil"></button>`;
                         const deactivateBtn = `<button title="Dar de baja" class="btn btn-danger btn-sm fa-solid fa-exclamation-circle"></button>`;
                         const activateBtn = `<button title="Dar de alta" class="btn btn-success btn-sm fa-solid fa-check-circle"></button>`;
@@ -84,11 +84,10 @@ script.
                 }
             ],
             columnDefs: [
-                {orderable: false, targets:[3]}, // Columna de "Opciones"
-                {searchable: false, targets:[3]},
-                {className: "dt-center", targets: [0, 1, 2, 3, 4, 5]},
-                //{ width: '14%', targets: [0, 1, 2, 3, 4, 5] },
-                { width: '20%', targets: [3] },
+                { orderable: false, targets: [5] }, // Columna de "Opciones"
+                { searchable: false, targets: [5] },
+                { className: "dt-center", targets: [0, 1, 2, 3, 4, 5] },
+                { width: '20%', targets: [5] },
             ]
         });
 
@@ -105,6 +104,58 @@ script.
                 $(td).text("Aún no ha llegado al Centro de Salud");
             }
         }
+
+        $(document).on('click', '#confirmBajaBtn', function() {
+            const data = $(this).data('rowData');
+            $.ajax({
+                url: '/traslados/' + data.idTraslado + '/baja',
+                type: 'PUT',
+                success: function(response) {
+                    if (response.success) {
+                        location.reload(true);
+                    } else {
+                        console.error(response.message);
+                    }
+                },
+                error: function(error) {
+                    console.error(error);
+                }
+            });
+            $('#confirmBajaModal').modal('hide');
+        });
+
+        $(document).on('click', '#confirmAltaBtn', function() {
+            const data = $(this).data('rowData');
+            $.ajax({
+                url: '/traslados/' + data.idTraslado + '/alta',
+                type: 'PUT',
+                success: function(response) {
+                    if (response.success) {
+                        location.reload(true);
+                    } else {
+                        console.error(response.message);
+                    }
+                },
+                error: function(error) {
+                    console.error(error);
+                }
+            });
+            $('#confirmAltaModal').modal('hide');
+        });
+
+        tabla.on('click', 'button', function(event) {
+            const data = tabla.row($(this).closest('tr')).data();
+
+            if ($(event.target).hasClass('fa-exclamation-circle')) {
+                $('#confirmBajaBtn').data('rowData', data);
+                $('#confirmBajaModal').modal('show');
+            } else if ($(event.target).hasClass('fa-check-circle')) {
+                $('#confirmAltaBtn').data('rowData', data);
+                $('#confirmAltaModal').modal('show');
+            } else {
+                window.location.href = "/traslados/" + data.idTraslado;
+            }
+        });
     });
 
     $(document).ready(function() {
@@ -112,70 +163,5 @@ script.
         setTimeout(function() {
             $('.flash-message').removeClass('fade-in');
         }, 3000);
-
-        tabla.on('click', 'button', function (f) {
-            let data = tabla.row(f.target.closest('tr')).data();
-
-            if ($(event.target).hasClass('fa-exclamation-circle')) {
-                $(confirmBajaBtn).modal('show');
-                $(confirmBajaBtn).on('click', function() {
-                    $.ajax({
-                        url: '/traslados/' + data.idTraslado + '/baja',
-                        type: 'PUT',
-                        success: function(data) {
-                            if (data.success) {
-                                location.reload(true)
-                            } else {
-                                console.error(data.message);
-                            }
-                        },
-                        error: function(error) {
-                            console.error(error);
-                        }
-                    });
-                    $(confirmBajaModal).modal('hide');
-                });
-
-                $('#cancelBajaBtn, .modal-header button.close').on('click', function() {
-                    $(confirmBajaModal).modal('hide');
-                });
-
-                $(document).on('keydown', function(e) {
-                    if (e.key === 'Enter' && $(confirmBajaModal).is(':visible')) {
-                        $(confirmBajaBtn).trigger('click');
-                    }
-                });
-            } else if ($(event.target).hasClass('fa-check-circle')) {
-                $(confirmAltaModal).modal('show');
-                $(confirmAltaBtn).on('click', function() {
-                    $.ajax({
-                        url: '/traslados/' + data.idTraslado + '/alta',
-                        type: 'PUT',
-                        success: function(data) {
-                            if (data.success) {
-                                location.reload(true)
-                            } else {
-                                console.error(data.message);
-                            }
-                        },
-                        error: function(error) {
-                            console.error(error);
-                        }
-                    });
-                    $(confirmAltaModal).modal('hide');
-                })
-
-                $('#cancelAltaBtn, .modal-header button.close').on('click', function() {
-                    $(confirmAltaModal).modal('hide');
-                });
-
-                $(document).on('keydown', function(e) {
-                    if (e.key === 'Enter' && $(confirmAltaModal).is(':visible')) {
-                        $(confirmAltaBtn).trigger('click');
-                    }
-                });
-            } else {
-                window.location.href = "/traslados/" + data.idTraslado;
-            }
-        });
     });
+

@@ -13,17 +13,17 @@ body
 	br
 	form#form(action=`/centrosdevacunacion/${centroV.idCentroDeVacunacion}?_method=PUT` method='post')
 		.form-group
-			label.form-label ID del Centro de Vacunación:
-			input.form-control.is-valid#idCentroDeVacunacion(type='text' name='idCentroDeVacunacion' value=centroV.idCentroDeVacunacion disabled)
+			label.form-label.text-center ID del Centro de Vacunación:
+			input.form-control.text-center.is-valid#idCentroDeVacunacion(type='text' name='idCentroDeVacunacion' value=centroV.idCentroDeVacunacion disabled)
 		.form-group
-			label.form-label(for='ubicacion') Seleccione la ubicación del centro de vacunación en el mapa:
+			label.form-label.text-center(for='ubicacion') Seleccione la ubicación del centro de vacunación en el mapa:
 			#map
 		.form-group
-			label.form-label(for='longitud') Longitud:
-			input.form-control.is-valid#longitud(type='text' name='longitud' readonly)
+			label.form-label.text-center(for='longitud') Longitud:
+			input.form-control.text-center.is-valid#longitud(type='text' name='longitud' readonly)
 		.form-group
-			label.form-label(for='latitud') Latitud:
-			input.form-control.is-valid#latitud(type='text' name='latitud' readonly)
+			label.form-label.text-center(for='latitud') Latitud:
+			input.form-control.text-center.is-valid#latitud(type='text' name='latitud' readonly)
 		br
 		div.text-center
 			button.btn.btn-primary(type='submit') Actualizar
