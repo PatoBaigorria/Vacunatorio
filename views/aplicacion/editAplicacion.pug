@@ -1,58 +1,101 @@
 - const title ='Actualizar aplicacion de vacunas'
 include ..\includes\layout
 block content
-html(lang="es")
-body
-    h2.text-center Actualice los datos de la aplicación de la vacuna
-    br
-    form#form(action=`/aplicaciones/${aplicacion.idAplicacion}?_method=PUT` method="post")
-        .form-group
-            label.form-label(for="idAplicacion") ID Aplicación:
-            input.form-control.readonly-input(type="text" id="idAplicacion" name="idAplicacion" value=aplicacion.idAplicacion readonly disabled)
+    html(lang="es")
+    body
+        h2.text-center Actualice los datos de la aplicación de la vacuna
         br
-        .form-group
-            label.form-label(for="DNIPaciente") Seleccione un Paciente:
-            select.form-select(name="DNIPaciente" id="DNIPaciente" onchange=`agenteS(${JSON.stringify(agentes)}, ${JSON.stringify(personas)})` required)
-                each persona in personas
-                    if(persona.DNI === aplicacion.DNIPaciente)
-                        option(value=persona.DNI selected) #{persona.nombre} #{persona.apellido}
-                    else
-                        option(value=persona.DNI) #{persona.nombre} #{persona.apellido}
-        br
-        .form-group
-            label.form-label(for="DNIAgente") Seleccione un Agente de Salud:
-            select.form-select(name="DNIAgente" id="DNIAgente" class="DNIAgente" required)
-                each persona in personas
-                    if(persona.DNI === aplicacion.DNIAgente)
-                        option(value=aplicacion.DNIAgente) #{persona.nombre} #{persona.apellido}
-        br
-        .form-group
-            label.form-label(for="numeroDeSerie") Seleccione el Lote de Vacunas que se Aplicara al Paciente:
-            select.form-select(name="numeroDeSerie" id="numeroDeSerie" required)
-                each lote in lotes
-                    if(lote.numeroDeSerie === aplicacion.numeroDeSerie)
-                        option(value=lote.numeroDeSerie selected) #{lote.numeroDeSerie}
-                    else
-                        option(value=lote.numeroDeSerie) #{lote.numeroDeSerie}
-        br
-        .form-group
-            label.form-label(for="fechaDeAplicacion") Fecha de Aplicación:
-            input.form-control(type="date" name="fechaDeAplicacion" id="fechaDeAplicacion" value=aplicacion.fechaDeAplicacion required)
-        br
-        div.text-center
-            button(type="submit" class="btn btn-primary") Actualizar
-            | &nbsp;&nbsp;&nbsp;&nbsp;
-            button(type="button" class="btn btn-primary" onclick="window.history.back()") Volver
-script.
-    function agenteS(agentes, pacientes) {
-        let paciente = null
-        const pacienteSelect = document.getElementById("DNIPaciente").value;
-        const agenteSelect = document.getElementById("DNIAgente");
-        agenteSelect.innerHTML = "";  // Limpiar el contenido actual
-        for (let i = 0; i < agentes.length; i++) {
-            if (agentes[i].DNI != pacienteSelect) {
-                paciente = pacientes.filter(paciente => paciente.DNI===agentes[i].DNI);
-                agenteSelect.innerHTML += `<option value=${paciente[0].DNI}>${paciente[0].nombre} ${paciente[0].apellido}</option>`;
+        form#form(action=`/aplicaciones/${aplicacion.idAplicacion}?_method=PUT` method='post' class='needs-validation' novalidate)
+            .form-group
+                label.form-label(for='idAplicacion') ID Aplicación:
+                input.form-control.is-valid#idAplicacion(type='text' name='idAplicacion' value=aplicacion.idAplicacion readonly disabled)
+            br
+            .form-group
+                label.form-label(for='DNIPaciente') Seleccione un Paciente:
+                select.form-select.is-valid#DNIPaciente(name='DNIPaciente' required onchange=`agenteS(${JSON.stringify(agentes)}, ${JSON.stringify(personas)})`)
+                    each paciente in pacientes
+                        if paciente.ocupacion === 'otro'
+                            option(value=paciente.DNI selected=paciente.DNI === aplicacion.DNIPaciente) #{paciente.nombre} #{paciente.apellido}
+                .valid-feedback
+                .invalid-feedback
+                    | Por favor, seleccione un paciente.
+            br
+            .form-group
+                label.form-label(for='DNIAgente') Seleccione un Agente de Salud:
+                select.form-select.is-valid#DNIAgente(name='DNIAgente' required)
+                    each agente in agentes
+                        if agente.DNI !== aplicacion.DNIPaciente
+                            option(value=agente.DNI selected=agente.DNI === aplicacion.DNIAgente) #{agente.nombre} #{agente.apellido}
+                .valid-feedback
+                .invalid-feedback
+                    | Por favor, seleccione un agente de salud.
+            br
+            .form-group
+                label.form-label(for='numeroDeSerie') Seleccione el Lote de Vacunas que se Aplicará al Paciente:
+                select.form-select.is-valid#numeroDeSerie(name='numeroDeSerie' required)
+                    each lote in lotes
+                        if lote.numeroDeSerie === aplicacion.numeroDeSerie
+                            option(value=lote.numeroDeSerie selected) #{lote.numeroDeSerie}
+                        else
+                            option(value=lote.numeroDeSerie) #{lote.numeroDeSerie}
+                .valid-feedback
+                .invalid-feedback
+                    | Por favor, seleccione un lote de vacunas.
+            br
+            .form-group
+                label.form-label(for='fechaDeAplicacion') Fecha de Aplicación:
+                input.form-control.is-valid#fechaDeAplicacion(type='date' name='fechaDeAplicacion' value=aplicacion.fechaDeAplicacion required)
+                .invalid-feedback.d-none#fechaDeAplicacionSuperior La fecha seleccionada es superior a la fecha actual
+            br
+            div.text-center
+                button.btn.btn-primary(type='submit') Actualizar
+                | &nbsp;&nbsp;&nbsp;&nbsp;
+                button.btn.btn-primary(type='button' onclick='window.history.back()') Volver
+    script.
+        document.addEventListener('DOMContentLoaded', function() {
+            const fechaInput = document.getElementById('fechaDeAplicacion');
+            
+            fechaInput.addEventListener('change', function() {
+                validarFecha();
+            });
+
+            function validarFecha() {
+                const fechaSeleccionada = new Date(fechaInput.value);
+                const fechaActual = new Date();
+
+                if (fechaSeleccionada > fechaActual) {
+                    fechaInput.classList.add('is-invalid');
+                    document.getElementById('fechaDeAplicacionSuperior').classList.remove('d-none');
+                } else {
+                    fechaInput.classList.remove('is-invalid');
+                    document.getElementById('fechaDeAplicacionSuperior').classList.add('d-none');
+                }
             }
+        });
+
+        function agenteS(agentes, pacientes) {
+            const pacienteSelect = document.getElementById("DNIPaciente").value;
+            const agenteSelect = document.getElementById("DNIAgente");
+            agenteSelect.innerHTML = "";  // Limpiar el contenido actual
+
+            // Filtrar los agentes cuyo DNI no coincida con el DNI del paciente seleccionado
+            agentes.forEach(agente => {
+                if (agente.Persona.DNI !== pacienteSelect) {
+                    agenteSelect.innerHTML += `<option value="${agente.Persona.DNI}">${agente.Persona.nombre} ${agente.Persona.apellido}</option>`;
+                }
+            });
         }
-    }
+
+        (function() {
+            'use strict';
+            const forms = document.querySelectorAll('.needs-validation');
+            Array.from(forms).forEach(function(form) {
+                form.addEventListener('submit', function(event) {
+                    if (!form.checkValidity()) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+                    form.classList.add('was-validated');
+                }, false);
+            });
+        })();
