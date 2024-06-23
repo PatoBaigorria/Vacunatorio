@@ -64,17 +64,18 @@ script.
             $(`div[id^=${campo.attr('id')}].invalid-feedback`).addClass('d-none')
         }
 
-        function cargarPacientes(){
-            const pacientes = !{JSON.stringify(personas)}.filter(paciente => paciente.activo == 1)
-            if(pacientes.length == 0){
-                $(DNIPaciente).append(`<option disabled selected hidden value="">No hay pacientes dados de alta</option>`).prop('disabled', true)
-                $(DNIAgente).append(`<option disabled selected hidden value="">No hay agentes dados de alta</option>`).prop('disabled', true)
-                mostrarError($(DNIPaciente), 'SinPacientes')
-                mostrarError($(DNIAgente), 'SinAgentes')
+        function cargarPacientes() {
+            const pacientes = !{JSON.stringify(personas)}.filter(paciente => paciente.activo == 1 && paciente.ocupacion === 'otro');
+            
+            if (pacientes.length === 0) {
+                $(DNIPaciente).append(`<option disabled selected hidden value="">No hay pacientes dados de alta</option>`).prop('disabled', true);
+                $(DNIAgente).append(`<option disabled selected hidden value="">No hay agentes dados de alta</option>`).prop('disabled', true);
+                mostrarError($(DNIPaciente), 'SinPacientes');
+                mostrarError($(DNIAgente), 'SinAgentes');
             } else {
                 pacientes.forEach(paciente => {
-                    $(DNIPaciente).append(`<option value="${paciente.DNI}">${paciente.nombre} ${paciente.apellido}</option>`)
-                })
+                    $(DNIPaciente).append(`<option value="${paciente.DNI}">${paciente.nombre} ${paciente.apellido}</option>`);
+                });
             }
         }
 

@@ -13,7 +13,7 @@
 - Verificar que las consultas de la realidad puedan hacerse en el proyecto ✔ (Eze y Pato)
 - Comparar que la fecha de llegada al depósito nacional sea posterior a la fecha de compra en LI ✔ (Pato)
 - No mostrar los campos que no tienen datos en detailsLI ✔ (Pato)
-- Validar que las aplicaciones solo puedan hacerse con LI que esten en CDV y que si tienen traslados tengan una fecha de llegada no nula
+- Validar que las aplicaciones solo puedan hacerse con LI que esten en CDV y que si tienen traslados tengan una fecha de llegada no nula  ✔ (Pato
 - Corregir el "is-valid" en la fecha de aplicación ✔ (Pato)
 - Arreglar la vista editar de aplicación ✔ (Pato)
 - Verificar toda la lógica de las vistas de traslado ✔ (Pato)
