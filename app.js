@@ -20,7 +20,7 @@
 - Modificar el descarte para que sea eliminado físicamente ✔ (Pato)
 - Corregir los endpoints de cada usuario para que solo puedan ver sus vistas ✔ (Pato)
 - En Traslados validar al dar de alta  en Nº de Serie aparezcan los lotes que hayan llegado al Centro de Vacunación y que no tengan un traslado en curso
-- Ver boton editar en Lote Interno.
+- Ver boton editar en Lote Interno ✔ (Pato)
 - Ordenar la lista de forma descendente de las siguientes tablas: ✔ (Pato)
   - Lote proveedor ✔
   - Lote interno ✔

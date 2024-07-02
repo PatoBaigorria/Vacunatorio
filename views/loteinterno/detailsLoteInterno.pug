@@ -60,13 +60,15 @@ block content
             label.form-label.text-center(for="idCentroDeVacunacion") Centro de Vacunación:
             .input-group
               input.form-control.text-center#idCentroDeVacunacion(name="idCentroDeVacunacion" value=loteInterno.idCentroDeVacunacion disabled)
-      br
-      div.text-center
-        button.btn.btn-primary#detalle Editar
-        | &nbsp;&nbsp;&nbsp;&nbsp;
-        button.btn.btn-primary(type="button" onclick="window.history.back()") Volver
-  script.
+        br
+        div.text-center
+          button.btn.btn-primary#detalle Editar
+          | &nbsp;&nbsp;&nbsp;&nbsp;
+          button(type="button" class="btn btn-primary" onclick="window.history.back()") Volver
+script.
     $(function (){
+      var loteInterno = !{JSON.stringify(loteInterno)};
+
       function mostrarFechaLlegadaDN(){
         if(loteInterno.fechaDeLlegadaDepositoNacional != null){
           $('#fechaDeLlegadaDepositoNacional').val(loteInterno.fechaDeLlegadaDepositoNacional);
@@ -155,7 +157,6 @@ block content
 
       $('#detalle').on('click', function() {
         const numeroDeSerie = loteInterno.numeroDeSerie;
-        console.log(numeroDeSerie);
         window.location.href = `/lotesinternos/${numeroDeSerie}`;
       });
     });
