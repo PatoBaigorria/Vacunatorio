@@ -1,7 +1,9 @@
 const express = require("express");
 const router = express.Router();
-const depositoNacionalController = require("../controllers/depositoNacionalController");
+const depositoNacionalController = require("../controllers/depositonacionalController");
 const authorize = require("../middleware/authorize");
+
+router.get("/localidades/:provinciaNombre", authorize(["Super Admin"]), depositoNacionalController.getLocalidadesByProvinciaFromAPI);
 
 router.get(
 	"/",

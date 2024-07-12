@@ -3,6 +3,7 @@ const router = express.Router();
 const personaController = require("../controllers/personaController");
 const authorize = require("../middleware/authorize");
 
+router.get('/localidades/:provinciaNombre', authorize(["Super Admin"]), personaController.getLocalidadesByProvinciaFromAPI);
 router.get(
 	"/",
 	authorize(["Super Admin", "Agente de salud"]),

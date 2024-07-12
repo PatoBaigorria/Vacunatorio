@@ -3,6 +3,7 @@ const router = express.Router();
 const centroDeVacunacionController = require("../controllers/centroDeVacunacionController");
 const authorize = require("../middleware/authorize");
 
+router.get("/localidades/:provinciaNombre", authorize(["Super Admin"]), centroDeVacunacionController.getLocalidadesByProvinciaFromAPI);
 router.get(
 	"/",
 	authorize(["Super Admin"]),

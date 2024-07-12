@@ -57,14 +57,17 @@ body
             .input-group.has-validation
                 input.form-control.text-center(name="patologiaBase" id="patologiaBase" value=persona.Patologiabase.patologiaBase disabled)
         .form-group
-            label.form-label.text-center Seleccione ubicación en el mapa:
-            #map
+            label.form-label.text-center(for="direccion") Dirección:
+            .input-group.has-validation
+                input.form-control.text-center(type="text" id="direccion" name="direccion" value=persona.direccion disabled)
         .form-group
-            label.form-label.text-center(for="longitud") Longitud:
-            input.form-control.text-center(type="text" id="longitud" name="longitud" value=persona.longitud disabled)
+            label.form-label.text-center(for="localidad") Localidad:
+            .input-group.has-validation
+                input.form-control.text-center(type="text" id="localidad" name="localidad" value=persona.localidad disabled)
         .form-group
-            label.form-label.text-center(for="latitud") Latitud:
-            input.form-control.text-center(type="text" id="latitud" name="latitud" value=persona.latitud disabled)
+            label.form-label.text-center(for="provincia") Provincia:
+            input.form-control.text-center(type="text" id="provincia" name="provincia" value=persona.provincia disabled)
+
         br
         div.text-center
             button.btn.btn-primary#detalle Editar
@@ -72,30 +75,6 @@ body
             button.btn.btn-primary(type="button" onclick="window.history.back()") Volver
 script.
     $(function () {
-        $('#map').css('width', $('#form').outerWidth() + 'px');
-
-        $().ready(function () {
-            initMap();
-        });
-
-        function initMap() {
-            let map = L.map('map');
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: '© OpenStreetMap contributors'
-            }).addTo(map);
-
-            if ("geolocation" in navigator) {
-                navigator.geolocation.getCurrentPosition(function (position) {
-                    var userLocation = [!{JSON.stringify(persona)}.latitud, !{JSON.stringify(persona)}.longitud];
-                    map.setView(userLocation, 15);
-                    var marker = L.marker(userLocation, { draggable: true }).addTo(map);
-                    marker.on('dragend', function (event) {
-                        actualizarCoordenadas(event.target.getLatLng());
-                    });
-                    actualizarCoordenadas(map.getCenter());
-                });
-            }
-        }
 
         $(detalle).on('click', function() {
             const DNI = !{JSON.stringify(persona)}.DNI

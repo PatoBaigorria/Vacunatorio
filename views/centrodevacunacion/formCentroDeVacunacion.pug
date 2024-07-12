@@ -16,60 +16,158 @@ body
     br
     form#form(action='/centrosdevacunacion' method='post')
         .form-group
-            label.form-label(for='direccion') Dirección del centro de salud:
+            label.form-label(for='direccion') Dirección:
             .input-group.has-validation
                 input.form-control.is-invalid#direccion(type='text' name='direccion')
                 .invalid-feedback.d-none(id="direccionVacio") El campo no puede estar vacío
         .form-group
-            label.form-label(for='localidad') Localidad del centro de salud:
-            input.form-control.is-invalid#localidad(type='text' name='localidad')
+            label.form-label(for='provincia') Provincia:
+            .input-group.has-validation
+                select.form-select(name="provincia" id="provincia" required)
+                    option(disabled selected hidden value="") Selecciona una provincia
+                    each provincia in provincias
+                        option(value=provincia)= provincia
+                .invalid-feedback.d-none(id="provinciaSinSeleccionar") Seleccione una provincia
+
         .form-group
-            label.form-label(for='provincia') Provincia del centro de salud:
-            input.form-control.is-invalid#provincia(type='text' name='provincia')
-        .form-group
-            label.form-label(for='ubicacion') Seleccione la ubicación del centro de vacunación en el mapa:
-            #map
-        .form-group
-            label.form-label(for='longitud') Longitud:
-            input.form-control.is-valid#longitud(type='text' name='longitud' readonly)
-        .form-group
-            label.form-label(for='latitud') Latitud:
-            input.form-control.is-valid#latitud(type='text' name='latitud' readonly)
+            label.form-label(for='localidad') Localidad:
+            input-group.has-validation
+                select.form-select(name="localidad" id="localidad" required)
+                    option(disabled selected hidden value="") Selecciona una localidad
+                    each localidad in localidades
+                        option(value=localidad)= localidad
+                .invalid-feedback.d-none(id="localidadSinSeleccionar") Seleccione una localidad
         br
         div.text-center
             button.btn.btn-primary(type='submit') Alta
             | &nbsp;&nbsp;&nbsp;&nbsp;
             button.btn.btn-primary(type='button' onclick='window.history.back()') Volver
 script.
-    $(function (){
-        $('#map').css('width', $('#form').outerWidth() + 'px')
-        $().ready(function () {
-            initMap()
-        })
+    document.addEventListener('DOMContentLoaded', function () {
+        const provinciaSelect = document.getElementById('provincia');
+        const localidadSelect = document.getElementById('localidad');
 
-        function initMap() {
-            let map = L.map('map')
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: '© OpenStreetMap contributors'
-            }).addTo(map)
+        provinciaSelect.addEventListener('change', async function () {
+            const selectedProvincia = provinciaSelect.value;
 
-            if ('geolocation' in navigator) {
-            navigator.geolocation.getCurrentPosition(function (position) {
-                const userLocation = [position.coords.latitude, position.coords.longitude]
-                map.setView(userLocation, 15)
-                const marker = L.marker(userLocation, { draggable: true }).addTo(map)
-                marker.on('dragend', function (event) {
-                actualizarCoordenadas(event.target.getLatLng())
-                })
-                actualizarCoordenadas(map.getCenter())
-            })
+            try {
+                const response = await fetch(`https://apis.datos.gob.ar/georef/api/localidades?provincia=${selectedProvincia}`);
+                const data = await response.json();
+
+                // Limpiar opciones actuales
+                localidadSelect.innerHTML =  '';
+
+                // Agregar opciones actualizadas
+                data.localidades.forEach(localidad => {
+                    const option = document.createElement('option');
+                    option.value = localidad.nombre;
+                    option.textContent = localidad.nombre;
+                    localidadSelect.appendChild(option);
+                });
+
+            } catch (error) {
+                console.error('Error al obtener localidades:', error);
+            }
+        });
+        // Llamar la función de cambio para cargar las localidades iniciales
+        $('#provincia').trigger('change');
+    });
+    
+
+   
+    // Función para mostrar errores
+        function mostrarAlerta() {
+            $('#mensajeAlerta').text("¡Datos incorrectos! Por favor, verifica la información ingresada.");
+            $('#alertModal').modal('show');
+        }
+
+        // Funciones para mostrar y quitar errores
+        function mostrarError(campo, error) {
+            campo.addClass('is-invalid').removeClass('is-valid').addClass();
+            $('#' + campo.attr('id') + error).removeClass('d-none');
+        }
+
+        function quitarError(campo) {
+            campo.addClass('is-valid').removeClass('is-invalid');
+            $('div[id^=' + campo.attr('id') + '].invalid-feedback').addClass('d-none');
+        }
+        
+        function validarComboBox(campo){
+            if(!campo.val()){
+                mostrarError(campo, 'SinSeleccionar');
+                $('#' + campo.attr('id') + 'SinSeleccionar').removeClass('d-none');
+            } else {
+                quitarError(campo);
             }
         }
 
-        function actualizarCoordenadas(coords) {
-            const lng = coords.lng.toFixed(6)
-            const lat = coords.lat.toFixed(6)
-            $(longitud).val(lng)
-            $(latitud).val(lat)
+        function validarDireccion() {
+            quitarError($('#direccion'));
+            const direccionValue = $('#direccion').val();
+            if (!direccionValue) {
+                mostrarError($('#direccion'), 'Vacio');
+            } else if (direccionValue.length < 5 || direccionValue.length > 100) {
+                mostrarError($('#direccion'), 'Invalido');
+            }
         }
-    })
+        $('#direccion').on('keyup focusout', function () {
+            validarDireccion();
+        });
+
+        $('#provincia, #localidad').on('change', function () {
+            validarComboBox($(this));
+        });
+
+        let press = 0
+        $('#alertModal').on('keyup', function (event) {
+            // Si la tecla presionada es "Enter", oculta el modal
+            if(event.key === 'Enter'){
+                press = press+1
+            }
+            if (event.key === 'Escape' || press == 2) {
+                $('#alertModal').modal('hide');
+                press = 0
+            }
+        });
+
+        $('#alertModal').on('hidden.bs.modal', function () {
+            // Buscar el primer elemento con la clase 'is-invalid' y hacer foco en él
+            var primerInvalido = $('.is-invalid:first');
+            if (primerInvalido.length > 0) {
+                primerInvalido.focus();
+            }
+        });
+
+        // Evento cuando se oculta el modal
+        $('#alertModal').on('hidden.bs.modal', function () {
+            // Buscar el primer elemento con la clase 'is-invalid' y hacer foco en él
+            var primerInvalido = $('.is-invalid:first');
+            if (primerInvalido.length > 0) {
+                primerInvalido.focus();
+            }
+        });
+
+        $('#direccion').trigger('focusout');
+        $('#provincia, #localidad').trigger('change');
+
+        // Asociar el evento submit al formulario
+        $('#form input').on('keypress', function (event) {
+            if (event.which === 13) {
+                console.log("Formulario enviado por teclado");
+                //console.log(validarFormulario());
+                if(!validarFormulario()){
+                    event.preventDefault();
+                }
+                // Puedes agregar lógica adicional aquí si es necesario
+            }
+        });
+
+        $('#form button[type="submit"]').on('click', function (event) {
+            console.log("Botón de envío clicado");
+            if (!validarFormulario()) {
+                event.preventDefault();
+            }
+        });
+
+
+

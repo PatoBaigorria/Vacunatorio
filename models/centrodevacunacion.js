@@ -23,14 +23,6 @@ const centrodevacunacion = Centrodevacunacion.init(
 			type: DataTypes.STRING,
 			allowNull: false,
 		},
-		longitud: {
-			type: DataTypes.DOUBLE,
-			allowNull: false,
-		},
-		latitud: {
-			type: DataTypes.DOUBLE,
-			allowNull: false,
-		},
 		activo: {
 			type: DataTypes.BOOLEAN,
 			allowNull: false,

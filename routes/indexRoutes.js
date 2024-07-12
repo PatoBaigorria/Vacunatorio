@@ -7,14 +7,17 @@ const depositonacionalRoutes = require("./depositonacionalRoutes");
 const depositoprovincialRoutes = require("./depositoprovincialRoutes");
 const descarteRoutes = require("./descarteRoutes");
 const laboratorioRoutes = require("./laboratorioRoutes");
+const localidadRoutes = require("./localidadRoutes");
 const loteinternoRoutes = require("./loteinternoRoutes");
 const loteproveedorRoutes = require("./loteproveedorRoutes");
 const personaRoutes = require("./personaRoutes");
+const provinciaRoutes = require("./provinciaRoutes");
 const trasladoRoutes = require("./trasladoRoutes");
 const registroRoutes = require("./registroRoutes");
 const usuarioRoutes = require("./usuarioRoutes");
 
 const { passport } = require("../app");
+
 
 // Middleware para verificar si el usuario está autenticado
 function isAuthenticated(req, res, next) {
@@ -133,6 +136,19 @@ router.use(
 	isAuthenticated,
 	authorize(["Super Admin"]),
 	usuarioRoutes
+);
+router.use(
+    "/provincia",
+	isAuthenticated,
+	authorize(["Super Admin"]),
+    provinciaRoutes // Rutas de Provincia
+);
+
+router.use(
+    "/localidad",
+	isAuthenticated,
+	authorize(["Super Admin"]),
+    localidadRoutes // Rutas de Localidad
 );
 
 module.exports = router;

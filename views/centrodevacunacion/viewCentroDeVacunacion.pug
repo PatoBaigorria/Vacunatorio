@@ -56,29 +56,30 @@ script.
             },
             columns:[
                 {data: 'idCentroDeVacunacion', title: 'ID Centro de Vacunación'},
+                {data: 'direccion', title: 'Dirección'},
                 {data: 'localidad', title: 'Localidad'},
                 {data: 'provincia', title: 'Provincia'},
                 { data: 'activo', title: 'Estado del centro de vacunacion', createdCell: agregarMensajeSiActivoOInactivo },
                 {
                     data: 'opciones', title: 'Opciones',
                     render: function (data, type, row) {
-                        const detailsBtn = `<button title="Detalle" class="btn btn-primary btn-sm fa fa-info-circle detalle"></button>`;
                         const editBtn = `<button title='Editar' class='btn btn-warning btn-sm fa-solid fa-pencil'></button>`
                         const deactivateBtn = `<button title='Dar de baja' class='btn btn-danger btn-sm fa-solid fa-exclamation-circle'></button>`
                         const activateBtn = `<button title='Dar de alta' class='btn btn-success btn-sm fa-solid fa-check-circle'></button>`
                         if (row.activo == 1)
-                            return `${detailsBtn} | ${editBtn} | ${deactivateBtn}`;
+                            return `${editBtn} | ${deactivateBtn}`;
                         else
-                            return `${detailsBtn} | ${editBtn} | ${activateBtn}`;
+                            return `${editBtn} | ${activateBtn}`;
                     }
                 }
             ],
             order: [[0, 'desc']],
             columnDefs: [
-                {orderable: false, targets:[4]}, 
-                {searchable: false, targets:[1, 2, 3, 4]},
-                {className: 'dt-center', targets: [0, 1, 2, 3, 4]},
-                { width: '20%', targets: [0, 1, 2, 3, 4] },
+                {orderable: false, targets:[5]}, 
+                {searchable: false, targets:[1, 2, 3, 4, 5]},
+                {className: 'dt-center', targets: [0, 1, 2, 3, 4, 5]},
+                { width: '15%', targets: [0, 1, 2, 3, 4] },
+                { width: '10%', targets: [5] },
             ]
         })
 

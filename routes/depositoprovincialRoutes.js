@@ -3,6 +3,8 @@ const router = express.Router();
 const depositoProvincialController = require("../controllers/depositoProvincialController");
 const authorize = require("../middleware/authorize");
 
+router.get("/localidades/:provinciaNombre", authorize(["Super Admin"]), depositoProvincialController.getLocalidadesByProvinciaFromAPI);
+
 router.get(
 	"/",
 	authorize(["Super Admin"]),
