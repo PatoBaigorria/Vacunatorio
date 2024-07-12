@@ -6,7 +6,7 @@ const getLocalidadesByProvinciaFromAPI = async (req, res) => {
     const { provinciaNombre } = req.params;
     try {
         const response = await axios.get(`https://apis.datos.gob.ar/georef/api/localidades?provincia=${provinciaNombre}`);
-        const localidades = response.data.localidades.map(localidad => localidad.nombre);
+        const localidades = response.data.localidades.map(localidad => localidad.nombre).sort((a, b) => a.localeCompare(b));
         res.json(localidades);
     } catch (error) {
         console.error('Error al obtener las localidades desde la API externa:', error);
@@ -35,7 +35,7 @@ const formDepProv = async (req, res) => {
 		// Obtener provincias desde la API externa
         let provincias = [];
         const provinciasResponse = await axios.get('https://apis.datos.gob.ar/georef/api/provincias');
-        provincias = provinciasResponse.data.provincias.map(provincia => provincia.nombre);
+        provincias = provinciasResponse.data.provincias.map(provincia => provincia.nombre).sort((a, b) => a.localeCompare(b));
 		res.render("depositoprovincial/formDepositoProvincial",{
 			provincias: provincias,
 		});
@@ -82,7 +82,7 @@ const editDepProv = async (req, res) => {
 
 		let provincias = [];
 		const provinciasResponse = await axios.get('https://apis.datos.gob.ar/georef/api/provincias');
-		provincias = provinciasResponse.data.provincias.map(provincia => provincia.nombre);
+		provincias = provinciasResponse.data.provincias.map(provincia => provincia.nombre).sort((a, b) => a.localeCompare(b));
 
 		res.render("depositoprovincial/editDepositoProvincial", {
 			depositoP: depositoP,

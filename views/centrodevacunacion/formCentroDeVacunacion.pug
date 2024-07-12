@@ -55,23 +55,45 @@ script.
                 const data = await response.json();
 
                 // Limpiar opciones actuales
-                localidadSelect.innerHTML =  '';
+                localidadSelect.innerHTML = '';
+
+                // Agregar opción por defecto
+                const defaultOption = document.createElement('option');
+                defaultOption.disabled = true;
+                defaultOption.selected = true;
+                defaultOption.hidden = true;
+                defaultOption.value = "";
+                defaultOption.textContent = "Selecciona una localidad";
+                localidadSelect.appendChild(defaultOption);
 
                 // Agregar opciones actualizadas
-                data.localidades.forEach(localidad => {
+                const localidades = data.localidades.map(localidad => localidad.nombre);
+                localidades.sort((a, b) => a.localeCompare(b)); // Ordenar alfabéticamente
+
+                localidades.forEach(localidad => {
                     const option = document.createElement('option');
-                    option.value = localidad.nombre;
-                    option.textContent = localidad.nombre;
+                    option.value = localidad; // Usar el nombre de la localidad
+                    option.textContent = localidad; // Usar el nombre de la localidad
                     localidadSelect.appendChild(option);
                 });
+
+                // Limpiar la selección de localidad
+                localidadSelect.value = ""; // Mantener "Selecciona una localidad"
+
+                // Quitar el estado is-invalid de la provincia
+                quitarError($(provinciaSelect));
+                // Limpiar el estado de localidad
+                quitarError($(localidadSelect));
 
             } catch (error) {
                 console.error('Error al obtener localidades:', error);
             }
         });
+
         // Llamar la función de cambio para cargar las localidades iniciales
         $('#provincia').trigger('change');
     });
+
     
 
    

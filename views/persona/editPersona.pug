@@ -111,13 +111,11 @@ body
         .form-group
             label.form-label(for="provincia") Provincia:
             select.form-select(name="provincia" id="provincia" required)
-                option(value="") Seleccione una provincia
                 each provincia in provincias
                     option(value=provincia selected=(persona.provincia === provincia))= provincia
         .form-group
             label.form-label(for="localidad") Localidad:
             select.form-select(id="localidad" name="localidad" required)
-                option(value="") Seleccione una localidad
                 each localidad in localidades
                     option(value=localidad selected=(persona.localidad === localidad))= localidad
         

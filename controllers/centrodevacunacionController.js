@@ -6,7 +6,7 @@ const getLocalidadesByProvinciaFromAPI = async (req, res) => {
     const { provinciaNombre } = req.params;
     try {
         const response = await axios.get(`https://apis.datos.gob.ar/georef/api/localidades?provincia=${provinciaNombre}`);
-        const localidades = response.data.localidades.map(localidad => localidad.nombre);
+        const localidades = response.data.localidades.map(localidad => localidad.nombre).sort((a, b) => a.localeCompare(b));
         res.json(localidades);
     } catch (error) {
         console.error('Error al obtener las localidades desde la API externa:', error);
@@ -37,14 +37,18 @@ const formCentroVac = async (req, res) => {
 		// Obtener provincias desde la API externa
         let provincias = [];
         const provinciasResponse = await axios.get('https://apis.datos.gob.ar/georef/api/provincias');
-        provincias = provinciasResponse.data.provincias.map(provincia => provincia.nombre);
+        provincias = provinciasResponse.data.provincias.map(provincia => provincia.nombre).sort((a, b) => a.localeCompare(b));
 
         // Obtener localidades de la primera provincia de la lista
         let localidades = [];
         if (provincias.length > 0) {
             const localidadesResponse = await axios.get(`https://apis.datos.gob.ar/georef/api/localidades?provincia=${provincias[0]}`);
             localidades = localidadesResponse.data.localidades.map(localidad => localidad.nombre);
+			localidades = localidades.map(localidad => localidad.trim());
+			localidades.sort((a, b) => a.localeCompare(b));
+			localidades.unshift("Selecciona una localidad");
         }
+		
 
 		res.render("centrodevacunacion/formCentroDeVacunacion", {
             provincias: provincias,
@@ -115,13 +119,13 @@ const editCentroVac = async (req, res) => {
 
 		let provincias = [];
 		const provinciasResponse = await axios.get('https://apis.datos.gob.ar/georef/api/provincias');
-		provincias = provinciasResponse.data.provincias.map(provincia => provincia.nombre); 
+		provincias = provinciasResponse.data.provincias.map(provincia => provincia.nombre).sort((a, b) => a.localeCompare(b)); 
 
 		// Obtener localidades según la provincia del centro de vacunación
 		let localidades = [];
 		if (centroV.provincia) {
 			const localidadesResponse = await axios.get(`https://apis.datos.gob.ar/georef/api/localidades?provincia=${centroV.provincia}`);
-			localidades = localidadesResponse.data.localidades.map(localidad => localidad.nombre);
+			localidades = localidadesResponse.data.localidades.map(localidad => localidad.nombre).sort((a, b) => a.localeCompare(b));
 		}
 
 		res.render("centrodevacunacion/editCentroDeVacunacion", {

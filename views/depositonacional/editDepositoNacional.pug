@@ -20,7 +20,6 @@ body
         .form-group
             label.form-label(for='provincia') Provincia:
             select.form-select(name="provincia" id="provincia" required)
-                option(value="") Seleccione una provincia 
                 each provincia in provincias
                     option(value=provincia selected=(depositoN.provincia === provincia))= provincia
         br

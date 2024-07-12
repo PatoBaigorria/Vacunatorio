@@ -22,8 +22,8 @@
 - Ver boton editar en Lote Interno ✔ (Pato)
 - Ordenar la lista de forma descendente de las siguientes tablas: ✔ (Pato)
 - En Traslados validar al crear un Traslado en Nº de Serie aparezcan los lotes que hayan llegado al Centro de Vacunación 
-- Ordenar lexicograficamente las provincias y las localidades
-- Sacar el is-invalid de las localidades cuando se seleccione una provincia
+- Ordenar lexicograficamente las provincias y las localidades ✔ (Pato)
+- Sacar el is-invalid de las localidades cuando se seleccione una provincia ✔ (Pato)
   - Lote proveedor ✔
   - Lote interno ✔
   - Depósito nacional ✔
