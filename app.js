@@ -19,9 +19,11 @@
 - Verificar toda la lógica de las vistas de traslado ✔ (Pato)
 - Modificar el descarte para que sea eliminado físicamente ✔ (Pato)
 - Corregir los endpoints de cada usuario para que solo puedan ver sus vistas ✔ (Pato)
-- En Traslados validar al crear un Traslado  en Nº de Serie aparezcan los lotes que hayan llegado al Centro de Vacunación
 - Ver boton editar en Lote Interno ✔ (Pato)
 - Ordenar la lista de forma descendente de las siguientes tablas: ✔ (Pato)
+- En Traslados validar al crear un Traslado en Nº de Serie aparezcan los lotes que hayan llegado al Centro de Vacunación 
+- Ordenar lexicograficamente las provincias y las localidades
+- Sacar el is-invalid de las localidades cuando se seleccione una provincia
   - Lote proveedor ✔
   - Lote interno ✔
   - Depósito nacional ✔
@@ -103,7 +105,7 @@ db.authenticate()
 
 /* catch 404 and forward to error handler
 app.use(function (req, res, next) {
-  	next(createError(404));
+		next(createError(404));
 });*/
 
 // error handler

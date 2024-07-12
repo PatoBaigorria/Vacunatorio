@@ -9,15 +9,15 @@ const { createRegistro } = require("./registroController");
 
 const axios = require('axios');
 const getLocalidadesByProvinciaFromAPI = async (req, res) => {
-    const { provinciaNombre } = req.params;
-    try {
-        const response = await axios.get(`https://apis.datos.gob.ar/georef/api/localidades?provincia=${provinciaNombre}`);
-        const localidades = response.data.localidades.map(localidad => localidad.nombre);
-        res.json(localidades);
-    } catch (error) {
-        console.error('Error al obtener las localidades desde la API externa:', error);
-        res.status(500).json({ error: 'Error al obtener las localidades' });
-    }
+	const { provinciaNombre } = req.params;
+	try {
+		const response = await axios.get(`https://apis.datos.gob.ar/georef/api/localidades?provincia=${provinciaNombre}`);
+		const localidades = response.data.localidades.map(localidad => localidad.nombre);
+		res.json(localidades);
+	} catch (error) {
+		console.error('Error al obtener las localidades desde la API externa:', error);
+		res.status(500).json({ error: 'Error al obtener las localidades' });
+	}
 };
 
 
@@ -39,28 +39,28 @@ const listarPersonas = async (req, res) => {
 };
 
 const formPersona = async (req, res) => {
-    try {
-        // Obtener agentes
-        let agentes = await AgenteDeSalud.findAll();
+	try {
+		// Obtener agentes
+		let agentes = await AgenteDeSalud.findAll();
 
-        // Obtener provincias desde la API externa
-        let provincias = [];
-        const provinciasResponse = await axios.get('https://apis.datos.gob.ar/georef/api/provincias');
-        provincias = provinciasResponse.data.provincias.map(provincia => provincia.nombre); // Ajusta según la estructura de la respuesta
+		// Obtener provincias desde la API externa
+		let provincias = [];
+		const provinciasResponse = await axios.get('https://apis.datos.gob.ar/georef/api/provincias');
+		provincias = provinciasResponse.data.provincias.map(provincia => provincia.nombre); // Ajusta según la estructura de la respuesta
 
-        // Inicializar localidades como un array vacío
-        let localidades = [];
+		// Inicializar localidades como un array vacío
+		//let localidades = [];
 
-        // Renderizar la vista formPersona con los agentes, provincias y localidades (vacías inicialmente)
-        res.render("persona/formPersona", {
-            agentes: agentes,
-            provincias: provincias,
-            localidades: localidades
-        });
-    } catch (error) {
-        console.error("Error al crear la persona:", error);
-        res.status(500).json({ message: "Error al crear la persona." });
-    }
+		// Renderizar la vista formPersona con los agentes, provincias y localidades (vacías inicialmente)
+		res.render("persona/formPersona", {
+			agentes: agentes,
+			provincias: provincias,
+			//localidades: localidades
+		});
+	} catch (error) {
+		console.error("Error al crear la persona:", error);
+		res.status(500).json({ message: "Error al crear la persona." });
+	}
 };
 
 
@@ -200,51 +200,51 @@ const detailsPersona = async (req, res) => {
 
 
 const editPersona = async (req, res) => {
-    try {
-        const persona = await Persona.findByPk(req.params.id, {
-            include: [
-                { model: Telefono, attributes: ["celular1", "celular2"] },
-                { model: PatologiaBase, attributes: ["patologiaBase"] },
-                { model: AgenteDeSalud, attributes: ["matricula"] },
-            ],
-        });
+	try {
+		const persona = await Persona.findByPk(req.params.id, {
+			include: [
+				{ model: Telefono, attributes: ["celular1", "celular2"] },
+				{ model: PatologiaBase, attributes: ["patologiaBase"] },
+				{ model: AgenteDeSalud, attributes: ["matricula"] },
+			],
+		});
 
-        if (!persona) {
-            return res.status(404).render("error", {
-                message: "Persona no encontrada",
-            });
-        }
+		if (!persona) {
+			return res.status(404).render("error", {
+				message: "Persona no encontrada",
+			});
+		}
 
-        // Obtener provincias desde la API externa
-        let provincias = [];
-        const provinciasResponse = await axios.get('https://apis.datos.gob.ar/georef/api/provincias');
-        provincias = provinciasResponse.data.provincias.map(provincia => provincia.nombre); // Ajusta según la estructura de la respuesta
+		// Obtener provincias desde la API externa
+		let provincias = [];
+		const provinciasResponse = await axios.get('https://apis.datos.gob.ar/georef/api/provincias');
+		provincias = provinciasResponse.data.provincias.map(provincia => provincia.nombre); // Ajusta según la estructura de la respuesta
 
-        // Obtener localidades de la persona desde la API externa o de tu base de datos
-        let localidadesPersona = [];
-        const localidadesPersonaResponse = await axios.get(`https://apis.datos.gob.ar/georef/api/localidades?provincia=${persona.provincia}`);
-        localidadesPersona = localidadesPersonaResponse.data.localidades.map(localidad => localidad.nombre); // Ajusta según la estructura de la respuesta
+		// Obtener localidades de la persona desde la API externa o de tu base de datos
+		let localidadesPersona = [];
+		const localidadesPersonaResponse = await axios.get(`https://apis.datos.gob.ar/georef/api/localidades?provincia=${persona.provincia}`);
+		localidadesPersona = localidadesPersonaResponse.data.localidades.map(localidad => localidad.nombre); // Ajusta según la estructura de la respuesta
 
-        // Obtener listado de localidades según la provincia seleccionada
-        let localidades = [];
-        if (persona.provincia) {
-            const localidadesResponse = await axios.get(`https://apis.datos.gob.ar/georef/api/localidades?provincia=${persona.provincia}`);
-            localidades = localidadesResponse.data.localidades.map(localidad => localidad.nombre); // Ajusta según la estructura de la respuesta
-        }
+		// Obtener listado de localidades según la provincia seleccionada
+		let localidades = [];
+		if (persona.provincia) {
+			const localidadesResponse = await axios.get(`https://apis.datos.gob.ar/georef/api/localidades?provincia=${persona.provincia}`);
+			localidades = localidadesResponse.data.localidades.map(localidad => localidad.nombre); // Ajusta según la estructura de la respuesta
+		}
 
-        res.render("persona/editPersona", {
-            persona: persona,
-            provincias: provincias,
-            localidades: localidades,
-            localidadesPersona: localidadesPersona,
-        });
-    } catch (error) {
-        console.error("Error al obtener la persona. ", error);
-        res.status(500).json({
-            message: "Error al obtener la persona.",
-            error: error.message,
-        });
-    }
+		res.render("persona/editPersona", {
+			persona: persona,
+			provincias: provincias,
+			localidades: localidades,
+			localidadesPersona: localidadesPersona,
+		});
+	} catch (error) {
+		console.error("Error al obtener la persona. ", error);
+		res.status(500).json({
+			message: "Error al obtener la persona.",
+			error: error.message,
+		});
+	}
 };
 
 

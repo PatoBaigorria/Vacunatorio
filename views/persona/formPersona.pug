@@ -125,8 +125,6 @@ body
             .input-group.has-validation
                 select.form-select(name="localidad" id="localidad" required)
                     option(disabled selected hidden value="") Selecciona una localidad
-                    each localidad in localidades
-                        option(value=localidad)= localidad
                 .invalid-feedback.d-none(id="localidadSinSeleccionar") Seleccione una localidad
         br
         div.text-center
