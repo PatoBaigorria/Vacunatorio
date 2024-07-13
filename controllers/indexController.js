@@ -1,8 +1,8 @@
 const laboratorioController = require("./laboratorioController");
 const localidadController = require("./localidadController");
 const loteInternoController = require("./loteInternoController");
-const loteProveedorController = require("./loteProveedorController");
-const depositoNacionalController = require("./depositoNacionalController");
+const loteProveedorController = require("./loteproveedorController");
+const depositoNacionalController = require("./depositonacionalController");
 const depositoProvincialController = require("./depositoProvincialController");
 const centroDeVacunacionController = require("./centroDeVacunacionController");
 const personaController = require("./personaController");
@@ -12,6 +12,7 @@ const trasladoController = require("./trasladoController");
 const descarteController = require("./descarteController");
 const registroController = require("./registroController");
 const usuarioController = require("./usuarioController");
+const reporteController = require("./reporteController");
 
 module.exports = {
 	laboratorioController,
@@ -28,4 +29,5 @@ module.exports = {
 	descarteController,
 	registroController,
 	usuarioController,
+	reporteController,
 };

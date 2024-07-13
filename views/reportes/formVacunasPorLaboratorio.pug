@@ -1,0 +1,29 @@
+- const title = 'Reporte'
+include ..\includes\layout
+block content
+
+  h1 Selecciona el rango de fechas para el reporte
+
+  form(action="/reportes/vacunas-por-laboratorio" method="get" onsubmit="return validateDates()")
+    div
+      label(for="fechaInicio") Fecha de Inicio:
+      input(type="date" name="fechaInicio" id="fechaInicio" required)
+    div
+      label(for="fechaFin") Fecha de Fin:
+      input(type="date" name="fechaFin" id="fechaFin" required)
+    br
+    div
+      button(type="submit") Generar Reporte
+
+script.
+    function validateDates() {
+      const fechaInicio = new Date(document.getElementById('fechaInicio').value);
+      const fechaFin = new Date(document.getElementById('fechaFin').value);
+
+      // Validar que la fecha de inicio sea anterior a la fecha de fin
+      if (fechaInicio >= fechaFin) {
+        alert("La fecha de inicio debe ser anterior a la fecha de fin.");
+        return false; // Evitar el envío del formulario
+      }
+      return true; // Permitir el envío del formulario
+    }

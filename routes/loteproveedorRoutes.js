@@ -1,7 +1,10 @@
 const express = require("express");
 const router = express.Router();
-const loteProveedorController = require("../controllers/loteProveedorController");
+const loteProveedorController = require("../controllers/loteproveedorController");
 const authorize = require("../middleware/authorize");
+const reporteController = require("../controllers/reporteController");
+
+router.get("/reportes/vacunas-por-laboratorio", authorize(["Super Admin"]), reporteController.generarReporteVacunasPorLaboratorio);
 
 router.get(
 	"/",

@@ -15,6 +15,7 @@ const provinciaRoutes = require("./provinciaRoutes");
 const trasladoRoutes = require("./trasladoRoutes");
 const registroRoutes = require("./registroRoutes");
 const usuarioRoutes = require("./usuarioRoutes");
+const reporteRoutes = require("./reporteRoutes");
 
 const { passport } = require("../app");
 
@@ -150,5 +151,8 @@ router.use(
 	authorize(["Super Admin"]),
     localidadRoutes // Rutas de Localidad
 );
+router.use(
+	"/reportes", isAuthenticated,
+	authorize(["Super Admin"]), reporteRoutes)
 
 module.exports = router;

@@ -1,0 +1,19 @@
+-const title = 'Reporte'
+include ..\includes\layout
+block content
+  h1 Reporte de Vacunas Compradas por Laboratorio
+  p Fecha de inicio: #{fechaInicio}
+  p Fecha de fin: #{fechaFin}
+
+  table
+    thead
+      tr
+        th Laboratorio
+        th Total de Vacunas Compradas
+    tbody
+      each row in reportData
+        tr
+          td= row.Laboratorio.nombreLaboratorio
+          td= row.dataValues.totalVacunas
+
+  a(href="/reportes/vacunas-por-laboratorio") Volver al reporte
