@@ -26,7 +26,9 @@ const generarReporteVacunasPorLaboratorio = async (req, res) => {
             type: sequelize.QueryTypes.SELECT
         });
         res.render('reportes/vacunasPorLaboratorio', {
-            reportData: reportData
+            reportData: reportData,
+            fechaInicio: fechaInicio,
+            fechaFin: fechaFin
         });
     } catch (error) {
         console.error("Error al generar el reporte:", error);

@@ -34,7 +34,11 @@
 - Acordar las vistas a la provincia y a cada usuario ✔ (Eze y Pato)
 - Consultas:
   - ¿Los reportes deben ser vistos por los usuarios correspondientes o solo deben verlo los "Super Admin"?
-  - tres reportes, uno en stock, otro en cuantas vacunas se enviaron a determinado centro, localidad o provincia, otro en administración de la vacunas
+  - tres reportes: 
+		° cantidad de stock disponible por tipo de vacuna por provincia que esten en los centros de vacunación
+		° cuantas vacunas se enviaron a determinado centro, localidad o provincia en una fecha determinada
+		° administración de la vacunas ✔ (Eze y Pato)
+		° Cantidad de personas vacunadas por tipo de vacuna, por provincia y localidad
 */
 
 const createError = require("http-errors");
