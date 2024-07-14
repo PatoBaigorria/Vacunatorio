@@ -13,7 +13,7 @@ block content
     tbody
       each row in reportData
         tr
-          td= row.Laboratorio.nombreLaboratorio
-          td= row.dataValues.totalVacunas
+          td= row.nombreLaboratorio
+          td= row.cantidadDeVacunasTotales
 
   a(href="/reportes/vacunas-por-laboratorio") Volver al reporte

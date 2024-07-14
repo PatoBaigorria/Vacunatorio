@@ -1,41 +1,40 @@
-const { LoteProveedor, Laboratorio } = require("../models/relaciones");
+const { LoteProveedor, Laboratorio, LoteInterno } = require("../models/relaciones");
 const { Op } = require("sequelize");
-const sequelize = require("sequelize"); // Asegúrate de que esto esté importado
+const sequelize = require("../database/db"); // Asegúrate de que esto esté importado
 
 const generarReporteVacunasPorLaboratorio = async (req, res) => {
     const { fechaInicio, fechaFin } = req.query;
+    const query = `
+        SELECT 
+            Laboratorio.nombreLaboratorio, 
+            SUM(Loteproveedor.cantidadDeLotesInternos * Loteinterno.cantidadDeVacunasTotales) AS cantidadDeVacunasTotales
+        FROM 
+            loteproveedor AS Loteproveedor
+        JOIN 
+            loteinterno AS Loteinterno ON Loteproveedor.numeroDeLote = Loteinterno.numeroDeLote
+        JOIN 
+            laboratorio AS Laboratorio ON Loteproveedor.idLaboratorio = Laboratorio.idLaboratorio
+        WHERE 
+            Loteproveedor.fechaDeCompra BETWEEN :fechaInicio AND :fechaFin
+        GROUP BY 
+            Laboratorio.nombreLaboratorio;
+    `;
 
     try {
-        const reportData = await LoteProveedor.findAll({
-            attributes: [
-                [sequelize.fn('sum', sequelize.col('cantidadDeLotesInternos')), 'totalVacunas'],
-            ],
-            include: [
-                {
-                    model: Laboratorio,
-                    attributes: ['nombreLaboratorio']
-                }
-            ],
-            where: {
-                fechaDeCompra: {
-                    [Op.between]: [fechaInicio, fechaFin]
-                }
-            },
-            group: ['Laboratorio.idLaboratorio'] // Cambia a idLaboratorio para evitar problemas
+        const reportData = await sequelize.query(query, {
+            replacements: { fechaInicio, fechaFin },
+            type: sequelize.QueryTypes.SELECT
         });
-
         res.render('reportes/vacunasPorLaboratorio', {
-            reportData: reportData,
-            fechaInicio: fechaInicio,
-            fechaFin: fechaFin
+            reportData: reportData
         });
     } catch (error) {
         console.error("Error al generar el reporte:", error);
-        res.status(500).json({ message: "Error al generar el reporte." });
+        res.status(500).json({ message: "Error al generar el reporte. Error: " + error.message });
     }
 };
+
 const formDatosReporte = (req, res) => {
-    
     res.render('reportes/formVacunasPorLaboratorio');
 }
 
