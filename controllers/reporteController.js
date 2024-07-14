@@ -78,10 +78,62 @@ const generarReportePersonasVacunadas = async (req, res) => {
     }
 };
     
+const formEnviosVacunasReporte = (req, res) => {
+    res.render('reportes/formEnviosVacunas');
+}
+const generarReporteEnviosVacunas = async (req, res) => {
+    const { fecha, filtro, valor } = req.query;
+    const formattedFecha = moment(fecha).format('DD-MM-YYYY');
+
+    const validFilters = ['idCentroDeVacunacion', 'localidad', 'provincia'];
+    if (!validFilters.includes(filtro)) {
+        return res.status(400).json({ message: "Filtro no válido." });
+    }
+
+    const query = `
+        SELECT 
+            CentroDeVacunacion.idCentroDeVacunacion,
+            CentroDeVacunacion.localidad,
+            CentroDeVacunacion.provincia,
+            SUM(LoteInterno.cantidadDeVacunasTotales) AS cantidadDeVacunasTotales
+        FROM 
+            traslado
+        JOIN 
+            loteinterno AS LoteInterno ON traslado.numeroDeSerie = LoteInterno.numeroDeSerie
+        JOIN 
+            centrodevacunacion AS CentroDeVacunacion ON traslado.idCentroDeVacunacion = CentroDeVacunacion.idCentroDeVacunacion
+        WHERE 
+            traslado.fechaDeLlegada = :fecha
+            AND CentroDeVacunacion.${filtro} = :valor
+        GROUP BY 
+            CentroDeVacunacion.idCentroDeVacunacion, CentroDeVacunacion.localidad, CentroDeVacunacion.provincia;
+    `;
+
+    try {
+        const reportData = await sequelize.query(query, {
+            replacements: { fecha, valor },
+            type: sequelize.QueryTypes.SELECT
+        });
+        res.render('reportes/enviosVacunas', {
+            reportData,
+            fecha: formattedFecha,
+            filtro,
+            valor
+        });
+    } catch (error) {
+        console.error("Error al generar el reporte:", error);
+        res.status(500).json({ message: "Error al generar el reporte. Error: " + error.message });
+    }
+};
+
+
+
    
 
 module.exports = {
     generarReporteVacunasPorLaboratorio,
     formDatosReporte,
     generarReportePersonasVacunadas,
+    formEnviosVacunasReporte,
+    generarReporteEnviosVacunas,
 };

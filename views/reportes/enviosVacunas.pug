@@ -1,0 +1,88 @@
+- const title = 'Reporte de Envíos de Vacunas'
+include ..\includes\layout
+block content
+  .container.mt-4
+    .row.justify-content-center
+        .col-md-8
+            h1(style="white-space: nowrap;") Reporte de Envíos de Vacunas a Centros de Vacunación
+
+            .row.mb-3
+                .col.text-center
+                    p(style="margin-top: 20px;")
+                        strong Fecha:
+                        |  #{fecha}
+
+            .text-center
+                canvas#enviosChart(width="400" height="200")
+
+            .text-center.mt-4
+                button.btn.btn-primary(onclick="window.history.back()") Volver al reporte
+
+script(src="https://cdn.jsdelivr.net/npm/chart.js")
+script(src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2")
+
+script.
+  // Datos para el gráfico
+  const reportData = !{JSON.stringify(reportData)};
+  const filtro = !{JSON.stringify(filtro)};
+  const labels = reportData.map(row => {
+    if (filtro === 'provincia') {
+      return row.provincia;
+    } else if (filtro === 'idCentroDeVacunacion') {
+      return row.idCentroDeVacunacion;
+    } else {
+      return row.localidad;
+    }
+  });
+  const data = reportData.map(row => row.cantidadDeVacunasTotales);
+
+  // Configuración del gráfico
+  const ctx = document.getElementById('enviosChart').getContext('2d');
+  const enviosChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: labels,
+      datasets: [{
+        label: 'Total de Vacunas Enviadas',
+        data: data,
+        backgroundColor: 'rgba(255, 99, 132, 0.2)',
+        borderColor: 'rgba(255, 99, 132, 1)',
+        borderWidth: 1
+      }]
+    },
+    options: {
+      scales: {
+        y: {
+          beginAtZero: true,
+          ticks: {
+            suggestedMax: Math.max(...reportData.map(row => row.cantidadDeVacunasTotales)) + 10
+        },
+          title: {
+            display: true,
+            text: 'Cantidad de Vacunas'
+          }
+        },
+        x: {
+          title: {
+            display: true,
+            text: 'Centros de Vacunación'
+          }
+        }
+      },
+      plugins: {
+        legend: {
+          display: false
+        },
+        datalabels: {
+            color: 'black',
+            anchor: 'end',
+            align: 'start',
+            formatter: function(value, context) {
+                return value;
+            }
+        }
+      }
+    },
+    plugins: [ChartDataLabels]
+  });
+
