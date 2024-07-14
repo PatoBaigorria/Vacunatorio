@@ -1,19 +1,78 @@
--const title = 'Reporte'
+- const title = 'Reporte Vacunas Compradas por Laboratorio'
 include ..\includes\layout
 block content
-	h1 Reporte de Vacunas Compradas por Laboratorio
-	p Fecha de inicio: #{fechaInicio}
-	p Fecha de fin: #{fechaFin}
+  .container.mt-4
+    .row.justify-content-center
+      .col-md-8
+        h1(style="white-space: nowrap;") Reporte de Vacunas Compradas por Laboratorio
 
-	table
-		thead
-			tr
-				th Laboratorio
-				th Total de Vacunas Compradas
-		tbody
-			each row in reportData
-				tr
-					td= row.nombreLaboratorio
-					td= row.cantidadDeVacunasTotales
-	br
-	button.btn.btn-primary(onclick="window.history.back()") Volver al reporte
+        .row.mb-3
+          .col.text-center
+            p(style="margin-top: 50px;")
+              strong Fecha de inicio:
+              |  #{fechaInicio}
+          .col.text-center
+            p(style="margin-top: 50px;")
+              strong Fecha de fin:
+              |  #{fechaFin}
+
+        .text-center
+          canvas#vacunasChart(width="400" height="200")
+
+        .text-center.mt-4
+          button.btn.btn-primary(onclick="window.history.back()") Volver al reporte
+
+script(src="https://cdn.jsdelivr.net/npm/chart.js")
+script(src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2")
+
+script.
+  // Datos para el gráfico
+  const reportData = !{JSON.stringify(reportData)};
+  const labels = reportData.map(row => row.nombreLaboratorio);
+  const data = reportData.map(row => row.cantidadDeVacunasTotales);
+
+  // Configuración del gráfico
+  const ctx = document.getElementById('vacunasChart').getContext('2d');
+  const vacunasChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: labels,
+      datasets: [{
+        label: 'Total de Vacunas Compradas',
+        data: data,
+        backgroundColor: 'rgba(54, 162, 235, 0.2)',
+        borderColor: 'rgba(54, 162, 235, 1)',
+        borderWidth: 1
+      }]
+    },
+    options: {
+      scales: {
+        y: {
+          beginAtZero: true,
+          title: {
+            display: true,
+            text: 'Cantidad de Vacunas'
+          }
+        },
+        x: {
+          title: {
+            display: true,
+            text: 'Laboratorios'
+          }
+        }
+      },
+      plugins: {
+        legend: {
+          display: false
+        },
+        datalabels: {
+          anchor: 'end',
+          align: 'top',
+          formatter: function(value, context) {
+            return value;
+          }
+        }
+      }
+    },
+    plugins: [ChartDataLabels]
+  });

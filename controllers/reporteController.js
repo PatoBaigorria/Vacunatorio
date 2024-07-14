@@ -1,9 +1,13 @@
 const { LoteProveedor, Laboratorio, LoteInterno } = require("../models/relaciones");
 const { Op } = require("sequelize");
-const sequelize = require("../database/db"); // Asegúrate de que esto esté importado
+const sequelize = require("../database/db");
+const moment = require('moment');
 
 const generarReporteVacunasPorLaboratorio = async (req, res) => {
     const { fechaInicio, fechaFin } = req.query;
+    const formattedFechaInicio = moment(fechaInicio).format('DD-MM-YYYY');
+    const formattedFechaFin = moment(fechaFin).format('DD-MM-YYYY');
+
     const query = `
         SELECT 
             Laboratorio.nombreLaboratorio, 
@@ -27,8 +31,8 @@ const generarReporteVacunasPorLaboratorio = async (req, res) => {
         });
         res.render('reportes/vacunasPorLaboratorio', {
             reportData: reportData,
-            fechaInicio: fechaInicio,
-            fechaFin: fechaFin
+            fechaInicio: formattedFechaInicio,
+            fechaFin: formattedFechaFin
         });
     } catch (error) {
         console.error("Error al generar el reporte:", error);
@@ -40,7 +44,44 @@ const formDatosReporte = (req, res) => {
     res.render('reportes/formVacunasPorLaboratorio');
 }
 
+const generarReportePersonasVacunadas = async (req, res) => {
+    const query = `
+        SELECT 
+            lp.tipoDeVacuna,
+            p.provincia,
+            p.localidad,
+            COUNT(DISTINCT a.DNIPaciente) AS cantidad_vacunados
+        FROM 
+            aplicacion a
+        JOIN 
+            persona p ON a.DNIPaciente = p.DNI
+        JOIN 
+            loteInterno li ON a.numeroDeSerie = li.numeroDeSerie
+        JOIN 
+            loteProveedor lp ON li.numeroDeLote = lp.numeroDeLote
+        GROUP BY 
+            lp.tipoDeVacuna, p.provincia, p.localidad
+        ORDER BY 
+            p.provincia, p.localidad, lp.tipoDeVacuna;
+    `;
+
+    try {
+        const reportData = await sequelize.query(query, {
+            type: sequelize.QueryTypes.SELECT
+        });
+        res.render('reportes/personasVacunadas', {
+            reportData: reportData
+        });
+    } catch (error) {
+        console.error("Error al generar el reporte:", error);
+        res.status(500).json({ message: "Error al generar el reporte. Error: " + error.message });
+    }
+};
+    
+   
+
 module.exports = {
     generarReporteVacunasPorLaboratorio,
     formDatosReporte,
+    generarReportePersonasVacunadas,
 };

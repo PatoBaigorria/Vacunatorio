@@ -38,7 +38,7 @@
 		° cantidad de stock disponible por tipo de vacuna por provincia que esten en los centros de vacunación
 		° cuantas vacunas se enviaron a determinado centro, localidad o provincia en una fecha determinada
 		° administración de la vacunas ✔ (Eze y Pato)
-		° Cantidad de personas vacunadas por tipo de vacuna, por provincia y localidad
+		° Cantidad de personas vacunadas por tipo de vacuna, por provincia y localidad ✔ (Pato)
 */
 
 const createError = require("http-errors");

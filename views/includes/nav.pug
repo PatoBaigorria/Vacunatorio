@@ -59,14 +59,14 @@ nav.navbar.navbar-expand-md.bg-dark
 								i.fas.fa-users-cog
 								|  Usuarios
 						li.nav-item.dropdown
-							a.nav-link.dropdown-toggle.text-light#toggleLotes(data-bs-toggle="dropdown" data-bs-target="lotes" aria-haspopup="true" aria-expanded="false") 
+							a.nav-link.dropdown-toggle.text-light#toggleReportes(data-bs-toggle="dropdown" data-bs-target="reportes" aria-haspopup="true" aria-expanded="false") 
 								i.fa-solid.fa-chart-pie
 								|  Reportes
-							ul.dropdown-menu.bg-dark#lotes(aria-labelledby="toggleLotes")
+							ul.dropdown-menu.bg-dark#lotes(aria-labelledby="toggleReportes")
 								li
 									a.nav-link.text-light(href="/reportes/form-vacunas-por-laboratorio") Vacunas compradas por laboratorio
 								li
-									a.nav-link.text-light(href="/lotesproveedores") Personas vacunadas por provincia
+									a.nav-link.text-light(href="/reportes/personasvacunadas") Personas vacunadas por provincia
 					else if user.rol === 'Gestor de compras'
 						li.nav-item
 							a.nav-link.text-light(href="/laboratorios") 

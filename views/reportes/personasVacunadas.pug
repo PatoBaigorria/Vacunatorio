@@ -1,0 +1,73 @@
+doctype html
+html(lang="es")
+  head
+    title= title
+    script(src="https://cdn.jsdelivr.net/npm/chart.js")
+    script(src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels")
+  body
+    include ..\includes\layout
+
+    block content
+      .container.mt-4
+        .row.justify-content-center
+          .col-md-8
+            .text-center.mb-4
+              h3 Reporte Cantidad de Personas Vacunadas por Tipo de Vacuna y Provincia
+            canvas#vacunasChart(width="400" height="200")
+
+            script.
+              const ctx = document.getElementById('vacunasChart').getContext('2d');
+              const reportData = !{JSON.stringify(reportData)};
+
+              const colores = [
+                "rgba(255, 99, 132, 0.2)",
+                "rgba(54, 162, 235, 0.2)",
+                "rgba(255, 206, 86, 0.2)",
+                "rgba(75, 192, 192, 0.2)",
+              ];
+
+              const tiposDeVacuna = [...new Set(reportData.map(row => row.tipoDeVacuna))];
+              const provincias = [...new Set(reportData.map(row => row.provincia))];
+
+              const cantidadesPorTipo = tiposDeVacuna.map(tipo => {
+                return provincias.map(provincia => {
+                  const cantidad = reportData.find(row => row.tipoDeVacuna === tipo && row.provincia === provincia);
+                  return cantidad ? cantidad.cantidad_vacunados : 0;
+                });
+              });
+
+              const vacunasChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                  labels: provincias,
+                  datasets: tiposDeVacuna.map((tipo, index) => ({
+                    label: tipo,
+                    data: cantidadesPorTipo[index],
+                    backgroundColor: colores[index % colores.length],
+                    borderColor: colores[index % colores.length].replace('0.2', '1'),
+                    borderWidth: 1
+                  }))
+                },
+                options: {
+                  scales: {
+                    y: {
+                      beginAtZero: true,
+                      title: {
+                        display: true,
+                        text: 'Personas'
+                      }
+                    }
+                  },
+                  plugins: {
+                    datalabels: {
+                      color: 'black',
+                      anchor: 'start',
+                      align: 'start',
+                      formatter: (value) => {
+                        return value !== 0 ? value : '';
+                      }
+                    }
+                  }
+                },
+                plugins: [ChartDataLabels]
+              });
