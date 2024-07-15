@@ -2,49 +2,49 @@
 include ..\includes\layout
 block content
 
-	h1 Selecciona el rango de fechas para el reporte
-
-	form(action="/reportes/vacunas-por-laboratorio" method="get" onsubmit="return validateDates()")
-		div
-			label(for="fechaInicio") Fecha de Inicio:
-			input(type="date" name="fechaInicio" id="fechaInicio" required)
-		div
-			label(for="fechaFin") Fecha de Fin:
-			input(type="date" name="fechaFin" id="fechaFin" required)
-		br
-		div
-			button(type="submit") Generar Reporte
-
+  .container.mt-4
+    .row.justify-content-center
+      .col-md-5
+        h2(style="white-space: nowrap;") Selecciona el rango de fechas para el reporte
+        .row.mb-3
+        form(action="/reportes/vacunas-por-laboratorio" method="get" onsubmit="return validateDates()")
+          .form-group
+            label.form-label(for="fechaInicio") Fecha de Inicio:
+            input.form-control(type="date" name="fechaInicio" id="fechaInicio" required)
+          .form-group
+            label.form-label(for="fechaFin") Fecha de Fin:
+            input.form-control(type="date" name="fechaFin" id="fechaFin" required)
+          .text-center.mt-4
+            button.btn.btn-primary(type="submit") Generar Reporte
 script.
-	// Publicar la solicitud AJAX cuando se envíe el formulario
-		$('#reportForm').submit(function(event) {
-			// Prevenir el comportamiento predeterminado del formulario
-			event.preventDefault();
+  $('#reportForm').submit(function(event) {
+    // Prevenir el comportamiento predeterminado del formulario
+    event.preventDefault();
 
-			// Obtener las fechas de inicio y fin del formulario
-			const fechaInicio = $('#fechaInicio').val();
-			const fechaFin = $('#fechaFin').val();
+    // Obtener las fechas de inicio y fin del formulario
+    const fechaInicio = $('#fechaInicio').val();
+    const fechaFin = $('#fechaFin').val();
 
-			// Objeto de datos a enviar al backend
-			const formData = {
-				fechaInicio: fechaInicio,
-				fechaFin: fechaFin
-			};
+    // Objeto de datos a enviar al backend
+    const formData = {
+      fechaInicio: fechaInicio,
+      fechaFin: fechaFin
+    };
 
-			// Realizar la solicitud AJAX usando jQuery
-			$.ajax({
-				type: 'GET', // Método HTTP GET para obtener datos
-				url: '/reportes/vacunas-por-laboratorio', // URL del controlador de backend
-				data: formData, // Datos a enviar al servidor
-				success: function(response) {
-					// Manejar la respuesta exitosa aquí
-					console.log('Reporte generado:', response);
-					// Puedes redirigir a otra página o mostrar la respuesta en la misma página
-				},
-				error: function(error) {
-					// Manejar errores de la solicitud AJAX
-					console.error('Error al generar el reporte:', error);
-					// Puedes mostrar un mensaje de error o tomar otra acción adecuada
-				}
-			});
-		});
+    // Realizar la solicitud AJAX usando jQuery
+    $.ajax({
+      type: 'GET', // Método HTTP GET para obtener datos
+      url: '/reportes/vacunas-por-laboratorio', // URL del controlador de backend
+      data: formData, // Datos a enviar al servidor
+      success: function(response) {
+        // Manejar la respuesta exitosa aquí
+        console.log('Reporte generado:', response);
+        // Puedes redirigir a otra página o mostrar la respuesta en la misma página
+      },
+      error: function(error) {
+        // Manejar errores de la solicitud AJAX
+        console.error('Error al generar el reporte:', error);
+        // Puedes mostrar un mensaje de error o tomar otra acción adecuada
+      }
+    });
+  });
