@@ -17,13 +17,15 @@ script(src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2")
 
 script.
   // Datos para el gráfico
-  const reportData = !{JSON.stringify(reportData)};
   
-  const labels = reportData.map(row => `${row.provincia} - ${row.tipoDeVacuna}`);
-  const data = reportData.map(row => row.cantidadDeStockDisponible);
+  
+  
 
   // Configuración del gráfico
   const ctx = document.getElementById('stockChart').getContext('2d');
+  const reportData = !{JSON.stringify(reportData)};
+  const labels = reportData.map(row => `${row.provincia} - ${row.tipoDeVacuna}`);
+  const data = reportData.map(row => row.cantidadDeStockDisponible);
   const stockChart = new Chart(ctx, {
     type: 'bar',
     data: {
@@ -61,10 +63,10 @@ script.
         },
         datalabels: {
           color: 'black',
-          anchor: 'end',
-          align: 'start',
+          anchor: 'start',
+          align: 'top',
           formatter: function(value, context) {
-            return value;
+            return value !== 0 ? value : '';
           }
         }
       }

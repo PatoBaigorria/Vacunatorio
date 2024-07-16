@@ -52,6 +52,12 @@ html(lang="es")
                   scales: {
                     y: {
                       beginAtZero: true,
+                      ticks: {
+                        stepSize: 1, // Asegura que los ticks sean enteros
+                        callback: function(value) {
+                          return Math.round(value); // Redondea a enteros
+                        }
+                      },
                       title: {
                         display: true,
                         text: 'Personas'
