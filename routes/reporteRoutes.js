@@ -9,5 +9,6 @@ router.get('/form-vacunas-por-laboratorio', authorize(["Super Admin"]), reporteC
 router.get('/personasvacunadas', authorize(["Super Admin"]), reporteController.generarReportePersonasVacunadas);
 router.get('/formenviosvacunas', authorize(["Super Admin"]), reporteController.formEnviosVacunasReporte);
 router.get('/enviosvacunas', authorize(["Super Admin"]), reporteController.generarReporteEnviosVacunas);
+router.get('/stockdisponible', authorize(["Super Admin"]), reporteController.generarReporteStockDisponibleDeVacunas);
 
 module.exports = router;

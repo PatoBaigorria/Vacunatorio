@@ -1,0 +1,73 @@
+- const title = 'Reporte de Stock Disponible de Vacunas'
+include ..\includes\layout
+block content
+  .container.mt-4
+    .row.justify-content-center
+      .col-md-8
+        h1 Reporte de Stock Disponible de Vacunas
+
+        .text-center
+          canvas#stockChart(width="400" height="200")
+
+        .text-center.mt-4
+          button.btn.btn-primary(onclick="window.history.back()") Volver
+
+script(src="https://cdn.jsdelivr.net/npm/chart.js")
+script(src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2")
+
+script.
+  // Datos para el gráfico
+  const reportData = !{JSON.stringify(reportData)};
+  
+  const labels = reportData.map(row => `${row.provincia} - ${row.tipoDeVacuna}`);
+  const data = reportData.map(row => row.cantidadDeStockDisponible);
+
+  // Configuración del gráfico
+  const ctx = document.getElementById('stockChart').getContext('2d');
+  const stockChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: labels,
+      datasets: [{
+        label: 'Stock Disponible de Vacunas',
+        data: data,
+        backgroundColor: 'rgba(255, 206, 86, 0.2)',
+        borderColor: 'rgba(75, 192, 192, 1)',
+        borderWidth: 1
+      }]
+    },
+    options: {
+      scales: {
+        y: {
+          beginAtZero: true,
+          ticks: {
+            suggestedMax: Math.max(...data) + 50
+          },
+          title: {
+            display: true,
+            text: 'Cantidad de Stock Disponible'
+          }
+        },
+        x: {
+          title: {
+            display: true,
+            text: 'Provincia - Tipo de Vacuna'
+          }
+        }
+      },
+      plugins: {
+        legend: {
+          display: false
+        },
+        datalabels: {
+          color: 'black',
+          anchor: 'end',
+          align: 'start',
+          formatter: function(value, context) {
+            return value;
+          }
+        }
+      }
+    },
+    plugins: [ChartDataLabels]
+  });

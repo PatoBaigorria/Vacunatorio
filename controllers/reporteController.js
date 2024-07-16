@@ -126,6 +126,38 @@ const generarReporteEnviosVacunas = async (req, res) => {
     }
 };
 
+const generarReporteStockDisponibleDeVacunas = async (req, res) => {
+    const query = `
+        SELECT 
+            lp.tipoDeVacuna,
+            c.provincia, 
+            SUM(li.cantidadDeVacunasTotales - li.cantidadDeVacunasRestantes) AS cantidadDeStockDisponible
+        FROM 
+            loteinterno li
+        JOIN 
+            centrodevacunacion c ON li.idCentroDeVacunacion = c.idCentroDeVacunacion
+        JOIN 
+            loteproveedor lp ON li.numeroDeLote = lp.numeroDeLote
+        GROUP BY 
+            lp.tipoDeVacuna,
+            c.provincia  
+        ORDER BY 
+            lp.tipoDeVacuna,
+            c.provincia;
+    `;
+
+    try {
+        const reportData = await sequelize.query(query, {
+            type: sequelize.QueryTypes.SELECT
+        });
+        res.render('reportes/stockDisponible', {
+            reportData: reportData
+        });
+    } catch (error) {
+        console.error("Error al generar el reporte:", error);
+        res.status(500).json({ message: "Error al generar el reporte. Error: " + error.message });
+    }
+};
 
 
    
@@ -136,4 +168,5 @@ module.exports = {
     generarReportePersonasVacunadas,
     formEnviosVacunasReporte,
     generarReporteEnviosVacunas,
+    generarReporteStockDisponibleDeVacunas,
 };

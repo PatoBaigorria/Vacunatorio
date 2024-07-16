@@ -1,7 +1,6 @@
 /*
 - Corregir todas las tablas para que tengan menos columnas ✔ (Eze)
 - Dividir las vistas por rol ✔ (Pato)
-- Corregir el redireccionamiento para que muestre las acciones correspondientes ¿?
 - Mover el perfil del usuario al nav ✔ (Pato)
 - Corregir modificar Lote interno para que quede como alta lote interno ✔ (Eze)
 - Modificar registro para que se refleje el usuario que realiza las acciones ✔ (Eze)
@@ -35,8 +34,8 @@
 - Consultas:
   - ¿Los reportes deben ser vistos por los usuarios correspondientes o solo deben verlo los "Super Admin"?
   - tres reportes: 
-		° cantidad de stock disponible por tipo de vacuna por provincia que esten en los centros de vacunación
-		° cuantas vacunas se enviaron a determinado centro, localidad o provincia en una fecha determinada
+		° cantidad de stock disponible por tipo de vacuna por provincia que esten en los centros de vacunación ✔ (Pato)
+		° cuantas vacunas se enviaron a determinado centro, localidad o provincia en una fecha determinada ✔ (Pato)
 		° administración de la vacunas ✔ (Eze y Pato)
 		° Cantidad de personas vacunadas por tipo de vacuna, por provincia y localidad ✔ (Pato)
 */
