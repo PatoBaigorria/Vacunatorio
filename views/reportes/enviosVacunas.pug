@@ -8,9 +8,13 @@ block content
 
             .row.mb-3
                 .col.text-center
-                    p(style="margin-top: 20px;")
-                        strong Fecha:
-                        |  #{fecha}
+                  p(style="margin-top: 50px;")
+                    strong Fecha de inicio:
+                    |  #{fechaInicio}
+                .col.text-center
+                  p(style="margin-top: 50px;")
+                    strong Fecha de fin:
+                    |  #{fechaFin}
 
             .text-center
                 canvas#enviosChart(width="400" height="200")

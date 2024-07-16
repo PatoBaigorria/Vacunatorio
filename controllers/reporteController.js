@@ -82,8 +82,10 @@ const formEnviosVacunasReporte = (req, res) => {
     res.render('reportes/formEnviosVacunas');
 }
 const generarReporteEnviosVacunas = async (req, res) => {
-    const { fecha, filtro, valor } = req.query;
-    const formattedFecha = moment(fecha).format('DD-MM-YYYY');
+    const { fechaInicio, fechaFin, filtro, valor } = req.query;
+    const formattedFechaInicio = moment(fechaInicio).format('DD-MM-YYYY');
+    const formattedFechaFin = moment(fechaFin).format('DD-MM-YYYY');
+    
 
     const validFilters = ['idCentroDeVacunacion', 'localidad', 'provincia'];
     if (!validFilters.includes(filtro)) {
@@ -95,15 +97,13 @@ const generarReporteEnviosVacunas = async (req, res) => {
             CentroDeVacunacion.idCentroDeVacunacion,
             CentroDeVacunacion.localidad,
             CentroDeVacunacion.provincia,
-            SUM(LoteInterno.cantidadDeVacunasTotales) AS cantidadDeVacunasTotales
+            SUM(li.cantidadDeVacunasRestantes) AS cantidadDeVacunasTotales
         FROM 
-            traslado
+            loteinterno AS li
         JOIN 
-            loteinterno AS LoteInterno ON traslado.numeroDeSerie = LoteInterno.numeroDeSerie
-        JOIN 
-            centrodevacunacion AS CentroDeVacunacion ON traslado.idCentroDeVacunacion = CentroDeVacunacion.idCentroDeVacunacion
+            centrodevacunacion AS CentroDeVacunacion ON li.idCentroDeVacunacion = CentroDeVacunacion.idCentroDeVacunacion
         WHERE 
-            traslado.fechaDeLlegada = :fecha
+            li.fechaDeLlegadaCentroDeVacunacion BETWEEN :fechaInicio AND :fechaFin
             AND CentroDeVacunacion.${filtro} = :valor
         GROUP BY 
             CentroDeVacunacion.idCentroDeVacunacion, CentroDeVacunacion.localidad, CentroDeVacunacion.provincia;
@@ -111,12 +111,13 @@ const generarReporteEnviosVacunas = async (req, res) => {
 
     try {
         const reportData = await sequelize.query(query, {
-            replacements: { fecha, valor },
+            replacements: { fechaInicio, fechaFin, valor },
             type: sequelize.QueryTypes.SELECT
         });
         res.render('reportes/enviosVacunas', {
             reportData,
-            fecha: formattedFecha,
+            fechaInicio: formattedFechaInicio,
+            fechaFin: formattedFechaFin,
             filtro,
             valor
         });
@@ -131,7 +132,7 @@ const generarReporteStockDisponibleDeVacunas = async (req, res) => {
         SELECT 
             lp.tipoDeVacuna,
             c.provincia, 
-            SUM(li.cantidadDeVacunasTotales - li.cantidadDeVacunasRestantes) AS cantidadDeStockDisponible
+            SUM(li.cantidadDeVacunasRestantes) AS cantidadDeStockDisponible
         FROM 
             loteinterno li
         JOIN 
