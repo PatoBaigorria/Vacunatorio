@@ -5,7 +5,8 @@ block content
   .container.mt-4
     .row.justify-content-center
       .col-md-5
-        h2(style="white-space: nowrap;") Selecciona el rango de fechas para el reporte de vacunas por laboratorio
+        h2.mx-auto.text-center(style="white-space: nowrap;") Selecciona el rango de fechas para
+        h2.mx-auto.text-center(style="white-space: nowrap;") el reporte de vacunas por laboratorio
         .row.mb-3
         form(action="/reportes/vacunas-por-laboratorio" method="get" onsubmit="return validateDates()")
           .form-group

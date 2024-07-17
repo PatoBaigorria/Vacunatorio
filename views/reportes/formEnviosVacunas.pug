@@ -5,7 +5,8 @@ block content
     .container.mt-4
         .row.justify-content-center
             .col-md-5
-                h2(style="white-space: nowrap;") Completa los filtros para el reporte de envíos de vacunas
+                h2.mx-auto.text-center(style="white-space: nowrap;") Completa los filtros para 
+                h2.mx-auto.text-center(style="white-space: nowrap;") el reporte de envíos de vacunas
                 .row.mb-3
                 form(action="/reportes/enviosvacunas" method="get")
                     .form-group
@@ -15,16 +16,19 @@ block content
                         label.form-label(for="fechaFin") Fecha de Fin:
                         input.form-control(type="date" name="fechaFin" id="fechaFin" required)
                     .form-group
-                        label(for="filtro") Filtro:
-                            select.form-select(name="filtro" id="filtro" required)
-                                option(value="idCentroDeVacunacion") Centro de Vacunación
-                                option(value="provincia") Provincia
-                                option(value="localidad") Localidad
-                                
-
-                    .form-group
-                        label(for="valor") Valor:
-                            input.form-control(type="text" name="valor" id="valor" required)
-
+                        label(for="provincia") Seleccione una provincia:
+                        select.form-select#provincia(name="provincia")
+                            option(disabled selected hidden value="") Selecciona una provincia
+                                each provincia in provincias
+                                    option(value=provincia)= provincia
+                    div.d-none#loc
+                        .form-group
+                            label.form-label(for="localidad") Seleccione una localidad:
+                                select.form-select.is-valid#localidad(name="localidad")
+                    div.d-none#centro
+                        .form-group
+                            label.form-label(for="idCentroDeVacunacion") Seleccione un centro de vacunación:
+                            .input-group.has-validation
+                                select.form-select.is-valid#idCentroDeVacunacion(name="idCentroDeVacunacion")
                     .text-center.mt-4
                         button.btn.btn-primary(type="submit") Generar Reporte

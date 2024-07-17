@@ -4,7 +4,7 @@ block content
   .container.mt-4
     .row.justify-content-center
       .col-md-8
-        h1 Reporte de Stock Disponible de Vacunas
+        h2.mx-auto.text-center(style="white-space: nowrap;") Reporte de Stock Disponible de Vacunas
 
         .text-center
           canvas#stockChart(width="400" height="200")
@@ -17,9 +17,9 @@ script(src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2")
 
 script.
   // Datos para el gráfico
-  
-  
-  
+
+
+
 
   // Configuración del gráfico
   const ctx = document.getElementById('stockChart').getContext('2d');
@@ -33,8 +33,8 @@ script.
       datasets: [{
         label: 'Stock Disponible de Vacunas',
         data: data,
-        backgroundColor: 'rgba(255, 206, 86, 0.2)',
-        borderColor: 'rgba(75, 192, 192, 1)',
+        backgroundColor: 'rgba(255, 206, 86, 0.2)' 
+        borderColor: 'rgba(75, 192, 192, 1)' 
         borderWidth: 1
       }]
     },
@@ -63,7 +63,7 @@ script.
         },
         datalabels: {
           color: 'black',
-          anchor: 'start',
+          anchor: 'end',
           align: 'top',
           formatter: function(value, context) {
             return value !== 0 ? value : '';

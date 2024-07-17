@@ -2,6 +2,7 @@ const { LoteProveedor, Laboratorio, LoteInterno } = require("../models/relacione
 const { Op } = require("sequelize");
 const sequelize = require("../database/db");
 const moment = require('moment');
+const axios = require('axios');
 
 const generarReporteVacunasPorLaboratorio = async (req, res) => {
     const { fechaInicio, fechaFin } = req.query;
@@ -77,21 +78,36 @@ const generarReportePersonasVacunadas = async (req, res) => {
         res.status(500).json({ message: "Error al generar el reporte. Error: " + error.message });
     }
 };
-    
-const formEnviosVacunasReporte = (req, res) => {
-    res.render('reportes/formEnviosVacunas');
+
+const formEnviosVacunasReporte = async (req, res) => {
+    const provinciasResponse = await axios.get('https://apis.datos.gob.ar/georef/api/provincias');
+    provincias = provinciasResponse.data.provincias.map(provincia => provincia.nombre).sort((a, b) => a.localeCompare(b));
+    const localidadesResponse = await axios.get(`https://apis.datos.gob.ar/georef/api/localidades?provincia=${provincias[0]}`);
+    localidades = localidadesResponse.data.localidades.map(localidad => localidad.nombre);
+    localidades = localidades.map(localidad => localidad.trim());
+    localidades.sort((a, b) => a.localeCompare(b));
+    localidades.unshift("Selecciona una localidad");
+    res.render('reportes/formEnviosVacunas', {
+        provincias: provincias,
+        localidades: localidades
+    });
 }
 const generarReporteEnviosVacunas = async (req, res) => {
-    const { fechaInicio, fechaFin, filtro, valor } = req.query;
+    const { fechaInicio, fechaFin, provincia, localidad, centro } = req.query;
+    let filtro = "";
+    let valor = "";
+    if (centro != null) {
+        filtro = "idCentroDeVacunacion";
+        valor = centro;
+    } else if (localidad != null) {
+        filtro = "localidad";
+        valor = localidad;
+    } else {
+        filtro = "provincia";
+        valor = provincia;
+    }
     const formattedFechaInicio = moment(fechaInicio).format('DD-MM-YYYY');
     const formattedFechaFin = moment(fechaFin).format('DD-MM-YYYY');
-    
-
-    const validFilters = ['idCentroDeVacunacion', 'localidad', 'provincia'];
-    if (!validFilters.includes(filtro)) {
-        return res.status(400).json({ message: "Filtro no válido." });
-    }
-
     const query = `
         SELECT 
             CentroDeVacunacion.idCentroDeVacunacion,
@@ -114,6 +130,7 @@ const generarReporteEnviosVacunas = async (req, res) => {
             replacements: { fechaInicio, fechaFin, valor },
             type: sequelize.QueryTypes.SELECT
         });
+        console.log(reportData);
         res.render('reportes/enviosVacunas', {
             reportData,
             fechaInicio: formattedFechaInicio,
@@ -126,6 +143,7 @@ const generarReporteEnviosVacunas = async (req, res) => {
         res.status(500).json({ message: "Error al generar el reporte. Error: " + error.message });
     }
 };
+
 
 const generarReporteStockDisponibleDeVacunas = async (req, res) => {
     const query = `
@@ -161,7 +179,7 @@ const generarReporteStockDisponibleDeVacunas = async (req, res) => {
 };
 
 
-   
+
 
 module.exports = {
     generarReporteVacunasPorLaboratorio,
