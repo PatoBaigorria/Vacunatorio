@@ -20,6 +20,7 @@
 - Corregir los endpoints de cada usuario para que solo puedan ver sus vistas ✔ (Pato)
 - Ver boton editar en Lote Interno ✔ (Pato)
 - Ordenar la lista de forma descendente de las siguientes tablas: ✔ (Pato)
+- Terminar formEnviosVacunas 
 - En Traslados validar al crear un Traslado en Nº de Serie aparezcan los lotes que hayan llegado al Centro de Vacunación 
 - Ordenar lexicograficamente las provincias y las localidades ✔ (Pato)
 - Sacar el is-invalid de las localidades cuando se seleccione una provincia ✔ (Pato)

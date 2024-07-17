@@ -1,17 +1,18 @@
+const centrodevacunacion = require("../models/centrodevacunacion");
 const { CentroDeVacunacion } = require("../models/relaciones");
 const { createRegistro } = require("./registroController");
 const axios = require('axios');
 
 const getLocalidadesByProvinciaFromAPI = async (req, res) => {
-    const { provinciaNombre } = req.params;
-    try {
-        const response = await axios.get(`https://apis.datos.gob.ar/georef/api/localidades?provincia=${provinciaNombre}`);
-        const localidades = response.data.localidades.map(localidad => localidad.nombre).sort((a, b) => a.localeCompare(b));
-        res.json(localidades);
-    } catch (error) {
-        console.error('Error al obtener las localidades desde la API externa:', error);
-        res.status(500).json({ error: 'Error al obtener las localidades' });
-    }
+	const { provinciaNombre } = req.params;
+	try {
+		const response = await axios.get(`https://apis.datos.gob.ar/georef/api/localidades?provincia=${provinciaNombre}`);
+		const localidades = response.data.localidades.map(localidad => localidad.nombre).sort((a, b) => a.localeCompare(b));
+		res.json(localidades);
+	} catch (error) {
+		console.error('Error al obtener las localidades desde la API externa:', error);
+		res.status(500).json({ error: 'Error al obtener las localidades' });
+	}
 };
 
 const listarCentrosDeVacunacion = async (req, res) => {
@@ -32,27 +33,37 @@ const listarCentrosDeVacunacion = async (req, res) => {
 	}
 };
 
+async function listarCentrosJSON(req, res) {
+	const { provincia } = req.body;
+	try {
+		const centros = await CentroDeVacunacion.findAll({ where: { provincia: provincia } });
+		res.json(centros);
+	} catch (error) {
+		throw new Error(`Error al listar centros de vacunación: ${error.message}`);
+	}
+}
+
 const formCentroVac = async (req, res) => {
 	try {
 		// Obtener provincias desde la API externa
-        let provincias = [];
-        const provinciasResponse = await axios.get('https://apis.datos.gob.ar/georef/api/provincias');
-        provincias = provinciasResponse.data.provincias.map(provincia => provincia.nombre).sort((a, b) => a.localeCompare(b));
+		let provincias = [];
+		const provinciasResponse = await axios.get('https://apis.datos.gob.ar/georef/api/provincias');
+		provincias = provinciasResponse.data.provincias.map(provincia => provincia.nombre).sort((a, b) => a.localeCompare(b));
 
-        // Obtener localidades de la primera provincia de la lista
-        let localidades = [];
-        if (provincias.length > 0) {
-            const localidadesResponse = await axios.get(`https://apis.datos.gob.ar/georef/api/localidades?provincia=${provincias[0]}`);
-            localidades = localidadesResponse.data.localidades.map(localidad => localidad.nombre);
+		// Obtener localidades de la primera provincia de la lista
+		let localidades = [];
+		if (provincias.length > 0) {
+			const localidadesResponse = await axios.get(`https://apis.datos.gob.ar/georef/api/localidades?provincia=${provincias[0]}`);
+			localidades = localidadesResponse.data.localidades.map(localidad => localidad.nombre);
 			localidades = localidades.map(localidad => localidad.trim());
 			localidades.sort((a, b) => a.localeCompare(b));
 			localidades.unshift("Selecciona una localidad");
-        }
-		
+		}
+
 
 		res.render("centrodevacunacion/formCentroDeVacunacion", {
-            provincias: provincias,
-            localidades: localidades
+			provincias: provincias,
+			localidades: localidades
 		});
 	} catch (error) {
 		req.flash(
@@ -119,7 +130,7 @@ const editCentroVac = async (req, res) => {
 
 		let provincias = [];
 		const provinciasResponse = await axios.get('https://apis.datos.gob.ar/georef/api/provincias');
-		provincias = provinciasResponse.data.provincias.map(provincia => provincia.nombre).sort((a, b) => a.localeCompare(b)); 
+		provincias = provinciasResponse.data.provincias.map(provincia => provincia.nombre).sort((a, b) => a.localeCompare(b));
 
 		// Obtener localidades según la provincia del centro de vacunación
 		let localidades = [];
@@ -256,6 +267,7 @@ const altaCentroDeVacunacion = async (req, res) => {
 module.exports = {
 	getLocalidadesByProvinciaFromAPI,
 	listarCentrosDeVacunacion,
+	listarCentrosJSON,
 	formCentroVac,
 	createCentroVac,
 	detailsCentroVac,

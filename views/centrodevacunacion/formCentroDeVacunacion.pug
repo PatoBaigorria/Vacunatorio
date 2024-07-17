@@ -94,9 +94,6 @@ script.
         $('#provincia').trigger('change');
     });
 
-    
-
-   
     // Función para mostrar errores
         function mostrarAlerta() {
             $('#mensajeAlerta').text("¡Datos incorrectos! Por favor, verifica la información ingresada.");
@@ -113,7 +110,7 @@ script.
             campo.addClass('is-valid').removeClass('is-invalid');
             $('div[id^=' + campo.attr('id') + '].invalid-feedback').addClass('d-none');
         }
-        
+
         function validarComboBox(campo){
             if(!campo.val()){
                 mostrarError(campo, 'SinSeleccionar');

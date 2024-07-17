@@ -82,24 +82,18 @@ const generarReportePersonasVacunadas = async (req, res) => {
 const formEnviosVacunasReporte = async (req, res) => {
     const provinciasResponse = await axios.get('https://apis.datos.gob.ar/georef/api/provincias');
     provincias = provinciasResponse.data.provincias.map(provincia => provincia.nombre).sort((a, b) => a.localeCompare(b));
-    const localidadesResponse = await axios.get(`https://apis.datos.gob.ar/georef/api/localidades?provincia=${provincias[0]}`);
-    localidades = localidadesResponse.data.localidades.map(localidad => localidad.nombre);
-    localidades = localidades.map(localidad => localidad.trim());
-    localidades.sort((a, b) => a.localeCompare(b));
-    localidades.unshift("Selecciona una localidad");
     res.render('reportes/formEnviosVacunas', {
-        provincias: provincias,
-        localidades: localidades
+        provincias: provincias
     });
 }
 const generarReporteEnviosVacunas = async (req, res) => {
     const { fechaInicio, fechaFin, provincia, localidad, centro } = req.query;
     let filtro = "";
     let valor = "";
-    if (centro != null) {
+    if (centro != null && centro != "") {
         filtro = "idCentroDeVacunacion";
         valor = centro;
-    } else if (localidad != null) {
+    } else if (localidad != null && localidad != "") {
         filtro = "localidad";
         valor = localidad;
     } else {
@@ -121,7 +115,7 @@ const generarReporteEnviosVacunas = async (req, res) => {
         WHERE 
             li.fechaDeLlegadaCentroDeVacunacion BETWEEN :fechaInicio AND :fechaFin
             AND CentroDeVacunacion.${filtro} = :valor
-        GROUP BY 
+        ORDER BY 
             CentroDeVacunacion.idCentroDeVacunacion, CentroDeVacunacion.localidad, CentroDeVacunacion.provincia;
     `;
 

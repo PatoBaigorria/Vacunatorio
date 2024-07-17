@@ -32,3 +32,71 @@ block content
                                 select.form-select.is-valid#idCentroDeVacunacion(name="idCentroDeVacunacion")
                     .text-center.mt-4
                         button.btn.btn-primary(type="submit") Generar Reporte
+
+script(src="https://code.jquery.com/jquery-3.6.0.min.js")
+script.
+    async function cargarLocalidades(){
+        const provincia = $('#provincia').val();
+        const response = await fetch(`https://apis.datos.gob.ar/georef/api/localidades?provincia=${provincia}`);
+        const data = await response.json();
+        const localidades = data.localidades.map(localidad => localidad.nombre);
+        localidades.sort((a, b) => a.localeCompare(b));
+        $('#localidad').empty();
+        $('#localidad').append(new Option('Seleccione una localidad', ''));
+        localidades.forEach(localidad => {
+            $('#localidad').append(new Option(localidad, localidad));
+        });
+    }
+
+    async function cargarCentros() {
+        const provincia = $('#provincia').val();
+        $.ajax({
+            url: '/centrosJSON',  // Ajusta la URL para que coincida con tu ruta del servidor
+            type: 'GET',
+            data: { provincia: provincia },  // Pasa la provincia como parámetro de consulta
+            success: function(data) {
+                // Aquí data es la respuesta JSON con los centros
+                if (data.length > 0) {
+                    // Manejar los datos de los centros, por ejemplo, llenar el select de centros
+                    let $centro = $('#idCentroDeVacunacion');
+                    $centro.empty().append('<option disabled selected hidden value="">Selecciona un centro de vacunación</option>');
+                    data.forEach(function(centro) {
+                        $centro.append(new Option(centro.idCentroDeVacunacion, centro.idCentroDeVacunacion));  // Ajusta según tu estructura de datos
+                    });
+                    $('#centro').removeClass('d-none');
+                } else {
+                    console.error("No se encontraron centros de vacunación para la provincia seleccionada.");
+                }
+            },
+            error: function(error) {
+                console.error("Error al cargar los centros de vacunación:", error.responseText);
+            }
+        });
+    }
+
+    $(document).ready(function() {
+        // Maneja el cambio de provincia
+        $('#provincia').change(function() {
+            let provincia = $(this).val();
+            if (provincia) {
+                $('#loc').removeClass('d-none');
+                cargarLocalidades();
+            } else {
+                $('#loc').addClass('d-none');
+            }
+            $('#centro').addClass('d-none');
+        });
+
+        // Maneja el cambio de localidad
+        $('#localidad').change(function() {
+            let localidad = $(this).val();
+            if (localidad) {
+                $('#loc').removeClass('d-none');
+                cargarCentros();
+            } else {
+                $('#loc').addClass('d-none');
+            }
+            $('#centro').addClass('d-none');
+        });
+    });
+l

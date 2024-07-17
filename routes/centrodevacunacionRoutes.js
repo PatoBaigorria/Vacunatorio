@@ -49,5 +49,8 @@ router.put(
 	authorize(["Super Admin"]),
 	centroDeVacunacionController.altaCentroDeVacunacion
 );
-
+router.get('/centrosJSON',
+	authorize(["Super Admin"]),
+	centroDeVacunacionController.listarCentrosJSON
+);
 module.exports = router;
