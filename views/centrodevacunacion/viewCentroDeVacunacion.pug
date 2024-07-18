@@ -49,17 +49,17 @@ script.
     $(document).ready(function() {
         tabla = $(centrosdevacunacion).DataTable({
             data: !{JSON.stringify(centrosVac)},
-            pageLength:5,
-            lengthMenu:[5,10,15,20],
+            pageLength:20,
+            lengthMenu:[25,30,35,40],
             language: {
                 url: '//cdn.datatables.net/plug-ins/1.13.7/i18n/es-AR.json'
             },
             columns:[
                 {data: 'idCentroDeVacunacion', title: 'ID Centro de Vacunación'},
                 {data: 'direccion', title: 'Dirección'},
-                {data: 'localidad', title: 'Localidad'},
                 {data: 'provincia', title: 'Provincia'},
-                { data: 'activo', title: 'Estado del centro de vacunacion', createdCell: agregarMensajeSiActivoOInactivo },
+                {data: 'localidad', title: 'Localidad'},
+                {data: 'activo', title: 'Estado del centro de vacunacion', createdCell: agregarMensajeSiActivoOInactivo },
                 {
                     data: 'opciones', title: 'Opciones',
                     render: function (data, type, row) {
