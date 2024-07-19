@@ -5,46 +5,46 @@ const { createRegistro } = require("./registroController");
 
 // Obtener el reporte de vacunas compradas por cada laboratorio en un rango de fechas
 const reporteVacunasPorLaboratorio = async (req, res) => {
-    try {
-        const { fechaInicio, fechaFin } = req.query;
+	try {
+		const { fechaInicio, fechaFin } = req.query;
 
-        // Verificar que las fechas se proporcionaron
-        if (!fechaInicio || !fechaFin) {
-            return res.status(400).json({
-                message: "Debe proporcionar una fecha de inicio y una fecha de fin."
-            });
-        }
+		// Verificar que las fechas se proporcionaron
+		if (!fechaInicio || !fechaFin) {
+			return res.status(400).json({
+				message: "Debe proporcionar una fecha de inicio y una fecha de fin."
+			});
+		}
 
-        // Consultar la base de datos
-        const reportes = await LoteProveedor.findAll({
-            where: {
-                fechaDeCompra: {
-                    [Op.between]: [new Date(fechaInicio), new Date(fechaFin)]
-                }
-            },
-            attributes: [
-                [sequelize.fn('sum', sequelize.col('cantidadDeLotesInternos')), 'totalVacunas'],
-            ],
-            include: [
-                {
-                    model: Laboratorio,
-                    attributes: ["nombreLaboratorio"]
-                }
-            ],
-            group: ["Laboratorio.idLaboratorio"]
-        });
+		// Consultar la base de datos
+		const reportes = await LoteProveedor.findAll({
+			where: {
+				fechaDeCompra: {
+					[Op.between]: [new Date(fechaInicio), new Date(fechaFin)]
+				}
+			},
+			attributes: [
+				[sequelize.fn('sum', sequelize.col('cantidadDeLotesInternos')), 'totalVacunas'],
+			],
+			include: [
+				{
+					model: Laboratorio,
+					attributes: ["nombreLaboratorio"]
+				}
+			],
+			group: ["Laboratorio.idLaboratorio"]
+		});
 
-        res.render("reporteVacunas", {
-            reportes: reportes,
-            fechaInicio: fechaInicio,
-            fechaFin: fechaFin,
-        });
-    } catch (error) {
-        console.error("Error al generar el reporte de vacunas:", error);
-        res.status(500).json({
-            message: "Error al generar el reporte de vacunas."
-        });
-    }
+		res.render("reporteVacunas", {
+			reportes: reportes,
+			fechaInicio: fechaInicio,
+			fechaFin: fechaFin,
+		});
+	} catch (error) {
+		console.error("Error al generar el reporte de vacunas:", error);
+		res.status(500).json({
+			message: "Error al generar el reporte de vacunas."
+		});
+	}
 };
 
 const listarLotesProveedores = async (req, res) => {

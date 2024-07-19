@@ -95,6 +95,10 @@ PatologiaBase.belongsTo(Persona, {
 	foreignKey: "DNI",
 });
 
+Traslado.belongsTo(CentroDeVacunacion, {
+	foreignKey: 'idCentroDeVacunacion'
+});
+
 Persona.hasOne(AgenteDeSalud, {
 	foreignKey: "DNI",
 	//onDelete: 'RESTRICT'

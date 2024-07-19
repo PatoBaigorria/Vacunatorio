@@ -20,8 +20,9 @@
 - Corregir los endpoints de cada usuario para que solo puedan ver sus vistas ✔ (Pato)
 - Ver boton editar en Lote Interno ✔ (Pato)
 - Ordenar la lista de forma descendente de las siguientes tablas: ✔ (Pato)
-- Terminar formEnviosVacunas 
-- En Traslados validar al crear un Traslado en Nº de Serie aparezcan los lotes que hayan llegado al Centro de Vacunación 
+- Terminar formEnviosVacunas ✔ (Pato)
+- En Traslados validar al crear un Traslado en Nº de Serie aparezcan los lotes que hayan llegado al Centro de Vacunación ✔ (Pato)
+- Revisar Aplicación
 - Ordenar lexicograficamente las provincias y las localidades ✔ (Pato)
 - Sacar el is-invalid de las localidades cuando se seleccione una provincia ✔ (Pato)
   - Lote proveedor ✔
@@ -114,11 +115,11 @@ app.use(function (req, res, next) {
 
 // error handler
 app.use((err, req, res, next) => {
-    res.status(err.status || 500);
-    res.render('error', {
-        message: err.message,
-        error: app.get('env') === 'development' ? err : {}
-    });
+	res.status(err.status || 500);
+	res.render('error', {
+		message: err.message,
+		error: app.get('env') === 'development' ? err : {}
+	});
 });
 
 require("./models/relaciones");

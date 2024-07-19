@@ -18,6 +18,10 @@ body
                     p#mensajeAlerta.text-center
     form#form(action="/traslados" method="post")
         .form-group
+            label.form-label Centro de vacunación desde donde saldra el lote interno:
+            .input-group.has-validation
+                select.form-select.is-valid#idCentroDeVacunacionOrigen(required)
+        .form-group
             label.form-label(for="numeroDeSerie") Nº de Serie del lote interno que sera trasladado:
             .input-group.has-validation
                 select.form-select.is-valid#numeroDeSerie(name="numeroDeSerie" required)
@@ -59,9 +63,22 @@ script.
                 campo.next('.invalid-feedback').addClass('d-none');
             }
 
+            function cargarCentroOrigen() {
+                $('#idCentroDeVacunacionOrigen').empty();
+                const lotes = !{JSON.stringify(lotesInternos)}
+                if (lotes.length == 0) {
+                    $('#idCentroDeVacunacionOrigen').append('<option disabled selected hidden value=""> No hay ningún centro de vacunación disponible para trasladar </option>');
+                } else {
+                    lotes.forEach(lote => {
+                        console.log(lote.idCentroDeVacunacion)
+                        $('#idCentroDeVacunacionOrigen').append(`<option value="${lote.idCentroDeVacunacion}">${lote.idCentroDeVacunacion}</option>`);
+                    });
+                }
+            }
+
             function cargarLotes() {
                 $('#numeroDeSerie').empty();
-                const lotes = !{JSON.stringify(lotesInternos)}.filter(lote => lote.activo == 1);
+                const lotes = !{JSON.stringify(lotesInternos)}.filter(lote => lote.activo == 1).filter(lote => lote.idCentroDeVacunacion == $('#idCentroDeVacunacionOrigen').val());
                 if (lotes.length == 0) {
                     $('#numeroDeSerie').append('<option disabled selected hidden value=""> No hay ningún lote disponible para trasladar </option>');
                 } else {
@@ -79,6 +96,7 @@ script.
                     $('#idCentroDeVacunacion').append('<option disabled selected hidden value=""> No hay ningún centro de vacunación disponible para trasladar </option>');
                 } else {
                     centros.forEach(centro => {
+                        console.log(centro.idCentroDeVacunacion)
                         $('#idCentroDeVacunacion').append(`<option value="${centro.idCentroDeVacunacion}">${centro.idCentroDeVacunacion}</option>`);
                     });
                 }
@@ -162,8 +180,16 @@ script.
                 return formularioValido;
             }
 
+            cargarCentroOrigen()
             cargarLotes();
             cargarCentros();
+
+            $('#idCentroDeVacunacionOrigen').on('change', function () {
+                limpiarFechaYErrores();
+                cargarLotes();
+                cargarCentros()
+                quitarError($('#idCentroDeVacunacionOrigen'));
+            });
 
             $('#numeroDeSerie').on('change', function () {
                 limpiarFechaYErrores();
