@@ -87,12 +87,12 @@ const formEnviosVacunasReporte = async (req, res) => {
     });
 }
 const generarReporteEnviosVacunas = async (req, res) => {
-    const { fechaInicio, fechaFin, provincia, localidad, centro } = req.query;
+    const { fechaInicio, fechaFin, provincia, localidad, idCentroDeVacunacion } = req.query;
     let filtro = "";
     let valor = "";
-    if (centro != null && centro != "") {
+    if (idCentroDeVacunacion != null && idCentroDeVacunacion != "") {
         filtro = "idCentroDeVacunacion";
-        valor = centro;
+        valor = idCentroDeVacunacion;
     } else if (localidad != null && localidad != "") {
         filtro = "localidad";
         valor = localidad;

@@ -50,26 +50,31 @@ script.
 
     async function cargarCentros() {
         const provincia = $('#provincia').val();
+        console.log("Provincia seleccionada: " + provincia);
         $.ajax({
-            url: '/centrosJSON',  // Ajusta la URL para que coincida con tu ruta del servidor
+            url: `/centrosdevacunacion/centrosJSON/${provincia}`,  // Ajusta la URL para incluir el parámetro provincia
             type: 'GET',
-            data: { provincia: provincia },  // Pasa la provincia como parámetro de consulta
-            success: function(data) {
-                // Aquí data es la respuesta JSON con los centros
-                if (data.length > 0) {
-                    // Manejar los datos de los centros, por ejemplo, llenar el select de centros
-                    let $centro = $('#idCentroDeVacunacion');
-                    $centro.empty().append('<option disabled selected hidden value="">Selecciona un centro de vacunación</option>');
-                    data.forEach(function(centro) {
-                        $centro.append(new Option(centro.idCentroDeVacunacion, centro.idCentroDeVacunacion));  // Ajusta según tu estructura de datos
-                    });
-                    $('#centro').removeClass('d-none');
+            success: function(response) {
+                console.log("Datos de centros recibidos: ", response);
+                if (response.success) {
+                    const data = response.data;
+                    if (data.length > 0) {
+                        let $centro = $('#idCentroDeVacunacion');
+                        $centro.empty().append('<option selected value="">Selecciona un centro de vacunación</option>');
+                        data.forEach(function(centro) {
+                            console.log(centro)
+                            $centro.append(new Option(centro.idCentroDeVacunacion + ' - ' + centro.direccion, centro.idCentroDeVacunacion));  // Ajusta según tu estructura de datos
+                        });
+                        $('#centro').removeClass('d-none');
+                    } else {
+                        console.error("No se encontraron centros de vacunación para la provincia seleccionada.");
+                    }
                 } else {
-                    console.error("No se encontraron centros de vacunación para la provincia seleccionada.");
+                    console.error("Error: ", response.message);
                 }
             },
             error: function(error) {
-                console.error("Error al cargar los centros de vacunación:", error.responseText);
+                console.error("Error al cargar los centros de vacunación:", error);
             }
         });
     }
@@ -91,12 +96,11 @@ script.
         $('#localidad').change(function() {
             let localidad = $(this).val();
             if (localidad) {
-                $('#loc').removeClass('d-none');
+                $('#centro').removeClass('d-none');
                 cargarCentros();
             } else {
-                $('#loc').addClass('d-none');
+                $('#centro').addClass('d-none');
             }
             $('#centro').addClass('d-none');
         });
     });
-l

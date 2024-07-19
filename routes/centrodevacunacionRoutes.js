@@ -1,9 +1,14 @@
 const express = require("express");
 const router = express.Router();
-const centroDeVacunacionController = require("../controllers/centroDeVacunacionController");
+//const centroDeVacunacionController = require("../controllers/centroDeVacunacionController");
+const centroDeVacunacionController = require("../controllers/centrodevacunacionController");
 const authorize = require("../middleware/authorize");
 
-router.get("/localidades/:provinciaNombre", authorize(["Super Admin"]), centroDeVacunacionController.getLocalidadesByProvinciaFromAPI);
+router.get(
+	"/localidades/:provinciaNombre",
+	authorize(["Super Admin"]),
+	centroDeVacunacionController.getLocalidadesByProvinciaFromAPI
+);
 router.get(
 	"/",
 	authorize(["Super Admin"]),
@@ -49,8 +54,10 @@ router.put(
 	authorize(["Super Admin"]),
 	centroDeVacunacionController.altaCentroDeVacunacion
 );
-router.get('/centrosJSON',
+router.get(
+	'/centrosJSON/:provincia',
 	authorize(["Super Admin"]),
 	centroDeVacunacionController.listarCentrosJSON
 );
+
 module.exports = router;

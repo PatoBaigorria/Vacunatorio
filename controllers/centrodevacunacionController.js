@@ -1,4 +1,5 @@
 const centrodevacunacion = require("../models/centrodevacunacion");
+const sequelize = require("../database/db");
 const { CentroDeVacunacion } = require("../models/relaciones");
 const { createRegistro } = require("./registroController");
 const axios = require('axios');
@@ -34,14 +35,29 @@ const listarCentrosDeVacunacion = async (req, res) => {
 };
 
 async function listarCentrosJSON(req, res) {
-	const { provincia } = req.body;
+	const { provincia } = req.params;
+	console.log("Provincia recibida: " + provincia);
 	try {
-		const centros = await CentroDeVacunacion.findAll({ where: { provincia: provincia } });
-		res.json(centros);
+		const centros = await sequelize.query(
+			'SELECT idCentroDeVacunacion, direccion FROM CentroDeVacunacion WHERE provincia = :provincia',
+			{
+				replacements: { provincia: provincia },
+				type: sequelize.QueryTypes.SELECT
+			}
+		);
+		if (centros.length > 0) {
+			console.log("Centros encontrados: ", centros);
+			res.json({ success: true, data: centros });
+		} else {
+			console.log("No se encontraron centros de vacunación para la provincia seleccionada.");
+			res.json({ success: false, message: "No se encontraron centros de vacunación para la provincia seleccionada." });
+		}
 	} catch (error) {
-		throw new Error(`Error al listar centros de vacunación: ${error.message}`);
+		console.error(`Error al listar centros de vacunación: ${error.message}`);
+		res.status(500).json({ success: false, message: `Error al listar centros de vacunación: ${error.message}` });
 	}
 }
+
 
 const formCentroVac = async (req, res) => {
 	try {
