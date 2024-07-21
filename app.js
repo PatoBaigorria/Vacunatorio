@@ -24,6 +24,7 @@
 - En Traslados validar al crear un Traslado en Nº de Serie aparezcan los lotes que hayan llegado al Centro de Vacunación ✔ (Pato)
 - Revisar Aplicación
 - Ordenar lexicograficamente las provincias y las localidades ✔ (Pato)
+- Corregir modificaciones para que se vea por provincia
 - Sacar el is-invalid de las localidades cuando se seleccione una provincia ✔ (Pato)
   - Lote proveedor ✔
   - Lote interno ✔

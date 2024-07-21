@@ -1,0 +1,49 @@
+mixin modales(rol)
+    if rol === 'Gestor de compras'
+        button.btn.btn-primary(data-bs-toggle="modal" data-bs-target="#exampleModal") texto del boton
+            div.modal.fade(id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true")
+                div.modal-dialog
+                    div.modal-content
+                        div.modal-body
+                            label.form-label(for="nombreLaboratorio") Nombre del laboratorio:
+                                .input-group.has-validation
+                                    input.is-invalid.form-control#nombreLaboratorio(type="text" name="nombreLaboratorio" placeholder="Ingrese el nombre del laboratorio" title="Ingrese un nombre válido" required)
+                                    .invalid-feedback.d-none#nombreLaboratorioVacio El campo no puede estar vacío
+                                    .invalid-feedback.d-none#nombreLaboratorioInvalido El nombre es invalido
+                                    .invalid-feedback.d-none#nombreLaboratorioExiste El nombre del laboratorio ya existe en la BD
+                            label.form-label(for="pais") País de origen del laboratorio:
+                                .input-group.has-validation
+                                    input.is-invalid.form-control#pais(type="text" name="pais" placeholder="Ingrese el país donde se encuentra el laboratorio" title="Ingrese un nombre válido" required)
+                                    .invalid-feedback.d-none#paisVacio El campo no puede estar vacío
+                                    .invalid-feedback.d-none#paisInvalido El país no puede contener números
+                                    .invalid-feedback.d-none#paisMaximo El país no puede contener más de cincuenta y seis caracteres
+                            label.form-label(for="email") Email del laboratorio:
+                                .input-group.has-validation
+                                    input.is-invalid.form-control#email(type="email" name="email" placeholder="Ingrese el email del laboratorio" title="Ingrese un email válido" required)
+                                    .invalid-feedback.d-none#emailVacio El campo no puede estar vacío
+                                    .invalid-feedback.d-none#emailInvalido El email no es valido
+                            label.form-label(for="telefono") Teléfono del laboratorio:
+                                .input-group.has-validation
+                                    input.is-invalid.form-control#telefono(type="tel" name="telefono" placeholder="Ingrese el teléfono del laboratorio" title="Debe contener un máximo de 10 dígitos" required)
+                                    .invalid-feedback.d-none#telefonoVacio El campo no puede estar vacío
+                                    .invalid-feedback.d-none#telefonoInvalido El teléfono no puede contener letras, espacios ni guiones
+                                    .invalid-feedback.d-none#telefonoMaximo El teléfono debe contener 10 dígitos sin espacios ni guiones
+                            label.form-label Seleccione la ubicación del laboratorio en el mapa:
+                            #map
+                            label.form-label(for="longitud") Longitud:
+                            input.form-control.is-valid#longitud(type="text" name="longitud" readonly)
+                            label.form-label(for="latitud") Latitud:
+                            input.form-control.is-valid#latitud(type="text" name="latitud" readonly)
+                        div.modal-footer
+                            button.btn.btn-secondary(data-bs-toggle="modal" data-bs-dismiss="modal" data-bs-target="#otroModal") salir
+                            button.btn.btn-secondary#ventana() ventana nueva
+
+                div.modal.fade(id="otroModal" tabindex="-1" aria-labelledby="otroModalLabel" aria-hidden="true")
+                    div.modal-dialog
+                        div.modal-content
+                            p DASKMDSAJNDSAKJNASDJNKJNASDKJNKDAS
+                            div.modal-footer
+                                button.btn.btn-secondary(data-bs-dismiss="modal" ) salir2
+
+    else if rol === 'Agente de salud'
+        p.text-center.text-white.bg-dark.text-uppercase Agente de salud
