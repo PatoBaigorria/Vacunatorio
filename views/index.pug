@@ -1,4 +1,5 @@
 include .\includes\layout
+include .\includes\mixins
 
 block content
 	head
@@ -17,16 +18,15 @@ block content
 		h1 Argentina Vacuna
 		section(class="vh-100 gradient-custom overflow-hidden")
 			.container.py-1.h-100
-				if messages.success
-					.alert.alert-success.flash-message.fade-in
-						= messages.success
-				if messages.error
-					.alert.alert-danger.flash-message.fade-in
-						= messages.error
 				if user 
-					if user.rol == "Super Admin"
-						h2="Hola Super Admin"
+					+modales(user.rol)
 				else
+					if messages.success
+						.alert.alert-success.flash-message.fade-in
+							= messages.success
+					if messages.error
+						.alert.alert-danger.flash-message.fade-in
+							= messages.error
 					.row.d-flex.justify-content-center.align-items-center.h-50
 						.col-12.col-md-6.col-lg-4.col-xl-3
 							.card.bg-dark.text-white(style="border-radius: 1rem;")
@@ -40,11 +40,80 @@ block content
 												input.form-control-lg(type="email" name="emailLogin" placeholder="Email")
 											.form-outline.form-white.mb-4
 												input.form-control-lg(type="password" name="passwordLogin" placeholder="Contraseña")
+												p.small.mb-2.pb-lg-2
+													br
+													a.text-white-50(href="#") ¿Olvidaste tu contraseña?
 											button.btn.btn-outline-light.btn-lg.px-5(type="submit") Ingresar
 script.
-	$(document).ready(function() {
-		$('.flash-message').addClass('fade-in')
-		setTimeout(function() {
-			$('.flash-message').removeClass('fade-in')
-		}, 3000)
+	$(function () {
+		function mostrarError(campo, error) {
+			campo.addClass('is-invalid').removeClass('is-valid')
+			$(`#${campo.attr('id')}${error}`).removeClass('d-none')
+		}
+
+		function quitarError(campo) {
+			campo.addClass('is-valid').removeClass('is-invalid')
+			$(`div[id^=${campo.attr('id')}].invalid-feedback`).addClass('d-none')
+		}
+
+		function validarNombLab() {
+			quitarError($(nombreLaboratorio))
+			if(!$(nombreLaboratorio).val()) {
+				mostrarError($(nombreLaboratorio), 'Vacio')
+			} else if(!/^[A-Za-záéíóúüñÁÉÍÓÚÜÑ\s]{1,}$/.test($(nombreLaboratorio).val())) {
+				mostrarError($(nombreLaboratorio), 'Invalido')
+			} else {
+				//if (!{JSON.stringify(laboratorios)}
+				//.some(laboratorio => laboratorio.nombreLaboratorio == $(nombreLaboratorio).val())) {
+				//	mostrarError($(nombreLaboratorio), 'Existe')
+				//}
+			}
+		}
+
+		function validarPais() {
+			quitarError($(pais))
+			if ($(pais).val().length == 0) {
+				mostrarError($(pais), 'Vacio')
+			} else if (!/^[A-Za-záéíóúüñÁÉÍÓÚÜÑ\s]{1,}$/.test($(pais).val())) {
+				mostrarError($(pais), 'Invalido')
+			} else if ($(pais).val().length > 56) {
+				mostrarError($(pais), 'Maximo')
+			}
+		}
+
+		function validarEmail() {
+			quitarError($(email))
+			if (!$(email).val()){ 
+				mostrarError($(email), 'Vacio')
+			} else if (!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test($(email).val())) {
+				mostrarError($(email), 'Invalido')
+			}
+		}
+
+		function validarTelefono(){
+			quitarError($(telefono))
+			if ($(telefono).val().length == 0) {
+				mostrarError($(telefono), 'Vacio')
+			} else if (!/^[0-9]{1,}$/.test($(telefono).val())) { 
+				mostrarError($(telefono), 'Invalido')
+			} else if ($(telefono).val().length != 10) {
+				mostrarError($(telefono), 'Maximo')
+			}
+		}
+
+		$(nombreLaboratorio).on('keyup focusout', function () {
+			validarNombLab()
+		})
+
+		$(pais).on('keyup focusout', function () {
+			validarPais()
+		})
+
+		$(email).on('keyup focusout', function () {
+			validarEmail()
+		})
+
+		$(telefono).on('keyup focusout', function () {
+			validarTelefono()
+		})
 	})

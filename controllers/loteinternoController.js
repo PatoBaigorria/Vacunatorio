@@ -148,6 +148,46 @@ const createLoteInterno = async (req, res) => {
 	}
 };
 
+async function createLoteInternoDesdeProveedor(req, res, idLaboratorio, numeroDeLote, cantidadDeVacunas) {
+	try {
+		const lote = await LoteInterno.create({
+			numeroDeSerie,
+			numeroDeLote,
+			idLaboratorio: idLaboratorio,
+			cantidadDeVacunasTotales: cantidadDeVacunas,
+			cantidadDeVacunasRestantes: cantidadDeVacunas,
+			fechaDeLlegadaDepositoNacional: null,
+			idDepositoNacional: null,
+			fechaDeSalidaDepositoNacional: null,
+			fechaDeLlegadaDepositoProvincial: null,
+			idDepositoProvincial: null,
+			fechaDeSalidaDepositoProvincial: null,
+			fechaDeLlegadaCentroDeVacunacion: null,
+			idCentroDeVacunacion: null,
+			activo: 1,
+		});
+		await createRegistro(
+			req.user.idUsuario,
+			"Lote interno",
+			lote.dataValues.numeroDeSerie,
+			"Creacion"
+		);
+		await createRegistro(
+			req.user.idUsuario,
+			"Lote interno",
+			lote.dataValues.numeroDeSerie,
+			"Alta"
+		);
+		req.flash("success", "Lote Interno creado exitosamente.");
+		res.redirect("/lotesinternos");
+	} catch (error) {
+		req.flash("error", "Error al crear el lote interno.");
+		res.status(500).json({
+			message: "Error al crear el lote interno. " + error.message,
+		});
+	}
+};
+
 const detailsLoteInterno = async (req, res) => {
 	try {
 		const loteInterno = await LoteInterno.findByPk(req.params.id, {
@@ -339,6 +379,7 @@ module.exports = {
 	listarLotesInternos,
 	formLoteInterno,
 	createLoteInterno,
+	createLoteInternoDesdeProveedor,
 	detailsLoteInterno,
 	editLoteInterno,
 	updateLoteInterno,

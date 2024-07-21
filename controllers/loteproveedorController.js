@@ -1,5 +1,6 @@
 const { LoteProveedor, Laboratorio } = require("../models/relaciones");
 const { detailsPersona } = require("./personaController");
+const { createLoteInternoDesdeProveedor } = require("./loteInternoController");
 const { createRegistro } = require("./registroController");
 
 
@@ -100,6 +101,7 @@ const createLoteProveedor = async (req, res) => {
 			fechaDeCompra,
 			activo: 1,
 		});
+		//createLoteInternoDesdeProveedor(req, res, idLaboratorio, lote.dataValues.numeroDeLote, 10)
 		await createRegistro(
 			req.user.idUsuario,
 			"Lote proveeedor",

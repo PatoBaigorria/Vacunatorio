@@ -33,6 +33,11 @@ router.put(
 	authorize(["Super Admin", "Gestor de compras"]),
 	laboratorioController.updateLaboratorio
 );
+router.get(
+	'/laboratorioJSON/:nombre',
+	authorize(["Super Admin", "Gestor de compras"]),
+	laboratorioController.listarLaboratorioPorJSON
+);
 router.delete(
 	"/:id",
 	authorize(["Super Admin", "Gestor de compras"]),
