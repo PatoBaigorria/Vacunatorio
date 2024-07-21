@@ -1,4 +1,5 @@
 const { Laboratorio } = require("../models/relaciones");
+const sequelize = require("../database/db");
 const { createRegistro } = require("./registroController");
 // Obtener todos los laboratorios
 const listarLaboratorios = async (req, res) => {
@@ -13,6 +14,29 @@ const listarLaboratorios = async (req, res) => {
 		res.status(500).json({ message: "Error al obtener los laboratorios." });
 	}
 };
+
+async function listarLaboratorioPorJSON(req, res) {
+	try {
+		const nombre = req.params.nombre;
+		const laboratorio = await sequelize.query(
+			'SELECT idLaboratorio FROM Laboratorio WHERE nombreLaboratorio = :nombre',
+			{
+				replacements: { nombre: nombre },
+				type: sequelize.QueryTypes.SELECT
+			}
+		);
+		if (laboratorio) {
+			console.log("Laboratorio encontrado: ", laboratorio);
+			res.json({ success: true, data: laboratorio });
+		} else {
+			console.log("No se encontro el laboratorio seleccionado.");
+			res.json({ success: false, message: "No se encontro el laboratorio seleccionado." });
+		}
+	} catch (error) {
+		console.error(`Error al seleccionar el laboratorio: ${error.message}`);
+		res.status(500).json({ success: false, message: `Error al seleccionar el laboratorio: ${error.message}` });
+	}
+}
 // Muestra formulario de creacion de Laboratorio
 const formLaboratorio = async (req, res) => {
 	try {
@@ -193,6 +217,7 @@ const altaLaboratorio = async (req, res) => {
 
 module.exports = {
 	listarLaboratorios,
+	listarLaboratorioPorJSON,
 	formLaboratorio,
 	createLaboratorio,
 	detailsLaboratorio,
