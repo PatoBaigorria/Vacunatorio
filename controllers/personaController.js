@@ -24,6 +24,7 @@ const getLocalidadesByProvinciaFromAPI = async (req, res) => {
 const listarPersonas = async (req, res) => {
 	try {
 		const personas = await Persona.findAll({
+			where: { provincia: req.user.provincia },
 			include: [
 				{ model: Telefono, attributes: ["celular1", "celular2"] },
 				{ model: PatologiaBase, attributes: ["patologiaBase"] },
@@ -34,7 +35,7 @@ const listarPersonas = async (req, res) => {
 			personas: personas,
 		});
 	} catch (error) {
-		res.status(500).json({ message: "Error al obtener las personas." });
+		res.status(500).json({ message: "Error al obtener las personas." + error.message });
 	}
 };
 
