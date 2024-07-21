@@ -14,8 +14,7 @@ block content
                 label.form-label(for='DNIPaciente') Seleccione un Paciente:
                 select.form-select.is-valid#DNIPaciente(name='DNIPaciente' required onchange=`agenteS(${JSON.stringify(agentes)}, ${JSON.stringify(personas)})`)
                     each paciente in pacientes
-                        if paciente.ocupacion === 'otro'
-                            option(value=paciente.DNI selected=paciente.DNI === aplicacion.DNIPaciente) #{paciente.nombre} #{paciente.apellido}
+                        option(value=paciente.DNI selected=paciente.DNI === aplicacion.DNIPaciente) #{paciente.nombre} #{paciente.apellido}
                 .valid-feedback
                 .invalid-feedback
                     | Por favor, seleccione un paciente.
@@ -54,7 +53,7 @@ block content
     script.
         document.addEventListener('DOMContentLoaded', function() {
             const fechaInput = document.getElementById('fechaDeAplicacion');
-            
+
             fechaInput.addEventListener('change', function() {
                 validarFecha();
             });
@@ -74,6 +73,8 @@ block content
         });
 
         function agenteS(agentes, pacientes) {
+            console.log(agentes);
+            console.log(pacientes);
             const pacienteSelect = document.getElementById("DNIPaciente").value;
             const agenteSelect = document.getElementById("DNIAgente");
             agenteSelect.innerHTML = "";  // Limpiar el contenido actual

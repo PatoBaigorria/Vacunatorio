@@ -25,6 +25,10 @@ const listarAplicacion = async (req, res) => {
 				{
 					model: Persona,
 					attributes: ["DNI", "nombre", "apellido"],
+					where: {
+						provincia: req.user.provincia,
+						localidad: req.user.localidad,
+					}
 				},
 				{
 					model: LoteInterno,
@@ -32,13 +36,14 @@ const listarAplicacion = async (req, res) => {
 				},
 			],
 		});
+		console.log(aplicaciones)
 		res.render("aplicacion/viewAplicacion", { aplicaciones: aplicaciones });
 	} catch (error) {
 		req.flash(
 			"error",
 			`Hubo un error al intentar listar las aplicaciones. ${error.message}`
 		);
-		res.json({ success: false });
+		res.json({ success: false, error: error.message });
 	}
 };
 
@@ -101,34 +106,40 @@ const createAplicacion = async (req, res) => {
 };
 
 const editAplicacion = async (req, res) => {
-    try {
-        const aplicacion = await Aplicacion.findByPk(req.params.id);
-        const lotes = await LoteInterno.findAll();
-        const personas = await Persona.findAll({
-            include: [{ model: AgenteDeSalud, attributes: ["matricula"] }],
-        });
+	try {
+		const aplicacion = await Aplicacion.findByPk(req.params.id);
+		const lotes = await LoteInterno.findAll();
+		const pacientes = await Persona.findAll({
+			where: {
+				provincia: req.user.provincia,
+				localidad: req.user.localidad,
+				ocupacion: "otro"
+			}
+		});
 
-        // Filtrar pacientes cuya ocupación sea "otro"
-        const pacientes = personas.filter(persona => persona.ocupacion === "otro");
+		// Filtrar agentes de salud
+		const agentes = await AgenteDeSalud.findAll({
+			include: [{
+				model: Persona, attributes: ["DNI", "nombre", "apellido"], where: {
+					provincia: req.user.provincia,
+					localidad: req.user.localidad,
+				}
+			}],
+		});
 
-        // Filtrar agentes de salud
-        const agentes = await AgenteDeSalud.findAll({
-            include: [{ model: Persona, attributes: ["DNI", "nombre", "apellido"] }],
-        });
-
-        res.render("aplicacion/editAplicacion", {
-            aplicacion: aplicacion,
-            lotes: lotes,
-            pacientes: pacientes,
-            agentes: agentes.map(agente => agente.Persona) // Mapeo solo las personas de los agentes
-        });
-    } catch (error) {
-        req.flash(
-            "error",
-            `Hubo un error al intentar editar la aplicación. ${error.message}`
-        );
-        res.json({ success: false });
-    }
+		res.render("aplicacion/editAplicacion", {
+			aplicacion: aplicacion,
+			lotes: lotes,
+			pacientes: pacientes,
+			agentes: agentes.map(agente => agente.Persona) // Mapeo solo las personas de los agentes
+		});
+	} catch (error) {
+		req.flash(
+			"error",
+			`Hubo un error al intentar editar la aplicación. ${error.message}`
+		);
+		res.json({ success: false, error: error.message });
+	}
 };
 
 
