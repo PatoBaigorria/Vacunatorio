@@ -4,6 +4,7 @@ const {
 	AgenteDeSalud,
 	LoteInterno,
 	LoteProveedor,
+	CentroDeVacunacion,
 } = require("../models/relaciones");
 
 const { createRegistro } = require("./registroController");
@@ -48,27 +49,67 @@ const listarAplicacion = async (req, res) => {
 };
 
 const formAplicacion = async (req, res) => {
-	try {
-		const lotes = await LoteInterno.findAll({
-			include: [
-				{ model: LoteProveedor, attributes: ["fechaDeVencimiento"] },
-			],
-		});
-		const personas = await Persona.findAll({
-			include: [{ model: AgenteDeSalud, attributes: ["matricula"] }],
-		});
-		res.render("aplicacion/formAplicacion", {
-			lotes: lotes,
-			personas: personas,
-		});
-	} catch (error) {
-		req.flash(
-			"error",
-			`Hubo un error al intentar mostrar el formulario de la aplicación de la vacuna. ${error.message}`
-		);
-		res.json({ success: false });
-	}
+    try {
+        // Obtener los lotes internos que han llegado a centros de vacunación en la misma provincia y localidad que el usuario logueado
+        const lotes = await LoteInterno.findAll({
+            include: [
+                {
+                    model: CentroDeVacunacion,
+                    where: {
+                        provincia: req.user.provincia,
+                        localidad: req.user.localidad
+                    },
+                    attributes: [] // No necesitamos atributos del centro de vacunación en el resultado
+                },
+                { model: LoteProveedor, attributes: ["fechaDeVencimiento"] }
+            ],
+			distinct: true
+        });
+
+        // Obtener pacientes de la misma provincia y localidad que el usuario logueado
+        const pacientes = await Persona.findAll({
+            where: {
+                provincia: req.user.provincia,
+                localidad: req.user.localidad,
+                ocupacion: "otro",
+                activo: true
+            },
+            attributes: ["DNI", "nombre", "apellido"],
+			distinct: true
+        });
+
+        // Obtener agentes de salud de la misma provincia y localidad que el usuario logueado
+        const agentes = await Persona.findAll({
+            where: {
+                provincia: req.user.provincia,
+                localidad: req.user.localidad,
+                ocupacion: "agente de salud",
+                activo: true
+            },
+            attributes: ["DNI", "nombre", "apellido"],
+			distinct: true
+        });
+		console.log("Lotes:", lotes);
+		console.log("Pacientes:", pacientes);
+		console.log("Agentes:", agentes);
+
+        // Renderizar el formulario con los datos obtenidos
+        res.render("aplicacion/formAplicacion", {
+            lotes: lotes,
+            pacientes: pacientes,
+            agentes: agentes
+        });
+    } catch (error) {
+        req.flash(
+            "error",
+            `Hubo un error al intentar mostrar el formulario de la aplicación de la vacuna. ${error.message}`
+        );
+        res.json({ success: false, error: error.message });
+    }
 };
+
+
+
 
 const createAplicacion = async (req, res) => {
 	try {
@@ -106,40 +147,49 @@ const createAplicacion = async (req, res) => {
 };
 
 const editAplicacion = async (req, res) => {
-	try {
-		const aplicacion = await Aplicacion.findByPk(req.params.id);
-		const lotes = await LoteInterno.findAll();
-		const pacientes = await Persona.findAll({
-			where: {
-				provincia: req.user.provincia,
-				localidad: req.user.localidad,
-				ocupacion: "otro"
-			}
-		});
+    try {
+        const aplicacion = await Aplicacion.findByPk(req.params.id);
+        
+        if (!aplicacion) {
+            req.flash("error", "No se encontró la aplicación especificada.");
+            return res.redirect("/aplicaciones");
+        }
 
-		// Filtrar agentes de salud
-		const agentes = await AgenteDeSalud.findAll({
-			include: [{
-				model: Persona, attributes: ["DNI", "nombre", "apellido"], where: {
-					provincia: req.user.provincia,
-					localidad: req.user.localidad,
-				}
-			}],
-		});
+        const lotes = await LoteInterno.findAll();
 
-		res.render("aplicacion/editAplicacion", {
-			aplicacion: aplicacion,
-			lotes: lotes,
-			pacientes: pacientes,
-			agentes: agentes.map(agente => agente.Persona) // Mapeo solo las personas de los agentes
-		});
-	} catch (error) {
-		req.flash(
-			"error",
-			`Hubo un error al intentar editar la aplicación. ${error.message}`
-		);
-		res.json({ success: false, error: error.message });
-	}
+        const pacientes = await Persona.findAll({
+            where: {
+                provincia: req.user.provincia,
+                localidad: req.user.localidad,
+                ocupacion: "otro",
+                activo: true
+            },
+            attributes: ["DNI", "nombre", "apellido"]
+        });
+
+        const agentes = await Persona.findAll({
+            where: {
+                provincia: req.user.provincia,
+                localidad: req.user.localidad,
+                ocupacion: "agente de salud",
+                activo: true
+            },
+            attributes: ["DNI", "nombre", "apellido"]
+        });
+
+        res.render("aplicacion/editAplicacion", {
+            aplicacion,
+            lotes,
+            pacientes,
+            agentes
+        });
+    } catch (error) {
+        req.flash(
+            "error",
+            `Hubo un error al intentar editar la aplicación. ${error.message}`
+        );
+        res.json({ success: false, error: error.message });
+    }
 };
 
 
