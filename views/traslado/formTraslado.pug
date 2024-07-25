@@ -18,9 +18,9 @@ body
                     p#mensajeAlerta.text-center
     form#form(action="/traslados" method="post")
         .form-group
-            label.form-label Centro de vacunación desde donde saldra el lote interno:
+            label.form-label(for="idCentroDeVacunacionOrigen") Centro de vacunación desde donde saldra el lote interno:
             .input-group.has-validation
-                select.form-select.is-valid#idCentroDeVacunacionOrigen(required)
+                select.form-select.is-valid#idCentroDeVacunacionOrigen(name="idCentroDeVacunacionOrigen" required)
         .form-group
             label.form-label(for="numeroDeSerie") Nº de Serie del lote interno que sera trasladado:
             .input-group.has-validation
@@ -151,12 +151,15 @@ script.
                 fechaActual.setHours(0, 0, 0, 0);
                 if (((fechaIngresada - fechaActual) / (1000 * 60 * 60 * 24)) > 0) {
                     mostrarError($('#fechaDeLlegada'), 'La fecha de llegada no puede ser futura.');
+                    return false;
                 } else {
                     const fechaSalida = new Date($('#fechaDeSalida').val());
                     if (fechaIngresada < fechaSalida) {
                         mostrarError($('#fechaDeLlegada'), 'La fecha de llegada debe ser posterior a la fecha de salida al centro de vacunación.');
+                    return false;
                     }
                 }
+                return true;
             }
 
             function limpiarFechaYErrores() {
@@ -168,18 +171,19 @@ script.
 
             function validarFormulario() {
                 let formularioValido = true;
-
+                console.log("FechaSalida", validarFechaDeSalida())
                 if (!validarFechaDeSalida()) {
                     formularioValido = false;
                 }
-
+                console.log("FechaLlegada", validarFechaDeLlegada())
+                
                 if (!validarFechaDeLlegada()) {
                     formularioValido = false;
                 }
 
                 return formularioValido;
             }
-
+            
             cargarCentroOrigen()
             cargarLotes();
             cargarCentros();
@@ -215,9 +219,12 @@ script.
             });
 
             $('#form button[type="submit"]').on('click', function (event) {
+                console.log(validarFormulario);
                 if (!validarFormulario()) {
+                    console.log("Dentro del if", validarFormulario);
                     event.preventDefault();
                 }
+
             });
         });
 

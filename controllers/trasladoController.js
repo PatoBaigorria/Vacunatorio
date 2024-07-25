@@ -84,6 +84,7 @@ const altaTraslado = async (req, res) => {
 
 const createTraslados = async (req, res) => {
 	try {
+		
 		const { numeroDeSerie, idCentroDeVacunacion, fechaDeSalida } = req.body;
 
 		// Verificación adicional
@@ -106,7 +107,7 @@ const createTraslados = async (req, res) => {
 			fechaDeLlegada,
 			activo: 1,
 		});
-
+		
 		if (fechaDeLlegada != null) {
 			const loteEncontrado = await LoteInterno.findOne({
 				where: { numeroDeSerie: numeroDeSerie },
