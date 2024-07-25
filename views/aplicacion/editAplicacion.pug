@@ -1,4 +1,4 @@
-- const title ='Actualizar aplicacion de vacunas'
+const title = 'Actualizar aplicacion de vacunas'
 include ..\includes\layout
 block content
     html(lang="es")
@@ -33,10 +33,7 @@ block content
                 label.form-label(for='numeroDeSerie') Seleccione el Lote de Vacunas que se Aplicará al Paciente:
                 select.form-select.is-valid#numeroDeSerie(name='numeroDeSerie' required)
                     each lote in lotes
-                        if lote.numeroDeSerie === aplicacion.numeroDeSerie
-                            option(value=lote.numeroDeSerie selected) #{lote.numeroDeSerie}
-                        else
-                            option(value=lote.numeroDeSerie) #{lote.numeroDeSerie}
+                        option(value=lote.numeroDeSerie selected=lote.numeroDeSerie === aplicacion.numeroDeSerie) #{lote.numeroDeSerie}
                 .valid-feedback
                 .invalid-feedback
                     | Por favor, seleccione un lote de vacunas.
@@ -81,8 +78,8 @@ block content
 
             // Filtrar los agentes cuyo DNI no coincida con el DNI del paciente seleccionado
             agentes.forEach(agente => {
-                if (agente.Persona.DNI !== pacienteSelect) {
-                    agenteSelect.innerHTML += `<option value="${agente.Persona.DNI}">${agente.Persona.nombre} ${agente.Persona.apellido}</option>`;
+                if (agente.DNI !== pacienteSelect) { // Usa directamente `agente.DNI`
+                    agenteSelect.innerHTML += `<option value="${agente.DNI}">${agente.nombre} ${agente.apellido}</option>`;
                 }
             });
         }

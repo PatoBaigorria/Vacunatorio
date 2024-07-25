@@ -1,4 +1,4 @@
-- const title ='Actualizar el descarte de vacuna'
+-const title ='Actualizar el descarte de vacuna'
 include ..\includes\layout
 block content
 html(lang='es') 
@@ -20,44 +20,45 @@ body
         .form-group
             label.form-label(for='DNIAgente') Seleccione un Agente de Salud Existente:
             .input-group.has-validation
-                select.form-select.is-valid#DNIAgente(name='DNIAgente' required)
-                .invalid-feedback.d-none#DNIAgenteSinAgentes No hay ningún agente dado de alta para realizar el descarte, dé de alta uno y luego genere el descarte
+                select.form-select(id='DNIAgente' name='DNIAgente' required class=(errors && errors.DNIAgente ? 'is-invalid' : 'is-valid'))
+                    option(value='', disabled selected hidden) Seleccione un agente
+                    
         .form-group
             label.form-label(for='numeroDeSerie') Nº de Serie de Lote Interno:
             .input-group.has-validation
-                select.form-select.is-valid#numeroDeSerie(name='numeroDeSerie' required)
-                .invalid-feedback.d-none#numeroDeSerieSinAgentes No hay agentes que realicen descartes de vacunas
-                .invalid-feedback.d-none#numeroDeSerieSinLotes No hay lotes de los cuales descartar vacunas
+                select.form-select(class=(errors && errors.numeroDeSerie ? 'is-invalid' : 'is-valid') id='numeroDeSerie' name='numeroDeSerie' required)
+                    each lote in lotesInternos
+                        option(value=lote.numeroDeSerie selected=descarte.numeroDeSerie == lote.numeroDeSerie)= lote.numeroDeSerie
+                if errors && errors.numeroDeSerie
+                    .invalid-feedback #{errors.numeroDeSerie}
         .form-group
             label.form-label(for='empresaDescartante') Empresa Descartante:
             .input-group.has-validation
-                select.form-select.is-valid#empresaDescartante(name='empresaDescartante' required)
-                .invalid-feedback.d-none#empresaDescartanteSinAgentes No hay agentes que realicen descartes de vacunas
-                .invalid-feedback.d-none#empresaDescartanteSinLotes No hay lotes de los cuales descartar vacunas
+                select.form-select(class=(errors && errors.empresaDescartante ? 'is-invalid' : 'is-valid') id='empresaDescartante' name='empresaDescartante' required)
+                    each empresa in empresas
+                        option(value=empresa selected=descarte.empresaDescartante == empresa)= empresa
+                if errors && errors.empresaDescartante
+                    .invalid-feedback #{errors.empresaDescartante}
         .form-group
             label.form-label(for='motivo') Motivo de descarte:
             .input-group.has-validation
-                select.form-select.is-valid#motivo(name='motivo' required)
-                .invalid-feedback.d-none#motivoSinAgentes No hay agentes que realicen descartes de vacunas
-                .invalid-feedback.d-none#motivoSinLotes No hay lotes de los cuales descartar vacunas
+                select.form-select(class=(errors && errors.motivo ? 'is-invalid' : 'is-valid') id='motivo' name='motivo' required)
+                    each motivo in motivos
+                        option(value=motivo selected=descarte.motivo == motivo)= motivo
+                if errors && errors.motivo
+                    .invalid-feedback #{errors.motivo}
         .form-group
             label.form-label(for='cantidadDeVacunas') Cantidad de Vacunas:
             .input-group.has-validation
-                input.form-control.is-invalid#cantidadDeVacunas(type='text' name='cantidadDeVacunas' value=descarte.cantidadDeVacunas required)
-                .invalid-feedback.d-none#cantidadDeVacunasSinAgentes No hay agentes que realicen descartes de vacunas
-                .invalid-feedback.d-none#cantidadDeVacunasSinLotes No hay lotes de los cuales descartar vacunas
-                .invalid-feedback.d-none#cantidadDeVacunasVacio El campo no puede estar vacío
-                .invalid-feedback.d-none#cantidadDeVacunasNumeros Ingrese solo números positivos
-                .invalid-feedback.d-none#cantidadDeVacunasSuperior La cantidad de vacunas ingresadas es superior a la que se encuentra en el lote, por favor corrija la cantidad
+                input.form-control(class=(errors && errors.cantidadDeVacunas ? 'is-invalid' : 'is-valid') id='cantidadDeVacunas' type='text' name='cantidadDeVacunas' value=descarte.cantidadDeVacunas required)
+                if errors && errors.cantidadDeVacunas
+                    .invalid-feedback #{errors.cantidadDeVacunas}
         .form-group
             label.form-label(for='fechaDeDescarte') Fecha de descarte:
             .input-group.has-validation
-                input.form-control.is-invalid#fechaDeDescarte(type='date' name='fechaDeDescarte' value=descarte.fechaDeDescarte required)
-                .invalid-feedback.d-none#fechaDeDescarteSinAgentes No hay agentes que realicen descartes de vacunas
-                .invalid-feedback.d-none#fechaDeDescarteSinLotes No hay lotes de los cuales descartar vacunas
-                .invalid-feedback.d-none#fechaDeDescarteVacio El campo no puede estar vacío
-                .invalid-feedback.d-none#fechaDeDescarteSuperior La fecha seleccionada es superior a la fecha actual
-                .invalid-feedback.d-none#fechaDeDescarteLlegada La fecha de descarte no puede ser previa a la fecha de llegada al depósito nacional
+                input.form-control(class=(errors && errors.fechaDeDescarte ? 'is-invalid' : 'is-valid') id='fechaDeDescarte' type='date' name='fechaDeDescarte' value=descarte.fechaDeDescarte required)
+                if errors && errors.fechaDeDescarte
+                    .invalid-feedback #{errors.fechaDeDescarte}
         br
         div.text-center
             button.btn.btn-primary(type='submit') Actualizar
@@ -66,227 +67,140 @@ body
 script.
     $(function () {
         function mostrarAlerta() {
-            $(mensajeAlerta).text('¡Datos incorrectos! Por favor, verifica la información ingresada.')
-            $(alertModal).modal('show')
+            $('#mensajeAlerta').text('¡Datos incorrectos! Por favor, verifica la información ingresada.');
+            $('#alertModal').modal('show');
         }
 
         function mostrarError(campo, error) {
-            campo.addClass('is-invalid').removeClass('is-valid')
-            $(`#${campo.attr('id')}${error}`).removeClass('d-none')
+            campo.addClass('is-invalid').removeClass('is-valid');
+            $(`#${campo.attr('id')}${error}`).removeClass('d-none');
         }
 
         function quitarError(campo) {
-            campo.addClass('is-valid').removeClass('is-invalid')
-            $(`div[id^=${campo.attr('id')}].invalid-feedback`).addClass('d-none')
+            campo.addClass('is-valid').removeClass('is-invalid');
+            $(`div[id^=${campo.attr('id')}].invalid-feedback`).addClass('d-none');
         }
 
-        function cargarAgentes(){
-            let descarte = !{JSON.stringify(descarte)}
-            let ag = !{JSON.stringify(personas)}.find(agente => agente.DNI == descarte.DNIAgente)
-            let agentes = !{JSON.stringify(personas)}.filter(agente => agente.activo == 1 && agente.ocupacion == 'agente de salud')
-            if(agentes.length == 0){
-                $(DNIAgente).prop('disabled', true).append(`<option hidden disabled selected value=${ag.DNIAgente}>${ag.nombre} ${ag.apellido}</option>`)
-                mostrarError($(DNIAgente), 'SinAgentes')
+        function cargarAgentes() {
+            let descarte = !{JSON.stringify(descarte)};
+            let personas = !{JSON.stringify(personas)};
+            console.log('Descarte:', descarte);
+            console.log('Personas:', personas);
+            let ag = personas.find(agente => agente.DNI == descarte.DNIAgente);
+            let agentes = personas.filter(agente => agente.activo == 1 && agente.ocupacion == 'agente de salud');
+
+            $('#DNIAgente').empty();  // Vaciar la lista antes de cargar
+            if (agentes.length == 0) {
+                if (ag) {
+                    $('#DNIAgente').append(`<option hidden selected value=${ag.DNI}>${ag.nombre} ${ag.apellido}</option>`);
+                }
             } else {
                 agentes.forEach(agente => {
-                    if(descarte.DNIAgente == agente.DNI){
-                        $(DNIAgente).append(`<option selected value=${agente.DNI}>${agente.nombre} ${agente.apellido}</option>`)
+                    if (descarte.DNIAgente == agente.DNI) {
+                        $('#DNIAgente').append(`<option selected value=${agente.DNI}>${agente.nombre} ${agente.apellido}</option>`);
                     } else {
-                        $(DNIAgente).append(`<option value='${agente.DNI}'>${agente.nombre} ${agente.apellido}</option>`)
+                        $('#DNIAgente').append(`<option value='${agente.DNI}'>${agente.nombre} ${agente.apellido}</option>`);
                     }
-                })
+                });
             }
         }
 
-        function cargarLotes(){
-            let descarte = !{JSON.stringify(descarte)}
-            let lot = !{JSON.stringify(lotesInternos)}.find(lote => lote.numeroDeSerie == descarte.numeroDeSerie)
-            if($(DNIAgente).hasClass('is-invalid')){
-                $(numeroDeSerie).prop('disabled', true).append(`<option disabled selected hidden value=${lot.numeroDeSerie}>${lot.numeroDeSerie}</option>`)
-                mostrarError($(numeroDeSerie), 'SinAgentes')
+
+        function cargarLotes() {
+            let descarte = !{JSON.stringify(descarte)};
+            let lot = !{JSON.stringify(lotesInternos)}.find(lote => lote.numeroDeSerie == descarte.numeroDeSerie);
+            let lotes = !{JSON.stringify(lotesInternos)}.filter(lote => lote.activo == 1).filter(lote => lote.fechaDeLlegadaDepositoNacional != null);
+            $('#numeroDeSerie').empty();  // Vaciar la lista antes de cargar
+            if (lotes.length == 0) {
+                $('#numeroDeSerie').append(`<option selected hidden value=${lot.numeroDeSerie}>${lot.numeroDeSerie}</option>`);
+                mostrarError($('#numeroDeSerie'), 'SinLotes');
             } else {
-                let lotes = !{JSON.stringify(lotesInternos)}.filter(lote => lote.activo == 1).filter(lote => lote.fechaDeLlegadaDepositoNacional != null)
-                if(lotes.length == 0) {
-                    $(numeroDeSerie).prop('disabled', true).append(`<option disabled selected hidden value=${lot.numeroDeSerie}>${lot.numeroDeSerie}</option>`)
-                    mostrarError($(numeroDeSerie), 'SinLotes')
+                lotes.forEach(lote => {
+                    if (lot.numeroDeSerie == lote.numeroDeSerie) {
+                        $('#numeroDeSerie').append(`<option selected value=${lote.numeroDeSerie}>${lote.numeroDeSerie}</option>`);
+                    } else {
+                        $('#numeroDeSerie').append(`<option value=${lote.numeroDeSerie}>${lote.numeroDeSerie}</option>`);
+                    }
+                });
+            }
+        }
+
+        function cargarMotivos() {
+            let descarte = !{JSON.stringify(descarte)};
+            $('#motivo').empty();  // Vaciar la lista antes de cargar
+            [
+                'Vencida',
+                'Rotura',
+                'Pérdida de frío',
+                'Contaminación'
+            ].forEach(motiv => {
+                if (motiv == descarte.motivo) {
+                    $('#motivo').append(`<option selected value='${motiv}'>${motiv}</option>`);
                 } else {
-                    lotes.forEach(lote => {
-                        if(lot.numeroDeSerie == lote.numeroDeSerie) {
-                            $(numeroDeSerie).append(`<option selected value=${lote.numeroDeSerie}>${lote.numeroDeSerie}</option>`)
-                        } else {
-                            $(numeroDeSerie).append(`<option value=${lote.numeroDeSerie}>${lote.numeroDeSerie}</option>`)
-                        }
-                    })  
+                    $('#motivo').append(`<option value='${motiv}'>${motiv}</option>`);
                 }
-            }
+            });
         }
 
-        function cargarMotivos(){
-            let descarte = !{JSON.stringify(descarte)}
-            if($(DNIAgente).hasClass('is-invalid')){
-                $(motivo).prop('disabled', true).append(`<option disabled selected hidden value=${descarte.motivo}>${descarte.motivo}</option>`)
-                mostrarError($(motivo), 'SinAgentes')
-            } else if($(numeroDeSerie).hasClass('is-invalid')) {
-                $(motivo).prop('disabled', true).append(`<option disabled selected hidden value=${descarte.motivo}>${descarte.motivo}</option>`)
-                mostrarError($(motivo), 'SinLotes')
-            } else {
-                [
-                    'Vencida',
-                    'Rotura',
-                    'Pérdida de frío',
-                    'Contaminación'
-                ].forEach(motiv => {
-                    if(motiv == descarte.motivo){
-                        $(motivo).append(`<option selected value='${motiv}'>${motiv}</option>`)
-                    } else {
-                        $(motivo).append(`<option value='${motiv}'>${motiv}</option>`)
-                    }
-                })
-            }
-        }
-
-        function cargarEmpresasDescartantes(){
-            let descarte = !{JSON.stringify(descarte)}
-            if($(DNIAgente).hasClass('is-invalid')){
-                $(empresaDescartante).prop('disabled', true).append(`<option disabled selected hidden value=${descarte.empresaDescartante}>${descarte.empresaDescartante}</option>`)
-                mostrarError($(empresaDescartante), 'SinAgentes')
-            } else if($(numeroDeSerie).hasClass('is-invalid')) {
-                $(empresaDescartante).prop('disabled', true).append(`<option disabled selected hidden value=${descarte.empresaDescartante}>${descarte.empresaDescartante}</option>`)
-                mostrarError($(empresaDescartante), 'SinLotes')
-            } else {
-                [
-                    'Veolia',
-                    'Clean Harbors',
-                    'Waste Management',
-                    'Stericycle'
-                ].forEach(empresa => {
-                    if(empresa == descarte.empresaDescartante) {
-                        $(empresaDescartante).append(`<option selected value='${empresa}'>${empresa}</option>`)
-                    } else {
-                        $(empresaDescartante).append(`<option value='${empresa}'>${empresa}</option>`)
-                    }
-                })
-            }
-        }
-
-        function validarCantidadDeVacunas(){
-            let descarte = !{JSON.stringify(descarte)}
-            quitarError($(cantidadDeVacunas))
-            if($(DNIAgente).hasClass('is-invalid')){
-                $(cantidadDeVacunas).prop('disabled', true)
-                mostrarError($(cantidadDeVacunas), 'SinAgentes')
-            } else if($(numeroDeSerie).hasClass('is-invalid')) {
-                $(cantidadDeVacunas).prop('disabled', true)
-                mostrarError($(cantidadDeVacunas), 'SinLotes')
-            } else if ($(cantidadDeVacunas).val() == '') {
-                mostrarError($(cantidadDeVacunas), 'Vacio')
-            } else if(!/^[0-9]{1,}$/.test($(cantidadDeVacunas).val()) || $(cantidadDeVacunas).val() < 0 || $(cantidadDeVacunas).val()[0] == 0){
-                mostrarError($(cantidadDeVacunas), 'Numeros')
-            } else {
-                let cantidadDeVacunasIngresadas = parseInt($(cantidadDeVacunas).val(), 10)
-                let loteEncontrado = !{JSON.stringify(lotesInternos)}.find(lote => lote.numeroDeSerie == $(numeroDeSerie).val())
-                if (loteEncontrado) {
-                    if(loteEncontrado.cantidadDeVacunasRestantes - cantidadDeVacunasIngresadas < 0){
-                        mostrarError($(cantidadDeVacunas), 'Superior')
-                    } else {
-                        quitarError($(cantidadDeVacunas))
-                    }
-                }
-            }
-        }
-
-        function validarFechaDeDescarte() {
-            let descarte = !{JSON.stringify(descarte)}
-            quitarError($(fechaDeDescarte))
-            if($(DNIAgente).hasClass('is-invalid')){
-                $(fechaDeDescarte).prop('disabled', true)
-                mostrarError($(fechaDeDescarte), 'SinAgentes')
-            } else if($(numeroDeSerie).hasClass('is-invalid')) {
-                $(fechaDeDescarte).prop('disabled', true)
-                mostrarError($(fechaDeDescarte), 'SinLotes')
-            } else if(!$(fechaDeDescarte).val()) {
-                mostrarError($(fechaDeDescarte), 'Vacio')
-            } else {
-                let fechaIngresada = new Date($(fechaDeDescarte).val())
-                let fechaActual = new Date()
-                fechaIngresada.setHours(24, 0, 0, 0)
-                fechaActual.setHours(0, 0, 0, 0)
-                if (((fechaIngresada - fechaActual) / (1000 * 60 * 60 * 24)) > 0) {
-                    mostrarError($(fechaDeDescarte), 'Superior')
+        function cargarEmpresasDescartantes() {
+            let descarte = !{JSON.stringify(descarte)};
+            $('#empresaDescartante').empty();  // Vaciar la lista antes de cargar
+            [
+                'Veolia',
+                'Clean Harbors',
+                'Waste Management',
+                'Stericycle'
+            ].forEach(empresa => {
+                if (empresa == descarte.empresaDescartante) {
+                    $('#empresaDescartante').append(`<option selected value='${empresa}'>${empresa}</option>`);
                 } else {
-                    let fechaLlegada = !{JSON.stringify(lotesInternos)}.find(lote => lote.numeroDeSerie == $(numeroDeSerie).val())
-                    fechaLlegada = new Date(fechaLlegada.fechaDeLlegadaDepositoNacional)
-                    fechaLlegada.setHours(24, 0, 0, 0)
-                    if(fechaLlegada > fechaIngresada){
-                        mostrarError($(fechaDeDescarte), 'Llegada')
-                    }
+                    $('#empresaDescartante').append(`<option value='${empresa}'>${empresa}</option>`);
+                }
+            });
+        }
+
+        function validarCantidadDeVacunas() {
+            let descarte = !{JSON.stringify(descarte)};
+            quitarError($('#cantidadDeVacunas'));
+            if ($('#cantidadDeVacunas').val() == '') {
+                mostrarError($('#cantidadDeVacunas'), 'Vacio');
+            } else if (!/^[0-9]{1,}$/.test($('#cantidadDeVacunas').val()) || $('#cantidadDeVacunas').val() < 0 || $('#cantidadDeVacunas').val()[0] == '0') {
+                mostrarError($('#cantidadDeVacunas'), 'Invalido');
+            } else {
+                let cantidadDeVacunasIngresadas = parseInt($('#cantidadDeVacunas').val());
+                let {cantidad} = !{JSON.stringify(lotesInternos)}.find(lote => lote.numeroDeSerie == descarte.numeroDeSerie);
+                if (cantidadDeVacunasIngresadas > cantidad) {
+                    mostrarError($('#cantidadDeVacunas'), 'SuperaCantidad');
                 }
             }
         }
 
-        function validarFormulario() {
-            let inputs = $('#form input, #form select')
-            let camposInvalidos = false
-            inputs.each(function () {
-                if ($(this).hasClass('is-invalid')) {
-                    camposInvalidos = true
-                }
-            })
-            if (camposInvalidos) {
-                mostrarAlerta()
-                return false
+        $('#cantidadDeVacunas').blur(validarCantidadDeVacunas);
+        $('#empresaDescartante').blur(() => {
+            quitarError($('#empresaDescartante'));
+            if ($('#empresaDescartante').val() == '') {
+                mostrarError($('#empresaDescartante'), 'SinEmpresas');
             }
-            return true
-        }
-
-        let press = 0
-        $(alertModal).on('keypress', function (event) {
-            if(event.key === 'Enter'){
-                press = press + 1
+        });
+        $('#motivo').blur(() => {
+            quitarError($('#motivo'));
+            if ($('#motivo').val() == '') {
+                mostrarError($('#motivo'), 'SinMotivos');
             }
-            if (event.key === 'Escape' || press == 2) {
-                $(alertModal).modal('hide')
-                press = 0
+        });
+        $('#fechaDeDescarte').blur(() => {
+            quitarError($('#fechaDeDescarte'));
+            if ($('#fechaDeDescarte').val() == '') {
+                mostrarError($('#fechaDeDescarte'), 'FechaVacia');
+            } else if ($('#fechaDeDescarte').val() > new Date().toISOString().split('T')[0]) {
+                mostrarError($('#fechaDeDescarte'), 'FechaFutura');
             }
-        })            
+        });
 
-        $(alertModal).on('hidden.bs.modal', function () {
-            let primerInvalido = $('.is-invalid:first')
-            if (primerInvalido.length > 0) {
-                primerInvalido.focus()
-            }
-        })
-
-        cargarAgentes()
-        cargarLotes()
-        cargarEmpresasDescartantes()
-        cargarMotivos()
-        validarCantidadDeVacunas()
-        validarFechaDeDescarte()
-
-        $(cantidadDeVacunas).on('keyup focusout', function(){
-            validarCantidadDeVacunas()
-        })
-
-        $(fechaDeDescarte).on('keyup focusout', function(){
-            validarFechaDeDescarte()
-        })
-
-        $(DNIAgente).trigger('focus')
-
-
-        $('#form input').on('keypress', function (event) {
-            if (event.which === 13) {
-                if(!validarFormulario()){
-                    event.preventDefault()
-                }
-            }
-        })
-
-        $(`#form button[type='submit']`).on('click', function (event) {
-            if (!validarFormulario()) {
-                event.preventDefault()
-                press = 1
-            }
-        })
-    })
+        cargarLotes();
+        cargarAgentes();
+        cargarEmpresasDescartantes();
+        cargarMotivos();
+        $('#alertModal').modal({backdrop: 'static', keyboard: false});
+        
+    });
