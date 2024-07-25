@@ -13,6 +13,11 @@ router.get(
 	authorize(["Super Admin", "Gestor de compras"]),
 	laboratorioController.formLaboratorio
 );
+router.get(
+	'/laboratoriosJSON',
+	authorize(["Super Admin", "Gestor de compras"]),
+	laboratorioController.listarLaboratoriosPorJSON
+);
 router.post(
 	"/",
 	authorize(["Super Admin", "Gestor de compras"]),

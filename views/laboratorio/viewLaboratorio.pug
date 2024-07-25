@@ -47,7 +47,22 @@ body
                         div.table.responsive 
                             table#laboratorios.table.table-striped.table-bordered
 script.
-    let tabla 
+    let tabla
+    let laboratorios = $.ajax({
+        url: `/laboratorios/laboratoriosJSON`,
+        type: 'GET',
+        success: function(response) {
+            console.log(response)
+            if (response.data.length > 0) {
+                mostrarError($(nombreLaboratorio), 'Existe');
+            } else {
+                quitarError($(nombreLaboratorio));
+            }
+        },
+        error: function() {
+            console.error("Error al validar el nombre del laboratorio.");
+        }
+    });
     $(document).ready(function() {
         tabla = $(laboratorios).DataTable({
             data: !{JSON.stringify(laboratorios)},

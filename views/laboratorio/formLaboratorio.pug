@@ -61,7 +61,7 @@ body
         div.text-center
             button(type="submit" class="btn btn-primary") Alta
             | &nbsp;&nbsp;&nbsp;&nbsp;
-            button(type="button" class="btn btn-primary" onclick="window.history.back()") Volver
+            button#volver(type="button" class="btn btn-primary" onclick="window.history.back()") Volver
 script.
     $(function () {
         $('#map').css('width', $('#form').outerWidth() + 'px')
@@ -222,9 +222,28 @@ script.
             }
         })
 
+        $(document).ready(function() {
+            var params = new URLSearchParams(window.location.search);
+            var boton = params.get('boton');
+            console.log(boton);
+            if (boton==='true'){
+                $('nav').css('display', 'none')
+                $('#volver').css('display', 'none')
+            }
+        })
+
         $('form button[type="submit"]').on('click', function (event) {
+            var params = new URLSearchParams(window.location.search);
+            var boton = params.get('boton');
             if (!validarFormulario()) {
                 event.preventDefault()
+            } 
+            if (boton==='true'){
+                window.opener.postMessage($(nombreLaboratorio).val(), window.location.origin)
+                setTimeout(function(){
+                    window.close();
+                }, 2000);
             }
+            
         })
     })

@@ -37,6 +37,17 @@ async function listarLaboratorioPorJSON(req, res) {
 		res.status(500).json({ success: false, message: `Error al seleccionar el laboratorio: ${error.message}` });
 	}
 }
+
+async function listarLaboratoriosPorJSON(req, res) {
+	try {
+		let laboratorios = await Laboratorio.findAll({
+			raw: true,
+		});
+		res.json(laboratorios);
+	} catch (error) {
+		res.status(500).json({ message: "Error al obtener los laboratorios." });
+	}
+}
 // Muestra formulario de creacion de Laboratorio
 const formLaboratorio = async (req, res) => {
 	try {
@@ -90,7 +101,9 @@ const createLaboratorio = async (req, res) => {
 			"Alta"
 		);
 		req.flash("success", "Laboratorio creado exitosamente");
-		res.redirect("/laboratorios");
+		setTimeout(function(){
+			res.redirect("/laboratorios");
+		}, 3000);
 	} catch (error) {
 		console.error(error);
 		req.flash("error", "Error al crear el laboratorio.");
@@ -218,6 +231,7 @@ const altaLaboratorio = async (req, res) => {
 module.exports = {
 	listarLaboratorios,
 	listarLaboratorioPorJSON,
+	listarLaboratoriosPorJSON,
 	formLaboratorio,
 	createLaboratorio,
 	detailsLaboratorio,
