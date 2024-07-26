@@ -1,0 +1,111 @@
+mixin modales(rol)
+    if rol === 'Gestor de compras'
+        div.modal#alertModal(tabindex="-1" role="dialog" aria-labelledby="alertModalLabel" aria-hidden="true")
+            div.modal-dialog(role="document")
+                div.modal-content
+                    div.modal-header
+                        h5.modal-title#alertModalLabel Alerta
+                        button.close(type="button" data-bs-dismiss="modal" aria-label="Close")
+                            span(aria-hidden="true") ×
+                    div.modal-body
+                        p#mensajeAlerta.text-center
+        .modal.fade(id='ModalDataTable' tabindex='-1' aria-labelledby='ModalDataTableLabel' aria-hidden='true')
+            .modal-dialog(style="max-width: 1000px;")
+                .modal-content
+                    .modal-header
+                        h5.modal-title#ModalDataTableLabel Listado de Laboratorios
+                        button.btn-close(type='button' data-bs-dismiss='modal' aria-label='Close')
+                    .modal-body
+                        div.table.responsive
+                            table#laboratorios.table.table-striped.table-bordered
+
+        button.btn.btn-primary(type='button' data-bs-toggle='modal' data-bs-target='#mainModal') Laboratorios
+        .modal.fade(id='mainModal' tabindex='-1' aria-labelledby='mainModalLabel' aria-hidden='true')
+            .modal-dialog
+                .modal-content
+                    .modal-header
+                        h5.modal-title#mainModalLabel Opciones de Laboratorio
+                        button.btn-close(type='button' data-bs-dismiss='modal' aria-label='Close')
+                    .modal-body
+                        .form-group
+                            label.text-center Nombre del laboratorio:
+                            input.form-control#nombreLaboratorio(type='text' placeholder='Ingrese el nombre del laboratorio' disabled)
+                        br
+                        .form-group.text-center
+                            button.btn.btn-primary#buscarLaboratorioBtn(type='button' data-bs-toggle='modal' data-bs-target='#ModalDataTable' data-bs-dismiss='modal') Buscar Laboratorios
+                            | &nbsp;&nbsp;&nbsp;&nbsp;
+                            button.btn.btn-success#altaLaboratorio(type='button') Alta de Laboratorio
+
+    script.
+        let tabla
+        $(document).ready(function() {
+            $('#mainModal').modal({
+                backdrop: 'static',
+                keyboard: false
+            });
+        });
+        $(document).ready(function() {
+            tabla = $(laboratorios).DataTable({
+                ajax: {
+                    url:'/laboratorios/laboratoriosJSON',
+                    dataSrc: ""
+                },
+                select: {
+                    style: 'single',
+                    items: 'row'
+                },
+                lengthChange: false,
+                pageLength: 8,
+                language: {
+                    url: 'https://cdn.datatables.net/plug-ins/2.1.2/i18n/es-AR.json'
+                },
+                columns: [
+                    { data: 'nombreLaboratorio', title: 'Nombre del laboratorio' },
+                    { data: 'pais', title: 'País de origen' },
+                    { data: 'activo', title: 'Estado del laboratorio', createdCell: agregarMensajeSiActivoOInactivo },
+                ],
+                columnDefs: [
+                    { className: "dt-center", targets: [0, 1, 2] }
+                    //{ width: '15%', targets: [0, 1, 2] },
+                    //{ width: '8%', targets: [3] },
+                ],
+                dom: '<"top"Bf>rt<"bottom"lp><"clear">', // Adding a search box (`f`) at the top
+                buttons: [
+                    {
+                        text: 'Seleccionar',
+                        className: 'btn btn-primary',
+                        attr: {
+                            id:'Seleccionar',
+                            'data-bs-toggle':'modal',
+                            'data-bs-target':'#mainModal',
+                            'data-bs-dismiss':'modal'
+                        },
+                        action: function ( e, dt, node, config) {
+                            var seleccionado = dt.rows({selected:true}).data();
+                            if (seleccionado.length>0){
+                                $('#nombreLaboratorio').val(seleccionado[0]['nombreLaboratorio'])
+                            }
+                        }
+                    }
+                ]
+            })
+
+            $('#altaLaboratorio').on('click', function(event){
+                var win = window.open('http://localhost:3000/laboratorios/alta?boton=true','_blank', 'popup=true')
+                $(win).on('load', function(){
+                    win.resizeTo(600,900)
+                    win.moveTo(600,200)
+                })
+            })
+
+            $(window).on('message onmessage', function(e){
+                $('#nombreLaboratorio').val(e.originalEvent.data)
+            })
+
+            function agregarMensajeSiActivoOInactivo(td, cellData, rowData, row, col) {
+                if (cellData == 1) 
+                    $(td).text("Activo")
+                else 
+                    $(td).text("Inactivo")
+            }
+        })

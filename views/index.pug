@@ -1,6 +1,11 @@
 include .\includes\layout
-
+include .\includes\modalLab
 block contenthead
+	style.
+		body{
+			background-image: url('../images/fondo2.jpg');
+			background-size: cover;
+		}
 	title Argentina Vacuna
 
 block content
@@ -33,6 +38,5 @@ block content
 												br
 												a.text-white-50(href="#") ¿Olvidaste tu contraseña?
 										button.btn.btn-outline-light.btn-lg.px-5(type="submit") Ingresar
-	
+
 	script.
-		
