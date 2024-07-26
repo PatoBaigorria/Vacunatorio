@@ -23,14 +23,25 @@ const getLocalidadesByProvinciaFromAPI = async (req, res) => {
 
 const listarPersonas = async (req, res) => {
 	try {
-		const personas = await Persona.findAll({
-			where: { provincia: req.user.provincia },
+		const usuario = req.user;
+
+		let personas;
+		
+		if (usuario.rol === "Super Admin") {
+			personas = await Persona.findAll({
+				raw: true,
+			});
+		} else {
+			personas = await Persona.findAll({
+				where: { provincia: usuario.provincia },
 			include: [
 				{ model: Telefono, attributes: ["celular1", "celular2"] },
 				{ model: PatologiaBase, attributes: ["patologiaBase"] },
 				{ model: AgenteDeSalud, attributes: ["matricula"] },
 			],
 		});
+		}
+		
 		res.render("persona/viewPersona", {
 			personas: personas,
 		});

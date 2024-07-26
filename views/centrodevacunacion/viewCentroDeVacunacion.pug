@@ -43,14 +43,14 @@ body
                         br
                         br
                         div.table.responsive
-                            table#centrosdevacunacion.table.table-striped.table-bordered    
+                            table#centrosdevacunacion.table.table-striped.table-bordered.table-centered    
 script.
     let tabla 
     $(document).ready(function() {
         tabla = $(centrosdevacunacion).DataTable({
             data: !{JSON.stringify(centrosVac)},
             pageLength:20,
-            lengthMenu:[25,30,35,40],
+            lengthMenu:[20,30,35,40],
             language: {
                 url: '//cdn.datatables.net/plug-ins/1.13.7/i18n/es-AR.json'
             },
@@ -77,7 +77,7 @@ script.
             columnDefs: [
                 {orderable: false, targets:[5]}, 
                 {searchable: false, targets:[1, 2, 3, 4, 5]},
-                {className: 'dt-center', targets: [0, 1, 2, 3, 4, 5]},
+                {className: 'dt-center', targets: '_all'},
                 { width: '15%', targets: [0, 1, 2, 3, 4] },
                 { width: '10%', targets: [5] },
             ]

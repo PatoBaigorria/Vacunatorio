@@ -38,6 +38,14 @@ input[type="submit"] {
 	box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
+.table-centered th {
+    text-align: center !important;
+}
+
+.dt-center {
+    text-align: center !important;
+}
+
 .modal-content {
 	background-color: #f1f1f1;
 	padding: 20px;

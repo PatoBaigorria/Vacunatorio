@@ -8,14 +8,24 @@ const { createRegistro } = require("./registroController");
 // Obtener todos los traslados
 const listarTraslados = async (req, res) => {
 	try {
-		const traslados = await Traslado.findAll({
-			include: [{
-				model: CentroDeVacunacion,
-				where: { provincia: req.user.provincia },
-				attributes: [] // No incluir atributos de CentroDeVacunacion en el resultado
-			}],
-			raw: true
+		const usuario = req.user;
+
+		let traslados;
+
+		if (usuario.rol === "Super Admin") {
+			traslados = await Traslado.findAll({
+				raw: true,
+			});
+		} else {
+			traslados = await Traslado.findAll({
+				include: [{
+					model: CentroDeVacunacion,
+					where: { provincia: usuario.provincia },
+					attributes: [] // No incluir atributos de CentroDeVacunacion en el resultado
+				}],
+				raw: true
 		});
+	}
 		res.render("traslado/viewTraslado", {
 			traslados: traslados,
 		});
