@@ -6,7 +6,7 @@ const {
 	DepositoProvincial,
 	CentroDeVacunacion,
 } = require("../models/relaciones");
-const { createRegistro } = require("./registroController");
+const { createRegistro,bulkCreateRegistro } = require("./registroController");
 // Obtener todos los lotes internos
 const listarLotesInternos = async (req, res) => {
 	try {
@@ -148,43 +148,29 @@ const createLoteInterno = async (req, res) => {
 	}
 };
 
-async function createLoteInternoDesdeProveedor(req, res, idLaboratorio, numeroDeLote, cantidadDeVacunas) {
+async function createLoteInternoDesdeProveedor(req, arregloDeLotes) {
 	try {
-		const lote = await LoteInterno.create({
-			numeroDeSerie,
-			numeroDeLote,
-			idLaboratorio: idLaboratorio,
-			cantidadDeVacunasTotales: cantidadDeVacunas,
-			cantidadDeVacunasRestantes: cantidadDeVacunas,
-			fechaDeLlegadaDepositoNacional: null,
-			idDepositoNacional: null,
-			fechaDeSalidaDepositoNacional: null,
-			fechaDeLlegadaDepositoProvincial: null,
-			idDepositoProvincial: null,
-			fechaDeSalidaDepositoProvincial: null,
-			fechaDeLlegadaCentroDeVacunacion: null,
-			idCentroDeVacunacion: null,
-			activo: 1,
+		const lote = await LoteInterno.bulkCreate(arregloDeLotes);
+		let arregloDeRegistrosA = [];
+		let arregloDeRegistrosC = [];
+		lote.forEach(x => {
+			arregloDeRegistrosA.push({
+				idUsuario: req.user.idUsuario,
+				idFila: x.dataValues.numeroDeSerie,
+				nombreDeTabla: 'Lote interno',
+				tipoDeAccion: 'Alta'
+			})
+			arregloDeRegistrosC.push({
+				idUsuario: req.user.idUsuario,
+				idFila: x.dataValues.numeroDeSerie,
+				nombreDeTabla: 'Lote interno',
+				tipoDeAccion: 'Creacion'
+			})
 		});
-		await createRegistro(
-			req.user.idUsuario,
-			"Lote interno",
-			lote.dataValues.numeroDeSerie,
-			"Creacion"
-		);
-		await createRegistro(
-			req.user.idUsuario,
-			"Lote interno",
-			lote.dataValues.numeroDeSerie,
-			"Alta"
-		);
-		req.flash("success", "Lote Interno creado exitosamente.");
-		res.redirect("/lotesinternos");
+		await bulkCreateRegistro(arregloDeRegistrosA);
+		await bulkCreateRegistro(arregloDeRegistrosC);
 	} catch (error) {
-		req.flash("error", "Error al crear el lote interno.");
-		res.status(500).json({
-			message: "Error al crear el lote interno. " + error.message,
-		});
+		console.log(error.message);
 	}
 };
 

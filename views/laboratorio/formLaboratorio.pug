@@ -225,7 +225,6 @@ script.
         $(document).ready(function() {
             var params = new URLSearchParams(window.location.search);
             var boton = params.get('boton');
-            console.log(boton);
             if (boton==='true'){
                 $('nav').css('display', 'none')
                 $('#volver').css('display', 'none')
@@ -235,15 +234,19 @@ script.
         $('form button[type="submit"]').on('click', function (event) {
             var params = new URLSearchParams(window.location.search);
             var boton = params.get('boton');
+
             if (!validarFormulario()) {
-                event.preventDefault()
+                event.preventDefault();
+                return;
             } 
             if (boton==='true'){
-                window.opener.postMessage($(nombreLaboratorio).val(), window.location.origin)
-                setTimeout(function(){
-                    window.close();
-                }, 2000);
+                window.opener.postMessage({
+                    origen:'formLaboratorio', 
+                    datos: {
+                        nombreLab: $(nombreLaboratorio).val()
+                    }
+                }, window.location.origin);
+                $('#form').attr('action', $('#form').attr('action')+'?ventana=true');
             }
-
         })
     })

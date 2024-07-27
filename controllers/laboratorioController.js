@@ -25,11 +25,9 @@ async function listarLaboratorioPorJSON(req, res) {
 				type: sequelize.QueryTypes.SELECT
 			}
 		);
-		if (laboratorio) {
-			console.log("Laboratorio encontrado: ", laboratorio);
+		if (laboratorio.length>0) {
 			res.json({ success: true, data: laboratorio });
 		} else {
-			console.log("No se encontro el laboratorio seleccionado.");
 			res.json({ success: false, message: "No se encontro el laboratorio seleccionado." });
 		}
 	} catch (error) {
@@ -66,6 +64,7 @@ const formLaboratorio = async (req, res) => {
 
 const createLaboratorio = async (req, res) => {
 	try {
+		const { ventana } = req.query;
 		const { nombreLaboratorio, pais, email, telefono, longitud, latitud } =
 			req.body;
 		const existeLaboratorio = await Laboratorio.findOne({
@@ -87,7 +86,6 @@ const createLaboratorio = async (req, res) => {
 			latitud,
 			activo: 1,
 		});
-		console.log(req.user);
 		await createRegistro(
 			req.user.idUsuario,
 			"Laboratorio",
@@ -100,10 +98,20 @@ const createLaboratorio = async (req, res) => {
 			laboratorio.dataValues.idLaboratorio,
 			"Alta"
 		);
-		req.flash("success", "Laboratorio creado exitosamente");
-		setTimeout(function(){
+		if(ventana==='true'){
+			res.send(`
+                <html>
+                    <body>
+                        <script>
+                                window.close();
+                        </script>
+                    </body>
+                </html>`
+			);
+		} else {
+			req.flash("success", "Laboratorio creado exitosamente");
 			res.redirect("/laboratorios");
-		}, 3000);
+		}
 	} catch (error) {
 		console.error(error);
 		req.flash("error", "Error al crear el laboratorio.");

@@ -35,9 +35,52 @@ mixin modales(rol)
                             button.btn.btn-primary#buscarLaboratorioBtn(type='button' data-bs-toggle='modal' data-bs-target='#ModalDataTable' data-bs-dismiss='modal') Buscar Laboratorios
                             | &nbsp;&nbsp;&nbsp;&nbsp;
                             button.btn.btn-success#altaLaboratorio(type='button') Alta de Laboratorio
+                        br
+                        .form-group.text-center
+                            button.btn.btn-primary#buscarLaboratorioBtn(type='button' data-bs-toggle='modal' data-bs-target='#mainModal2' data-bs-dismiss='modal') Siguiente
+        .modal.fade(id='mainModal2' tabindex='-1' aria-labelledby='mainModal2Label' aria-hidden='true')
+            .modal-dialog
+                .modal-content
+                    .modal-header
+                        h5.modal-title#mainModal2Label COSAS LOTE PROVEEDOR
+                        button.btn-close(type='button' data-bs-dismiss='modal' aria-label='Close')
+                    .modal-body
+                        .form-group
+                            label.text-center Tipo de Vacuna:
+                            input.form-control#tipoVacuna(type='text' disabled)
+                        br
+                        .form-group
+                            label.text-center Nombre Comercial:
+                            input.form-control#nombreComercial(type='text' disabled)
+                        br
+                        .form-group
+                            label.text-center Cantidad de Lotes Internos:
+                            input.form-control#cantidadLotesInternos(type='text' disabled)
+                        br
+                        .form-group
+                            label.text-center Cantidad de Vacunas por Lote Interno:
+                            input.form-control#cantidadVacunasPorLoteInterno(type='text' disabled)
+                        br
+                        .form-group
+                            label.text-center Fecha de Fabricación:
+                            input.form-control#fechaFabricacion(type='text' disabled)
+                        br
+                        .form-group
+                            label.text-center Fecha de Compra:
+                            input.form-control#fechaCompra(type='text' disabled)
+                        br
+                        .form-group
+                            label.text-center Fecha de Vencimiento:
+                            input.form-control#fechaVencimiento(type='text' disabled)
+                        br
+                        .form-group.text-center
+                            button.btn.btn-primary(type='button' data-bs-toggle='modal' data-bs-dismiss='modal') Confirmar
+                            | &nbsp;&nbsp;&nbsp;&nbsp;
+                            button.btn.btn-success#altaLoteProveedor(type='button') Cargar Datos de Lote
         
     script.
-        let tabla
+        let tabla;
+        let idLab;
         $(document).ready(function() {
             tabla = $(laboratorios).DataTable({
                 ajax: {
@@ -55,15 +98,12 @@ mixin modales(rol)
                 },
                 columns: [
                     { data: 'nombreLaboratorio', title: 'Nombre del laboratorio' },
-                    { data: 'pais', title: 'País de origen' },
-                    { data: 'activo', title: 'Estado del laboratorio', createdCell: agregarMensajeSiActivoOInactivo },
+                    { data: 'pais', title: 'País de origen' }
                 ],
                 columnDefs: [
-                    { className: "dt-center", targets: [0, 1, 2] }
-                    //{ width: '15%', targets: [0, 1, 2] },
-                    //{ width: '8%', targets: [3] },
+                    { className: "dt-center", targets: [0, 1] }
                 ],
-                dom: '<"top"Bf>rt<"bottom"lp><"clear">', // Adding a search box (`f`) at the top
+                dom: '<"top"Bf>rt<"bottom"lp><"clear">',
                 buttons: [
                     {
                         text: 'Seleccionar',
@@ -78,6 +118,7 @@ mixin modales(rol)
                             var seleccionado = dt.rows({selected:true}).data();
                             if (seleccionado.length>0){
                                 $('#nombreLaboratorio').val(seleccionado[0]['nombreLaboratorio'])
+                                idLab= seleccionado[0]['idLaboratorio']
                             }
                         }
                     }
@@ -92,14 +133,32 @@ mixin modales(rol)
                 })
             })
 
-            $(window).on('message onmessage', function(e){
-                $('#nombreLaboratorio').val(e.originalEvent.data)
+            $('#altaLoteProveedor').on('click', function(event){
+                var win = window.open('http://localhost:3000/lotesproveedores/alta?boton=true&idLab='+idLab, '_blank', 'popup=true')
+                $(win).on('load', function(){
+                    win.resizeTo(600,900)
+                    win.moveTo(600,200)
+                })
             })
 
-            function agregarMensajeSiActivoOInactivo(td, cellData, rowData, row, col) {
-                if (cellData == 1) 
-                    $(td).text("Activo")
-                else 
-                    $(td).text("Inactivo")
-            }
+            $(window).on('message onmessage', function(e){
+                if (e.originalEvent.data['origen']==="formLaboratorio"){
+                    $('#nombreLaboratorio').val(e.originalEvent.data['datos']['nombreLab'])
+                    setTimeout(function(){
+                        $.getJSON('/laboratorios/laboratorioJSON/'+e.originalEvent.data['datos']['nombreLab'], function(respuesta){
+                            idLab = respuesta.data[0].idLaboratorio;
+                        })
+                    }, 1000);
+                    
+                }
+                if (e.originalEvent.data['origen']==="formLoteProveedor"){
+                    $('#tipoVacuna').val(e.originalEvent.data['datos']['tipoVacuna'])
+                    $('#nombreComercial').val(e.originalEvent.data['datos']['nombreComercial'])
+                    $('#cantidadLotesInternos').val(e.originalEvent.data['datos']['cantidadLotesInternos'])
+                    $('#cantidadVacunasPorLoteInterno').val(e.originalEvent.data['datos']['cantidadVacunasPorLoteInterno'])
+                    $('#fechaFabricacion').val(e.originalEvent.data['datos']['fechaFabricacion'])
+                    $('#fechaCompra').val(e.originalEvent.data['datos']['fechaCompra'])
+                    $('#fechaVencimiento').val(e.originalEvent.data['datos']['fechaVencimiento'])
+                }
+            })
         })

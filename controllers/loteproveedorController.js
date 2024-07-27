@@ -82,6 +82,7 @@ const formLoteProveedor = async (req, res) => {
 // Crear un nuevo lote proveedor
 const createLoteProveedor = async (req, res) => {
 	try {
+		const { ventana } = req.query;
 		const {
 			idLaboratorio,
 			tipoDeVacuna,
@@ -90,6 +91,7 @@ const createLoteProveedor = async (req, res) => {
 			fechaDeFabricacion,
 			fechaDeVencimiento,
 			fechaDeCompra,
+			cantidadDeVacunasPorLoteInterno
 		} = req.body;
 		const lote = await LoteProveedor.create({
 			idLaboratorio,
@@ -101,7 +103,27 @@ const createLoteProveedor = async (req, res) => {
 			fechaDeCompra,
 			activo: 1,
 		});
-		//createLoteInternoDesdeProveedor(req, res, idLaboratorio, lote.dataValues.numeroDeLote, 10)
+		if(ventana==='true'){
+			let arregloDeLotes = []
+			for(i=0;i<cantidadDeLotesInternos;i++){
+				arregloDeLotes.push({
+					numeroDeLote: lote.dataValues.numeroDeLote,
+					idLaboratorio: idLaboratorio,
+					cantidadDeVacunasTotales: cantidadDeVacunasPorLoteInterno,
+					cantidadDeVacunasRestantes: cantidadDeVacunasPorLoteInterno,
+					fechaDeLlegadaDepositoNacional: null,
+					idDepositoNacional: null,
+					fechaDeSalidaDepositoNacional: null,
+					fechaDeLlegadaDepositoProvincial: null,
+					idDepositoProvincial: null,
+					fechaDeSalidaDepositoProvincial: null,
+					fechaDeLlegadaCentroDeVacunacion: null,
+					idCentroDeVacunacion: null,
+					activo: 1,
+				})
+			}
+			await createLoteInternoDesdeProveedor(req,arregloDeLotes);
+		}
 		await createRegistro(
 			req.user.idUsuario,
 			"Lote proveeedor",
@@ -114,9 +136,23 @@ const createLoteProveedor = async (req, res) => {
 			lote.dataValues.numeroDeLote,
 			"Alta"
 		);
-		req.flash("success", "Lote Proveedor creado exitosamente.");
-		res.redirect("/lotesproveedores");
+		if(ventana==='true'){
+			res.send(`
+                <html>
+                    <body>
+                        <script>
+                                window.close();
+                        </script>
+                    </body>
+                </html>`
+			);
+		} else {
+			req.flash("success", "Lote Proveedor creado exitosamente.");
+			res.redirect("/lotesproveedores");
+		}
 	} catch (error) {
+		console.log(error);
+		console.log(error.message);
 		req.flash("error", "Error al crear el lote proveedor. ", error.message);
 		res.redirect("/lotesproveedores/alta");
 	}

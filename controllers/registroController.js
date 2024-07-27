@@ -13,6 +13,14 @@ const createRegistro = async (id, tabla, fila, accion) => {
 	}
 };
 
+const bulkCreateRegistro = async (arregloDeRegistros) => {
+	try {
+		await Registro.bulkCreate(arregloDeRegistros);
+	} catch (error) {
+		console.log(error.message);
+	}
+};
+
 const listarRegistros = async (req, res) => {
 	try {
 		const registros = await Registro.findAll({
@@ -30,4 +38,5 @@ const listarRegistros = async (req, res) => {
 module.exports = {
 	listarRegistros,
 	createRegistro,
+	bulkCreateRegistro,
 };
