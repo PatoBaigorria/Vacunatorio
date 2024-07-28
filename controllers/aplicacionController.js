@@ -10,43 +10,85 @@ const {
 const { createRegistro } = require("./registroController");
 
 const listarAplicacion = async (req, res) => {
-	try {
-		const aplicaciones = await Aplicacion.findAll({
-			include: [
-				{
-					model: AgenteDeSalud,
-					attributes: ["DNI"],
-					include: [
-						{
-							model: Persona,
-							attributes: ["DNI", "nombre", "apellido"],
-						},
-					],
-				},
-				{
-					model: Persona,
-					attributes: ["DNI", "nombre", "apellido"],
-					where: {
-						provincia: req.user.provincia,
-						localidad: req.user.localidad,
-					}
-				},
-				{
-					model: LoteInterno,
-					attributes: ["numeroDeSerie"],
-				},
-			],
-		});
-		console.log(aplicaciones)
-		res.render("aplicacion/viewAplicacion", { aplicaciones: aplicaciones });
-	} catch (error) {
-		req.flash(
-			"error",
-			`Hubo un error al intentar listar las aplicaciones. ${error.message}`
-		);
-		res.json({ success: false, error: error.message });
-	}
+    try {
+        const usuario = req.user;
+        console.log("Usuario logueado:", usuario);
+
+        if (usuario.rol === "Super Admin") {
+            console.log("El usuario es Super Admin.");
+        } else {
+            console.log("El usuario no es Super Admin.");
+        }
+
+        let aplicaciones;
+
+        if (usuario.rol === "Super Admin") {
+            aplicaciones = await Aplicacion.findAll({
+                include: [
+                    {
+                        model: AgenteDeSalud,
+                        attributes: ["DNI"],
+                        include: [
+                            {
+                                model: Persona,
+                                attributes: ["DNI", "nombre", "apellido"],
+                            },
+                        ],
+                    },
+                    {
+                        model: Persona,
+                        attributes: ["DNI", "nombre", "apellido"],
+                    },
+                    {
+                        model: LoteInterno,
+                        attributes: ["numeroDeSerie"],
+                    },
+                ],
+            });
+        } else {
+            aplicaciones = await Aplicacion.findAll({
+                include: [
+                    {
+                        model: AgenteDeSalud,
+                        attributes: ["DNI"],
+                        include: [
+                            {
+                                model: Persona,
+                                attributes: ["DNI", "nombre", "apellido"],
+                            },
+                        ],
+                    },
+                    {
+                        model: Persona,
+                        attributes: ["DNI", "nombre", "apellido"],
+                        where: {
+                            provincia: usuario.provincia,
+                            localidad: usuario.localidad,
+                        },
+                    },
+                    {
+                        model: LoteInterno,
+                        attributes: ["numeroDeSerie"],
+                    },
+                ],
+            });
+        }
+
+        console.log("Aplicaciones encontradas:", aplicaciones.length);
+        res.render("aplicacion/viewAplicacion", { aplicaciones: aplicaciones });
+    } catch (error) {
+        console.error("Error al listar aplicaciones:", error);
+        req.flash(
+            "error",
+            `Hubo un error al intentar listar las aplicaciones. ${error.message}`
+        );
+        res.json({ success: false, error: error.message });
+    }
 };
+
+
+
+
 
 const formAplicacion = async (req, res) => {
     try {
