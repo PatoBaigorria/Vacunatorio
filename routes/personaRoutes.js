@@ -14,6 +14,16 @@ router.get(
 	authorize(["Super Admin", "Agente de salud"]),
 	personaController.formPersona
 );
+router.get(
+	"/personasJSON",
+	authorize(["Super Admin", "Agente de salud"]),
+	personaController.listarPersonasJSON
+);
+router.get(
+	"/agentesJSON",
+	authorize(["Super Admin", "Agente de salud"]),
+	personaController.listarAgentesJSON
+);
 router.post(
 	"/",
 	authorize(["Super Admin", "Agente de salud"]),

@@ -1,0 +1,284 @@
+mixin modalesAgente()
+    div.modal#alertModal(tabindex="-1" role="dialog" aria-labelledby="alertModalLabel" aria-hidden="true")
+        div.modal-dialog(role="document")
+            div.modal-content
+                div.modal-header
+                    h5.modal-title#alertModalLabel Alerta
+                    button.close(type="button" data-bs-dismiss="modal" aria-label="Close")
+                        span(aria-hidden="true") ×
+                div.modal-body
+                    p#mensajeAlerta.text-center
+    .modal.fade(id='ModalDataTablePersona' tabindex='-1' aria-labelledby='ModalDataTablePersonaLabel' aria-hidden='true')
+        .modal-dialog(style="max-width: 1000px;")
+            .modal-content
+                .modal-header
+                    h5.modal-title#ModalDataTableLabel Pacientes
+                    button.btn-close(type='button' data-bs-dismiss='modal' aria-label='Close')
+                .modal-body
+                    div.table.responsive
+                        table#personas.table.table-striped.table-bordered
+    .modal.fade(id='ModalDataTableAgente' tabindex='-1' aria-labelledby='ModalDataTableAgenteLabel' aria-hidden='true')
+        .modal-dialog(style="max-width: 1000px;")
+            .modal-content
+                .modal-header
+                    h5.modal-title#ModalDataTableLabel Agentes de salud
+                    button.btn-close(type='button' data-bs-dismiss='modal' aria-label='Close')
+                .modal-body
+                    div.table.responsive
+                        table#agentes.table.table-striped.table-bordered
+    .modal.fade(id='ModalDataTableLote' tabindex='-1' aria-labelledby='ModalDataTableLoteLabel' aria-hidden='true')
+        .modal-dialog(style="max-width: 1000px;")
+            .modal-content
+                .modal-header
+                    h5.modal-title#ModalDataTableLabel Lotes de vacunas
+                    button.btn-close(type='button' data-bs-dismiss='modal' aria-label='Close')
+                .modal-body
+                    div.table.responsive
+                        table#lotes.table.table-striped.table-bordered
+
+    button.btn.btn-primary(type='button' data-bs-toggle='modal' data-bs-target='#mainModal') Persona
+    .modal.fade(id='mainModal' tabindex='-1' aria-labelledby='mainModalLabel' aria-hidden='true')
+        .modal-dialog
+            .modal-content
+                .modal-header
+                    h5.modal-title#mainModalLabel Detalles persona
+                    button.btn-close(type='button' data-bs-dismiss='modal' aria-label='Close')
+                .modal-body
+                    .form-group
+                        label.text-center Nombre y Apellido:
+                        input.form-control#nombrePersona(type='text' placeholder='Seleccione un paciente de la lista o ingrese sus datos' disabled)
+                    br
+                    .form-group
+                        label.text-center Numero de Documento:
+                        input.form-control#dniPersona(type='text' disabled)
+                    br
+                    .form-group.text-center
+                        button.btn.btn-primary#buscarPersonaBtn(type='button' data-bs-toggle='modal' data-bs-target='#ModalDataTablePersona' data-bs-dismiss='modal') Buscar Paciente
+                        | &nbsp;&nbsp;&nbsp;&nbsp;
+                        button.btn.btn-success#altaPersona(type='button') Alta
+                    br
+                    .form-group.text-center
+                        button.btn.btn-primary#siguiente(type='button' data-bs-toggle='modal' data-bs-target='#mainModal2' data-bs-dismiss='modal') Siguiente
+    .modal.fade(id='mainModal2' tabindex='-1' aria-labelledby='mainModal2Label' aria-hidden='true')
+        .modal-dialog
+            .modal-content
+                .modal-header
+                    h5.modal-title#mainModal2Label COSAS APLICACION
+                    button.btn-close(type='button' data-bs-dismiss='modal' aria-label='Close')
+                .modal-body
+                    .form-group
+                        label.text-center Agente de Salud que aplicó la vacuna:
+                        input.form-control#DNIAgente(type='text' disabled)
+                        button.btn.btn-primary#buscarAgenteBtn(type='button' data-bs-toggle='modal' data-bs-target='#ModalDataTableAgente' data-bs-dismiss='modal')
+                            i.fa-solid.fa-magnifying-glass
+                    br
+                    .form-group
+                        label.text-center Lote de vacunas que se aplicó al Paciente:
+                        input.form-control#numeroDeSerie(type='text' disabled)
+                        button.btn.btn-primary#buscarLoteBtn(type='button' data-bs-toggle='modal' data-bs-target='#ModalDataTableLote' data-bs-dismiss='modal')
+                            i.fa-solid.fa-magnifying-glass
+                    br
+                    .form-group.text-center
+                        button.btn.btn-success#registrarAplicacion(type='button' data-bs-toggle='modal' data-bs-dismiss='modal') Registrar Aplicacion
+    .alert.alert-success#flash(style='display:none')
+
+    script.
+        let tablaPaciente;
+        let tablaAgente;
+        let tablaLote;
+
+        let dniPaciente;
+        let numeroDeSerieLote;
+        let dniAgente;
+
+        $(document).ready(function() {
+            $('#mainModal').modal({
+                backdrop: 'static',
+                keyboard: false
+            });
+        });
+        $(document).ready(function() {
+            tablaPaciente = $(personas).DataTable({
+                ajax: {
+                    url:'/personas/personasJSON',
+                    dataSrc: ""
+                },
+                select: {
+                    style: 'single',
+                    items: 'row'
+                },
+                lengthChange: false,
+                pageLength: 8,
+                language: {
+                    url: 'https://cdn.datatables.net/plug-ins/2.1.2/i18n/es-AR.json'
+                },
+                columns: [
+                    {data: 'DNI', title:'DNI'},
+                    {data: 'nombre', title: 'Nombre'},
+                    {data: 'apellido', title: 'Apellido'}
+                ],
+                columnDefs: [
+                    {className: "dt-center", targets: [0, 1, 2]}
+                ],
+                dom: '<"top"Bf>rt<"bottom"lp><"clear">',
+                buttons: [
+                    {
+                        text: 'Seleccionar',
+                        className: 'btn btn-primary',
+                        attr: {
+                            id:'Seleccionar',
+                            'data-bs-toggle':'modal',
+                            'data-bs-target':'#mainModal',
+                            'data-bs-dismiss':'modal'
+                        },
+                        action: function ( e, dt, node, config) {
+                            var seleccionado = dt.rows({selected:true}).data();
+                            if (seleccionado.length>0){
+                                $('#nombrePersona').val(seleccionado[0]['nombre'] +' ' +seleccionado[0]['apellido'] )
+                                $('#dniPersona').val(seleccionado[0]['DNI']);
+                                dniPaciente=seleccionado[0]['DNI'];
+                            }
+                        }
+                    }
+                ]
+            })
+
+            tablaAgente = $(agentes).DataTable({
+                ajax: {
+                    url:'/personas/agentesJSON',
+                    dataSrc: ""
+                },
+                select: {
+                    style: 'single',
+                    items: 'row'
+                },
+                lengthChange: false,
+                pageLength: 8,
+                language: {
+                    url: 'https://cdn.datatables.net/plug-ins/2.1.2/i18n/es-AR.json'
+                },
+                columns: [
+                    {data: 'DNI', title:'DNI'},
+                    {data: 'nombre', title: 'Nombre'},
+                    {data: 'apellido', title: 'Apellido'},
+                    {data: 'Agentedesalud.matricula', title: 'Matrícula'}
+                ],
+                columnDefs: [
+                    {className: "dt-center", targets: [0, 1, 2]}
+                ],
+                dom: '<"top"Bf>rt<"bottom"lp><"clear">',
+                buttons: [
+                    {
+                        text: 'Seleccionar',
+                        className: 'btn btn-primary',
+                        attr: {
+                            id:'Seleccionar',
+                            'data-bs-toggle':'modal',
+                            'data-bs-target':'#mainModal2',
+                            'data-bs-dismiss':'modal'
+                        },
+                        action: function ( e, dt, node, config) {
+                            var seleccionado = dt.rows({selected:true}).data();
+                            if (seleccionado.length>0){
+                                $('#DNIAgente').val(seleccionado[0]['DNI']);
+                                dniAgente=seleccionado[0]['DNI'];
+                            }
+                        }
+                    }
+                ]
+            })
+
+            tablaLote = $(lotes).DataTable({
+                ajax: {
+                    url:'/lotesinternos/lotesinternosJSON',
+                    dataSrc: ""
+                },
+                select: {
+                    style: 'single',
+                    items: 'row'
+                },
+                lengthChange: false,
+                pageLength: 15,
+                language: {
+                    url: '//cdn.datatables.net/plug-ins/1.13.7/i18n/es-AR.json'
+                },
+                order: [[0, 'desc']],
+                columns: [
+                    {data: 'numeroDeSerie', title: 'Número de Serie'},
+                    {data: 'Loteproveedor.numeroDeLote', title: 'Número de Lote'},
+                    {data: 'Loteproveedor.tipoDeVacuna', title: 'Tipo de Vacuna'},
+                    {data: 'Loteproveedor.nombreComercial', title: 'Nombre Comercial'},
+                    {data: 'Laboratorio.nombreLaboratorio', title: 'Laboratorio Fabricante'},
+                ],
+                columnDefs: [
+                    {searchable: false, targets:[1, 2]},
+                    {className: 'dt-center', targets: [0, 1, 2]},
+                    { width: '10%', targets: [1] },
+                    { width: '5%', targets: [0] },
+                    { width: '10%', targets: [2] }
+                ],
+                dom: '<"top"Bf>rt<"bottom"lp><"clear">',
+                buttons: [
+                    {
+                        text: 'Seleccionar',
+                        className: 'btn btn-primary',
+                        attr: {
+                            id:'Seleccionar',
+                            'data-bs-toggle':'modal',
+                            'data-bs-target':'#mainModal2',
+                            'data-bs-dismiss':'modal'
+                        },
+                        action: function ( e, dt, node, config) {
+                            var seleccionado = dt.rows({selected:true}).data();
+                            if (seleccionado.length>0){
+                                $('#numeroDeSerie').val(seleccionado[0]['numeroDeSerie'] );
+                                numeroDeSerieLote=seleccionado[0]['numeroDeSerie'];
+                            }
+                        }
+                    }
+                ]
+            })
+
+            $('#altaPersona').on('click', function(event){
+                var win = window.open('http://localhost:3000/personas/alta?boton=true','_blank', 'popup=true')
+                $(win).on('load', function(){
+                    win.resizeTo(600,900)
+                    win.moveTo(600,200)
+                })
+            })
+
+            $('#registrarAplicacion').on('click', function(event){
+                var aplicacion={
+                    DNIPaciente: dniPaciente,
+                    DNIAgente: dniAgente,
+                    numeroDeSerie: numeroDeSerieLote,
+                    fechaDeAplicacion: new Date()
+                }
+                $.ajax({
+                    url: '/aplicaciones/createJSON',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify(aplicacion),
+                    success: function(response){
+                        if(response.flash){
+                            $('#flash').text(response.flash).show()
+                            setTimeout(function() {
+                                $('#flash').fadeOut('slow');
+                            }, 3000);
+                        }
+                    },
+                    error: function(response){
+
+                    }
+                })
+            })
+
+
+            $(window).on('message onmessage', function(e){
+                if(e.originalEvent.data['origen']==='formPersona'){
+                    $('#nombrePersona').val(e.originalEvent.data['datos']['nombre'] + ' ' + e.originalEvent.data['datos']['apellido'])
+                    $('#dniPersona').val(e.originalEvent.data['datos']['dni'])
+                    dniPaciente=e.originalEvent.data['datos']['dni'];
+                }
+            })
+        })

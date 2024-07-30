@@ -150,9 +150,6 @@ const formAplicacion = async (req, res) => {
     }
 };
 
-
-
-
 const createAplicacion = async (req, res) => {
 	try {
 		const { DNIPaciente, DNIAgente, numeroDeSerie, fechaDeAplicacion } =
@@ -178,6 +175,40 @@ const createAplicacion = async (req, res) => {
 		);
 		req.flash("success", "La aplicación fue creada exitosamente.");
 		res.redirect("/aplicaciones");
+	} catch (error) {
+		req.flash(
+			"error",
+			`Hubo un error al intentar crear la aplicación. ${error.message}`
+		);
+		console.log(error.message);
+		res.json({ success: false });
+	}
+};
+
+const createAplicacionJSON = async (req, res) => {
+	try {
+		const { DNIPaciente, DNIAgente, numeroDeSerie, fechaDeAplicacion } =
+			req.body;
+		const aplicacion = await Aplicacion.create({
+			DNIPaciente,
+			DNIAgente,
+			numeroDeSerie,
+			fechaDeAplicacion,
+			activo: 1,
+		});
+		await createRegistro(
+			req.user.idUsuario,
+			"Aplicacion",
+			aplicacion.dataValues.idAplicacion,
+			"Creacion"
+		);
+		await createRegistro(
+			req.user.idUsuario,
+			"Aplicacion",
+			aplicacion.dataValues.idAplicacion,
+			"Alta"
+		);
+        res.status(200).json({flash:'La aplicación fue registrada exitosamente.'})
 	} catch (error) {
 		req.flash(
 			"error",
@@ -334,6 +365,7 @@ module.exports = {
 	listarAplicacion,
 	formAplicacion,
 	createAplicacion,
+    createAplicacionJSON,
 	editAplicacion,
 	updateAplicacion,
 	deleteAplicacion,

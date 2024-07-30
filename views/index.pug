@@ -1,5 +1,6 @@
 include .\includes\layout
-include .\includes\modalLab
+include .\includes\modalAgente
+include .\includes\modalGestor
 
 block contenthead
 	style. 
@@ -13,8 +14,11 @@ block content
 	h1 Argentina Vacuna
 	section(class="vh-100 gradient-custom overflow-hidden")
 		.container.py-1.h-100
-			if user 
-				+modales(user.rol)
+			if user
+				if user.rol === 'Gestor de compras' 
+					+modalesGestor()
+				if user.rol === 'Agente de salud' 
+					+modalesAgente()
 			else
 				if messages.success
 					.alert.alert-success.flash-message.fade-in
@@ -39,5 +43,3 @@ block content
 												br
 												a.text-white-50(href="#") ¿Olvidaste tu contraseña?
 										button.btn.btn-outline-light.btn-lg.px-5(type="submit") Ingresar
-
-	script.

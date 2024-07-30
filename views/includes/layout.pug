@@ -1,5 +1,5 @@
 doctype html
-html
+html(lang="es")
 	head
 		meta(charset="UTF-8")
 		meta(name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no")
@@ -8,7 +8,7 @@ html
 		link(href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" integrity="sha512-Avb2QiuDEEvB4bZJYdft2mNjVShBftLdPG8FJ0V7irTLQ8Uo0qcPxh4Plq7G5tGm0rU+1SPhVotteLpBERwTkw==" crossorigin="anonymous" referrerpolicy="no-referrer")
 		link(href="/stylesheets/style.css" rel="stylesheet")
 		if user
-			if user.rol === 'Gestor de compras'
+			if user.rol === 'Gestor de compras' || user.rol === 'Agente de salud'
 				link(rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="")
 		block contenthead
 	body
@@ -20,6 +20,6 @@ html
 		script(src="https://cdn.datatables.net/v/bs5/dt-2.1.2/b-3.1.0/sl-2.0.3/datatables.min.js")
 		script(src="https://cdn.jsdelivr.net/npm/chart.js")
 		if user 
-			if user.rol==="Gestor de compras"
+			if user.rol==="Gestor de compras" || user.rol === 'Agente de salud'
 				script(src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin="")
 

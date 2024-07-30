@@ -34,12 +34,12 @@ const listarPersonas = async (req, res) => {
 		} else {
 			personas = await Persona.findAll({
 				where: { provincia: usuario.provincia },
-			include: [
-				{ model: Telefono, attributes: ["celular1", "celular2"] },
-				{ model: PatologiaBase, attributes: ["patologiaBase"] },
-				{ model: AgenteDeSalud, attributes: ["matricula"] },
-			],
-		});
+				include: [
+					{ model: Telefono, attributes: ["celular1", "celular2"] },
+					{ model: PatologiaBase, attributes: ["patologiaBase"] },
+					{ model: AgenteDeSalud, attributes: ["matricula"] },
+				],
+			});
 		}
 		
 		res.render("persona/viewPersona", {
@@ -47,6 +47,56 @@ const listarPersonas = async (req, res) => {
 		});
 	} catch (error) {
 		res.status(500).json({ message: "Error al obtener las personas." + error.message });
+	}
+};
+
+const listarPersonasJSON = async (req, res) => {
+	try {
+		const usuario = req.user;
+
+		let personas;
+		
+		if (usuario.rol === "Super Admin") {
+			personas = await Persona.findAll({
+				raw: true,
+			});
+		} else {
+			personas = await Persona.findAll({
+				where: { provincia: usuario.provincia },
+				include: [
+					{ model: Telefono, attributes: ["celular1", "celular2"] },
+					{ model: PatologiaBase, attributes: ["patologiaBase"] },
+					{ model: AgenteDeSalud, attributes: ["matricula"] },
+				],
+			});
+		}
+		res.json(personas)
+	} catch (error) {
+		res.status(500).json({ message: "Error al obtener las personas." + error.message });
+	}
+};
+
+const listarAgentesJSON = async (req, res) => {
+	try {
+		const usuario = req.user;
+
+		let personas;
+		
+		if (usuario.rol === "Super Admin") {
+			personas = await Persona.findAll({
+				raw: true,
+			});
+		} else {
+			personas = await Persona.findAll({
+				where: { provincia: usuario.provincia, ocupacion: 'Agente de salud' },
+				include: [
+					{ model: AgenteDeSalud, attributes: ["matricula"] }
+				],
+			});
+		}
+		res.json(personas)
+	} catch (error) {
+		console.error(error);
 	}
 };
 
@@ -84,6 +134,7 @@ const formPersona = async (req, res) => {
 
 const createPersona = async (req, res) => {
 	try {
+		const {ventana} = req.query;
 		const {
 			DNI,
 			nombre,
@@ -182,12 +233,22 @@ const createPersona = async (req, res) => {
 			DNI,
 			patologiaBase,
 		});
+		
+		if(ventana==='true'){
+			res.send(`
+				<html>
+					<body>
+						<script>
+								window.close();
+						</script>
+					</body>
+				</html>`
+			);
+		} else {
+			req.flash("success", "Persona creada exitosamente.");
+			res.redirect("/personas");
+		}
 
-		// Utiliza req.flash() para establecer el mensaje flash
-		req.flash("success", "Persona creada exitosamente.");
-
-		// Redirige a la vista de personas
-		res.redirect("/personas");
 	} catch (error) {
 		// Manejar errores
 		console.error(error);
@@ -471,6 +532,8 @@ const altaPersona = async (req, res) => {
 
 module.exports = {
 	getLocalidadesByProvinciaFromAPI,
+	listarPersonasJSON,
+	listarAgentesJSON,
 	listarPersonas,
 	formPersona,
 	createPersona,

@@ -18,6 +18,11 @@ router.post(
 	authorize(["Super Admin", "Agente de salud"]),
 	aplicacionController.createAplicacion
 );
+router.post(
+	"/createJSON",
+	authorize(["Super Admin", "Agente de salud"]),
+	aplicacionController.createAplicacionJSON
+);
 router.get(
 	"/:id",
 	authorize(["Super Admin", "Agente de salud"]),

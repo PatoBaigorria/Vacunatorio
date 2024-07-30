@@ -4,6 +4,11 @@ const loteInternoController = require("../controllers/loteInternoController");
 const authorize = require("../middleware/authorize");
 
 router.get(
+	"/lotesinternosJSON",
+	authorize(["Super Admin", "Agente de salud"]),
+	loteInternoController.listarLotesInternosJSON
+);
+router.get(
 	"/",
 	authorize(["Super Admin", "Gestor de compras"]),
 	loteInternoController.listarLotesInternos

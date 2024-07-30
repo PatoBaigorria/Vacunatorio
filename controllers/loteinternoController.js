@@ -28,6 +28,20 @@ const listarLotesInternos = async (req, res) => {
 	}
 };
 
+const listarLotesInternosJSON = async (req, res) => {
+	try {
+		const lotesInternos = await LoteInterno.findAll({
+			include: [
+				{ model: LoteProveedor, attributes: ["numeroDeLote", "tipoDeVacuna", "nombreComercial"] },
+				{ model: Laboratorio, attributes: ["nombreLaboratorio"] },
+			],
+		});
+		res.json(lotesInternos);
+	} catch (error) {
+		console.error(error);
+	}
+};
+
 const formLoteInterno = async (req, res) => {
 	try {
 		const lotesInternos = await LoteInterno.findAll();
@@ -363,6 +377,7 @@ const altaLoteInterno = async (req, res) => {
 
 module.exports = {
 	listarLotesInternos,
+	listarLotesInternosJSON,
 	formLoteInterno,
 	createLoteInterno,
 	createLoteInternoDesdeProveedor,

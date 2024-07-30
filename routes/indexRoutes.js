@@ -105,7 +105,7 @@ router.use(
 router.use(
 	"/lotesinternos",
 	isAuthenticated,
-	authorize(["Super Admin", "Gestor de compras"]),
+	authorize(["Super Admin", "Gestor de compras", "Agente de salud"]),
 	loteinternoRoutes
 );
 router.use(

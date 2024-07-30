@@ -20,7 +20,7 @@ block content
                             p#mensajeAlerta.text-center
 
             form#form(action="/aplicaciones" method="post")
-                .form-group
+                .form-group#DNIPacienteGroup
                     label.form-label(for="DNIPaciente") Paciente que recibió la aplicación de la vacuna:
                     .input-group.has-validation
                         select.form-select.is-valid#DNIPaciente(name="DNIPaciente" required)
@@ -58,7 +58,7 @@ block content
                 div.text-center
                     button.btn.btn-primary(type="submit") Crear
                     | &nbsp;&nbsp;&nbsp;&nbsp;
-                    button.btn.btn-primary(type="button" onclick="window.history.back()") Volver
+                    button.btn.btn-primary#volver(type="button" onclick="window.history.back()") Volver
 
 script.
     $(function(){
@@ -176,11 +176,38 @@ script.
             }
         })
 
-        $('#form button[type="submit"]').on('click', function (event) {
-            if (!validarFormulario()) {
-                event.preventDefault()
-            }
-        })
+        $(document).ready(function() {
+                var params = new URLSearchParams(window.location.search);
+                var boton = params.get('boton');
+                var dniPaciente = params.get('dni');
+                if (boton==='true'){
+                    $('nav').css('display', 'none')
+                    $('#volver').css('display', 'none')
+                }
+                $('#DNIPaciente').val(dniPaciente);
+            })
+
+            $('form button[type="submit"]').on('click', function (event) {
+                var params = new URLSearchParams(window.location.search);
+                var boton = params.get('boton');
+
+                if (!validarFormulario()) {
+                    event.preventDefault();
+                    return;
+                } 
+                if (boton==='true'){
+                    window.opener.postMessage({
+                        origen:'formAplicacion', 
+                        datos: {
+                            DNIPaciente: $('#DNIPaciente').val()
+                            DNIAgente: $('#DNIAgente').val()
+                            numeroDeSerie: $('#numeroDeSerie').val()
+                            fechaDeAplicacion: $('#fechaDeAplicacion').val()
+                        }
+                    }, window.location.origin);
+                    $('#form').attr('action', $('#form').attr('action')+'?ventana=true');
+                }
+            })
 
         function validarFechaDeAplicacion() {
             quitarError($(fechaDeAplicacion))

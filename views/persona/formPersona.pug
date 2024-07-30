@@ -1,11 +1,6 @@
 - var title ='Alta de una persona'
 include ..\includes\layout
 block content
-html(lang="es")
-head
-    link(rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="")
-    script(src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin="")
-body
     h2.text-center Ingrese los datos de la persona
     if messages.error
         .alert.alert-danger
@@ -55,7 +50,7 @@ body
                 .invalid-feedback.d-none(id="fechaDeNacimientoAntiguo") La fecha ingresada no puede ser anterior a cien años
                 .invalid-feedback.d-none(id="fechaDeNacimientoSuperior") La fecha de nacimiento es superior a la actual
                 .invalid-feedback.d-none(id="fechaDeNacimientoAgente") La fecha de nacimiento debe superior cuando se trata de un agente de salud
-        .form-group
+        .form-group#ocupacionGroup
             label.form-label(for="ocupacion") Ocupación:
             .input-group.has-validation
                 select.form-select(name="ocupacion" id="ocupacion" required)
@@ -130,58 +125,60 @@ body
         div.text-center
             button(type="submit" class="btn btn-primary") Alta
             | &nbsp;&nbsp;&nbsp;&nbsp;
-            button(type="button" class="btn btn-primary" onclick="window.history.back()") Volver
-script.
-    document.addEventListener('DOMContentLoaded', function () {
-        const provinciaSelect = document.getElementById('provincia');
-        const localidadSelect = document.getElementById('localidad');
+            button#volver(type="button" class="btn btn-primary" onclick="window.history.back()") Volver
 
-        provinciaSelect.addEventListener('change', async function () {
-            const selectedProvincia = provinciaSelect.value;
-
-            try {
-                const response = await fetch(`https://apis.datos.gob.ar/georef/api/localidades?provincia=${selectedProvincia}`);
-                const data = await response.json();
-
-                // Limpiar opciones actuales
-                localidadSelect.innerHTML = '';
-
-                // Agregar opción por defecto
-                const defaultOption = document.createElement('option');
-                defaultOption.disabled = true;
-                defaultOption.selected = true;
-                defaultOption.hidden = true;
-                defaultOption.value = "";
-                defaultOption.textContent = "Selecciona una localidad";
-                localidadSelect.appendChild(defaultOption);
-
-                // Agregar opciones actualizadas
-                const localidades = data.localidades.map(localidad => localidad.nombre);
-                localidades.sort((a, b) => a.localeCompare(b)); // Ordenar alfabéticamente
-
-                localidades.forEach(localidad => {
-                    const option = document.createElement('option');
-                    option.value = localidad; // Usar el nombre de la localidad
-                    option.textContent = localidad; // Usar el nombre de la localidad
-                    localidadSelect.appendChild(option);
-                });
-
-                // Limpiar la selección de localidad
-                localidadSelect.value = ""; // Mantener "Selecciona una localidad"
-
-                // Quitar el estado is-invalid de la provincia
-                quitarError($(provinciaSelect));
-                // Limpiar el estado de localidad
-                quitarError($(localidadSelect));
-
-            } catch (error) {
-                console.error('Error al obtener localidades:', error);
+    script.
+        $(document).ready(function () {
+            var params = new URLSearchParams(window.location.search);
+            var boton = params.get('boton');
+            if (boton==='true'){
+                $('nav').css('display', 'none')
+                $('#volver').css('display', 'none')
+                $('#ocupacionGroup').css('display','none')
             }
-        });
 
-        // Llamar la función de cambio para cargar las localidades iniciales
-        $('#provincia').trigger('change');
-    });
+            const provinciaSelect = document.getElementById('provincia');
+            const localidadSelect = document.getElementById('localidad');
+
+            provinciaSelect.addEventListener('change', async function () {
+                const selectedProvincia = provinciaSelect.value;
+
+                try {
+                    const response = await fetch(`https://apis.datos.gob.ar/georef/api/localidades?provincia=${selectedProvincia}`);
+                    const data = await response.json();
+
+                    localidadSelect.innerHTML = '';
+
+                    const defaultOption = document.createElement('option');
+                    defaultOption.disabled = true;
+                    defaultOption.selected = true;
+                    defaultOption.hidden = true;
+                    defaultOption.value = "";
+                    defaultOption.textContent = "Selecciona una localidad";
+                    localidadSelect.appendChild(defaultOption);
+
+                    const localidades = data.localidades.map(localidad => localidad.nombre);
+                    localidades.sort((a, b) => a.localeCompare(b));
+
+                    localidades.forEach(localidad => {
+                        const option = document.createElement('option');
+                        option.value = localidad;
+                        option.textContent = localidad;
+                        localidadSelect.appendChild(option);
+                    });
+
+                    localidadSelect.value = "";
+
+                    quitarError($(provinciaSelect));
+                    quitarError($(localidadSelect));
+
+                } catch (error) {
+                    console.error('Error al obtener localidades:', error);
+                }
+            });
+
+            $('#provincia').trigger('change');
+        });
 
 
         function mostrarAlerta() {
@@ -189,7 +186,6 @@ script.
             $('#alertModal').modal('show');
         }
 
-        // Funciones para mostrar y quitar errores
         function mostrarError(campo, error) {
             campo.addClass('is-invalid').removeClass('is-valid').addClass();
             $('#' + campo.attr('id') + error).removeClass('d-none');
@@ -207,7 +203,6 @@ script.
             } else if (!/^[0-9]{7,8}$/.test($('#dni').val())) {
                 mostrarError($('#dni'), 'Invalido');
             } else {
-                // Cambiar a Ajax
                 if (!{JSON.stringify(agentes)}.some(agente => agente.DNI == $('#dni').val())) {
                     mostrarError($('#dni'), 'Existe');
                 }
@@ -235,7 +230,6 @@ script.
         }
 
         function validarFecha() {
-            // Limpiar errores previos
             quitarError($('#fechaDeNacimiento'))
             if (!$('#fechaDeNacimiento').val()) {
                 mostrarError($('#fechaDeNacimiento'), 'Vacio');
@@ -300,6 +294,7 @@ script.
                 } 
             }
         }
+
         function validarDireccion() {
             quitarError($('#direccion'));
             const direccionValue = $('#direccion').val();
@@ -327,9 +322,7 @@ script.
             return true;
         }
 
-        // Eventos
         $('#dni').on('keyup focusout', function () {
-            //validarCampo($(this), 'dni', '', 'Vacio', 'Invalido', 'Existe');
             validarDNI()
         });
 
@@ -370,11 +363,8 @@ script.
             validarComboBox($(this));
         });
 
-
-
         let press = 0
         $('#alertModal').on('keyup', function (event) {
-            // Si la tecla presionada es "Enter", oculta el modal
             if(event.key === 'Enter'){
                 press = press+1
             }
@@ -385,16 +375,13 @@ script.
         });
 
         $('#alertModal').on('hidden.bs.modal', function () {
-            // Buscar el primer elemento con la clase 'is-invalid' y hacer foco en él
             var primerInvalido = $('.is-invalid:first');
             if (primerInvalido.length > 0) {
                 primerInvalido.focus();
             }
         });
 
-        // Evento cuando se oculta el modal
         $('#alertModal').on('hidden.bs.modal', function () {
-            // Buscar el primer elemento con la clase 'is-invalid' y hacer foco en él
             var primerInvalido = $('.is-invalid:first');
             if (primerInvalido.length > 0) {
                 primerInvalido.focus();
@@ -405,22 +392,34 @@ script.
         $('#ocupacion, #genero, #patologiaBase, #provincia, #localidad').trigger('change');
         $('#dni').trigger('focus')
 
-        // Asociar el evento submit al formulario
         $('#form input').on('keypress', function (event) {
             if (event.which === 13) {
                 console.log("Formulario enviado por teclado");
-                //console.log(validarFormulario());
                 if(!validarFormulario()){
                     event.preventDefault();
                 }
-                // Puedes agregar lógica adicional aquí si es necesario
             }
         });
 
-        $('#form button[type="submit"]').on('click', function (event) {
-            console.log("Botón de envío clicado");
+        $('form button[type="submit"]').on('click', function (event) {
+            var params = new URLSearchParams(window.location.search);
+            var boton = params.get('boton');
+
             if (!validarFormulario()) {
                 event.preventDefault();
+                return;
+            } 
+            if (boton==='true'){
+                $('#ocupacion').val('otro');
+                window.opener.postMessage({
+                    origen:'formPersona', 
+                    datos: {
+                        dni: $('#dni').val(),
+                        nombre: $('#nombre').val(),
+                        apellido: $('#apellido').val()
+                    }
+                }, window.location.origin);
+                $('#form').attr('action', $('#form').attr('action')+'?ventana=true');
             }
-        });
+        })
 
