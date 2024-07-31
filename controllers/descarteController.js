@@ -1,88 +1,23 @@
-const { Descarte, AgenteDeSalud, LoteInterno, Persona, CentroDeVacunacion } = require("../models/relaciones");
+const { Descarte, AgenteDeSalud, LoteInterno, Persona, CentroDeVacunacion, Usuario } = require("../models/relaciones");
 const { createRegistro } = require("./registroController");
 const Op = require('sequelize').Op;
 
 // Obtener todos los descartes
 const listarDescartes = async (req, res) => {
     try {
-        // Obtener la provincia y localidad del usuario logueado
-        const userProvincia = req.user.provincia;
-        const userLocalidad = req.user.localidad;
-
-        // Obtener los LoteInterno que están en centros de vacunación en la misma provincia y localidad
-        const lotesInternos = await LoteInterno.findAll({
-            include: [
-                {
-                    model: CentroDeVacunacion,
-                    attributes: ["provincia", "localidad"],
-                    where: {
-                        provincia: userProvincia,
-                        localidad: userLocalidad
-                    }
-                }
-            ],
-            attributes: ["numeroDeSerie"]
-        });
-
-        // Obtener los números de serie de los lotes internos filtrados
-        const numerosDeSerie = lotesInternos.map(lote => lote.numeroDeSerie);
-
-        // Obtener los AgenteDeSalud en la misma provincia y localidad del usuario logueado
-        const agentes = await AgenteDeSalud.findAll({
-            include: [
-                {
-                    model: Persona,
-                    attributes: ["DNI", "nombre", "apellido"],
-                    where: {
-                        provincia: userProvincia,
-                        localidad: userLocalidad
-                    }
-                }
-            ],
-            attributes: ["DNI"]
-        });
-
-        // Obtener los DNI de los agentes filtrados
-        const dniAgentes = agentes.map(agente => agente.DNI);
-
-        // Obtener los descartes que están asociados a los lotes internos y agentes filtrados
         const descartes = await Descarte.findAll({
-            include: [
-                {
-                    model: LoteInterno,
-                    where: {
-                        numeroDeSerie: numerosDeSerie
-                    },
-                    include: [
-                        {
-                            model: CentroDeVacunacion,
-                            attributes: ["provincia", "localidad"],
-                            where: {
-                                provincia: userProvincia,
-                                localidad: userLocalidad
-                            }
-                        }
-                    ]
-                },
-                {
-                    model: AgenteDeSalud,
-                    where: {
-                        DNI: dniAgentes
-                    },
-                    include: [
-                        {
-                            model: Persona,
-                            attributes: ["DNI", "nombre", "apellido"],
-                            where: {
-                                provincia: userProvincia,
-                                localidad: userLocalidad
-                            }
-                        }
-                    ],
-                    attributes: ["DNI"]
-                }
-            ]
+            include: [{
+                model: Usuario,
+                attributes: ["apellido"],
+            }],
+            where: {
+                activo: 1,
+                idUsuario: req.user.idUsuario
+            },
+            raw: true
         });
+
+        console.log(descartes)
 
         res.render("descarte/viewDescarte", { descartes: descartes });
     } catch (error) {
@@ -95,26 +30,10 @@ const listarDescartes = async (req, res) => {
 
 const formDescarte = async (req, res) => {
     try {
-        // Obtener el usuario logueado (ajusta según cómo manejes la autenticación)
-        const usuarioLogueado = req.user; // O el método que uses para obtener el usuario logueado
-
-        // Obtener la localidad y provincia del usuario logueado
-        const { localidad, provincia } = usuarioLogueado;
-
-        // Obtener agentes de salud filtrados por la localidad y provincia
-        const personas = await Persona.findAll({
-            where: {
-                ocupacion: 'agente de salud',
-                localidad: localidad,
-                provincia: provincia
-            }
-        });
-
-        // Obtener lotes internos que llegaron al centro de vacunación, filtrados por la localidad y provincia
         const lotesInternos = await LoteInterno.findAll({
             where: {
-                '$CentroDeVacunacion.localidad$': localidad,
-                '$CentroDeVacunacion.provincia$': provincia,
+                '$CentroDeVacunacion.localidad$': req.user.localidad,
+                '$CentroDeVacunacion.provincia$': req.user.provincia,
                 fechaDeLlegadaDepositoNacional: { [Op.ne]: null } // Solo lotes que llegaron
             },
             include: [{
@@ -141,7 +60,6 @@ const formDescarte = async (req, res) => {
 
         // Renderizar el formulario con los datos filtrados
         res.render("descarte/formDescarte", {
-            personas: personas,
             lotesInternos: lotesInternos,
             motivos: motivos,
             empresas: empresas
@@ -157,10 +75,10 @@ const formDescarte = async (req, res) => {
 // Crear un nuevo descarte
 const createDescarte = async (req, res) => {
     try {
-        const { DNIAgente, numeroDeSerie, empresaDescartante, motivo, cantidadDeVacunas, fechaDeDescarte } = req.body;
+        const { numeroDeSerie, empresaDescartante, motivo, cantidadDeVacunas, fechaDeDescarte } = req.body;
 
         const descarte = await Descarte.create({
-            DNIAgente,
+            idUsuario: req.user.idUsuario,
             numeroDeSerie,
             empresaDescartante,
             motivo,
@@ -314,8 +232,6 @@ const updateDescarte = async (req, res) => {
             throw new Error('Descarte no encontrado');
         }
 
-        descarte.DNIAgente = DNIAgente;
-        descarte.numeroDeSerie = numeroDeSerie;
         descarte.empresaDescartante = empresaDescartante;
         descarte.motivo = motivo;
         descarte.cantidadDeVacunas = cantidadDeVacunas;
@@ -323,14 +239,14 @@ const updateDescarte = async (req, res) => {
 
         await descarte.save();
         await createRegistro(
-			req.user.idUsuario,
-			"Descarte",
-			req.params.id,
-			"Modificacion"
-		);
+            req.user.idUsuario,
+            "Descarte",
+            req.params.id,
+            "Modificacion"
+        );
         req.flash(
-			"success",
-			"El descarte de la vacuna fue actualizada exitosamente.");
+            "success",
+            "El descarte de la vacuna fue actualizada exitosamente.");
 
         // Redirigir a la vista de descartes
         res.redirect('/descartes');
@@ -340,15 +256,24 @@ const updateDescarte = async (req, res) => {
     }
 };
 
-  
-  
-  
+
+
+
 
 // Eliminar un descarte por su ID
 const deleteDescarte = async (req, res) => {
     try {
         const descarte = await Descarte.findByPk(req.params.id);
         if (descarte) {
+            const loteInterno = await LoteInterno.findOne({ where: { numeroDeSerie: descarte.numeroDeSerie } });
+            const cantidadDeVacunasRest = loteInterno.cantidadDeVacunasRestantes + descarte.cantidadDeVacunas;
+            await LoteInterno.update({
+                cantidadDeVacunasRestantes: cantidadDeVacunasRest
+            }, {
+                where: {
+                    numeroDeSerie: descarte.numeroDeSerie
+                }
+            });
             await descarte.destroy();
             await createRegistro(req.user.idUsuario, "Descarte", req.params.id, "Eliminacion");
             req.flash("success", "Descarte de Vacuna eliminada exitosamente.");

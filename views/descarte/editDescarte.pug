@@ -22,7 +22,7 @@ body
             .input-group.has-validation
                 select.form-select(id='DNIAgente' name='DNIAgente' required class=(errors && errors.DNIAgente ? 'is-invalid' : 'is-valid'))
                     option(value='', disabled selected hidden) Seleccione un agente
-                    
+
         .form-group
             label.form-label(for='numeroDeSerie') Nº de Serie de Lote Interno:
             .input-group.has-validation
@@ -168,8 +168,8 @@ script.
                 mostrarError($('#cantidadDeVacunas'), 'Invalido');
             } else {
                 let cantidadDeVacunasIngresadas = parseInt($('#cantidadDeVacunas').val());
-                let {cantidad} = !{JSON.stringify(lotesInternos)}.find(lote => lote.numeroDeSerie == descarte.numeroDeSerie);
-                if (cantidadDeVacunasIngresadas > cantidad) {
+                let {cantidadDeVacunasRestantes} = !{JSON.stringify(lotesInternos)}.find(lote => lote.numeroDeSerie == descarte.numeroDeSerie);
+                if (cantidadDeVacunasIngresadas > cantidadDeVacunasRestantes) {
                     mostrarError($('#cantidadDeVacunas'), 'SuperaCantidad');
                 }
             }
@@ -202,5 +202,5 @@ script.
         cargarEmpresasDescartantes();
         cargarMotivos();
         $('#alertModal').modal({backdrop: 'static', keyboard: false});
-        
+
     });

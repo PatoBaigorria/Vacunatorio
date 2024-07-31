@@ -12,34 +12,17 @@ body
                 input.form-control.readonly-input(type="text" id="idTraslado" name="idTraslado" value=traslado.idTraslado readonly disabled)
             br
             .form-group
-                label.form-label(for="num-serie") Nº de Serie Lote Interno:
-                select.form-select#numeroDeSerieSelect(name="numeroDeSerie")
-                    each numSerie in lotesInternos
-                        if traslado.numeroDeSerie==numSerie.numeroDeSerie
-                            option(value=numSerie.numeroDeSerie selected)=numSerie.numeroDeSerie
-                        else
-                            option(value=numSerie.numeroDeSerie)=numSerie.numeroDeSerie
+                label.form-label(for="numeroDeSerie") Nº de Serie Lote Interno:
+                input.form-control(type="text" value=traslado.numeroDeSerie readonly)
             br
             .form-group
-                label.form-label(for="id-ctrovac") Centro de Vacunacion:
+                label.form-label(for="idCentroDeVacunacion") Centro de Vacunacion:
                 select.form-select#idCentroDeVacunacion(name="idCentroDeVacunacion")
-                    if traslado.idCentroDeVacunacion != null
-                        each cvac in centrosDeVacunacion
-                            if traslado.idCentroDeVacunacion==cvac.idCentroDeVacunacion
-                                option(value=cvac.idCentroDeVacunacion selected)= cvac.idCentroDeVacunacion
-                            else
-                                option(value=cvac.idCentroDeVacunacion)= cvac.idCentroDeVacunacion
-                    else
-                        option(value="" selected) Ningún Centro de Vacunación
-                        each cvac in centrosDeVacunacion
-                            option(value=cvac.idCentroDeVacunacion)= cvac.idCentroDeVacunacion
+                    option(value=traslado.idCentroDeVacunacion readonly selected)= traslado.idCentroDeVacunacion
             br
             .form-group
-                label.form-label(for="fecha-sal-trasl") Fecha Salida de Traslado:
-                    if traslado.fechaDeSalida != null
-                        input.form-control(type="date" id="fecha-sal-trasl" name="fechaDeSalida" class="fecha-salida" value=traslado.fechaDeSalida)
-                    else
-                        input.form-control(type="date" id="fecha-sal-trasl" name="fechaDeSalida" class="fecha-salida")
+                label.form-label(for="fechaDeSalida") Fecha Salida de Traslado:
+                    input.form-control(type="date" id="fechaDeSalida" readonly name="fechaDeSalida" value=traslado.fechaDeSalida)
             br
             .form-group
                 label.form-label(for="fecha-lleg-trasl") Fecha Llegada de Traslado en Destino:

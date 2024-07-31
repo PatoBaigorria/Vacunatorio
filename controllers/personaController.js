@@ -26,22 +26,23 @@ const listarPersonas = async (req, res) => {
 		const usuario = req.user;
 
 		let personas;
-		
+
 		if (usuario.rol === "Super Admin") {
 			personas = await Persona.findAll({
 				raw: true,
 			});
 		} else {
 			personas = await Persona.findAll({
-				where: { provincia: usuario.provincia },
+				where: { provincia: usuario.provincia, localidad: usuario.localidad },
 				include: [
 					{ model: Telefono, attributes: ["celular1", "celular2"] },
 					{ model: PatologiaBase, attributes: ["patologiaBase"] },
 					{ model: AgenteDeSalud, attributes: ["matricula"] },
 				],
+				raw: true
 			});
 		}
-		
+
 		res.render("persona/viewPersona", {
 			personas: personas,
 		});
@@ -55,7 +56,7 @@ const listarPersonasJSON = async (req, res) => {
 		const usuario = req.user;
 
 		let personas;
-		
+
 		if (usuario.rol === "Super Admin") {
 			personas = await Persona.findAll({
 				raw: true,
@@ -81,7 +82,7 @@ const listarAgentesJSON = async (req, res) => {
 		const usuario = req.user;
 
 		let personas;
-		
+
 		if (usuario.rol === "Super Admin") {
 			personas = await Persona.findAll({
 				raw: true,
@@ -108,17 +109,17 @@ const formPersona = async (req, res) => {
 		// Obtener provincias desde la API externa
 		let provincias = [];
 		const provinciasResponse = await axios.get('https://apis.datos.gob.ar/georef/api/provincias');
-		provincias = provinciasResponse.data.provincias.map(provincia => provincia.nombre).sort((a, b) => a.localeCompare(b)); 
+		provincias = provinciasResponse.data.provincias.map(provincia => provincia.nombre).sort((a, b) => a.localeCompare(b));
 
 		// Obtener localidades de la primera provincia de la lista
-        let localidades = [];
-        if (provincias.length > 0) {
-            const localidadesResponse = await axios.get(`https://apis.datos.gob.ar/georef/api/localidades?provincia=${provincias[0]}`);
-            localidades = localidadesResponse.data.localidades.map(localidad => localidad.nombre);
+		let localidades = [];
+		if (provincias.length > 0) {
+			const localidadesResponse = await axios.get(`https://apis.datos.gob.ar/georef/api/localidades?provincia=${provincias[0]}`);
+			localidades = localidadesResponse.data.localidades.map(localidad => localidad.nombre);
 			localidades = localidades.map(localidad => localidad.trim());
 			localidades.sort((a, b) => a.localeCompare(b));
 			localidades.unshift("Selecciona una localidad");
-        }
+		}
 		res.render("persona/formPersona", {
 			agentes: agentes,
 			provincias: provincias,
@@ -134,7 +135,7 @@ const formPersona = async (req, res) => {
 
 const createPersona = async (req, res) => {
 	try {
-		const {ventana} = req.query;
+		const { ventana } = req.query;
 		const {
 			DNI,
 			nombre,
@@ -233,8 +234,8 @@ const createPersona = async (req, res) => {
 			DNI,
 			patologiaBase,
 		});
-		
-		if(ventana==='true'){
+
+		if (ventana === 'true') {
 			res.send(`
 				<html>
 					<body>

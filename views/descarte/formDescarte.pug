@@ -19,14 +19,6 @@ body
                     p#mensajeAlerta.text-center
     form#form(action='/descartes' method='post')
         .form-group
-            label.form-label(for='DNIAgente') Seleccione un Agente de Salud Existente:
-            .input-group.has-validation
-                select.form-select#DNIAgente(name='DNIAgente' required)
-                    option(value='', hidden selected) Seleccione un agente
-                    each persona in personas
-                        option(value=persona.DNI)= persona.nombre + ' ' + persona.apellido
-                .invalid-feedback.d-none#DNIAgenteSinAgentes No hay ningún agente dado de alta para realizar el descarte, dé de alta uno y luego genere el descarte
-        .form-group
             label.form-label(for='numeroDeSerie') Nº de Serie de Lote Interno:
             .input-group.has-validation
                 select.form-select#numeroDeSerie(name='numeroDeSerie' required)

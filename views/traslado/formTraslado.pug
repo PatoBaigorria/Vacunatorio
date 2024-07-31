@@ -41,7 +41,7 @@ body
         .form-group
             label.form-label(for="fechaDeLlegada") Fecha de llegada del lote interno al centro de vacunación:
             .input-group.has-validation
-                input.form-control.is-valid#fechaDeLlegada(type="date" name="fechaDeLlegada" disabled)
+                input.form-control.is-valid#fechaDeLlegada(type="date" name="fechaDeLlegada" readonly disabled)
                 .invalid-feedback.d-none#fechaDeLlegadaVacio El campo no puede estar vacío
                 .invalid-feedback.d-none#fechaDeLlegadaSuperior La fecha de llegada es superior a la actual
                 .invalid-feedback.d-none#fechaDeLlegadaIncongruente La fecha de llegada no puede ser anterior a la fecha de salida
@@ -202,13 +202,11 @@ script.
         $('#idCentroDeVacunacionOrigen').on('change', function () {
             limpiarFechaYErrores();
             cargarLotes();
-            cargarCentros()
             quitarError($('#idCentroDeVacunacionOrigen'));
         });
 
         $('#numeroDeSerie').on('change', function () {
             limpiarFechaYErrores();
-            cargarCentros();
             quitarError($('#numeroDeSerie'));
         });
 
@@ -233,6 +231,5 @@ script.
             if (!validarFormulario()) {
                 event.preventDefault();
             }
-
         });
     });

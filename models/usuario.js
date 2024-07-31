@@ -2,7 +2,7 @@
 const { Model, DataTypes } = require("sequelize");
 const sequelize = require("../database/db");
 
-class Usuario extends Model {}
+class Usuario extends Model { }
 
 const usuario = Usuario.init(
 	{
@@ -15,10 +15,13 @@ const usuario = Usuario.init(
 			type: DataTypes.STRING,
 			allowNull: false,
 		},
-		nombreUsuario: {
+		nombre: {
 			type: DataTypes.STRING,
 			allowNull: false,
-			unique: true,
+		},
+		apellido: {
+			type: DataTypes.STRING,
+			allowNull: false,
 		},
 		email: {
 			type: DataTypes.STRING,

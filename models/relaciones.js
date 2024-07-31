@@ -140,18 +140,18 @@ LoteInterno.hasMany(Descarte, {
 	//onDelete: 'RESTRICT'
 });
 
-AgenteDeSalud.hasMany(Descarte, {
-	foreignKey: "DNIAgente",
-	sourceKey: "DNI"
+Usuario.hasMany(Descarte, {
+	foreignKey: "idUsuario",
+	sourceKey: "idUsuario",
 });
 
 Descarte.belongsTo(LoteInterno, {
 	foreignKey: "numeroDeSerie",
 });
 
-Descarte.belongsTo(AgenteDeSalud, {
-	foreignKey: "DNIAgente",
-	targetKey: "DNI"
+Descarte.belongsTo(Usuario, {
+	foreignKey: "idUsuario",
+	targetKey: "idUsuario",
 });
 
 Usuario.hasMany(Registro, {

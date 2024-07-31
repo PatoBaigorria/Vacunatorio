@@ -1,4 +1,5 @@
 /*
+- Descartes cambia de DNIAgente a idUsuario y los mismos son cargados y vistos por ellos
 - Corregir todas las tablas para que tengan menos columnas ✔ (Eze)
 - Dividir las vistas por rol ✔ (Pato)
 - Mover el perfil del usuario al nav ✔ (Pato)

@@ -2,7 +2,7 @@
 const { Model, DataTypes } = require("sequelize");
 const sequelize = require("../database/db");
 
-class Descarte extends Model {}
+class Descarte extends Model { }
 const descarte = Descarte.init(
 	{
 		idDescarte: {
@@ -10,7 +10,7 @@ const descarte = Descarte.init(
 			primaryKey: true,
 			autoIncrement: true,
 		},
-		DNIAgente: {
+		idUsuario: {
 			type: DataTypes.INTEGER,
 			foreignKey: true,
 			allowNull: false,
