@@ -6,8 +6,9 @@ mixin modalesAgente()
                     h5.modal-title#alertModalLabel Alerta
                     button.close(type="button" data-bs-dismiss="modal" aria-label="Close")
                         span(aria-hidden="true") ×
-                div.modal-body
+                div.modal-body.text-center
                     p#mensajeAlerta.text-center
+                    button#btnAceptar.btn.btn-primary Aceptar
     .modal.fade(id='ModalDataTablePersona' tabindex='-1' aria-labelledby='ModalDataTablePersonaLabel' aria-hidden='true')
         .modal-dialog(style="max-width: 1000px;")
             .modal-content
@@ -35,8 +36,10 @@ mixin modalesAgente()
                 .modal-body
                     div.table.responsive
                         table#lotes.table.table-striped.table-bordered
-
-    button.btn.btn-primary(type='button' data-bs-toggle='modal' data-bs-target='#mainModal') Persona
+    div.text-center
+        button.btn.btn-warning(type='button' data-bs-toggle='modal' data-bs-target='#mainModal')
+            i.fas.fa-syringe 
+            | &nbsp;&nbsp;&nbsp;&nbsp;   Registrar aplicación
     .modal.fade(id='mainModal' tabindex='-1' aria-labelledby='mainModalLabel' aria-hidden='true')
         .modal-dialog
             .modal-content
@@ -58,14 +61,14 @@ mixin modalesAgente()
                         button.btn.btn-success#altaPersona(type='button') Alta
                     br
                     .form-group.text-center
-                        button.btn.btn-primary#siguiente(type='button' data-bs-toggle='modal' data-bs-target='#mainModal2' data-bs-dismiss='modal') Siguiente
+                        button.btn.d-none.btn-primary#siguiente(type='button' data-bs-toggle='modal' data-bs-target='#mainModal2' data-bs-dismiss='modal') Siguiente
     .modal.fade(id='mainModal2' tabindex='-1' aria-labelledby='mainModal2Label' aria-hidden='true')
         .modal-dialog
             .modal-content
                 .modal-header
-                    h5.modal-title#mainModal2Label COSAS APLICACION
+                    h5.modal-title#mainModal2Label Aplicación de la vacuna
                     button.btn-close(type='button' data-bs-dismiss='modal' aria-label='Close')
-                .modal-body
+                .modal-body#form
                     .form-group
                         label.text-center Agente de Salud que aplicó la vacuna:
                         input.form-control#DNIAgente(type='text' disabled)
@@ -77,6 +80,15 @@ mixin modalesAgente()
                         input.form-control#numeroDeSerie(type='text' disabled)
                         button.btn.btn-primary#buscarLoteBtn(type='button' data-bs-toggle='modal' data-bs-target='#ModalDataTableLote' data-bs-dismiss='modal')
                             i.fa-solid.fa-magnifying-glass
+                    br
+                    .form-group
+                        label.form-label Fecha en la que se aplicó la vacuna
+                        .input-group.has-validation
+                            input.form-control.is-invalid#fechaDeAplicacion(type="date" name="fechaDeAplicacion" disabled required)
+                            .invalid-feedback#fechaDeAplicacionVacio El campo no puede estar vacío
+                            .invalid-feedback.d-none#fechaDeAplicacionSuperior La fecha de aplicación es superior a la actual
+                            .invalid-feedback.d-none#fechaDeAplicacionLlegadaACentro La fecha de aplicación no puede ser anterior a la llegada al centro de vacunación
+                            .d-none#fechaDeAplicacionVencida ADVERTENCIA: El lote seleccionado se encuentra vencido. Puede continuar, pero se recomienda precaución
                     br
                     .form-group.text-center
                         button.btn.btn-success#registrarAplicacion(type='button' data-bs-toggle='modal' data-bs-dismiss='modal') Registrar Aplicacion
@@ -91,13 +103,9 @@ mixin modalesAgente()
         let numeroDeSerieLote;
         let dniAgente;
 
+        let modales = document.querySelectorAll('.modal');
         $(document).ready(function() {
-            $('#mainModal').modal({
-                backdrop: 'static',
-                keyboard: false
-            });
-        });
-        $(document).ready(function() {
+            modales.forEach(x => $(x).modal({backdrop: 'static', keyboard: false}))
             tablaPaciente = $(personas).DataTable({
                 ajax: {
                     url:'/personas/personasJSON',
@@ -137,6 +145,7 @@ mixin modalesAgente()
                                 $('#nombrePersona').val(seleccionado[0]['nombre'] +' ' +seleccionado[0]['apellido'] )
                                 $('#dniPersona').val(seleccionado[0]['DNI']);
                                 dniPaciente=seleccionado[0]['DNI'];
+                                $(siguiente).removeClass('d-none');
                             }
                         }
                     }
@@ -233,6 +242,7 @@ mixin modalesAgente()
                             if (seleccionado.length>0){
                                 $('#numeroDeSerie').val(seleccionado[0]['numeroDeSerie'] );
                                 numeroDeSerieLote=seleccionado[0]['numeroDeSerie'];
+                                $('#fechaDeAplicacion').attr('disabled', false)
                             }
                         }
                     }
@@ -247,38 +257,132 @@ mixin modalesAgente()
                 })
             })
 
-            $('#registrarAplicacion').on('click', function(event){
-                var aplicacion={
-                    DNIPaciente: dniPaciente,
-                    DNIAgente: dniAgente,
-                    numeroDeSerie: numeroDeSerieLote,
-                    fechaDeAplicacion: new Date()
-                }
-                $.ajax({
-                    url: '/aplicaciones/createJSON',
-                    type: 'POST',
-                    contentType: 'application/json',
-                    data: JSON.stringify(aplicacion),
-                    success: function(response){
-                        if(response.flash){
-                            $('#flash').text(response.flash).show()
-                            setTimeout(function() {
-                                $('#flash').fadeOut('slow');
-                            }, 3000);
-                        }
-                    },
-                    error: function(response){
+            function validarFormulario() {
+                const inputs = $('#form input')
 
+                let camposInvalidos = false
+
+                console.log(inputs)
+                inputs.each(function () {
+                    if ($(this).hasClass('is-invalid') || $(this).val().length == 0) {
+                        camposInvalidos = true
                     }
                 })
+                if (camposInvalidos) {
+                    mostrarAlerta("¡Datos incorrectos! Por favor, verifica la información ingresada.")
+                    return false
+                }
+                return true
+            }
+
+            $('#registrarAplicacion').on('click', function(event){
+                if(validarFormulario()){
+                    var aplicacion={
+                        DNIPaciente: dniPaciente,
+                        DNIAgente: dniAgente,
+                        numeroDeSerie: numeroDeSerieLote,
+                        fechaDeAplicacion: $(fechaDeAplicacion).val(),
+                    }
+                    $.ajax({
+                        url: '/aplicaciones/createJSON',
+                        type: 'POST',
+                        contentType: 'application/json',
+                        data: JSON.stringify(aplicacion),
+                        success: function(response){
+                            if(response.flash){
+                                $('#flash').text(response.flash).show()
+                                setTimeout(function() {
+                                    $('#flash').fadeOut('slow');
+                                }, 3000);
+                            }
+                            $(nombrePersona).val('')
+                            $(dniPersona).val('')
+                            $(DNIAgente).val('')
+                            $(numeroDeSerie).val('')
+                            $(fechaDeAplicacion).val('')
+                            $(siguiente).addClass('d-none')
+                            mostrarError($(fechaDeAplicacion), 'Vacio')
+                        },
+                        error: function(response){
+
+                        }
+                    })
+                }
             })
 
+            function mostrarError(campo, error) {
+                campo.addClass('is-invalid').removeClass('is-valid')
+                $(`#${campo.attr('id')}${error}`).removeClass('d-none')
+            }
+
+            function quitarError(campo) {
+                campo.addClass('is-valid').removeClass('is-invalid')
+                $(`div[id^=${campo.attr('id')}].invalid-feedback`).addClass('d-none')
+                $(`div[id^=${campo.attr('id')}]`).addClass('d-none')
+            }
+
+            async function validarFechaDeAplicacion() {
+                try{
+                    quitarError($(fechaDeAplicacion))
+                    if (!$(fechaDeAplicacion).val()) {
+                        mostrarError($(fechaDeAplicacion), 'Vacio')
+                    } else {
+                        const fechaIngresada = new Date($(fechaDeAplicacion).val())
+                        const fechaActual = new Date()
+                        fechaIngresada.setHours(24, 0, 0, 0)
+                        fechaActual.setHours(0, 0, 0, 0)
+                        let loteInterno; 
+                        await $.ajax({
+                            url: '/lotesinternos/lotesinternosJSON',
+                            type: 'GET',
+                            contentType: 'application/json',
+                            success: function(response){
+                                loteInterno = response.find(lote => lote.numeroDeSerie == numeroDeSerieLote)
+                            },
+                            error: function(response){
+
+                            }
+                        })
+
+                        const fechaVencimiento = new Date(loteInterno.Loteproveedor.fechaDeVencimiento)
+                        if(loteInterno.fechaDeLlegadaCentroDeVacunacion != null){
+                            const fechaDeLlegadaACentro = new Date(loteInterno.fechaDeLlegadaCentroDeVacunacion)
+                            if(fechaIngresada < fechaDeLlegadaACentro){
+                                mostrarError($(fechaDeAplicacion), 'LlegadaACentro')
+                            } else if (fechaIngresada > fechaActual) {
+                                mostrarError($(fechaDeAplicacion), 'Superior')
+                            } else if (fechaIngresada > fechaVencimiento) {
+                                mostrarError($(fechaDeAplicacion), 'Vencida')
+                                $(fechaDeAplicacion).addClass('is-valid').removeClass('is-invalid')
+                            }
+                        } else {
+                            mostrarError($(fechaDeAplicacion), 'LlegadaACentro')
+                        }
+                    }
+                } catch(error){
+                    console.log(error)
+                }
+            }
+
+            function mostrarAlerta(mensaje) {
+                $(mensajeAlerta).text(mensaje)
+                $(alertModal).modal('show')
+            }
+
+            $(btnAceptar).on('click', function(){
+                $(alertModal).modal('hide')
+            })
+
+            $(fechaDeAplicacion).on('keyup focusout', function(){
+                validarFechaDeAplicacion()
+            })
 
             $(window).on('message onmessage', function(e){
                 if(e.originalEvent.data['origen']==='formPersona'){
                     $('#nombrePersona').val(e.originalEvent.data['datos']['nombre'] + ' ' + e.originalEvent.data['datos']['apellido'])
                     $('#dniPersona').val(e.originalEvent.data['datos']['dni'])
                     dniPaciente=e.originalEvent.data['datos']['dni'];
+                    $(siguiente).removeClass('d-none')
                 }
             })
         })

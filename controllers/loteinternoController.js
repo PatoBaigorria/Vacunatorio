@@ -6,7 +6,10 @@ const {
 	DepositoProvincial,
 	CentroDeVacunacion,
 } = require("../models/relaciones");
-const { createRegistro,bulkCreateRegistro } = require("./registroController");
+
+const { Op } = require("sequelize");
+
+const { createRegistro, bulkCreateRegistro } = require("./registroController");
 // Obtener todos los lotes internos
 const listarLotesInternos = async (req, res) => {
 	try {
@@ -32,9 +35,21 @@ const listarLotesInternosJSON = async (req, res) => {
 	try {
 		const lotesInternos = await LoteInterno.findAll({
 			include: [
-				{ model: LoteProveedor, attributes: ["numeroDeLote", "tipoDeVacuna", "nombreComercial"] },
+				{ model: LoteProveedor, attributes: ["numeroDeLote", "tipoDeVacuna", "nombreComercial", "fechaDeVencimiento"] },
 				{ model: Laboratorio, attributes: ["nombreLaboratorio"] },
+				{
+					model: CentroDeVacunacion,
+					where: {
+						idCentroDeVacunacion: { [Op.ne]: null },
+						provincia: req.user.provincia,
+						localidad: req.user.localidad
+					},
+					attributes: []
+				},
 			],
+			where: {
+				activo: true
+			}
 		});
 		res.json(lotesInternos);
 	} catch (error) {

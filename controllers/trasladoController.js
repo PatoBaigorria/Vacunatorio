@@ -24,8 +24,8 @@ const listarTraslados = async (req, res) => {
 					attributes: [] // No incluir atributos de CentroDeVacunacion en el resultado
 				}],
 				raw: true
-		});
-	}
+			});
+		}
 		res.render("traslado/viewTraslado", {
 			traslados: traslados,
 		});
@@ -71,7 +71,6 @@ const altaTraslado = async (req, res) => {
 			include: [{
 				model: CentroDeVacunacion,
 				where: { provincia: req.user.provincia, localidad: req.user.localidad },
-				attributes: ["idCentroDeVacunacion"]
 			}],
 			raw: true
 		});
@@ -91,25 +90,22 @@ const altaTraslado = async (req, res) => {
 	}
 };
 
+const listarTrasladosJSON = async (req, res) => {
+	try {
+		const traslados = await Traslado.findAll({
+			raw: true,
+		});
+		res.json(traslados);
+	} catch (error) {
+		res.status(500).json({
+			message: "Error al obtener los traslados. Error: " + error.message,
+		});
+	}
+}
 
 const createTraslados = async (req, res) => {
 	try {
-		
-		const { numeroDeSerie, idCentroDeVacunacion, fechaDeSalida } = req.body;
-
-		// Verificación adicional
-		if (!numeroDeSerie || !idCentroDeVacunacion || !fechaDeSalida) {
-			req.flash('error', 'Todos los campos son obligatorios.');
-			return res.redirect('/traslados/crear');
-		}
-
-		let fechaDeLlegada = req.body.fechaDeLlegada;
-		if (req.body.fechaDeLlegada == "") {
-			fechaDeLlegada = null;
-		} else {
-			fechaDeLlegada = req.body.fechaDeLlegada;
-		}
-
+		const { numeroDeSerie, idCentroDeVacunacion, fechaDeSalida, fechaDeLlegada } = req.body;
 		const traslado = await Traslado.create({
 			numeroDeSerie,
 			idCentroDeVacunacion,
@@ -117,8 +113,9 @@ const createTraslados = async (req, res) => {
 			fechaDeLlegada,
 			activo: 1,
 		});
-		
-		if (fechaDeLlegada != null) {
+
+
+		if (fechaDeLlegada !== "") {
 			const loteEncontrado = await LoteInterno.findOne({
 				where: { numeroDeSerie: numeroDeSerie },
 			});
@@ -145,7 +142,7 @@ const createTraslados = async (req, res) => {
 		res.redirect("/traslados");
 	} catch (error) {
 		res.status(500).json({
-			message: "Error al crear el traslado: " + error.message,
+			message: "Error al crear el traslado: " + error,
 		});
 	}
 };
@@ -184,13 +181,25 @@ const updateTraslado = async (req, res) => {
 				idTraslado: req.params.id,
 			},
 		});
+		const { numeroDeSerie, idCentroDeVacunacion } = req.body;
+		let fechaDeLlegada = req.body.fechaDeLlegada;
+		if (fechaDeLlegada != null) {
+			const loteEncontrado = await LoteInterno.findOne({
+				where: { numeroDeSerie: numeroDeSerie },
+			});
+			if (loteEncontrado) {
+				await loteEncontrado.update({
+					idCentroDeVacunacion: idCentroDeVacunacion,
+				});
+			}
+		}
 		await createRegistro(
 			req.user.idUsuario,
 			"Traslado",
 			req.params.id,
 			"Modificacion"
 		);
-		req.flash("success", "Traslado de Vacuna actualizado exitosamente.");
+		req.flash("success", "Traslado de lote actualizado exitosamente.");
 		res.redirect("/traslados");
 	} catch (error) {
 		res.status(500).json({
@@ -243,6 +252,7 @@ const bajaTraslado = async (req, res) => {
 
 module.exports = {
 	listarTraslados,
+	listarTrasladosJSON,
 	altaLogicaTraslado,
 	altaTraslado,
 	createTraslados,

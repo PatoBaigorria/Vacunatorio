@@ -3,9 +3,10 @@ const router = express.Router();
 const trasladoController = require("../controllers/trasladoController");
 const authorize = require("../middleware/authorize");
 
-router.get("/",	authorize(["Super Admin", "Operador de logistica", "Agente de salud"]),	trasladoController.listarTraslados);
+router.get("/", authorize(["Super Admin", "Operador de logistica", "Agente de salud"]), trasladoController.listarTraslados);
+router.get("/trasladosJSON", authorize(["Super Admin", "Operador de logistica", "Agente de salud"]), trasladoController.listarTrasladosJSON);
 router.get("/crear", authorize(["Super Admin", "Operador de logistica", "Agente de salud"]), trasladoController.altaTraslado);
-router.put("/:id/alta",	authorize(["Super Admin", "Operador de logistica", "Agente de salud"]),	trasladoController.altaLogicaTraslado);
+router.put("/:id/alta", authorize(["Super Admin", "Operador de logistica", "Agente de salud"]), trasladoController.altaLogicaTraslado);
 router.put("/:id/baja", authorize(["Super Admin", "Operador de logistica", "Agente de salud"]), trasladoController.bajaTraslado);
 router.post("/", authorize(["Super Admin", "Operador de logistica", "Agente de salud"]), trasladoController.createTraslados);
 router.get("/:id", authorize(["Super Admin", "Operador de logistica", "Agente de salud"]), trasladoController.editTraslado);

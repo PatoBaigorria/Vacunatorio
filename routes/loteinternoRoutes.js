@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const loteInternoController = require("../controllers/loteInternoController");
+const loteInternoController = require("../controllers/loteinternoController");
 const authorize = require("../middleware/authorize");
 
 router.get(

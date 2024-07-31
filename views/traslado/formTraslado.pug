@@ -25,10 +25,12 @@ body
             label.form-label(for="numeroDeSerie") Nº de Serie del lote interno que sera trasladado:
             .input-group.has-validation
                 select.form-select.is-valid#numeroDeSerie(name="numeroDeSerie" required)
+                .invalid-feedback.d-none#numeroDeSerieSinLotes
         .form-group
             label.form-label(for="idCentroDeVacunacion") Centro de Vacunación al que se trasladara el lote interno:
             .input-group.has-validation
                 select.form-select.is-valid#idCentroDeVacunacion(name="idCentroDeVacunacion" required)
+                .invalid-feedback.d-none#idCentroDeVacunacionSinLotes
         .form-group
             label.form-label(for="fechaDeSalida") Fecha de salida del lote interno hacia el centro de vacunación:
             .input-group.has-validation
@@ -40,6 +42,7 @@ body
             label.form-label(for="fechaDeLlegada") Fecha de llegada del lote interno al centro de vacunación:
             .input-group.has-validation
                 input.form-control.is-valid#fechaDeLlegada(type="date" name="fechaDeLlegada" disabled)
+                .invalid-feedback.d-none#fechaDeLlegadaVacio El campo no puede estar vacío
                 .invalid-feedback.d-none#fechaDeLlegadaSuperior La fecha de llegada es superior a la actual
                 .invalid-feedback.d-none#fechaDeLlegadaIncongruente La fecha de llegada no puede ser anterior a la fecha de salida
         br
@@ -51,184 +54,185 @@ body
 
 
 script.
-    $(function () {
-        $(document).ready(function () {
-            function mostrarError(campo, mensaje) {
-                campo.addClass('is-invalid').removeClass('is-valid');
-                campo.next('.invalid-feedback').text(mensaje).removeClass('d-none');
-            }
+    $(document).ready(function () {
+        function mostrarError(campo, mensaje) {
+            campo.addClass('is-invalid').removeClass('is-valid');
+            campo.next('.invalid-feedback').text(mensaje).removeClass('d-none');
+        }
 
-            function quitarError(campo) {
-                campo.addClass('is-valid').removeClass('is-invalid');
-                campo.next('.invalid-feedback').addClass('d-none');
-            }
+        function quitarError(campo) {
+            campo.addClass('is-valid').removeClass('is-invalid');
+            campo.next('.invalid-feedback').addClass('d-none');
+        }
 
-            function cargarCentroOrigen() {
-                $('#idCentroDeVacunacionOrigen').empty();
-                const lotes = !{JSON.stringify(lotesInternos)}
-                if (lotes.length == 0) {
-                    $('#idCentroDeVacunacionOrigen').append('<option disabled selected hidden value=""> No hay ningún centro de vacunación disponible para trasladar </option>');
-                } else {
-                    lotes.forEach(lote => {
-                        console.log(lote.idCentroDeVacunacion)
-                        $('#idCentroDeVacunacionOrigen').append(`<option value="${lote.idCentroDeVacunacion}">${lote.idCentroDeVacunacion}</option>`);
-                    });
+        function cargarCentroOrigen() {
+            $('#idCentroDeVacunacionOrigen').empty();
+            let lotes = !{JSON.stringify(lotesInternos)}
+            if (lotes.length == 0) {
+                $('#idCentroDeVacunacionOrigen').append('<option disabled selected hidden value=""> No hay ningún centro de vacunación disponible para trasladar </option>');
+            } else {
+                let loteS = new Set(lotes.map(l => l.idCentroDeVacunacion))
+                lotes = Array.from(loteS)
+                lotes.forEach(lote => {
+                    $('#idCentroDeVacunacionOrigen').append(`<option value="${lote}">${lote}</option>`);
+                });
+            }
+        }
+
+        async function cargarLotes() {
+            $('#numeroDeSerie').empty();
+            let traslados
+            await $.ajax({
+                url: '/traslados/trasladosJSON',
+                type: 'GET',
+                contentType: 'application/json',
+                success: function(response) {
+                    traslados = response
+                },
+                error: function() {
+                    console.error("Error al cargar los lotes internos.");
                 }
+            })
+            let viajes = traslados.filter(t => t.fechaDeLlegada == null).map(t => t.numeroDeSerie)
+            const lotes = !{JSON.stringify(lotesInternos)}.filter(lote => lote.activo == 1).filter(lote => lote.idCentroDeVacunacion == $('#idCentroDeVacunacionOrigen').val()).filter(lote => !viajes.includes(lote.numeroDeSerie));
+            if (lotes.length == 0) {
+                $('#numeroDeSerie').append('<option disabled selected hidden value=""> No hay ningún lote disponible para trasladar </option>');
+                mostrarError($('#numeroDeSerie'), 'El centro de vacunación no tiene lotes para trasladar');
+            } else {
+                lotes.forEach(lote => {
+                    $('#numeroDeSerie').append(`<option value="${lote.numeroDeSerie}">${lote.numeroDeSerie}</option>`);
+                });
             }
-
-            function cargarLotes() {
-                $('#numeroDeSerie').empty();
-                const lotes = !{JSON.stringify(lotesInternos)}.filter(lote => lote.activo == 1).filter(lote => lote.idCentroDeVacunacion == $('#idCentroDeVacunacionOrigen').val());
-                if (lotes.length == 0) {
-                    $('#numeroDeSerie').append('<option disabled selected hidden value=""> No hay ningún lote disponible para trasladar </option>');
-                } else {
-                    lotes.forEach(lote => {
-                        $('#numeroDeSerie').append(`<option value="${lote.numeroDeSerie}">${lote.numeroDeSerie}</option>`);
-                    });
-                }
-            }
-
-            function cargarCentros() {
-                $('#idCentroDeVacunacion').empty();
-                const lote = !{JSON.stringify(lotesInternos)}.find(lote => lote.numeroDeSerie == $('#numeroDeSerie').val());
+            $('#idCentroDeVacunacion').empty();
+            if($('#numeroDeSerie').val() == null){
+                $('#idCentroDeVacunacion').append('<option disabled selected hidden value=""> No hay ningún centro de vacunación disponible para trasladar </option>');
+                mostrarError($('#idCentroDeVacunacion'), 'El centro de vacunación no tiene lotes para trasladar')
+            } else {
+                const lote = !{JSON.stringify(lotesInternos)}.find(l => l.numeroDeSerie == $('#numeroDeSerie').val());
                 const centros = !{JSON.stringify(centrosDeVacunacion)}.filter(centro => centro.activo == 1).filter(centro => centro.idCentroDeVacunacion != lote.idCentroDeVacunacion);
                 if (centros.length == 0) {
                     $('#idCentroDeVacunacion').append('<option disabled selected hidden value=""> No hay ningún centro de vacunación disponible para trasladar </option>');
                 } else {
                     centros.forEach(centro => {
-                        console.log(centro.idCentroDeVacunacion)
                         $('#idCentroDeVacunacion').append(`<option value="${centro.idCentroDeVacunacion}">${centro.idCentroDeVacunacion}</option>`);
                     });
                 }
             }
+        }
 
-            function validarFechaDeSalida() {
-                quitarError($('#fechaDeSalida'));
-                if (!$('#fechaDeSalida').val()) {
-                    mostrarError($('#fechaDeSalida'), 'El campo no puede estar vacío.');
-                    return false;
-                } else {
-                    const fechaIngresada = new Date($('#fechaDeSalida').val());
-                    const fechaActual = new Date();
-                    fechaIngresada.setHours(24, 0, 0, 0);
-                    fechaActual.setHours(0, 0, 0, 0);
-
-                    const loteSeleccionado = !{JSON.stringify(lotesInternos)}.find(lote => lote.numeroDeSerie == $('#numeroDeSerie').val());
-                    if (!loteSeleccionado.fechaDeSalidaDepositoProvincial) {
-                        mostrarError($('#fechaDeSalida'), 'Elija otro lote interno que haya salido del depósito provincial.');
-                        return false;
-                    }
-
-                    const fechaSalidaDepositoProvincial = new Date(loteSeleccionado.fechaDeSalidaDepositoProvincial);
-                    if (fechaIngresada <= fechaSalidaDepositoProvincial) {
-                        mostrarError($('#fechaDeSalida'), 'La fecha de salida al centro de vacunación debe ser posterior a la fecha de salida del depósito provincial.');
-                        return false;
-                    }
-
-                    if (((fechaIngresada - fechaActual) / (1000 * 60 * 60 * 24)) > 0) {
-                        mostrarError($('#fechaDeSalida'), 'La fecha de salida no puede ser futura.');
-                        return false;
-                    }
-                }
-                return true;
-            }
-
-            function habilitarFechaDeLlegada() {
-                if ($('#fechaDeSalida').val()) {
-                    $('#fechaDeLlegada').prop('disabled', false);
-                    quitarError($('#fechaDeLlegada'));
-                } else {
-                    $('#fechaDeLlegada').prop('disabled', true);
-                    quitarError($('#fechaDeLlegada'));
-                }
-            }
-
-            function validarFechaDeLlegada() {
-                quitarError($('#fechaDeLlegada'));
-                const fechaIngresada = new Date($('#fechaDeLlegada').val());
+        function validarFechaDeSalida() {
+            quitarError($('#fechaDeSalida'));
+            if (!$('#fechaDeSalida').val()) {
+                mostrarError($('#fechaDeSalida'), 'El campo no puede estar vacío.');
+                return false;
+            } else {
+                const fechaIngresada = new Date($('#fechaDeSalida').val());
                 const fechaActual = new Date();
                 fechaIngresada.setHours(24, 0, 0, 0);
                 fechaActual.setHours(0, 0, 0, 0);
+
+                const loteSeleccionado = !{JSON.stringify(lotesInternos)}.find(lote => lote.numeroDeSerie == $('#numeroDeSerie').val());
+                const fechaDeLlegadaCentroDeVacunacion = new Date(loteSeleccionado.fechaDeLlegadaCentroDeVacunacion);
+                if (fechaIngresada <= fechaDeLlegadaCentroDeVacunacion) {
+                    mostrarError($('#fechaDeSalida'), 'La fecha de salida al centro de vacunación que será trasladado debe ser posterior a la fecha de llegada al centro de vacunación actual.');
+                    return false;
+                }
+
                 if (((fechaIngresada - fechaActual) / (1000 * 60 * 60 * 24)) > 0) {
-                    mostrarError($('#fechaDeLlegada'), 'La fecha de llegada no puede ser futura.');
+                    mostrarError($('#fechaDeSalida'), 'La fecha de salida no puede ser futura.');
                     return false;
-                } else {
-                    const fechaSalida = new Date($('#fechaDeSalida').val());
-                    if (fechaIngresada < fechaSalida) {
-                        mostrarError($('#fechaDeLlegada'), 'La fecha de llegada debe ser posterior a la fecha de salida al centro de vacunación.');
-                    return false;
-                    }
                 }
-                return true;
             }
+            return true;
+        }
 
-            function limpiarFechaYErrores() {
-                $('#fechaDeSalida').val('');
-                $('#fechaDeLlegada').val('').prop('disabled', true);
-                quitarError($('#fechaDeSalida'));
+        function habilitarFechaDeLlegada() {
+            if ($('#fechaDeSalida').val()) {
+                $('#fechaDeLlegada').prop('disabled', false);
                 quitarError($('#fechaDeLlegada'));
+            } else {
+                $('#fechaDeLlegada').prop('disabled', true);
+            }
+        }
+
+        function validarFechaDeLlegada() {
+            quitarError($('#fechaDeLlegada'));
+            const fechaIngresada = new Date($('#fechaDeLlegada').val());
+            const fechaActual = new Date();
+            fechaIngresada.setHours(24, 0, 0, 0);
+            fechaActual.setHours(0, 0, 0, 0);
+            if (((fechaIngresada - fechaActual) / (1000 * 60 * 60 * 24)) > 0) {
+                mostrarError($('#fechaDeLlegada'), 'La fecha de llegada no puede ser futura.');
+                return false;
+            } else {
+                const fechaSalida = new Date($('#fechaDeSalida').val());
+                if (fechaIngresada < fechaSalida) {
+                    mostrarError($('#fechaDeLlegada'), 'La fecha de llegada debe ser posterior a la fecha de salida al centro de vacunación.');
+                return false;
+                }
+            }
+            return true;
+        }
+
+        function limpiarFechaYErrores() {
+            $('#fechaDeSalida').val('');
+            $('#fechaDeLlegada').val('').prop('disabled', true);
+            quitarError($('#fechaDeSalida'));
+            quitarError($('#fechaDeLlegada'));
+        }
+
+        function validarFormulario() {
+            let formularioValido = true;
+            if (!validarFechaDeSalida()) {
+                formularioValido = false;
             }
 
-            function validarFormulario() {
-                let formularioValido = true;
-                console.log("FechaSalida", validarFechaDeSalida())
-                if (!validarFechaDeSalida()) {
-                    formularioValido = false;
-                }
-                console.log("FechaLlegada", validarFechaDeLlegada())
-                
-                if (!validarFechaDeLlegada()) {
-                    formularioValido = false;
-                }
-
-                return formularioValido;
+            if (!validarFechaDeLlegada()) {
+                formularioValido = false;
             }
-            
-            cargarCentroOrigen()
+
+            return formularioValido;
+        }
+
+        cargarCentroOrigen()
+        cargarLotes();
+        validarFechaDeSalida()
+        validarFechaDeLlegada()
+
+        $('#idCentroDeVacunacionOrigen').on('change', function () {
+            limpiarFechaYErrores();
             cargarLotes();
-            cargarCentros();
-
-            $('#idCentroDeVacunacionOrigen').on('change', function () {
-                limpiarFechaYErrores();
-                cargarLotes();
-                cargarCentros()
-                quitarError($('#idCentroDeVacunacionOrigen'));
-            });
-
-            $('#numeroDeSerie').on('change', function () {
-                limpiarFechaYErrores();
-                cargarCentros();
-                quitarError($('#numeroDeSerie'));
-            });
-
-            $('#fechaDeSalida').on('change', function () {
-                habilitarFechaDeLlegada();
-                validarFechaDeSalida();
-            });
-
-            $('#fechaDeLlegada').on('change', function () {
-                validarFechaDeLlegada();
-            });
-
-            $('#form input').on('keypress', function (event) {
-                if (event.which === 13) {
-                    if (!validarFormulario()) {
-                        event.preventDefault();
-                    }
-                }
-            });
-
-            $('#form button[type="submit"]').on('click', function (event) {
-                console.log(validarFormulario);
-                if (!validarFormulario()) {
-                    console.log("Dentro del if", validarFormulario);
-                    event.preventDefault();
-                }
-
-            });
+            cargarCentros()
+            quitarError($('#idCentroDeVacunacionOrigen'));
         });
 
+        $('#numeroDeSerie').on('change', function () {
+            limpiarFechaYErrores();
+            cargarCentros();
+            quitarError($('#numeroDeSerie'));
+        });
+
+        $('#fechaDeSalida').on('change', function () {
+            habilitarFechaDeLlegada();
+            validarFechaDeSalida();
+        });
+
+        $('#fechaDeLlegada').on('change', function () {
+            validarFechaDeLlegada();
+        });
+
+        $('#form input').on('keypress', function (event) {
+            if (event.which === 13) {
+                if (!validarFormulario()) {
+                    event.preventDefault();
+                }
+            }
+        });
+
+        $('#form button[type="submit"]').on('click', function (event) {
+            if (!validarFormulario()) {
+                event.preventDefault();
+            }
+
+        });
     });
-
-
-
