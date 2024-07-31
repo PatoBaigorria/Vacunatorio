@@ -36,10 +36,14 @@ mixin modalesAgente()
                 .modal-body
                     div.table.responsive
                         table#lotes.table.table-striped.table-bordered
-    div.text-center
-        button.btn.btn-warning(type='button' data-bs-toggle='modal' data-bs-target='#mainModal')
-            i.fas.fa-syringe 
-            | &nbsp;&nbsp;&nbsp;&nbsp;   Registrar aplicación
+    .container.mt-5
+        .row.justify-content-center
+            .col-md-6
+                .card.card-button.mb-3(data-bs-toggle='modal' data-bs-target='#mainModal')
+                    .card-body.text-center
+                        h5.card-title Accede a la gestión de aplicaciones
+                    .card-footer.text-center
+                        button.btn.btn-warning(type='button' data-bs-toggle='modal' data-bs-target='#mainModal') Registrar aplicación
     .modal.fade(id='mainModal' tabindex='-1' aria-labelledby='mainModalLabel' aria-hidden='true')
         .modal-dialog
             .modal-content
