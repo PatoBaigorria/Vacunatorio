@@ -54,6 +54,7 @@ const listarLotesProveedores = async (req, res) => {
 			include: [
 				{ model: Laboratorio, attributes: ["nombreLaboratorio"] },
 			],
+			raw: true,
 		});
 		console.log(lotesProveedores);
 		res.render("loteproveedor/viewLoteProveedor", {

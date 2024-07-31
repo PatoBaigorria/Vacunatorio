@@ -115,7 +115,7 @@ nav.navbar.navbar-expand-md.bg-dark
 					li.nav-item.dropdown
 						a.nav-link.dropdown-toggle.text-light#toggleBienvenido(data-bs-toggle="dropdown" aria-expanded="false")
 							i.fas.fa-user-tie
-							|  Bienvenid@ #{user.nombreUsuario} (#{user.rol})
+							|  Bienvenid@ #{user.nombre} #{user.apellido} (#{user.rol})
 						ul.dropdown-menu.dropdown-menu-end.bg-dark
 							li
 								a.nav-link.text-light(href="/logout") Cerrar Sesión

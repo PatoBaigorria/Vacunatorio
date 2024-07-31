@@ -57,8 +57,8 @@ script.
             },
             columns:[
                 {data: 'numeroDeSerie', title: 'Número de Serie'},
-                {data: 'Loteproveedor.numeroDeLote', title: 'Número de Lote'},
-                {data: 'Laboratorio.nombreLaboratorio', title: 'Laboratorio Fabricante'},
+                {data: ['Loteproveedor.numeroDeLote'], title: 'Número de Lote'},
+                {data: ['Laboratorio.nombreLaboratorio'], title: 'Laboratorio Fabricante'},
                 {data: 'activo', title: 'Estado del lote interno', createdCell: agregarMensajeSiActivoOInactivo },
                 {
                     data: 'opciones', title: 'Opciones',

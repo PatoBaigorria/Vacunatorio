@@ -58,7 +58,7 @@ script.
             order: [[0, 'desc']],
             columns: [
                 { data: 'numeroDeLote', title: 'Número de Lote' },
-                { data: 'Laboratorio.nombreLaboratorio', title: 'Nombre del Laboratorio' },
+                { data: ['Laboratorio.nombreLaboratorio'], title: 'Nombre del Laboratorio' },
                 { data: 'cantidadDeLotesInternos', title: 'Cantidad de Lotes Internos' },
                 { data: 'activo', title: 'Estado del lote', createdCell: agregarMensajeSiActivoOInactivo },
                 {
@@ -77,7 +77,7 @@ script.
             ],
             columnDefs: [
                 {orderable: false, targets:[4]},
-                {searchable: false, targets:[1, 2, 3]},
+                {searchable: true, targets:[1, 2,]},
                 {className: 'dt-center', targets: [0, 1, 2, 3, 4]},
                 { width: '10%', targets: [1] },
                 { width: '5%', targets: [0] },

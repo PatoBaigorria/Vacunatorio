@@ -39,6 +39,9 @@ async function listarLaboratorioPorJSON(req, res) {
 async function listarLaboratoriosPorJSON(req, res) {
 	try {
 		let laboratorios = await Laboratorio.findAll({
+			where: {
+				activo: 1,
+			},
 			raw: true,
 		});
 		res.json(laboratorios);

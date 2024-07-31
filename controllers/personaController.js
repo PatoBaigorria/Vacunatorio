@@ -89,7 +89,7 @@ const listarAgentesJSON = async (req, res) => {
 			});
 		} else {
 			personas = await Persona.findAll({
-				where: { provincia: usuario.provincia, ocupacion: 'Agente de salud' },
+				where: { provincia: usuario.provincia, ocupacion: 'Agente de salud', activo: 1 },
 				include: [
 					{ model: AgenteDeSalud, attributes: ["matricula"] }
 				],

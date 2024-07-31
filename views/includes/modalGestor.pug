@@ -17,8 +17,14 @@ mixin modalesGestor()
                 .modal-body
                     div.table.responsive
                         table#laboratorios.table.table-striped.table-bordered
-
-    button.btn.btn-primary(type='button' data-bs-toggle='modal' data-bs-target='#mainModal') Laboratorios
+    .container.mt-5
+        .row.justify-content-center
+             .col-md-6
+                .card.card-button.mb-3(data-bs-toggle='modal' data-bs-target='#mainModal')
+                    .card-body.text-center
+                        h5.card-title Accede a la gestión de lotes
+                    .card-footer.text-center
+                        button.btn.btn-warning(type='button' data-bs-toggle='modal' data-bs-target='#mainModal') Registrar lotes
     .modal.fade(id='mainModal' tabindex='-1' aria-labelledby='mainModalLabel' aria-hidden='true')
         .modal-dialog
             .modal-content
@@ -36,12 +42,12 @@ mixin modalesGestor()
                         button.btn.btn-success#altaLaboratorio(type='button') Alta de Laboratorio
                     br
                     .form-group.text-center
-                        button.btn.btn-primary#buscarLaboratorioBtn(type='button' data-bs-toggle='modal' data-bs-target='#mainModal2' data-bs-dismiss='modal') Siguiente
+                        button.btn.btn-primary.d-none#siguiente(type='button' data-bs-toggle='modal' data-bs-target='#mainModal2' data-bs-dismiss='modal') Siguiente
     .modal.fade(id='mainModal2' tabindex='-1' aria-labelledby='mainModal2Label' aria-hidden='true')
         .modal-dialog
             .modal-content
                 .modal-header
-                    h5.modal-title#mainModal2Label COSAS LOTE PROVEEDOR
+                    h5.modal-title#mainModal2Label ALTA LOTE PROVEEDOR
                     button.btn-close(type='button' data-bs-dismiss='modal' aria-label='Close')
                 .modal-body
                     .form-group
@@ -117,17 +123,22 @@ mixin modalesGestor()
                             var seleccionado = dt.rows({selected:true}).data();
                             if (seleccionado.length>0){
                                 $('#nombreLaboratorio').val(seleccionado[0]['nombreLaboratorio'])
-                                idLab= seleccionado[0]['idLaboratorio']
+                                idLab= seleccionado[0]['idLaboratorio'];
+                                 $(siguiente).removeClass('d-none');
                             }
                         }
                     }
                 ]
             })
+        function mostrarAlerta() {
+            $('#mensajeAlerta').text("Lote Proveedor registrado correctamente.");
+            $('#alertModal').modal('show');
+        }
 
             $('#altaLaboratorio').on('click', function(event){
                 var win = window.open('http://localhost:3000/laboratorios/alta?boton=true','_blank', 'popup=true')
                 $(win).on('load', function(){
-                    win.resizeTo(600,900)
+                    win.resizeTo(750,900)
                     win.moveTo(600,200)
                 })
             })
@@ -135,10 +146,13 @@ mixin modalesGestor()
             $('#altaLoteProveedor').on('click', function(event){
                 var win = window.open('http://localhost:3000/lotesproveedores/alta?boton=true&idLab='+idLab, '_blank', 'popup=true')
                 $(win).on('load', function(){
-                    win.resizeTo(600,900)
+                    win.resizeTo(750,900)
                     win.moveTo(600,200)
                 })
             })
+
+            $('#mainModal').modal({backdrop: 'static', keyboard: false});
+            $('#mainModal2').modal({backdrop: 'static', keyboard: false});
 
             $(window).on('message onmessage', function(e){
                 if (e.originalEvent.data['origen']==="formLaboratorio"){
@@ -146,6 +160,7 @@ mixin modalesGestor()
                     setTimeout(function(){
                         $.getJSON('/laboratorios/laboratorioJSON/'+e.originalEvent.data['datos']['nombreLab'], function(respuesta){
                             idLab = respuesta.data[0].idLaboratorio;
+                            $(siguiente).removeClass('d-none');
                         })
                     }, 1000);
                     
@@ -158,6 +173,10 @@ mixin modalesGestor()
                     $('#fechaFabricacion').val(e.originalEvent.data['datos']['fechaFabricacion'])
                     $('#fechaCompra').val(e.originalEvent.data['datos']['fechaCompra'])
                     $('#fechaVencimiento').val(e.originalEvent.data['datos']['fechaVencimiento'])
+                    $(siguiente).addClass('d-none');
+                    $(nombreLaboratorio).val('');
+                    mostrarAlerta()                
                 }
             })
+
         })
