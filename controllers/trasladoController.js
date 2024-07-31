@@ -15,6 +15,7 @@ const listarTraslados = async (req, res) => {
 		if (usuario.rol === "Super Admin") {
 			traslados = await Traslado.findAll({
 				raw: true,
+				order: [["idTraslado", "DESC"]],
 			});
 		} else {
 			traslados = await Traslado.findAll({

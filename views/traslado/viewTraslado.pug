@@ -65,6 +65,7 @@ script.
                 url: '/idiomaTabla.json'
             },
             columns: [
+                {data: 'idTraslado', title: 'ID del traslado'},
                 { data: 'numeroDeSerie', title: 'Número de Serie' },
                 { data: 'idCentroDeVacunacion', title: 'ID del Centro de Vacunación' },
                 { data: 'fechaDeSalida', title: 'Fecha de Salida del Traslado', render: function(data) { return formatDate(data); } },
@@ -83,6 +84,7 @@ script.
                     }
                 }
             ],
+            order: [[0, 'desc']],
             columnDefs: [
                 { orderable: false, targets: [5] }, // Columna de "Opciones"
                 { searchable: false, targets: [5] },
