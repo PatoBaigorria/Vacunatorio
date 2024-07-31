@@ -61,3 +61,84 @@ body
             button.btn.btn-primary(type='submit') Crear
             | &nbsp;&nbsp;&nbsp;&nbsp;
             button.btn.btn-primary(type='button' onclick='window.history.back()') Volver
+script.
+    $(function () {
+        let descarte = !{JSON.stringify(descarte)};
+        function mostrarAlerta() {
+            $('#mensajeAlerta').text('¡Datos incorrectos! Por favor, verifica la información ingresada.');
+            $('#alertModal').modal('show');
+        }
+
+        function mostrarError(campo, error) {
+            campo.addClass('is-invalid').removeClass('is-valid');
+            $(`#${campo.attr('id')}${error}`).removeClass('d-none');
+        }
+
+        function quitarError(campo) {
+            campo.addClass('is-valid').removeClass('is-invalid');
+            $(`div[id^=${campo.attr('id')}].invalid-feedback`).addClass('d-none');
+        }
+
+        function validarCantidadDeVacunas() {
+            quitarError($('#cantidadDeVacunas'));
+            if ($('#cantidadDeVacunas').val() == '') {
+                mostrarError($('#cantidadDeVacunas'), 'Vacio');
+                return false;
+            } else if (!/^[0-9]{1,}$/.test($('#cantidadDeVacunas').val()) || $('#cantidadDeVacunas').val() < 0 || $('#cantidadDeVacunas').val()[0] == '0') {
+                mostrarError($('#cantidadDeVacunas'), 'Numeros');
+                return false;
+            } else {
+                let cantidadDeVacunasIngresadas = parseInt($('#cantidadDeVacunas').val());
+                let vacunasRestantes = descarte['Loteinterno.cantidadDeVacunasRestantes'];
+                if (cantidadDeVacunasIngresadas > vacunasRestantes) {
+                    mostrarError($('#cantidadDeVacunas'), 'Superior');
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        function validarFechaDeDescarte() {
+            quitarError($('#fechaDeDescarte'));
+            if (!$('#fechaDeDescarte').val()) {
+                mostrarError($('#fechaDeDescarte'), 'Vacio');
+                return false;
+            } else {
+                const fechaIngresada = new Date($('#fechaDeDescarte').val());
+                const fechaActual = new Date();
+                fechaIngresada.setHours(24, 0, 0, 0);
+                fechaActual.setHours(0, 0, 0, 0);
+
+                const fechaDeLlegada = new Date(descarte['Loteinterno.fechaDeLlegadaCentroDeVacunacion']);
+                console.log(fechaIngresada <= fechaDeLlegada)
+                if (fechaIngresada <= fechaDeLlegada) {
+                    mostrarError($('#fechaDeDescarte'), 'Llegada');
+                    return false;
+                } else if (((fechaIngresada - fechaActual) / (1000 * 60 * 60 * 24)) > 0) {
+                    mostrarError($('#fechaDeDescarte'), 'Superior');
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        $('#cantidadDeVacunas').keyup(validarCantidadDeVacunas);
+        $('#fechaDeDescarte').keyup(validarFechaDeDescarte);
+        $('#alertModal').modal({backdrop: 'static', keyboard: false});
+
+        function validarFormulario() {
+            let formularioValido = true;
+            if (!validarCantidadDeVacunas() || !validarFechaDeDescarte()) {
+                mostrarAlerta()
+                formularioValido = false;
+            }
+            return formularioValido;
+        }
+
+        $('#form button[type="submit"]').on('click', function (event) {
+            if (!validarFormulario()) {
+                event.preventDefault();
+            }
+        });
+
+    });

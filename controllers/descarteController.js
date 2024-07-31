@@ -164,41 +164,19 @@ const detailsDescarte = async (req, res) => {
 
 const editDescarte = async (req, res) => {
     try {
-        const { provincia, localidad } = req.user; // Suponiendo que req.user tiene la información del usuario logueado
-
-        const descarte = await Descarte.findByPk(req.params.id);
-
-        // Filtrar agentes de salud según la localidad y provincia del usuario logueado
-        const agentesDeSalud = await Persona.findAll({
-            where: {
-                ocupacion: 'agente de salud',
-                provincia: provincia,
-                localidad: localidad,
-                activo: 1
-            }
-        });
-
-        // Filtrar lotes internos según la localidad y provincia del usuario logueado
-        const lotesInternos = await LoteInterno.findAll({
+        const descarte = await Descarte.findByPk(req.params.id, {
             include: [{
-                model: CentroDeVacunacion,
-                where: {
-                    provincia: provincia,
-                    localidad: localidad
-                }
+                model: LoteInterno,
+                attributes: ["numeroDeSerie", "cantidadDeVacunasRestantes", "fechaDeLlegadaCentroDeVacunacion"],
             }],
-            where: {
-                activo: 1
-            }
+            raw: true
         });
-        console.log(agentesDeSalud)
+
         const empresas = ["Veolia", "Clean Harbors", "Waste Management", "Stericycle"];
         const motivos = ["Vencida", "Rotura", "Cadena Pérdida de Frío", "Contaminación"];
 
         res.render("descarte/editDescarte", {
             descarte: descarte,
-            personas: agentesDeSalud,
-            lotesInternos: lotesInternos,
             motivos: motivos,
             empresas: empresas,
         });
@@ -213,24 +191,11 @@ const editDescarte = async (req, res) => {
 // Actualizar un descarte por su ID
 const updateDescarte = async (req, res) => {
     try {
-        const { DNIAgente, numeroDeSerie, empresaDescartante, motivo, cantidadDeVacunas, fechaDeDescarte } = req.body;
+        const { numeroDeSerie, empresaDescartante, motivo, cantidadDeVacunas, fechaDeDescarte } = req.body;
 
-        console.log('Datos recibidos:', { DNIAgente, numeroDeSerie, empresaDescartante, motivo, cantidadDeVacunas, fechaDeDescarte });
-
-        if (!DNIAgente) {
-            throw new Error('DNIAgente es obligatorio');
-        }
-
-        // Validar que el agente de salud existe en la tabla
-        const agente = await AgenteDeSalud.findOne({ where: { DNI: DNIAgente } });
-        if (!agente) {
-            throw new Error('El DNIAgente no existe en la tabla agente de salud');
-        }
+        console.log('Datos recibidos:', { numeroDeSerie, empresaDescartante, motivo, cantidadDeVacunas, fechaDeDescarte });
 
         const descarte = await Descarte.findByPk(req.params.id);
-        if (!descarte) {
-            throw new Error('Descarte no encontrado');
-        }
 
         descarte.empresaDescartante = empresaDescartante;
         descarte.motivo = motivo;
