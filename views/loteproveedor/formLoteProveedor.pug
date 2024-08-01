@@ -43,7 +43,7 @@ body
         .form-group.d-none#cantidadVacunas
             label.form-label(for='cantidadDeVacunasPorLoteInterno') Cantidad de vacunas por lote interno :
             .input-group.has-validation
-                input.form-control.is-valid#cantidadDeVacunasPorLoteInterno(type='text' title='Ingrese la cantidad de cajas que posee el lote' placeholder='Ingrese la cantidad de cajas que posee el lote' name='cantidadDeVacunasPorLoteInterno')
+                input.form-control.is-invalid#cantidadDeVacunasPorLoteInterno(type='text' title='Ingrese la cantidad de cajas que posee el lote' placeholder='Ingrese la cantidad de cajas que posee el lote' name='cantidadDeVacunasPorLoteInterno')
                 .invalid-feedback#cantidadDeVacunasPorLoteInternoVacio El campo no puede estar vacío
                 .invalid-feedback.d-none#cantidadDeVacunasPorLoteInternoNumeros Ingrese solo números positivos
         .form-group
@@ -162,6 +162,18 @@ script.
             }
         }
 
+        function validarCantidadDeVacunasPorLote() {
+            quitarError($(cantidadDeVacunasPorLoteInterno))
+            if(!$(idLaboratorio).val()) {
+                $(cantidadDeVacunasPorLoteInterno).prop('disabled', true)
+                mostrarError($(cantidadDeVacunasPorLoteInterno), 'SinLaboratorios')
+            } else if ($(cantidadDeVacunasPorLoteInterno).val() == '') {
+                mostrarError($(cantidadDeVacunasPorLoteInterno), 'Vacio')
+            } else if(!/^[0-9]{1,}$/.test($(cantidadDeVacunasPorLoteInterno).val()) || $(cantidadDeVacunasPorLoteInterno).val() < 0 || $(cantidadDeVacunasPorLoteInterno).val()[0] == 0) {
+                mostrarError($(cantidadDeVacunasPorLoteInterno), 'Numeros')
+            }
+        }
+
         function validarFechaDeFabricacion() {
             quitarError($(fechaDeFabricacion))
             if (!$(fechaDeFabricacion).val()) {
@@ -241,9 +253,14 @@ script.
         cargarTiposDeVacunas()
         cargarNombresComerciales()
         validarCantidadDeLotesInternos()
+        validarCantidadDeVacunasPorLote()
 
-        $(cantidadDeLotesInternos).on('keyup focusout', function () {
+        $('#cantidadDeLotesInternos').on('keyup focusout', function () {
             validarCantidadDeLotesInternos()
+        })
+
+        $('#cantidadDeVacunasPorLoteInterno').on('keyup focusout', function () {
+            validarCantidadDeVacunasPorLote()
         })
 
         $(fechaDeFabricacion).on('keyup focusout', function () {
@@ -301,18 +318,18 @@ script.
                 $(idLaboratorio).val(idLab);
                 $('#form').attr('action', $('#form').attr('action')+'?ventana=true');
                 window.opener.postMessage({
-                        origen:'formLoteProveedor',
-                        datos: {
-                            tipoVacuna: $(tipoDeVacuna).val(),
-                            nombreComercial: $(nombreComercial).val(),
-                            cantidadLotesInternos: $(cantidadDeLotesInternos).val(),
-                            cantidadVacunasPorLoteInterno: $(cantidadDeVacunasPorLoteInterno).val(),
-                            fechaFabricacion: $(fechaDeFabricacion).val(),
-                            fechaCompra: $(fechaDeCompra).val(),
-                            fechaVencimiento: $(fechaDeVencimiento).val()
-                        }
+                    origen:'formLoteProveedor',
+                    datos: {
+                        tipoVacuna: $(tipoDeVacuna).val(),
+                        nombreComercial: $(nombreComercial).val(),
+                        cantidadLotesInternos: $(cantidadDeLotesInternos).val(),
+                        cantidadVacunasPorLoteInterno: $(cantidadDeVacunasPorLoteInterno).val(),
+                        fechaFabricacion: $(fechaDeFabricacion).val(),
+                        fechaCompra: $(fechaDeCompra).val(),
+                        fechaVencimiento: $(fechaDeVencimiento).val()
+                    }
                     }, window.location.origin)
-                
+
             }
         })
 

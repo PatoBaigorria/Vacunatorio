@@ -42,46 +42,7 @@ mixin modalesGestor()
                         button.btn.btn-success#altaLaboratorio(type='button') Alta de Laboratorio
                     br
                     .form-group.text-center
-                        button.btn.btn-primary.d-none#siguiente(type='button' data-bs-toggle='modal' data-bs-target='#mainModal2' data-bs-dismiss='modal') Siguiente
-    .modal.fade(id='mainModal2' tabindex='-1' aria-labelledby='mainModal2Label' aria-hidden='true')
-        .modal-dialog
-            .modal-content
-                .modal-header
-                    h5.modal-title#mainModal2Label ALTA LOTE PROVEEDOR
-                    button.btn-close(type='button' data-bs-dismiss='modal' aria-label='Close')
-                .modal-body
-                    .form-group
-                        label.text-center Tipo de Vacuna:
-                        input.form-control#tipoVacuna(type='text' disabled)
-                    br
-                    .form-group
-                        label.text-center Nombre Comercial:
-                        input.form-control#nombreComercial(type='text' disabled)
-                    br
-                    .form-group
-                        label.text-center Cantidad de Lotes Internos:
-                        input.form-control#cantidadLotesInternos(type='text' disabled)
-                    br
-                    .form-group
-                        label.text-center Cantidad de Vacunas por Lote Interno:
-                        input.form-control#cantidadVacunasPorLoteInterno(type='text' disabled)
-                    br
-                    .form-group
-                        label.text-center Fecha de Fabricación:
-                        input.form-control#fechaFabricacion(type='text' disabled)
-                    br
-                    .form-group
-                        label.text-center Fecha de Compra:
-                        input.form-control#fechaCompra(type='text' disabled)
-                    br
-                    .form-group
-                        label.text-center Fecha de Vencimiento:
-                        input.form-control#fechaVencimiento(type='text' disabled)
-                    br
-                    .form-group.text-center
-                        button.btn.btn-primary#confirmar(type='button' data-bs-toggle='modal' data-bs-dismiss='modal') Confirmar
-                        | &nbsp;&nbsp;&nbsp;&nbsp;
-                        button.btn.btn-success#altaLoteProveedor(type='button') Cargar Datos de Lote
+                        button.btn.btn-primary.d-none#siguiente(type='button') Cargar Datos de Lote
 
     script.
         let tabla;
@@ -130,10 +91,11 @@ mixin modalesGestor()
                     }
                 ]
             })
-        function mostrarAlerta() {
-            $('#mensajeAlerta').text("Lote Proveedor registrado correctamente.");
-            $('#alertModal').modal('show');
-        }
+
+            function mostrarAlerta() {
+                $('#mensajeAlerta').text("Lote Proveedor registrado correctamente.");
+                $('#alertModal').modal('show');
+            }
 
             $('#altaLaboratorio').on('click', function(event){
                 var win = window.open('http://localhost:3000/laboratorios/alta?boton=true','_blank', 'popup=true')
@@ -143,7 +105,7 @@ mixin modalesGestor()
                 })
             })
 
-            $('#altaLoteProveedor').on('click', function(event){
+            $('#siguiente').on('click', function(event){
                 var win = window.open('http://localhost:3000/lotesproveedores/alta?boton=true&idLab='+idLab, '_blank', 'popup=true')
                 $(win).on('load', function(){
                     win.resizeTo(750,900)
@@ -152,7 +114,6 @@ mixin modalesGestor()
             })
 
             $('#mainModal').modal({backdrop: 'static', keyboard: false});
-            $('#mainModal2').modal({backdrop: 'static', keyboard: false});
 
             $(window).on('message onmessage', function(e){
                 if (e.originalEvent.data['origen']==="formLaboratorio"){
@@ -166,14 +127,9 @@ mixin modalesGestor()
 
                 }
                 if (e.originalEvent.data['origen']==="formLoteProveedor"){
-                    $('#tipoVacuna').val(e.originalEvent.data['datos']['tipoVacuna'])
-                    $('#nombreComercial').val(e.originalEvent.data['datos']['nombreComercial'])
-                    $('#cantidadLotesInternos').val(e.originalEvent.data['datos']['cantidadLotesInternos'])
-                    $('#cantidadVacunasPorLoteInterno').val(e.originalEvent.data['datos']['cantidadVacunasPorLoteInterno'])
-                    $('#fechaFabricacion').val(e.originalEvent.data['datos']['fechaFabricacion'])
-                    $('#fechaCompra').val(e.originalEvent.data['datos']['fechaCompra'])
-                    $('#fechaVencimiento').val(e.originalEvent.data['datos']['fechaVencimiento'])
                     $(siguiente).addClass('d-none');
+                    $('#mainModal').modal('hide');
+                    mostrarAlerta();
                     $(nombreLaboratorio).val('');
                 }
             })
