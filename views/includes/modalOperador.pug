@@ -315,7 +315,7 @@ mixin modalesOperador()
                                         numerosDeSerie.push(seleccionado[i]['numeroDeSerie'])
                                     }
                                     console.log('#loteInterno'+(nivel=='CentroDeVacunacion' ? 'CentroDeVacunacion' : 'Deposito'+nivel))
-                                    $('#loteInterno'+(nivel=='CentroDeVacunacion' ? 'CentroDeVacunacion' : 'Deposito'+nivel)).val(texto);
+                                    $('#loteInterno'+(nivel=='CentroDeVacunacion' ? 'CentroDeVacunacion' : nivel)).val(texto);
                                     $('#form'+(nivel=='CentroDeVacunacion' ? 'CentroDeVacunacion' : 'Deposito'+nivel)).removeClass('d-none')
                                     //numeroDeSerieLote=seleccionado[0]['numeroDeSerie'];
                                     //$('#fechaDeAplicacion').attr('disabled', false)
