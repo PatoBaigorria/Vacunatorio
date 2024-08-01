@@ -13,9 +13,6 @@ const listarDescartes = async (req, res) => {
                     model: Usuario,
                     attributes: ["apellido"],
                 }],
-                where: {
-                    activo: 1,
-                },
                 raw: true
             });
         } else {
@@ -25,13 +22,10 @@ const listarDescartes = async (req, res) => {
                     attributes: ["apellido"],
                 }],
                 where: {
-                    activo: 1,
                     idUsuario: req.user.idUsuario
                 },
                 raw: true
             });
-
-            console.log(descartes)
         }
 
         res.render("descarte/viewDescarte", { descartes: descartes, rol: rol });
@@ -49,7 +43,7 @@ const formDescarte = async (req, res) => {
             where: {
                 '$CentroDeVacunacion.localidad$': req.user.localidad,
                 '$CentroDeVacunacion.provincia$': req.user.provincia,
-                fechaDeLlegadaDepositoNacional: { [Op.ne]: null } // Solo lotes que llegaron
+                fechaDeLlegadaDepositoNacional: { [Op.ne]: null }
             },
             include: [{
                 model: CentroDeVacunacion,
@@ -98,8 +92,7 @@ const createDescarte = async (req, res) => {
             empresaDescartante,
             motivo,
             cantidadDeVacunas,
-            fechaDeDescarte,
-            activo: 1,
+            fechaDeDescarte
         });
 
         const loteEncontrado = await LoteInterno.findOne({

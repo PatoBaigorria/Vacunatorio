@@ -28,12 +28,19 @@ body
                     option(value="Agente de salud") Agente de salud
                 .invalid-feedback.d-none(id="rolSinSeleccionar") Seleccione un rol
         .form-group
-            label.form-label(for="nombreUsuario") Nombre de usuario:
+            label.form-label(for="nombre") Nombre del usuario:
             .input-group.has-validation
-                input.form-control(type="text" id="nombreUsuario" name="nombreUsuario" placeholder="Ingrese un nombre de usuario" required)
+                input.form-control(type="text" id="nombre" name="nombre" placeholder="Ingrese el nombre del usuario" required)
                 .invalid-feedback.d-none(id="nombreVacio") El campo no puede estar vacío
                 .invalid-feedback.d-none(id="nombreInvalido") El nombre debe contener más de dos y menos de cincuenta y un caracteres
                 .invalid-feedback.d-none(id="nombreNumeros") El nombre solo puede contener letras
+        .form-group
+            label.form-label(for="apellido") Apellido del usuario:
+            .input-group.has-validation
+                input.form-control(type="text" id="apellido" name="apellido" placeholder="Ingrese el apellido del usuario" required)
+                .invalid-feedback.d-none(id="apellidoVacio") El campo no puede estar vacío
+                .invalid-feedback.d-none(id="apellidoInvalido") El apellido debe contener más de dos y menos de cincuenta y un caracteres
+                .invalid-feedback.d-none(id="apellidoNumeros") El apellido solo puede contener letras
         .form-group
             label.form-label(form="provincia") Provincia:
             .input-group.has-validation
@@ -117,7 +124,7 @@ script.
         // Llamar la función de cambio para cargar las localidades iniciales
         $('#provincia').trigger('change');
     });
-    
+
     $(function () {
         function mostrarAlerta() {
             $('#mensajeAlerta').text("¡Datos incorrectos! Por favor, verifica la información ingresada.");
@@ -149,7 +156,7 @@ script.
             }
         }
 
-        function validarNombreUsuario(campo) {
+        function validarNombreYApellido(campo) {
             quitarError(campo);
             if (!campo.val()) {
                 mostrarError(campo, 'Vacio');
@@ -191,8 +198,8 @@ script.
         }
 
         // Eventos
-        $('#nombreUsuario').on('keyup focusout', function () {
-            validarNombreUsuario($(this));
+        $('#nombre, #apellido').on('keyup focusout', function () {
+            validarNombreYApellido($(this));
         });
 
         $('#password').on('keyup focusout', function () {
@@ -227,9 +234,9 @@ script.
             }
         });
 
-        $('#nombreUsuario, #email, #password').trigger('focusout');
+        $('#nombre, #apellido, #email, #password').trigger('focusout');
         $('#rol, #provincia, #localidad').trigger('change');
-        $('#nombreUsuario').trigger('focus');
+        $('#nombre').trigger('focus');
 
         // Asociar el evento submit al formulario
         $('#form input').on('keypress', function (event) {

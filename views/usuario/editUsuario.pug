@@ -20,20 +20,25 @@ body
         .form-group
             label.form-label(for="idUsuario") ID del usuario:
             .input-group.has-validation
-                input.form-select(type="text" id="idUsuario" name="idUsuario" value=usuario.idUsuario readonly)
+                input.form-select.is-valid(type="text" id="idUsuario" name="idUsuario" value=usuario.idUsuario readonly)
         .form-group
             label.form-label(for="rol") Rol del usuario:
             .input-group.has-validation
-                select.form-select(name="rol" id="rol" required)
-                    each rolOpcion in ['Super Admin', 'Usuario Común', 'Invitado', 'Agente']
-                        option(value=rolOpcion, selected=(rolOpcion === usuario.rol)) #{rolOpcion}
+                select.form-select.is-valid(name="rol" id="rol" required)
         .form-group
-            label.form-label(for="nombreUsuario") Nombre de usuario:
+            label.form-label(for="nombre") Nombre del usuario:
             .input-group.has-validation
-                input.form-control(type="text" id="nombreUsuario" name="nombreUsuario" placeholder="Ingrese un nombre de usuario" value=usuario.nombreUsuario required)
+                input.form-control(type="text" id="nombre" name="nombre" value=usuario.nombre placeholder="Ingrese el nombre del usuario" required)
                 .invalid-feedback.d-none(id="nombreVacio") El campo no puede estar vacío
                 .invalid-feedback.d-none(id="nombreInvalido") El nombre debe contener más de dos y menos de cincuenta y un caracteres
                 .invalid-feedback.d-none(id="nombreNumeros") El nombre solo puede contener letras
+        .form-group
+            label.form-label(for="apellido") Apellido del usuario:
+            .input-group.has-validation
+                input.form-control(type="text" id="apellido" name="apellido" value=usuario.apellido placeholder="Ingrese el apellido del usuario" required)
+                .invalid-feedback.d-none(id="apellidoVacio") El campo no puede estar vacío
+                .invalid-feedback.d-none(id="apellidoInvalido") El apellido debe contener más de dos y menos de cincuenta y un caracteres
+                .invalid-feedback.d-none(id="apellidoNumeros") El apellido solo puede contener letras
         .form-group
             label.form-label(for="email") Email:
             .input-group.has-validation
@@ -53,6 +58,7 @@ body
 
 script.
     $(function () {
+        let rol = !{JSON.stringify(usuario)}.rol;
         function mostrarAlerta() {
             $('#mensajeAlerta').text("¡Datos incorrectos! Por favor, verifica la información ingresada.");
             $('#alertModal').modal('show');
@@ -76,13 +82,13 @@ script.
             }  
         }
 
-        function validarNombreUsuario(campo){
+        function validarNombreYApellido(campo) {
             quitarError(campo);
-            if(!campo.val()){
+            if (!campo.val()) {
                 mostrarError(campo, 'Vacio');
-            } else if(!/^[A-Za-záéíóúüñÁÉÍÓÚÜÑ\s]{1,}$/.test(campo.val())){
+            } else if (!/^[A-Za-záéíóúüñÁÉÍÓÚÜÑ\s]{1,}$/.test(campo.val())) {
                 mostrarError(campo, 'Numeros');
-            } else if(campo.val().length < 3 || campo.val().length > 50){
+            } else if (campo.val().length < 3 || campo.val().length > 50) {
                 mostrarError(campo, 'Invalido');
             }
         }
@@ -96,16 +102,19 @@ script.
             } 
         }
 
-        function validarComboBox(){
-            console.log($('#rol').val())
-            if(!$('#rol').val()){
-                console.log('No seleccionado')
-                mostrarError($('#rol'), 'SinSeleccionar');
-                $('#' + $('#rol').attr('id') + 'SinSeleccionar').removeClass('d-none');
-            } else {
-                quitarError($('#rol'));
-            }
+        function cargarComboBox(){
+            $('#rol').empty();
+            ['Super Admin', 'Gestor de compras', 'Operador de logistica', 'Agente de salud'].forEach(rolUsuario => {
+                if (rolUsuario == rol) {
+                    console.log(rol == rolUsuario);
+                    $('#rol').append(`<option value="${rolUsuario}" selected>${rolUsuario}</option>`);
+                } else {
+                    console.log(rolUsuario);
+                    $('#rol').append(`<option value="${rolUsuario}">${rolUsuario}</option>`);
+                }
+            });
         }
+
 
         function validarFormulario() {
             let inputs = $('#form input, #form select');
@@ -123,22 +132,18 @@ script.
         }
 
         // Eventos
-        validarNombreUsuario($(this))
+        validarNombreYApellido($(this))
         validarContrasenia($(this))
-        validarComboBox()
+        cargarComboBox()
         validarEmail()
 
-        $('#nombreUsuario').on('keyup focusout', function () {
-            validarNombreUsuario($(this))
+        $('#nombre, #apellido').on('keyup focusout', function () {
+            validarNombreYApellido($(this));
         });
 
         $('#password').on('keyup focusout', function () {
             validarContrasenia($(this))
         });
-
-        $('#rol').on('change', function () {
-            validarComboBox()
-        })
 
         $('#email').on('keyup focusout', function() {
             validarEmail()
@@ -173,9 +178,9 @@ script.
             }
         });
 
-        $('#nombreUsuario, #email, #password').trigger('focusout');
-        $('#rol').trigger('change');
-        $('#nombreUsuario').trigger('focus')
+        $('#nombre, #apellido, #email, #password').trigger('focusout');
+        $('#rol, #provincia, #localidad').trigger('change');
+        $('#nombre').trigger('focus');
 
         // Asociar el evento submit al formulario
         $('#form input').on('keypress', function (event) {

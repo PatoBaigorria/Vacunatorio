@@ -5,7 +5,10 @@ const axios = require('axios');
 
 const listarUsuarios = async (req, res) => {
 	try {
-		const usuarios = await Usuario.findAll();
+		const usuarios = await Usuario.findAll({
+			raw: true,
+		}
+		);
 		res.render("usuario/viewUsuario", {
 			usuarios: usuarios,
 		});
@@ -18,21 +21,21 @@ const formUsuario = async (req, res) => {
 	try {
 		let provincias = [];
 		const provinciasResponse = await axios.get('https://apis.datos.gob.ar/georef/api/provincias');
-		provincias = provinciasResponse.data.provincias.map(provincia => provincia.nombre).sort((a, b) => a.localeCompare(b)); 
+		provincias = provinciasResponse.data.provincias.map(provincia => provincia.nombre).sort((a, b) => a.localeCompare(b));
 
 		// Obtener localidades de la primera provincia de la lista
-        let localidades = [];
-        if (provincias.length > 0) {
-            const localidadesResponse = await axios.get(`https://apis.datos.gob.ar/georef/api/localidades?provincia=${provincias[0]}`);
-            localidades = localidadesResponse.data.localidades.map(localidad => localidad.nombre);
+		let localidades = [];
+		if (provincias.length > 0) {
+			const localidadesResponse = await axios.get(`https://apis.datos.gob.ar/georef/api/localidades?provincia=${provincias[0]}`);
+			localidades = localidadesResponse.data.localidades.map(localidad => localidad.nombre);
 			localidades = localidades.map(localidad => localidad.trim());
 			localidades.sort((a, b) => a.localeCompare(b));
 			localidades.unshift("Selecciona una localidad");
-        }
+		}
 		res.render("usuario/formUsuario", {
 			provincias: provincias,
 		});
-			
+
 	} catch (error) {
 		res.status(500).json({ message: "Error al crear la usuario." });
 	}
@@ -40,11 +43,12 @@ const formUsuario = async (req, res) => {
 
 const createUsuario = async (req, res) => {
 	try {
-		const { rol, nombreUsuario, email, password, localidad, provincia } = req.body;
+		const { rol, nombre, apellido, email, password, localidad, provincia } = req.body;
 		const hashedPassword = await bcrypt.hash(password, 5);
 		const usuario = await Usuario.create({
 			rol,
-			nombreUsuario,
+			nombre,
+			apellido,
 			email,
 			password: hashedPassword,
 			localidad,

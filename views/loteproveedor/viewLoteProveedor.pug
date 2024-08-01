@@ -40,14 +40,11 @@ body
                                     button.btn.btn-secondary#cancelAltaBtn(type='button' data-dismiss='modal') Cancelar
                                     button.btn.btn-danger#confirmAltaBtn(type='button') Confirmar
                     div(style='text-align: left')
-                        if(user.rol != 'Super Admin')
-                            a.btn.btn-primary.btn-lg(href='/lotesproveedores/alta') Alta
-                        br
-                        br
                         div.table.responsive
                             table#lotesproveedores.table.table-striped.table-bordered
 script.
     let tabla
+    let rol = !{JSON.stringify(rol)}
     $(document).ready(function() {
         tabla = $(lotesproveedores).DataTable({
             data: !{JSON.stringify(lotesProveedores)},
@@ -79,8 +76,8 @@ script.
                 }
             ],
             columnDefs: [
-                {orderable: false, targets:[4]},
-                {searchable: true, targets:[1, 2,]},
+                {orderable: false, targets:[2, 3, 4]},
+                {searchable: true, targets:[0, 1]},
                 {className: 'dt-center', targets: [0, 1, 2, 3, 4]},
                 { width: '10%', targets: [1] },
                 { width: '5%', targets: [0] },

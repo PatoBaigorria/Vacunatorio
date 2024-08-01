@@ -51,6 +51,7 @@ const listarLotesInternosJSON = async (req, res) => {
 						idCentroDeVacunacion: { [Op.ne]: null },
 						provincia: req.user.provincia,
 						localidad: req.user.localidad,
+						activo: 1
 					},
 					attributes: []
 				},
