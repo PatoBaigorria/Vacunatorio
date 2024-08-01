@@ -130,36 +130,10 @@ const detailsDescarte = async (req, res) => {
 
         // Buscar el descarte por ID
         const descarte = await Descarte.findByPk(req.params.id, {
-            include: [
-                {
-                    model: LoteInterno,
-                    include: [
-                        {
-                            model: CentroDeVacunacion,
-                            attributes: ["provincia", "localidad"],
-                            where: {
-                                provincia: userProvincia,
-                                localidad: userLocalidad
-                            }
-                        }
-                    ],
-                    attributes: ["numeroDeSerie"]
-                },
-                {
-                    model: AgenteDeSalud,
-                    include: [
-                        {
-                            model: Persona,
-                            attributes: ["nombre", "apellido"],
-                            where: {
-                                provincia: userProvincia,
-                                localidad: userLocalidad
-                            }
-                        }
-                    ],
-                    attributes: ["DNI"]
-                }
-            ]
+            include: [{
+                model: Usuario,
+                attributes: ["idUsuario", "nombre", "apellido"],
+            }],
         });
 
         if (!descarte) {

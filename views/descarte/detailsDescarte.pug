@@ -9,9 +9,9 @@ body
             = messages.error
     div#form
         .form-group
-            label.form-label.text-center(for='DNIAgente') Agente de Salud
+            label.form-label.text-center(for='idUsuario') Agente autorizado
             .input-group
-                input.form-control.text-center(name='DNIAgente' value=descarte.Agentedesalud.Persona.apellido+ ", "+descarte.Agentedesalud.Persona.nombre disabled)
+                input.form-control.text-center(name='idUsuario' value=descarte.Usuario.apellido+ ", "+descarte.Usuario.nombre disabled)
         .form-group
             label.form-label.text-center(for='numeroDeSerie') Nº de Serie de Lote Interno
             .input-group
