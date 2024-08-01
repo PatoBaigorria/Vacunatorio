@@ -296,12 +296,12 @@ mixin modalesAgente()
                             if (response.reload){
                                 tablaLote.ajax.reload()
                             }
-                            if(response.flash){
+                            /*if(response.flash){
                                 $('#flash').text(response.flash).show()
                                 setTimeout(function() {
                                     $('#flash').fadeOut('slow');
                                 }, 3000);
-                            }
+                            }*/
                             $(nombrePersona).val('')
                             $(dniPersona).val('')
                             $(DNIAgente).val('')
@@ -309,6 +309,7 @@ mixin modalesAgente()
                             $(fechaDeAplicacion).val('')
                             $(siguiente).addClass('d-none')
                             mostrarError($(fechaDeAplicacion), 'Vacio')
+                            mostrarAlerta('Aplicacion registrada correctamente.')
                         },
                         error: function(response){
 
