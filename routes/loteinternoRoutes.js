@@ -14,6 +14,7 @@ router.get(
 	loteInternoController.listarLotesInternos
 );
 router.get("/sinDNJSON/:numeroDeLote", authorize(["Operador de logistica"]), loteInternoController.listarLotesSinDNJSON);
+router.get("/sinDPJSON/:numeroDeLote", authorize(["Operador de logistica"]), loteInternoController.listarLotesSinDPJSON);
 router.put("/actualizarDN", authorize(["Operador de logistica"]), loteInternoController.actualizarFechasDNLIJSON);
 router.get(
 	"/crear",

@@ -58,6 +58,33 @@ const listarLotesSinDNJSON = async (req, res) => {
 	}
 }
 
+const listarLotesSinDPJSON = async (req, res) => {
+	try {
+		const lotesInternos = await LoteInterno.findAll({
+			include: [{
+				model: LoteProveedor,
+				where: {
+					numeroDeLote: req.params.numeroDeLote
+				}
+			},
+			{
+				model: Laboratorio,
+			}
+			],
+			where: {
+				fechaDeLlegadaDepositoNacional: { [Op.ne]: null },
+				idDepositoNacional: { [Op.ne]: null },
+				fechaDeLlegadaDepositoProvincial: null,
+				idDepositoProvincial: null,
+			},
+			raw: true
+		});
+		res.json(lotesInternos);
+	} catch (error) {
+		console.error(error);
+	}
+}
+
 const actualizarFechasDNLIJSON = async (req, res) => {
 	try {
 		const { idDepositoNacional, fechaDeLlegadaDepositoNacional, numerosDeSerie } = req.body;
@@ -450,6 +477,7 @@ module.exports = {
 	listarLotesInternos,
 	listarLotesInternosJSON,
 	listarLotesSinDNJSON,
+	listarLotesSinDPJSON,
 	actualizarFechasDNLIJSON,
 	formLoteInterno,
 	createLoteInterno,

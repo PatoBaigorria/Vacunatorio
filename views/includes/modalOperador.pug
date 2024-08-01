@@ -15,13 +15,13 @@ mixin modalesOperador()
                     .card-body.text-center
                         h5.card-title Accede a la logistica de los lotes
                     .card-footer.text-center
-                        button.btn.btn-warning(type='button' data-bs-toggle='modal' data-bs-target='#modalDepositoNacional') Registrar envio al Depósito nacional
+                        button.btn.btn-warning#botonNacional(type='button' data-bs-toggle='modal' data-bs-target='#modalDepositoNacional') Registrar envio al Depósito nacional
                         br
                         br
-                        button.btn.btn-warning(type='button' data-bs-toggle='modal' data-bs-target='#modalDepositoProvincial') Registrar envio al Depósito provincial
+                        button.btn.btn-warning#botonProvincial(type='button' data-bs-toggle='modal' data-bs-target='#modalDepositoProvincial') Registrar envio al Depósito provincial
                         br
                         br
-                        button.btn.btn-warning(type='button' data-bs-toggle='modal' data-bs-target='#modalCentroDeVacunacion') Registrar envio al Centro de Vacunación
+                        button.btn.btn-warning#botonCentroDeSalud(type='button' data-bs-toggle='modal' data-bs-target='#modalCentroDeVacunacion') Registrar envio al Centro de Vacunación
     .modal.fade(id='modalDepositoNacional' tabindex='-1' aria-labelledby='modalDepositoNacionalLabel' aria-hidden='true')
         .modal-dialog
             .modal-content
@@ -33,19 +33,19 @@ mixin modalesOperador()
                         label.text-center Seleccione un lote proveedor:
                         .input-group
                             input.form-control#loteProveedorNacional(type='text' disabled)
-                            button.btn.btn-primary#loteProveedorNacionalSeleccionar(type='button' data-bs-toggle='modal' data-bs-target='#ModalDataTableLoteProveedorNacional' data-bs-dismiss='modal') Seleccionar
+                            button.btn.btn-primary#loteProveedorNacionalSeleccionar(type='button' data-bs-toggle='modal' data-bs-target='#ModalDataTableLoteProveedor' data-bs-dismiss='modal') Seleccionar
                     br
                     .form-group.d-none#formLoteInternoNacional
                         label.text-center Seleccione el/los lote/s interno/s:
                         .input-group
                             input.form-control#loteInternoNacional(type='text' disabled)
-                            button.btn.btn-primary#loteInternoNacionalSeleccionar(type='button' data-bs-toggle='modal' data-bs-target='#ModalDataTableLoteInternoNacional' data-bs-dismiss='modal') Seleccionar
+                            button.btn.btn-primary#loteInternoNacionalSeleccionar(type='button' data-bs-toggle='modal' data-bs-target='#ModalDataTableLoteInterno' data-bs-dismiss='modal') Seleccionar
                     br
                     .form-group.d-none#formDepositoNacional
                         label.text-center Seleccione el depósito nacional:
                         .input-group
                             input.form-control#inputDepositoNacional(type='text' disabled)
-                            button.btn.btn-primary#DepositoNacionalSeleccionar(type='button' data-bs-toggle='modal' data-bs-target='#ModalDataTableDepositoNacional' data-bs-dismiss='modal') Seleccionar
+                            button.btn.btn-primary#DepositoNacionalSeleccionar(type='button' data-bs-toggle='modal' data-bs-target='#ModalDataTableDeposito' data-bs-dismiss='modal') Seleccionar
                     br
                     .form-group.d-none#fechaLlegadaDepositoNacional
                         label.form-label Fecha de llegada al Depósito Nacional:
@@ -67,32 +67,32 @@ mixin modalesOperador()
                     .form-group
                         label.text-center Seleccione un lote proveedor:
                         .input-group
-                            input.form-control#lotePP(type='text' disabled)
-                            button.btn.btn-primary#lotePSeleccionar(type='button' data-bs-toggle='modal' data-bs-target='#ModalDataTableLP' data-bs-dismiss='modal') Seleccionar
+                            input.form-control#loteProveedorProvincial(type='text' disabled)
+                            button.btn.btn-primary#loteProveedorProvincialSeleccionar(type='button' data-bs-toggle='modal' data-bs-target='#ModalDataTableLoteProveedor' data-bs-dismiss='modal') Seleccionar
                     br
-                    .form-group.d-none#formLoteI
+                    .form-group.d-none#formLoteInternoProvincial
                         label.text-center Seleccione el/los lote/s interno/s:
                         .input-group
-                            input.form-control#loteI(type='text' disabled)
-                            button.btn.btn-primary#loteISeleccionar(type='button' data-bs-toggle='modal' data-bs-target='#ModalDataTableLI' data-bs-dismiss='modal') Seleccionar
+                            input.form-control#loteInternoProvincial(type='text' disabled)
+                            button.btn.btn-primary#loteInternoProvincialSeleccionar(type='button' data-bs-toggle='modal' data-bs-target='#ModalDataTableLoteInterno' data-bs-dismiss='modal') Seleccionar
                     br
-                    .form-group.d-none#formDN
-                        label.text-center Seleccione el depósito nacional:
+                    .form-group.d-none#formDepositoProvincial
+                        label.text-center Seleccione el depósito Provincial:
                         .input-group
-                            input.form-control#inputDN(type='text' disabled)
-                            button.btn.btn-primary#DNSeleccionar(type='button' data-bs-toggle='modal' data-bs-target='#ModalDataTableDN' data-bs-dismiss='modal') Seleccionar
+                            input.form-control#inputDepositoProvincial(type='text' disabled)
+                            button.btn.btn-primary#DepositoProvincialSeleccionar(type='button' data-bs-toggle='modal' data-bs-target='#ModalDataTableDeposito' data-bs-dismiss='modal') Seleccionar
                     br
-                    .form-group.d-none#fechaLlegadaDN
-                        label.form-label(for="fechaDeLlegadaDepositoNacional") Fecha de llegada al Depósito Nacional:
+                    .form-group.d-none#fechaLlegadaDepositoProvincial
+                        label.form-label Fecha de llegada al Depósito Provincial:
                         .input-group.has-validation
-                            input.form-control.is-invalid#fechaDeLlegadaDepositoNacional(type="date" name="fechaDeLlegadaDepositoNacional")
-                            .invalid-feedback.d-none#fechaDeLlegadaDepositoNacionalSuperior La fecha seleccionada es superior a la fecha actual
-                            .invalid-feedback.d-none#fechaDeLlegadaDepositoNacionalAnterior La fecha seleccionada es anterior a la fecha de compra
-                            .invalid-feedback.d-none#fechaDeLlegadaDepositoNacionalVacio El campo no puede estar vacio
+                            input.form-control.is-invalid#fechaDeLlegadaDepositoProvincial(type="date")
+                            .invalid-feedback.d-none#fechaDeLlegadaDepositoProvincialSuperior La fecha seleccionada es superior a la fecha actual
+                            .invalid-feedback.d-none#fechaDeLlegadaDepositoProvincialAnterior La fecha seleccionada es anterior a la fecha de compra
+                            .invalid-feedback.d-none#fechaDeLlegadaDepositoProvincialVacio El campo no puede estar vacio
                     br
                     .form-group.text-center
-                        button.btn.btn-primary.d-none#confirmarDN(type='button' data-bs-toggle='modal' data-bs-dismiss='modal') Confirmar
-    .modal.fade(id='ModalDataTableLoteProveedorNacional' tabindex='-1' aria-labelledby='ModalDataTableLoteProveedorNacionalLabel' aria-hidden='true')
+                        button.btn.btn-primary.d-none#confirmarDepositoProvincial(type='button' data-bs-toggle='modal' data-bs-dismiss='modal') Confirmar
+    .modal.fade(id='ModalDataTableLoteProveedor' tabindex='-1' aria-labelledby='ModalDataTableLoteProveedorLabel' aria-hidden='true')
         .modal-dialog(style="max-width: 1000px;")
             .modal-content
                 .modal-header
@@ -100,8 +100,8 @@ mixin modalesOperador()
                     button.btn-close(type='button' data-bs-dismiss='modal' aria-label='Close')
                 .modal-body
                     div.table.responsive
-                        table#tablaLoteProveedorNacional.table.table-striped.table-bordered
-    .modal.fade(id='ModalDataTableLoteInternoNacional' tabindex='-1' aria-labelledby='ModalDataTableLoteInternoNacionalLabel' aria-hidden='true')
+                        table#tablaLoteProveedor.table.table-striped.table-bordered
+    .modal.fade(id='ModalDataTableLoteInterno' tabindex='-1' aria-labelledby='ModalDataTableLoteInternoLabel' aria-hidden='true')
         .modal-dialog(style="max-width: 1000px;")
             .modal-content
                 .modal-header
@@ -109,8 +109,8 @@ mixin modalesOperador()
                     button.btn-close(type='button' data-bs-dismiss='modal' aria-label='Close')
                 .modal-body
                     div.table.responsive
-                        table#tablaLoteInternoNacional.table.table-striped.table-bordered
-    .modal.fade(id='ModalDataTableDepositoNacional' tabindex='-1' aria-labelledby='ModalDataTableDepositoNacionalLabel' aria-hidden='true')
+                        table#tablaLoteInterno.table.table-striped.table-bordered
+    .modal.fade(id='ModalDataTableDeposito' tabindex='-1' aria-labelledby='ModalDataTableDepositoLabel' aria-hidden='true')
         .modal-dialog(style="max-width: 1000px;")
             .modal-content
                 .modal-header
@@ -118,11 +118,7 @@ mixin modalesOperador()
                     button.btn-close(type='button' data-bs-dismiss='modal' aria-label='Close')
                 .modal-body
                     div.table.responsive
-                        table#tablaDepositoNacional.table.table-striped.table-bordered
-    .form-group.text-center
-        button.btn.btn-primary#buscarLaboratorioBtn(type='button' data-bs-toggle='modal' data-bs-target='#ModalDataTable' data-bs-dismiss='modal') Buscar Laboratorios
-        | &nbsp;&nbsp;&nbsp;&nbsp;
-        button.btn.btn-success#altaLaboratorio(type='button') Alta de Laboratorio
+                        table#tablaDeposito.table.table-striped.table-bordered
 
     script.
         $(document).ready(function () {
@@ -131,6 +127,11 @@ mixin modalesOperador()
             let tablaDN;
             let fechaCompra;
             let numerosDeSerie;
+            let ultimoBotonClickeado;
+
+            $('#botonNacional, #botonProvincial, #botonCentroDeSalud').on('click', function () {
+                ultimoBotonClickeado = this.id.slice(5, this.id.length)
+            })
 
             function mostrarAlerta(texto) {
                 $(mensajeAlerta).text(texto)
@@ -147,7 +148,7 @@ mixin modalesOperador()
                 $(`div[id^=${campo.attr('id')}].invalid-feedback`).addClass('d-none')
             }
 
-            tablaLoteP = $(tablaLoteProveedorNacional).DataTable({
+            tablaLoteP = $(tablaLoteProveedor).DataTable({
                 ajax: {
                     url:'/lotesproveedores/lotesproveedoresJSON',
                     dataSrc: ""
@@ -206,7 +207,7 @@ mixin modalesOperador()
                 ]
             })
 
-            tablaLoteI = $(tablaLoteInternoNacional).DataTable({
+            tablaLoteI = $(tablaLoteInterno).DataTable({
                 ajax: {
                     url:'/lotesinternos/sinDNJSON/1',
                     dataSrc: ""
@@ -269,7 +270,7 @@ mixin modalesOperador()
                 ]
             })
 
-            tablaDN = $('#tablaDepositoNacional').DataTable({
+            tablaDN = $('#tablaDeposito').DataTable({
                 ajax: {
                     url:'/depositosnacionales/depnacJSON',
                     dataSrc: ""
@@ -323,6 +324,8 @@ mixin modalesOperador()
             $(loteInternoNacionalSeleccionar).click(function () {
                 tablaLoteI.ajax.url('/lotesinternos/sinDNJSON/' + $(loteProveedorNacional).val()).load();
             })
+
+
 
             function validarFechaDeLlegadaDepositoNacional(){
                 quitarError($(fechaDeLlegadaDepositoNacional))
