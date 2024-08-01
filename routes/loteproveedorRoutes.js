@@ -8,7 +8,7 @@ router.get("/reportes/vacunas-por-laboratorio", authorize(["Super Admin"]), repo
 
 router.get(
 	"/",
-	authorize(["Super Admin", "Gestor de compras", "Operador de logistica"]),
+	authorize(["Super Admin", "Gestor de compras"]),
 	loteProveedorController.listarLotesProveedores
 );
 router.get("/lotesProveedoresJSON", authorize(["Operador de logistica"]), loteProveedorController.listarLotesProveedoresJSON);
@@ -24,12 +24,12 @@ router.post(
 );
 router.get(
 	"/details/:id",
-	authorize(["Super Admin", "Gestor de compras", "Operador de logistica"]),
+	authorize(["Super Admin", "Gestor de compras"]),
 	loteProveedorController.detailsLoteProveedor
 );
 router.get(
 	"/:id",
-	authorize(["Gestor de compras", "Operador de logistica"]),
+	authorize(["Gestor de compras"]),
 	loteProveedorController.editLoteProveedor
 );
 router.put(

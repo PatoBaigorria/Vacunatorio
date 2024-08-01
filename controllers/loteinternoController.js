@@ -77,8 +77,6 @@ const listarLotesSinDPJSON = async (req, res) => {
 			where: {
 				fechaDeLlegadaDepositoNacional: { [Op.ne]: null },
 				idDepositoNacional: { [Op.ne]: null },
-				fechaDeLlegadaDepositoProvincial: null,
-				idDepositoProvincial: null,
 			},
 			raw: true
 		});
