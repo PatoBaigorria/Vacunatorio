@@ -40,10 +40,6 @@ body
                                     button.btn.btn-secondary#cancelAltaBtn(type='button' data-dismiss='modal') Cancelar
                                     button.btn.btn-danger#confirmAltaBtn(type='button') Confirmar
                     div(style='text-align: left')
-                        if(user.rol != 'Super Admin')
-                            a.btn.btn-primary.btn-lg(href='/aplicaciones/crear') Crear
-                            br
-                            br
                         div.table.responsive
                             table#aplicaciones.table.table-striped.table-bordered
 script.

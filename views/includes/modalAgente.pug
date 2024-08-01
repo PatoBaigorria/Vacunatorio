@@ -75,15 +75,17 @@ mixin modalesAgente()
                 .modal-body#form
                     .form-group
                         label.text-center Agente de Salud que aplicó la vacuna:
-                        input.form-control#DNIAgente(type='text' disabled)
-                        button.btn.btn-primary#buscarAgenteBtn(type='button' data-bs-toggle='modal' data-bs-target='#ModalDataTableAgente' data-bs-dismiss='modal')
-                            i.fa-solid.fa-magnifying-glass
+                        .input-group
+                            input.form-control#DNIAgente(type='text' disabled)
+                            button.btn.btn-primary#buscarAgenteBtn(type='button' data-bs-toggle='modal' data-bs-target='#ModalDataTableAgente' data-bs-dismiss='modal')
+                                i.fa-solid.fa-magnifying-glass
                     br
                     .form-group
                         label.text-center Lote de vacunas que se aplicó al Paciente:
-                        input.form-control#numeroDeSerie(type='text' disabled)
-                        button.btn.btn-primary#buscarLoteBtn(type='button' data-bs-toggle='modal' data-bs-target='#ModalDataTableLote' data-bs-dismiss='modal')
-                            i.fa-solid.fa-magnifying-glass
+                        .input-group
+                            input.form-control#numeroDeSerie(type='text' disabled)
+                            button.btn.btn-primary#buscarLoteBtn(type='button' data-bs-toggle='modal' data-bs-target='#ModalDataTableLote' data-bs-dismiss='modal')
+                                i.fa-solid.fa-magnifying-glass
                     br
                     .form-group
                         label.form-label Fecha en la que se aplicó la vacuna
