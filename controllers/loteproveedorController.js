@@ -48,6 +48,26 @@ const reporteVacunasPorLaboratorio = async (req, res) => {
 	}
 };
 
+const listarLotesProveedoresJSON = async (req, res) => {
+	try {
+		const lotesProveedor = await LoteProveedor.findAll({
+			include: [
+				{
+					model: Laboratorio,
+					attributes: ["nombreLaboratorio"]
+				}
+			],
+			where: {
+				activo: 1
+			},
+			raw: true
+		});
+		res.json(lotesProveedor);
+	} catch (error) {
+		console.error(error);
+	}
+}
+
 const listarLotesProveedores = async (req, res) => {
 	try {
 		const lotesProveedores = await LoteProveedor.findAll({
@@ -307,6 +327,7 @@ const altaLoteProveedor = async (req, res) => {
 module.exports = {
 	listarLotesProveedores,
 	formLoteProveedor,
+	listarLotesProveedoresJSON,
 	createLoteProveedor,
 	detailsLoteProveedor,
 	editLoteProveedor,

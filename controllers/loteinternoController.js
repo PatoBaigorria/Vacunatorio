@@ -33,6 +33,53 @@ const listarLotesInternos = async (req, res) => {
 	}
 };
 
+
+const listarLotesSinDNJSON = async (req, res) => {
+	try {
+		const lotesInternos = await LoteInterno.findAll({
+			include: [{
+				model: LoteProveedor,
+				where: {
+					numeroDeLote: req.params.numeroDeLote
+				}
+			},
+			{
+				model: Laboratorio,
+			}
+			],
+			where: {
+				fechaDeLlegadaDepositoNacional: null,
+			},
+			raw: true
+		});
+		res.json(lotesInternos);
+	} catch (error) {
+		console.error(error);
+	}
+}
+
+const actualizarFechasDNLIJSON = async (req, res) => {
+	try {
+		const { idDepositoNacional, fechaDeLlegadaDepositoNacional, numerosDeSerie } = req.body;
+		await LoteInterno.update(
+			{
+				fechaDeLlegadaDepositoNacional,
+				idDepositoNacional
+			},
+			{
+				where: {
+					numeroDeSerie: {
+						[Op.in]: numerosDeSerie
+					}
+				},
+			}
+		);
+		res.json({ success: true });
+	} catch (error) {
+		res.json(error.message)
+	}
+}
+
 const listarLotesInternosJSON = async (req, res) => {
 	try {
 		const lotesInternos = await LoteInterno.findAll({
@@ -402,6 +449,8 @@ const altaLoteInterno = async (req, res) => {
 module.exports = {
 	listarLotesInternos,
 	listarLotesInternosJSON,
+	listarLotesSinDNJSON,
+	actualizarFechasDNLIJSON,
 	formLoteInterno,
 	createLoteInterno,
 	createLoteInternoDesdeProveedor,

@@ -50,10 +50,26 @@ const listarCentrosDeVacunacion = async (req, res) => {
 	}
 };
 
+async function listarCentrosJSON(req, res) {
+	try {
+		const centros = await sequelize.query(
+			'SELECT idCentroDeVacunacion, direccion FROM CentroDeVacunacion',
+			{
+				type: sequelize.QueryTypes.SELECT
+			}
+		);
+		if (centros.length > 0) {
+			res.json({ success: true, data: centros });
+		} else {
+			res.json({ success: false, message: "No se encontraron centros de vacunación para la provincia seleccionada." });
+		}
+	} catch (error) {
+		res.status(500).json({ success: false, message: `Error al listar centros de vacunación: ${error.message}` });
+	}
+}
 
 async function listarCentrosJSON(req, res) {
 	const { provincia } = req.params;
-	console.log("Provincia recibida: " + provincia);
 	try {
 		const centros = await sequelize.query(
 			'SELECT idCentroDeVacunacion, direccion FROM CentroDeVacunacion WHERE provincia = :provincia',
@@ -63,14 +79,11 @@ async function listarCentrosJSON(req, res) {
 			}
 		);
 		if (centros.length > 0) {
-			console.log("Centros encontrados: ", centros);
 			res.json({ success: true, data: centros });
 		} else {
-			console.log("No se encontraron centros de vacunación para la provincia seleccionada.");
 			res.json({ success: false, message: "No se encontraron centros de vacunación para la provincia seleccionada." });
 		}
 	} catch (error) {
-		console.error(`Error al listar centros de vacunación: ${error.message}`);
 		res.status(500).json({ success: false, message: `Error al listar centros de vacunación: ${error.message}` });
 	}
 }

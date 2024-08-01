@@ -11,6 +11,7 @@ router.get(
 	authorize(["Super Admin", "Gestor de compras"]),
 	loteProveedorController.listarLotesProveedores
 );
+router.get("/lotesProveedoresJSON", authorize(["Operador de logistica"]), loteProveedorController.listarLotesProveedoresJSON);
 router.get(
 	"/alta",
 	authorize(["Gestor de compras"]),

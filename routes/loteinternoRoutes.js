@@ -13,6 +13,8 @@ router.get(
 	authorize(["Super Admin", "Gestor de compras"]),
 	loteInternoController.listarLotesInternos
 );
+router.get("/sinDNJSON/:numeroDeLote", authorize(["Operador de logistica"]), loteInternoController.listarLotesSinDNJSON);
+router.put("/actualizarDN", authorize(["Operador de logistica"]), loteInternoController.actualizarFechasDNLIJSON);
 router.get(
 	"/crear",
 	authorize(["Gestor de compras"]),

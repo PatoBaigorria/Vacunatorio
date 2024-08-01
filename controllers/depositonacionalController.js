@@ -30,6 +30,18 @@ const listarDepositosNacionales = async (req, res) => {
 	}
 };
 
+const listarDepositosNacionalesJSON = async (req, res) => {
+	try {
+		const depositosNac = await DepositoNacional.findAll({
+			where: { activo: 1 },
+			raw: true,
+		});
+		res.json(depositosNac);
+	} catch (error) {
+		console.error(error);
+	}
+}
+
 // Muestra formulario de creacion de Deposito Nacional
 const formDepNac = async (req, res) => {
 	try {
@@ -192,6 +204,7 @@ const altaDepositoNacional = async (req, res) => {
 module.exports = {
 	getLocalidadesByProvinciaFromAPI,
 	listarDepositosNacionales,
+	listarDepositosNacionalesJSON,
 	formDepNac,
 	createDepNac,
 	editDepNac,

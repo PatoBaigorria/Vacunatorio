@@ -1,0 +1,399 @@
+mixin modalesOperador()
+    div.modal#alertModal(tabindex="-1" role="dialog" aria-labelledby="alertModalLabel" aria-hidden="true")
+        div.modal-dialog(role="document")
+            div.modal-content
+                div.modal-header
+                    h5.modal-title#alertModalLabel Alerta
+                    button.close(type="button" data-bs-dismiss="modal" aria-label="Close")
+                        span(aria-hidden="true") ×
+                div.modal-body
+                    p#mensajeAlerta.text-center
+    .container.mt-5
+        .row.justify-content-center
+            .col-md-6
+                .card.card-button.mb-3(data-bs-toggle='modal' data-bs-target='#mainModal')
+                    .card-body.text-center
+                        h5.card-title Accede a la logistica de los lotes
+                    .card-footer.text-center
+                        button.btn.btn-warning(type='button' data-bs-toggle='modal' data-bs-target='#modalDepositoNacional') Registrar envio al Depósito nacional
+                        br
+                        br
+                        button.btn.btn-warning(type='button' data-bs-toggle='modal' data-bs-target='#modalDepositoProvincial') Registrar envio al Depósito provincial
+                        br
+                        br
+                        button.btn.btn-warning(type='button' data-bs-toggle='modal' data-bs-target='#modalCentroDeVacunacion') Registrar envio al Centro de Vacunación
+    .modal.fade(id='modalDepositoNacional' tabindex='-1' aria-labelledby='modalDepositoNacionalLabel' aria-hidden='true')
+        .modal-dialog
+            .modal-content
+                .modal-header
+                    h5.modal-title Registrar envios al Depósito Nacional
+                    button.btn-close(type='button' data-bs-dismiss='modal' aria-label='Close')
+                .modal-body
+                    .form-group
+                        label.text-center Seleccione un lote proveedor:
+                        .input-group
+                            input.form-control#loteProveedorNacional(type='text' disabled)
+                            button.btn.btn-primary#loteProveedorNacionalSeleccionar(type='button' data-bs-toggle='modal' data-bs-target='#ModalDataTableLoteProveedorNacional' data-bs-dismiss='modal') Seleccionar
+                    br
+                    .form-group.d-none#formLoteInternoNacional
+                        label.text-center Seleccione el/los lote/s interno/s:
+                        .input-group
+                            input.form-control#loteInternoNacional(type='text' disabled)
+                            button.btn.btn-primary#loteInternoNacionalSeleccionar(type='button' data-bs-toggle='modal' data-bs-target='#ModalDataTableLoteInternoNacional' data-bs-dismiss='modal') Seleccionar
+                    br
+                    .form-group.d-none#formDepositoNacional
+                        label.text-center Seleccione el depósito nacional:
+                        .input-group
+                            input.form-control#inputDepositoNacional(type='text' disabled)
+                            button.btn.btn-primary#DepositoNacionalSeleccionar(type='button' data-bs-toggle='modal' data-bs-target='#ModalDataTableDepositoNacional' data-bs-dismiss='modal') Seleccionar
+                    br
+                    .form-group.d-none#fechaLlegadaDepositoNacional
+                        label.form-label Fecha de llegada al Depósito Nacional:
+                        .input-group.has-validation
+                            input.form-control.is-invalid#fechaDeLlegadaDepositoNacional(type="date")
+                            .invalid-feedback.d-none#fechaDeLlegadaDepositoNacionalSuperior La fecha seleccionada es superior a la fecha actual
+                            .invalid-feedback.d-none#fechaDeLlegadaDepositoNacionalAnterior La fecha seleccionada es anterior a la fecha de compra
+                            .invalid-feedback.d-none#fechaDeLlegadaDepositoNacionalVacio El campo no puede estar vacio
+                    br
+                    .form-group.text-center
+                        button.btn.btn-primary.d-none#confirmarDepositoNacional(type='button' data-bs-toggle='modal' data-bs-dismiss='modal') Confirmar
+    .modal.fade(id='modalDepositoProvincial' tabindex='-1' aria-labelledby='modalDepositoProvincialLabel' aria-hidden='true')
+        .modal-dialog
+            .modal-content
+                .modal-header
+                    h5.modal-title Registrar envios al Depósito Provincial
+                    button.btn-close(type='button' data-bs-dismiss='modal' aria-label='Close')
+                .modal-body
+                    .form-group
+                        label.text-center Seleccione un lote proveedor:
+                        .input-group
+                            input.form-control#lotePP(type='text' disabled)
+                            button.btn.btn-primary#lotePSeleccionar(type='button' data-bs-toggle='modal' data-bs-target='#ModalDataTableLP' data-bs-dismiss='modal') Seleccionar
+                    br
+                    .form-group.d-none#formLoteI
+                        label.text-center Seleccione el/los lote/s interno/s:
+                        .input-group
+                            input.form-control#loteI(type='text' disabled)
+                            button.btn.btn-primary#loteISeleccionar(type='button' data-bs-toggle='modal' data-bs-target='#ModalDataTableLI' data-bs-dismiss='modal') Seleccionar
+                    br
+                    .form-group.d-none#formDN
+                        label.text-center Seleccione el depósito nacional:
+                        .input-group
+                            input.form-control#inputDN(type='text' disabled)
+                            button.btn.btn-primary#DNSeleccionar(type='button' data-bs-toggle='modal' data-bs-target='#ModalDataTableDN' data-bs-dismiss='modal') Seleccionar
+                    br
+                    .form-group.d-none#fechaLlegadaDN
+                        label.form-label(for="fechaDeLlegadaDepositoNacional") Fecha de llegada al Depósito Nacional:
+                        .input-group.has-validation
+                            input.form-control.is-invalid#fechaDeLlegadaDepositoNacional(type="date" name="fechaDeLlegadaDepositoNacional")
+                            .invalid-feedback.d-none#fechaDeLlegadaDepositoNacionalSuperior La fecha seleccionada es superior a la fecha actual
+                            .invalid-feedback.d-none#fechaDeLlegadaDepositoNacionalAnterior La fecha seleccionada es anterior a la fecha de compra
+                            .invalid-feedback.d-none#fechaDeLlegadaDepositoNacionalVacio El campo no puede estar vacio
+                    br
+                    .form-group.text-center
+                        button.btn.btn-primary.d-none#confirmarDN(type='button' data-bs-toggle='modal' data-bs-dismiss='modal') Confirmar
+    .modal.fade(id='ModalDataTableLoteProveedorNacional' tabindex='-1' aria-labelledby='ModalDataTableLoteProveedorNacionalLabel' aria-hidden='true')
+        .modal-dialog(style="max-width: 1000px;")
+            .modal-content
+                .modal-header
+                    h5.modal-title Tabla de lotes proveedores
+                    button.btn-close(type='button' data-bs-dismiss='modal' aria-label='Close')
+                .modal-body
+                    div.table.responsive
+                        table#tablaLoteProveedorNacional.table.table-striped.table-bordered
+    .modal.fade(id='ModalDataTableLoteInternoNacional' tabindex='-1' aria-labelledby='ModalDataTableLoteInternoNacionalLabel' aria-hidden='true')
+        .modal-dialog(style="max-width: 1000px;")
+            .modal-content
+                .modal-header
+                    h5.modal-title Tabla de lotes internos
+                    button.btn-close(type='button' data-bs-dismiss='modal' aria-label='Close')
+                .modal-body
+                    div.table.responsive
+                        table#tablaLoteInternoNacional.table.table-striped.table-bordered
+    .modal.fade(id='ModalDataTableDepositoNacional' tabindex='-1' aria-labelledby='ModalDataTableDepositoNacionalLabel' aria-hidden='true')
+        .modal-dialog(style="max-width: 1000px;")
+            .modal-content
+                .modal-header
+                    h5.modal-title Tabla de Depósitos nacionales
+                    button.btn-close(type='button' data-bs-dismiss='modal' aria-label='Close')
+                .modal-body
+                    div.table.responsive
+                        table#tablaDepositoNacional.table.table-striped.table-bordered
+    .form-group.text-center
+        button.btn.btn-primary#buscarLaboratorioBtn(type='button' data-bs-toggle='modal' data-bs-target='#ModalDataTable' data-bs-dismiss='modal') Buscar Laboratorios
+        | &nbsp;&nbsp;&nbsp;&nbsp;
+        button.btn.btn-success#altaLaboratorio(type='button') Alta de Laboratorio
+
+    script.
+        $(document).ready(function () {
+            let tablaLoteI;
+            let tablaLoteP;
+            let tablaDN;
+            let fechaCompra;
+            let numerosDeSerie;
+
+            function mostrarAlerta(texto) {
+                $(mensajeAlerta).text(texto)
+                $(alertModal).modal('show')
+            }
+
+            function mostrarError(campo, error) {
+                campo.addClass('is-invalid').removeClass('is-valid')
+                $(`#${campo.attr('id')}${error}`).removeClass('d-none')
+            }
+
+            function quitarError(campo) {
+                campo.addClass('is-valid').removeClass('is-invalid')
+                $(`div[id^=${campo.attr('id')}].invalid-feedback`).addClass('d-none')
+            }
+
+            tablaLoteP = $(tablaLoteProveedorNacional).DataTable({
+                ajax: {
+                    url:'/lotesproveedores/lotesproveedoresJSON',
+                    dataSrc: ""
+                },
+                select: {
+                    style: 'single',
+                    items: 'row'
+                },
+                lengthChange: false,
+                pageLength: 15,
+                language: {
+                    url: '/idiomaTabla.json'
+                },
+                order: [[0, 'desc']],
+                columns: [
+                    {data: 'numeroDeLote', title: 'Número de Lote'},
+                    {data: ['Laboratorio.nombreLaboratorio'], title: 'Laboratorio Fabricante'},
+                    {data: 'tipoDeVacuna', title: 'Tipo de Vacuna'},
+                    {data: 'nombreComercial', title: 'Nombre Comercial'},
+                ],
+                columnDefs: [
+                    {searchable: false, targets:[1, 2]},
+                    {className: 'dt-center', targets: [0, 1, 2]},
+                    { width: '10%', targets: [1] },
+                    { width: '5%', targets: [0] },
+                    { width: '10%', targets: [2] }
+                ],
+                dom: '<"top"Bf>rt<"bottom"lp><"clear">',
+                buttons: [
+                    {
+                        text: 'Seleccionar',
+                        className: 'btn btn-primary',
+                        attr: {
+                            id:'Seleccionar',
+                            'data-bs-toggle':'modal',
+                            'data-bs-target':'#modalDepositoNacional',
+                            'data-bs-dismiss':'modal'
+                        },
+                        action: function ( e, dt, node, config) {
+                            var seleccionado = dt.rows({selected:true}).data();
+                            if (seleccionado.length>0){
+                                fechaCompra = seleccionado[0]['fechaDeCompra'];
+                                $('#loteProveedorNacional').val(seleccionado[0]['numeroDeLote'] );
+                                $('#formLoteInternoNacional').removeClass('d-none')
+                                $('#loteInternoNacional').val('')
+                                $('#inputDepositoNacional').val('')
+                                $('#fechaDeLlegadaDepositoNacional').val('')
+                                $('#formDepositoNacional').addClass('d-none')
+                                $('#fechaLlegadaDepositoNacional').addClass('d-none')
+                                validarFechaDeLlegadaDepositoNacional()
+                                //numeroDeSerieLote=seleccionado[0]['numeroDeLote'];
+                                //$('#fechaDeAplicacion').attr('disabled', false)
+                            }
+                        }
+                    }
+                ]
+            })
+
+            tablaLoteI = $(tablaLoteInternoNacional).DataTable({
+                ajax: {
+                    url:'/lotesinternos/sinDNJSON/1',
+                    dataSrc: ""
+                },
+                select: {
+                    style: 'multi',
+                    items: 'row'
+                },
+                lengthChange: false,
+                pageLength: 15,
+                language: {
+                    url: '/idiomaTabla.json'
+                },
+                order: [[0, 'desc']],
+                columns: [
+                    {data: 'numeroDeSerie', title: 'Número de Serie'},
+                    {data: ['Loteproveedor.numeroDeLote'], title: 'Número de Lote'},
+                    {data: ['Loteproveedor.tipoDeVacuna'], title: 'Tipo de Vacuna'},
+                    {data: ['Loteproveedor.nombreComercial'], title: 'Nombre Comercial'},
+                    {data: ['Laboratorio.nombreLaboratorio'], title: 'Laboratorio Fabricante'},
+                ],
+                columnDefs: [
+                    {searchable: false, targets:[1, 2]},
+                    {className: 'dt-center', targets: [0, 1, 2]},
+                    { width: '10%', targets: [1] },
+                    { width: '5%', targets: [0] },
+                    { width: '10%', targets: [2] }
+                ],
+                dom: '<"top"Bf>rt<"bottom"lp><"clear">',
+                buttons: [
+                    {
+                        text: 'Seleccionar',
+                        className: 'btn btn-primary',
+                        attr: {
+                            id:'Seleccionar',
+                            'data-bs-toggle':'modal',
+                            'data-bs-target':'#modalDepositoNacional',
+                            'data-bs-dismiss':'modal'
+                        },
+                        action: function ( e, dt, node, config) {
+                            var seleccionado = dt.rows({selected:true}).data();
+                            if (seleccionado.length>0){
+                                let texto = ''
+                                numerosDeSerie = []
+                                for(let i=0;i<seleccionado.length;i++){
+                                    if(i!=seleccionado.length-1){
+                                        texto += seleccionado[i]['numeroDeSerie'] + ', '
+                                    } else {
+                                        texto += seleccionado[i]['numeroDeSerie']
+                                    }
+                                    numerosDeSerie.push(seleccionado[i]['numeroDeSerie'])
+                                }
+                                $('#loteInternoNacional').val(texto);
+                                $('#formDepositoNacional').removeClass('d-none')
+                                //numeroDeSerieLote=seleccionado[0]['numeroDeSerie'];
+                                //$('#fechaDeAplicacion').attr('disabled', false)
+                            }
+                        }
+                    }
+                ]
+            })
+
+            tablaDN = $('#tablaDepositoNacional').DataTable({
+                ajax: {
+                    url:'/depositosnacionales/depnacJSON',
+                    dataSrc: ""
+                },
+                select: {
+                    style: 'single',
+                    items: 'row'
+                },
+                lengthChange: false,
+                pageLength: 15,
+                language: {
+                    url: '/idiomaTabla.json'
+                },
+                order: [[0, 'desc']],
+                columns: [
+                    {data: 'idDepositoNacional', title: 'ID'},
+                    {data: 'direccion', title: 'Dirección'},
+                    {data: 'provincia', title: 'Provincia'},
+                ],
+                columnDefs: [
+                    {searchable: false, targets:[1, 2]},
+                    {className: 'dt-center', targets: [0, 1, 2]},
+                    { width: '10%', targets: [1] },
+                    { width: '5%', targets: [0] },
+                    { width: '10%', targets: [2] }
+                ],
+                dom: '<"top"Bf>rt<"bottom"lp><"clear">',
+                buttons: [
+                    {
+                        text: 'Seleccionar',
+                        className: 'btn btn-primary',
+                        attr: {
+                            id:'Seleccionar',
+                            'data-bs-toggle':'modal',
+                            'data-bs-target':'#modalDepositoNacional',
+                            'data-bs-dismiss':'modal'
+                        },
+                        action: function ( e, dt, node, config) {
+                            var seleccionado = dt.rows({selected:true}).data();
+                            if (seleccionado.length>0){
+                                $('#inputDepositoNacional').val(seleccionado[0]['idDepositoNacional'] );
+                                $('#fechaLlegadaDepositoNacional').removeClass('d-none')
+                                //numeroDeSerieLote=seleccionado[0]['numeroDeSerie'];
+                                //$('#fechaDeAplicacion').attr('disabled', false)
+                            }
+                        }
+                    }
+                ]
+            })
+
+            $(loteInternoNacionalSeleccionar).click(function () {
+                tablaLoteI.ajax.url('/lotesinternos/sinDNJSON/' + $(loteProveedorNacional).val()).load();
+            })
+
+            function validarFechaDeLlegadaDepositoNacional(){
+                quitarError($(fechaDeLlegadaDepositoNacional))
+                if($(fechaDeLlegadaDepositoNacional).val() != ''){
+                    const fechaIngresada = new Date($(fechaDeLlegadaDepositoNacional).val())
+                    const fechaActual = new Date()
+                    fechaIngresada.setHours(24, 0, 0, 0)
+                    fechaActual.setHours(0, 0, 0, 0)
+                    if (comprobarFechaValida(fechaIngresada, fechaActual)) {
+                        mostrarError($(fechaDeLlegadaDepositoNacional), 'Superior')
+                    } else {
+                        const fechaDeCompra = new Date(fechaCompra)
+                        if (fechaIngresada < fechaDeCompra) {
+                            mostrarError($(fechaDeLlegadaDepositoNacional), 'Anterior')
+                        }
+                    }
+                } else {
+                    mostrarError($(fechaDeLlegadaDepositoNacional), 'Vacio')
+                }
+            }
+
+            function comprobarFechaValida(fechaIngresada, fechaActual) {
+                return ((fechaIngresada - fechaActual) / (1000 * 60 * 60 * 24)) > 0
+            }
+
+            $(fechaDeLlegadaDepositoNacional).on('keyup focusout', function () {
+                validarFechaDeLlegadaDepositoNacional()
+                if($(this).hasClass('is-valid')){
+                    $(confirmarDepositoNacional).removeClass('d-none');
+                } else {
+                    $(confirmarDepositoNacional).addClass('d-none');
+                }
+            })
+
+            function validarFormulario() {
+                let camposInvalidos = false
+                if ($(fechaDeLlegadaDepositoNacional).hasClass('is-invalid')) {
+                    camposInvalidos = true
+                }
+                if (camposInvalidos) {
+                    mostrarAlerta("¡Datos incorrectos! Por favor, verifica la información ingresada.")
+                    return false
+                }
+                return true
+            }
+
+            $('#confirmarDepositoNacional').click(function (event) {
+                let datos = {
+                    idDepositoNacional: $(inputDepositoNacional).val(),
+                    fechaDeLlegadaDepositoNacional: $(fechaDeLlegadaDepositoNacional).val(),
+                    numerosDeSerie: numerosDeSerie
+                    }
+                $.ajax({
+                    url: '/lotesinternos/actualizarDN',
+                    method: 'PUT',
+                    contentType: 'application/json',
+                    data: JSON.stringify(datos),
+                    success: function (response) {
+                        mostrarAlerta("Lotes internos actualizados con exito.")
+                        $('#loteProveedorNacional').val('');
+                        $('#formLoteInternoNacional').addClass('d-none')
+                        $('#loteInternoNacional').val('')
+                        $('#inputDepositoNacional').val('')
+                        $('#fechaDeLlegadaDepositoNacional').val('')
+                        $('#formDepositoNacional').addClass('d-none')
+                        $('#fechaLlegadaDepositoNacional').addClass('d-none')
+                        validarFechaDeLlegadaDepositoNacional()
+                    },
+                    error: function (error) {
+                        alert(error)
+                    }
+                })
+            })
+        })

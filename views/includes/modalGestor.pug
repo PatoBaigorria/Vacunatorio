@@ -19,7 +19,7 @@ mixin modalesGestor()
                         table#laboratorios.table.table-striped.table-bordered
     .container.mt-5
         .row.justify-content-center
-             .col-md-6
+            .col-md-6
                 .card.card-button.mb-3(data-bs-toggle='modal' data-bs-target='#mainModal')
                     .card-body.text-center
                         h5.card-title Accede a la gestión de lotes
@@ -79,10 +79,10 @@ mixin modalesGestor()
                         input.form-control#fechaVencimiento(type='text' disabled)
                     br
                     .form-group.text-center
-                        button.btn.btn-primary(type='button' data-bs-toggle='modal' data-bs-dismiss='modal') Confirmar
+                        button.btn.btn-primary#confirmar(type='button' data-bs-toggle='modal' data-bs-dismiss='modal') Confirmar
                         | &nbsp;&nbsp;&nbsp;&nbsp;
                         button.btn.btn-success#altaLoteProveedor(type='button') Cargar Datos de Lote
-        
+
     script.
         let tabla;
         let idLab;
@@ -124,7 +124,7 @@ mixin modalesGestor()
                             if (seleccionado.length>0){
                                 $('#nombreLaboratorio').val(seleccionado[0]['nombreLaboratorio'])
                                 idLab= seleccionado[0]['idLaboratorio'];
-                                 $(siguiente).removeClass('d-none');
+                                    $(siguiente).removeClass('d-none');
                             }
                         }
                     }
@@ -163,7 +163,7 @@ mixin modalesGestor()
                             $(siguiente).removeClass('d-none');
                         })
                     }, 1000);
-                    
+
                 }
                 if (e.originalEvent.data['origen']==="formLoteProveedor"){
                     $('#tipoVacuna').val(e.originalEvent.data['datos']['tipoVacuna'])
@@ -175,7 +175,6 @@ mixin modalesGestor()
                     $('#fechaVencimiento').val(e.originalEvent.data['datos']['fechaVencimiento'])
                     $(siguiente).addClass('d-none');
                     $(nombreLaboratorio).val('');
-                    mostrarAlerta()                
                 }
             })
 

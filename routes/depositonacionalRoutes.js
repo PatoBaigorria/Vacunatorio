@@ -10,6 +10,7 @@ router.get(
 	authorize(["Super Admin"]),
 	depositoNacionalController.listarDepositosNacionales
 );
+router.get("/depnacJSON", authorize(["Operador de logistica"]), depositoNacionalController.listarDepositosNacionalesJSON);
 router.get(
 	"/alta",
 	authorize(["Super Admin"]),
