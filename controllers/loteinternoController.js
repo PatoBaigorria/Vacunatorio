@@ -110,6 +110,35 @@ const actualizarFechasDNLIJSON = async (req, res) => {
 	}
 }
 
+const actualizarFechasDPLIJSON = async (req, res) => {
+	try {
+		let { idDepositoProvincial, fechaDeLlegadaDepositoProvincial, fechaDeSalidaDepositoNacional, numerosDeSerie } = req.body;
+		if (fechaDeSalidaDepositoNacional == '') {
+			fechaDeSalidaDepositoNacional = null
+		}
+		if (fechaDeLlegadaDepositoProvincial == '') {
+			fechaDeLlegadaDepositoProvincial = null
+		}
+		await LoteInterno.update(
+			{
+				fechaDeSalidaDepositoNacional,
+				fechaDeLlegadaDepositoProvincial,
+				idDepositoProvincial
+			},
+			{
+				where: {
+					numeroDeSerie: {
+						[Op.in]: numerosDeSerie
+					}
+				},
+			}
+		);
+		res.json({ success: true });
+	} catch (error) {
+		res.json(error.message)
+	}
+}
+
 const listarLotesInternosJSON = async (req, res) => {
 	try {
 		const lotesInternos = await LoteInterno.findAll({
@@ -482,6 +511,7 @@ module.exports = {
 	listarLotesSinDNJSON,
 	listarLotesSinDPJSON,
 	actualizarFechasDNLIJSON,
+	actualizarFechasDPLIJSON,
 	formLoteInterno,
 	createLoteInterno,
 	createLoteInternoDesdeProveedor,

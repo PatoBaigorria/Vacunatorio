@@ -82,16 +82,67 @@ mixin modalesOperador()
                             input.form-control#inputDepositoProvincial(type='text' disabled)
                             button.btn.btn-primary#depositoProvincialSeleccionar(type='button' data-bs-toggle='modal' data-bs-target='#ModalDataTableDeposito' data-bs-dismiss='modal') Seleccionar
                     br
+                    .form-group.d-none#fechaSalidaDepositoNacional
+                        label.form-label Fecha de salida al Depósito Provincial:
+                        .input-group.has-validation
+                            input.form-control.is-invalid#fechaDeSalidaDepositoNacional(type="date")
+                            .invalid-feedback.d-none#fechaDeSalidaDepositoNacionalSuperior La fecha seleccionada es superior a la fecha actual
+                            .invalid-feedback.d-none#fechaDeSalidaDepositoNacionalAnterior La fecha ingresada debe ser posterior a la fecha de llegada al depósito nacional
+                            .invalid-feedback.d-none#fechaDeSalidaDepositoNacionalVacio El campo no puede estar vacio
+                    br
                     .form-group.d-none#fechaLlegadaDepositoProvincial
                         label.form-label Fecha de llegada al Depósito Provincial:
                         .input-group.has-validation
                             input.form-control.is-invalid#fechaDeLlegadaDepositoProvincial(type="date")
                             .invalid-feedback.d-none#fechaDeLlegadaDepositoProvincialSuperior La fecha seleccionada es superior a la fecha actual
-                            .invalid-feedback.d-none#fechaDeLlegadaDepositoProvincialAnterior La fecha seleccionada es anterior a la fecha de compra
+                            .invalid-feedback.d-none#fechaDeLlegadaDepositoProvincialAnterior La fecha ingresada debe ser posterior a la fecha de salida del depósito nacional
                             .invalid-feedback.d-none#fechaDeLlegadaDepositoProvincialVacio El campo no puede estar vacio
                     br
                     .form-group.text-center
                         button.btn.btn-primary.d-none#confirmarDepositoProvincial(type='button' data-bs-toggle='modal' data-bs-dismiss='modal') Confirmar
+    .modal.fade(id='modalCentroDeVacunacion' tabindex='-1' aria-labelledby='modalCentroDeVacunacionLabel' aria-hidden='true')
+        .modal-dialog
+            .modal-content
+                .modal-header
+                    h5.modal-title Registrar envios al Centro de Vacunación
+                    button.btn-close(type='button' data-bs-dismiss='modal' aria-label='Close')
+                .modal-body
+                    .form-group
+                        label.text-center Seleccione un lote proveedor:
+                        .input-group
+                            input.form-control#loteProveedorCentroDeVacunacion(type='text' disabled)
+                            button.btn.btn-primary#loteProveedorCentroDeVacunacionSeleccionar(type='button' data-bs-toggle='modal' data-bs-target='#ModalDataTableLoteProveedor' data-bs-dismiss='modal') Seleccionar
+                    br
+                    .form-group.d-none#formLoteInternoCentroDeVacunacion
+                        label.text-center Seleccione el/los lote/s interno/s:
+                        .input-group
+                            input.form-control#loteInternoCentroDeVacunacion(type='text' disabled)
+                            button.btn.btn-primary#loteInternoCentroDeVacunacionSeleccionar(type='button' data-bs-toggle='modal' data-bs-target='#ModalDataTableLoteInterno' data-bs-dismiss='modal') Seleccionar
+                    br
+                    .form-group.d-none#formCentroDeVacunacion
+                        label.text-center Seleccione el Centro de vacunación:
+                        .input-group
+                            input.form-control#inputCentroDeVacunacion(type='text' disabled)
+                            button.btn.btn-primary#CentroDeVacunacionSeleccionar(type='button' data-bs-toggle='modal' data-bs-target='#ModalDataTableCentroDeVacunacion' data-bs-dismiss='modal') Seleccionar
+                    br
+                    .form-group.d-none#fechaSalidaDepositoProvincial
+                        label.form-label Fecha de salida del depósito provincial:
+                        .input-group.has-validation
+                            input.form-control.is-invalid#fechaDeSalidaDepositoProvincial(type="date")
+                            .invalid-feedback.d-none#fechaDeSalidaDepositoProvincialSuperior La fecha seleccionada es superior a la fecha actual
+                            .invalid-feedback.d-none#fechaDeSalidaDepositoProvincialAnterior La fecha seleccionada es anterior a la fecha de compra
+                            .invalid-feedback.d-none#fechaDeSalidaDepositoProvincialVacio El campo no puede estar vacio
+                    br
+                    .form-group.d-none#fechaLlegadaCentroDeVacunacion
+                        label.form-label Fecha de llegada al centro de vacunación:
+                        .input-group.has-validation
+                            input.form-control.is-invalid#fechaDeLlegadaCentroDeVacunacion(type="date")
+                            .invalid-feedback.d-none#fechaDeLlegadaCentroDeVacunacionSuperior La fecha seleccionada es superior a la fecha actual
+                            .invalid-feedback.d-none#fechaDeLlegadaCentroDeVacunacionAnterior La fecha seleccionada es anterior a la fecha de compra
+                            .invalid-feedback.d-none#fechaDeLlegadaCentroDeVacunacionVacio El campo no puede estar vacio
+                    br
+                    .form-group.text-center
+                        button.btn.btn-primary.d-none#confirmarCentroDeVacunacion(type='button' data-bs-toggle='modal' data-bs-dismiss='modal') Confirmar
     .modal.fade(id='ModalDataTableLoteProveedor' tabindex='-1' aria-labelledby='ModalDataTableLoteProveedorLabel' aria-hidden='true')
         .modal-dialog(style="max-width: 1000px;")
             .modal-content
@@ -171,11 +222,7 @@ mixin modalesOperador()
                         {data: 'nombreComercial', title: 'Nombre Comercial'},
                     ],
                     columnDefs: [
-                        {searchable: false, targets:[1, 2]},
-                        {className: 'dt-center', targets: [0, 1, 2]},
-                        { width: '10%', targets: [1] },
-                        { width: '5%', targets: [0] },
-                        { width: '10%', targets: [2] }
+                        {className: 'dt-center', targets: [0, 1, 2, 3]},
                     ],
                     dom: '<"top"Bf>rt<"bottom"lp><"clear">',
                     buttons: [
@@ -207,10 +254,10 @@ mixin modalesOperador()
                 }
             }
 
-            function tablaInterno(nivel){
+            function tablaInterno(nivel, urlAjax){
                 return {
                     ajax: {
-                        url:'/lotesinternos/sinDNJSON/1',
+                        url: urlAjax,
                         dataSrc: ""
                     },
                     select: {
@@ -231,11 +278,7 @@ mixin modalesOperador()
                         {data: ['Laboratorio.nombreLaboratorio'], title: 'Laboratorio Fabricante'},
                     ],
                     columnDefs: [
-                        {searchable: false, targets:[1, 2]},
-                        {className: 'dt-center', targets: [0, 1, 2]},
-                        { width: '10%', targets: [1] },
-                        { width: '5%', targets: [0] },
-                        { width: '10%', targets: [2] }
+                        {className: 'dt-center', targets: [0, 1, 2, 3, 4]},
                     ],
                     dom: '<"top"Bf>rt<"bottom"lp><"clear">',
                     buttons: [
@@ -272,10 +315,10 @@ mixin modalesOperador()
                 }
             }
 
-            function tablaDeposito(nivel){
+            function tablaDeposito(nivel, urlAjax){
                 return {
                     ajax: {
-                        url:'/depositosnacionales/depnacJSON',
+                        url: urlAjax,
                         dataSrc: ""
                     },
                     select: {
@@ -289,7 +332,7 @@ mixin modalesOperador()
                     },
                     order: [[0, 'desc']],
                     columns: [
-                        {data: 'idDeposito'+nivel, title: 'ID'},
+                        {data: 'id'+(nivel=='CentroDeVacunacion' ? 'CentroDeVacunacion' : 'Deposito'+nivel), title: 'ID'},
                         {data: 'direccion', title: 'Dirección'},
                         {data: 'provincia', title: 'Provincia'},
                     ],
@@ -308,14 +351,29 @@ mixin modalesOperador()
                             attr: {
                                 id:'Seleccionar',
                                 'data-bs-toggle':'modal',
-                                'data-bs-target':'#modalDeposito'+nivel,
+                                'data-bs-target':'#modal'+(nivel=='CentroDeVacunacion' ? 'CentroDeVacunacion' : 'Deposito'+nivel),
                                 'data-bs-dismiss':'modal'
                             },
                             action: function ( e, dt, node, config) {
                                 var seleccionado = dt.rows({selected:true}).data();
                                 if (seleccionado.length>0){
-                                    $('#inputDeposito'+nivel).val(seleccionado[0]['idDeposito'+nivel] );
-                                    //$('#fechaLlegadaDeposito'+nivel).removeClass('d-none')
+                                    if(nivel=='Provincial'){
+                                        $('#inputDepositoProvincial').val(seleccionado[0]['idDepositoProvincial'] );
+                                        $('#fechaLlegadaDepositoProvincial').removeClass('d-none')
+                                        $('#fechaSalidaDepositoNacional').removeClass('d-none')
+                                        quitarError($(fechaDeSalidaDepositoNacional))
+                                        quitarError($(fechaDeLlegadaDepositoProvincial))
+                                        $('#confirmarDepositoProvincial').removeClass('d-none')
+                                        //validarFechaDeSalidaDepositoNacional()
+                                        //validarFechaDeLlegadaDepositoProvincial()
+                                    } else if(nivel=='Nacional'){
+                                        $('#inputDepositoNacional').val(seleccionado[0]['idDepositoNacional'] );
+                                        $('#fechaLlegadaDepositoNacional').removeClass('d-none')
+                                    } else {
+                                        $('#inputCentroDeVacunacion').val(seleccionado[0]['idCentroDeVacunacion'] );
+                                        $('#fechaSalidaDepositoProvincial').removeClass('d-none')
+                                        $('#fechaLlegadaCentroDeVacunacion').removeClass('d-none')
+                                    }
                                     //numeroDeSerieLote=seleccionado[0]['numeroDeSerie'];
                                     //$('#fechaDeAplicacion').attr('disabled', false)
                                 }
@@ -324,7 +382,7 @@ mixin modalesOperador()
                     ]
                 }
             }
-            
+
             $(loteProveedorNacionalSeleccionar).click(function(){
                 tablaLoteP.destroy();
                 tablaLoteP = $('#tablaLoteProveedor').DataTable(tablaProveedor(ultimoBotonClickeado))
@@ -337,26 +395,22 @@ mixin modalesOperador()
 
             $(loteInternoNacionalSeleccionar).click(function(){
                 tablaLoteI.destroy();
-                tablaLoteI= $('#tablaLoteInterno').DataTable(tablaInterno(ultimoBotonClickeado))
-                tablaLoteI.ajax.url('/lotesinternos/sinDNJSON/' + $(loteProveedorNacional).val()).load();
+                tablaLoteI= $('#tablaLoteInterno').DataTable(tablaInterno(ultimoBotonClickeado, '/lotesinternos/sinDNJSON/' + $(loteProveedorNacional).val()))
             })
 
             $(loteInternoProvincialSeleccionar).click(function(){
                 tablaLoteI.destroy();
-                tablaLoteI= $('#tablaLoteInterno').DataTable(tablaInterno(ultimoBotonClickeado))
-                tablaLoteI.ajax.url('/lotesinternos/sinDPJSON/' + $(loteProveedorProvincial).val()).load();
+                tablaLoteI= $('#tablaLoteInterno').DataTable(tablaInterno(ultimoBotonClickeado, '/lotesinternos/sinDPJSON/' + $(loteProveedorProvincial).val()))
             })
 
             $(depositoNacionalSeleccionar).click(function(){
                 tablaD.destroy();
-                tablaD= $('#tablaDeposito').DataTable(tablaDeposito(ultimoBotonClickeado))
-                tablaD.ajax.url('/depositosnacionales/depnacjson').load()
+                tablaD= $('#tablaDeposito').DataTable(tablaDeposito(ultimoBotonClickeado, '/depositosnacionales/depnacjson'))
             })
 
             $(depositoProvincialSeleccionar).click(function(){
                 tablaD.destroy();
-                tablaD= $('#tablaDeposito').DataTable(tablaDeposito(ultimoBotonClickeado))
-                tablaD.ajax.url('/depositosprovinciales/depprojson').load()
+                tablaD= $('#tablaDeposito').DataTable(tablaDeposito(ultimoBotonClickeado,'/depositosprovinciales/depprojson'))
             })
 
             function validarFechaDeLlegadaDepositoNacional(){
@@ -376,6 +430,48 @@ mixin modalesOperador()
                     }
                 } else {
                     mostrarError($(fechaDeLlegadaDepositoNacional), 'Vacio')
+                }
+            }
+
+            function validarFechaDeSalidaDepositoNacional(){
+                quitarError($('#fechaDeSalidaDepositoNacional'))
+                if($(fechaDeSalidaDepositoNacional).val() != ''){
+                    const fechaIngresada = new Date($(fechaDeSalidaDepositoNacional).val())
+                    const fechaActual = new Date()
+                    fechaIngresada.setHours(24, 0, 0, 0)
+                    fechaActual.setHours(0, 0, 0, 0)
+                    if (comprobarFechaValida(fechaIngresada, fechaActual)) {
+                        mostrarError($(fechaDeSalidaDepositoNacional), 'Superior')
+                    } else {
+                        const fechaAnterior = new Date($(fechaDeLlegadaDepositoNacional).val())
+                        fechaAnterior.setHours(24, 0, 0, 0)
+                        if (!comprobarFechaValida(fechaIngresada, fechaAnterior)) {
+                            mostrarError($(fechaDeSalidaDepositoNacional), 'Anterior')
+                        }
+                    }
+                } else {
+                    mostrarError($(fechaDeSalidaDepositoNacional), 'Vacio')
+                }
+            }
+
+            function validarFechaDeLlegadaDepositoProvincial(){
+                quitarError($(fechaDeLlegadaDepositoProvincial))
+                if($(fechaDeLlegadaDepositoProvincial).val() != ''){
+                    const fechaIngresada = new Date($(fechaDeLlegadaDepositoProvincial).val())
+                    const fechaActual = new Date()
+                    fechaIngresada.setHours(24, 0, 0, 0)
+                    fechaActual.setHours(0, 0, 0, 0)
+                    if (comprobarFechaValida(fechaIngresada, fechaActual)) {
+                        mostrarError($(fechaDeLlegadaDepositoProvincial), 'Superior')
+                    } else {
+                        const fechaAnterior = new Date($(fechaDeSalidaDepositoNacional).val())
+                        fechaAnterior.setHours(24, 0, 0, 0)
+                        if (!comprobarFechaValida(fechaIngresada, fechaAnterior)) {
+                            mostrarError($(fechaDeLlegadaDepositoProvincial), 'Anterior')
+                        }
+                    }
+                } else {
+                    mostrarError($(fechaDeLlegadaDepositoProvincial), 'Vacio')
                 }
             }
 
@@ -425,6 +521,37 @@ mixin modalesOperador()
                         $('#formDepositoNacional').addClass('d-none')
                         $('#fechaLlegadaDepositoNacional').addClass('d-none')
                         validarFechaDeLlegadaDepositoNacional()
+                    },
+                    error: function (error) {
+                        alert(error)
+                    }
+                })
+            })
+
+            $('#confirmarDepositoProvincial').click(function (event) {
+                let datos = {
+                    idDepositoProvincial: $(inputDepositoProvincial).val(),
+                    fechaDeLlegadaDepositoProvincial: $(fechaDeLlegadaDepositoProvincial).val(),
+                    fechaDeSalidaDepositoNacional: $(fechaDeSalidaDepositoNacional).val(),
+                    numerosDeSerie: numerosDeSerie
+                    }
+                $.ajax({
+                    url: '/lotesinternos/actualizarDP',
+                    method: 'PUT',
+                    contentType: 'application/json',
+                    data: JSON.stringify(datos),
+                    success: function (response) {
+                        mostrarAlerta("Lotes internos actualizados con exito.")
+                        $('#loteProveedorProvincial').val('');
+                        $('#formLoteInternoProvincial').addClass('d-none')
+                        $('#loteInternoProvincial').val('')
+                        $('#inputDepositoProvincial').val('')
+                        $('#fechaDeLlegadaDepositoProvincial').val('')
+                        $('#fechaLlegadaDepositoProvincial').addClass('d-none')
+                        $('#fechaDeSalidaDepositoNacional').val('')
+                        $('#fechaSalidaDepositoNacional').addClass('d-none')
+                        $('#formDepositoProvincial').addClass('d-none')
+                        //validarFechaDeLlegadaDepositoProvincial()
                     },
                     error: function (error) {
                         alert(error)
