@@ -11,6 +11,11 @@ router.get(
 	depositoProvincialController.listarDepositosProvinciales
 );
 router.get(
+	"/depproJSON",
+	authorize(["Operador de logistica"]),
+	depositoProvincialController.listarDepositosProvincialesJSON
+);
+router.get(
 	"/alta",
 	authorize(["Super Admin"]),
 	depositoProvincialController.formDepProv

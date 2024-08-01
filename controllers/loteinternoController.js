@@ -36,6 +36,8 @@ const listarLotesInternos = async (req, res) => {
 
 const listarLotesSinDNJSON = async (req, res) => {
 	try {
+		console.log(req.params.numeroDeLote)
+		console.log("dentro del controlador")
 		const lotesInternos = await LoteInterno.findAll({
 			include: [{
 				model: LoteProveedor,
@@ -52,6 +54,7 @@ const listarLotesSinDNJSON = async (req, res) => {
 			},
 			raw: true
 		});
+		console.log("luego de findall")
 		res.json(lotesInternos);
 	} catch (error) {
 		console.error(error);

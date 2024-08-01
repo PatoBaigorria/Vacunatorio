@@ -45,7 +45,7 @@ mixin modalesOperador()
                         label.text-center Seleccione el depósito nacional:
                         .input-group
                             input.form-control#inputDepositoNacional(type='text' disabled)
-                            button.btn.btn-primary#DepositoNacionalSeleccionar(type='button' data-bs-toggle='modal' data-bs-target='#ModalDataTableDeposito' data-bs-dismiss='modal') Seleccionar
+                            button.btn.btn-primary#depositoNacionalSeleccionar(type='button' data-bs-toggle='modal' data-bs-target='#ModalDataTableDeposito' data-bs-dismiss='modal') Seleccionar
                     br
                     .form-group.d-none#fechaLlegadaDepositoNacional
                         label.form-label Fecha de llegada al Depósito Nacional:
@@ -80,7 +80,7 @@ mixin modalesOperador()
                         label.text-center Seleccione el depósito Provincial:
                         .input-group
                             input.form-control#inputDepositoProvincial(type='text' disabled)
-                            button.btn.btn-primary#DepositoProvincialSeleccionar(type='button' data-bs-toggle='modal' data-bs-target='#ModalDataTableDeposito' data-bs-dismiss='modal') Seleccionar
+                            button.btn.btn-primary#depositoProvincialSeleccionar(type='button' data-bs-toggle='modal' data-bs-target='#ModalDataTableDeposito' data-bs-dismiss='modal') Seleccionar
                     br
                     .form-group.d-none#fechaLlegadaDepositoProvincial
                         label.form-label Fecha de llegada al Depósito Provincial:
@@ -114,7 +114,7 @@ mixin modalesOperador()
         .modal-dialog(style="max-width: 1000px;")
             .modal-content
                 .modal-header
-                    h5.modal-title Tabla de Depósitos nacionales
+                    h5.modal-title Tabla de Depósitos
                     button.btn-close(type='button' data-bs-dismiss='modal' aria-label='Close')
                 .modal-body
                     div.table.responsive
@@ -122,9 +122,9 @@ mixin modalesOperador()
 
     script.
         $(document).ready(function () {
-            let tablaLoteI;
-            let tablaLoteP;
-            let tablaDN;
+            let tablaLoteI=new DataTable('#tablaLoteInterno');
+            let tablaLoteP=new DataTable('#tablaLoteProveedor');
+            let tablaD=new DataTable('#tablaDeposito');
             let fechaCompra;
             let numerosDeSerie;
             let ultimoBotonClickeado;
@@ -148,184 +148,216 @@ mixin modalesOperador()
                 $(`div[id^=${campo.attr('id')}].invalid-feedback`).addClass('d-none')
             }
 
-            tablaLoteP = $(tablaLoteProveedor).DataTable({
-                ajax: {
-                    url:'/lotesproveedores/lotesproveedoresJSON',
-                    dataSrc: ""
-                },
-                select: {
-                    style: 'single',
-                    items: 'row'
-                },
-                lengthChange: false,
-                pageLength: 15,
-                language: {
-                    url: '/idiomaTabla.json'
-                },
-                order: [[0, 'desc']],
-                columns: [
-                    {data: 'numeroDeLote', title: 'Número de Lote'},
-                    {data: ['Laboratorio.nombreLaboratorio'], title: 'Laboratorio Fabricante'},
-                    {data: 'tipoDeVacuna', title: 'Tipo de Vacuna'},
-                    {data: 'nombreComercial', title: 'Nombre Comercial'},
-                ],
-                columnDefs: [
-                    {searchable: false, targets:[1, 2]},
-                    {className: 'dt-center', targets: [0, 1, 2]},
-                    { width: '10%', targets: [1] },
-                    { width: '5%', targets: [0] },
-                    { width: '10%', targets: [2] }
-                ],
-                dom: '<"top"Bf>rt<"bottom"lp><"clear">',
-                buttons: [
-                    {
-                        text: 'Seleccionar',
-                        className: 'btn btn-primary',
-                        attr: {
-                            id:'Seleccionar',
-                            'data-bs-toggle':'modal',
-                            'data-bs-target':'#modalDepositoNacional',
-                            'data-bs-dismiss':'modal'
-                        },
-                        action: function ( e, dt, node, config) {
-                            var seleccionado = dt.rows({selected:true}).data();
-                            if (seleccionado.length>0){
-                                fechaCompra = seleccionado[0]['fechaDeCompra'];
-                                $('#loteProveedorNacional').val(seleccionado[0]['numeroDeLote'] );
-                                $('#formLoteInternoNacional').removeClass('d-none')
-                                $('#loteInternoNacional').val('')
-                                $('#inputDepositoNacional').val('')
-                                $('#fechaDeLlegadaDepositoNacional').val('')
-                                $('#formDepositoNacional').addClass('d-none')
-                                $('#fechaLlegadaDepositoNacional').addClass('d-none')
-                                validarFechaDeLlegadaDepositoNacional()
-                                //numeroDeSerieLote=seleccionado[0]['numeroDeLote'];
-                                //$('#fechaDeAplicacion').attr('disabled', false)
-                            }
-                        }
-                    }
-                ]
-            })
-
-            tablaLoteI = $(tablaLoteInterno).DataTable({
-                ajax: {
-                    url:'/lotesinternos/sinDNJSON/1',
-                    dataSrc: ""
-                },
-                select: {
-                    style: 'multi',
-                    items: 'row'
-                },
-                lengthChange: false,
-                pageLength: 15,
-                language: {
-                    url: '/idiomaTabla.json'
-                },
-                order: [[0, 'desc']],
-                columns: [
-                    {data: 'numeroDeSerie', title: 'Número de Serie'},
-                    {data: ['Loteproveedor.numeroDeLote'], title: 'Número de Lote'},
-                    {data: ['Loteproveedor.tipoDeVacuna'], title: 'Tipo de Vacuna'},
-                    {data: ['Loteproveedor.nombreComercial'], title: 'Nombre Comercial'},
-                    {data: ['Laboratorio.nombreLaboratorio'], title: 'Laboratorio Fabricante'},
-                ],
-                columnDefs: [
-                    {searchable: false, targets:[1, 2]},
-                    {className: 'dt-center', targets: [0, 1, 2]},
-                    { width: '10%', targets: [1] },
-                    { width: '5%', targets: [0] },
-                    { width: '10%', targets: [2] }
-                ],
-                dom: '<"top"Bf>rt<"bottom"lp><"clear">',
-                buttons: [
-                    {
-                        text: 'Seleccionar',
-                        className: 'btn btn-primary',
-                        attr: {
-                            id:'Seleccionar',
-                            'data-bs-toggle':'modal',
-                            'data-bs-target':'#modalDepositoNacional',
-                            'data-bs-dismiss':'modal'
-                        },
-                        action: function ( e, dt, node, config) {
-                            var seleccionado = dt.rows({selected:true}).data();
-                            if (seleccionado.length>0){
-                                let texto = ''
-                                numerosDeSerie = []
-                                for(let i=0;i<seleccionado.length;i++){
-                                    if(i!=seleccionado.length-1){
-                                        texto += seleccionado[i]['numeroDeSerie'] + ', '
-                                    } else {
-                                        texto += seleccionado[i]['numeroDeSerie']
-                                    }
-                                    numerosDeSerie.push(seleccionado[i]['numeroDeSerie'])
+            function tablaProveedor(nivel){
+                return {
+                    ajax: {
+                        url:'/lotesproveedores/lotesproveedoresJSON',
+                        dataSrc: ""
+                    },
+                    select: {
+                        style: 'single',
+                        items: 'row'
+                    },
+                    lengthChange: false,
+                    pageLength: 15,
+                    language: {
+                        url: '/idiomaTabla.json'
+                    },
+                    order: [[0, 'desc']],
+                    columns: [
+                        {data: 'numeroDeLote', title: 'Número de Lote'},
+                        {data: ['Laboratorio.nombreLaboratorio'], title: 'Laboratorio Fabricante'},
+                        {data: 'tipoDeVacuna', title: 'Tipo de Vacuna'},
+                        {data: 'nombreComercial', title: 'Nombre Comercial'},
+                    ],
+                    columnDefs: [
+                        {searchable: false, targets:[1, 2]},
+                        {className: 'dt-center', targets: [0, 1, 2]},
+                        { width: '10%', targets: [1] },
+                        { width: '5%', targets: [0] },
+                        { width: '10%', targets: [2] }
+                    ],
+                    dom: '<"top"Bf>rt<"bottom"lp><"clear">',
+                    buttons: [
+                        {
+                            text: 'Seleccionar',
+                            className: 'btn btn-primary',
+                            attr: {
+                                id:'Seleccionar',
+                                'data-bs-toggle':'modal',
+                                'data-bs-target':'#modal'+ (nivel=='CentroDeVacunacion' ? 'CentroDeVacunacion' : 'Deposito'+nivel), // nivel=='CentroDeVacunacion' ? 'CentroDeVacunacion' : 'Deposito'+nivel
+                                'data-bs-dismiss':'modal'
+                            },
+                            action: function ( e, dt, node, config) {
+                                var seleccionado = dt.rows({selected:true}).data();
+                                if (seleccionado.length>0){
+                                    fechaCompra = seleccionado[0]['fechaDeCompra'];
+                                    $('#loteProveedor'+nivel).val(seleccionado[0]['numeroDeLote'] );
+                                    $('#formLoteInterno'+nivel).removeClass('d-none')
+                                    $('#loteInterno'+nivel).val('')
+                                    $('#input'+(nivel=='CentroDeVacunacion' ? 'CentroDeVacunacion' : 'Deposito'+nivel)).val('')
+                                    $('#fechaDeLlegada'+(nivel=='CentroDeVacunacion' ? 'CentroDeVacunacion' : 'Deposito'+nivel)).val('')
+                                    $('#form'+(nivel=='CentroDeVacunacion' ? 'CentroDeVacunacion' : 'Deposito'+nivel)).addClass('d-none')
+                                    $('#fechaLlegada'+(nivel=='CentroDeVacunacion' ? 'CentroDeVacunacion' : 'Deposito'+nivel)).addClass('d-none')
+                                    validarFechaDeLlegadaDepositoNacional()
                                 }
-                                $('#loteInternoNacional').val(texto);
-                                $('#formDepositoNacional').removeClass('d-none')
-                                //numeroDeSerieLote=seleccionado[0]['numeroDeSerie'];
-                                //$('#fechaDeAplicacion').attr('disabled', false)
                             }
                         }
-                    }
-                ]
-            })
+                    ]
+                }
+            }
 
-            tablaDN = $('#tablaDeposito').DataTable({
-                ajax: {
-                    url:'/depositosnacionales/depnacJSON',
-                    dataSrc: ""
-                },
-                select: {
-                    style: 'single',
-                    items: 'row'
-                },
-                lengthChange: false,
-                pageLength: 15,
-                language: {
-                    url: '/idiomaTabla.json'
-                },
-                order: [[0, 'desc']],
-                columns: [
-                    {data: 'idDepositoNacional', title: 'ID'},
-                    {data: 'direccion', title: 'Dirección'},
-                    {data: 'provincia', title: 'Provincia'},
-                ],
-                columnDefs: [
-                    {searchable: false, targets:[1, 2]},
-                    {className: 'dt-center', targets: [0, 1, 2]},
-                    { width: '10%', targets: [1] },
-                    { width: '5%', targets: [0] },
-                    { width: '10%', targets: [2] }
-                ],
-                dom: '<"top"Bf>rt<"bottom"lp><"clear">',
-                buttons: [
-                    {
-                        text: 'Seleccionar',
-                        className: 'btn btn-primary',
-                        attr: {
-                            id:'Seleccionar',
-                            'data-bs-toggle':'modal',
-                            'data-bs-target':'#modalDepositoNacional',
-                            'data-bs-dismiss':'modal'
-                        },
-                        action: function ( e, dt, node, config) {
-                            var seleccionado = dt.rows({selected:true}).data();
-                            if (seleccionado.length>0){
-                                $('#inputDepositoNacional').val(seleccionado[0]['idDepositoNacional'] );
-                                $('#fechaLlegadaDepositoNacional').removeClass('d-none')
-                                //numeroDeSerieLote=seleccionado[0]['numeroDeSerie'];
-                                //$('#fechaDeAplicacion').attr('disabled', false)
+            function tablaInterno(nivel){
+                return {
+                    ajax: {
+                        url:'/lotesinternos/sinDNJSON/1',
+                        dataSrc: ""
+                    },
+                    select: {
+                        style: 'multi',
+                        items: 'row'
+                    },
+                    lengthChange: false,
+                    pageLength: 15,
+                    language: {
+                        url: '/idiomaTabla.json'
+                    },
+                    order: [[0, 'desc']],
+                    columns: [
+                        {data: 'numeroDeSerie', title: 'Número de Serie'},
+                        {data: ['Loteproveedor.numeroDeLote'], title: 'Número de Lote'},
+                        {data: ['Loteproveedor.tipoDeVacuna'], title: 'Tipo de Vacuna'},
+                        {data: ['Loteproveedor.nombreComercial'], title: 'Nombre Comercial'},
+                        {data: ['Laboratorio.nombreLaboratorio'], title: 'Laboratorio Fabricante'},
+                    ],
+                    columnDefs: [
+                        {searchable: false, targets:[1, 2]},
+                        {className: 'dt-center', targets: [0, 1, 2]},
+                        { width: '10%', targets: [1] },
+                        { width: '5%', targets: [0] },
+                        { width: '10%', targets: [2] }
+                    ],
+                    dom: '<"top"Bf>rt<"bottom"lp><"clear">',
+                    buttons: [
+                        {
+                            text: 'Seleccionar',
+                            className: 'btn btn-primary',
+                            attr: {
+                                id:'Seleccionar',
+                                'data-bs-toggle':'modal',
+                                'data-bs-target':'#modalDeposito'+nivel,
+                                'data-bs-dismiss':'modal'
+                            },
+                            action: function ( e, dt, node, config) {
+                                var seleccionado = dt.rows({selected:true}).data();
+                                if (seleccionado.length>0){
+                                    let texto = ''
+                                    numerosDeSerie = []
+                                    for(let i=0;i<seleccionado.length;i++){
+                                        if(i!=seleccionado.length-1){
+                                            texto += seleccionado[i]['numeroDeSerie'] + ', '
+                                        } else {
+                                            texto += seleccionado[i]['numeroDeSerie']
+                                        }
+                                        numerosDeSerie.push(seleccionado[i]['numeroDeSerie'])
+                                    }
+                                    $('#loteInterno'+nivel).val(texto);
+                                    $('#formDeposito'+nivel).removeClass('d-none')
+                                    //numeroDeSerieLote=seleccionado[0]['numeroDeSerie'];
+                                    //$('#fechaDeAplicacion').attr('disabled', false)
+                                }
                             }
                         }
-                    }
-                ]
+                    ]
+                }
+            }
+
+            function tablaDeposito(nivel){
+                return {
+                    ajax: {
+                        url:'/depositosnacionales/depnacJSON',
+                        dataSrc: ""
+                    },
+                    select: {
+                        style: 'single',
+                        items: 'row'
+                    },
+                    lengthChange: false,
+                    pageLength: 15,
+                    language: {
+                        url: '/idiomaTabla.json'
+                    },
+                    order: [[0, 'desc']],
+                    columns: [
+                        {data: 'idDeposito'+nivel, title: 'ID'},
+                        {data: 'direccion', title: 'Dirección'},
+                        {data: 'provincia', title: 'Provincia'},
+                    ],
+                    columnDefs: [
+                        {searchable: false, targets:[1, 2]},
+                        {className: 'dt-center', targets: [0, 1, 2]},
+                        { width: '10%', targets: [1] },
+                        { width: '5%', targets: [0] },
+                        { width: '10%', targets: [2] }
+                    ],
+                    dom: '<"top"Bf>rt<"bottom"lp><"clear">',
+                    buttons: [
+                        {
+                            text: 'Seleccionar',
+                            className: 'btn btn-primary',
+                            attr: {
+                                id:'Seleccionar',
+                                'data-bs-toggle':'modal',
+                                'data-bs-target':'#modalDeposito'+nivel,
+                                'data-bs-dismiss':'modal'
+                            },
+                            action: function ( e, dt, node, config) {
+                                var seleccionado = dt.rows({selected:true}).data();
+                                if (seleccionado.length>0){
+                                    $('#inputDeposito'+nivel).val(seleccionado[0]['idDeposito'+nivel] );
+                                    //$('#fechaLlegadaDeposito'+nivel).removeClass('d-none')
+                                    //numeroDeSerieLote=seleccionado[0]['numeroDeSerie'];
+                                    //$('#fechaDeAplicacion').attr('disabled', false)
+                                }
+                            }
+                        }
+                    ]
+                }
+            }
+            
+            $(loteProveedorNacionalSeleccionar).click(function(){
+                tablaLoteP.destroy();
+                tablaLoteP = $('#tablaLoteProveedor').DataTable(tablaProveedor(ultimoBotonClickeado))
             })
 
-            $(loteInternoNacionalSeleccionar).click(function () {
+            $(loteProveedorProvincialSeleccionar).click(function(){
+                tablaLoteP.destroy();
+                tablaLoteP = $('#tablaLoteProveedor').DataTable(tablaProveedor(ultimoBotonClickeado))
+            })
+
+            $(loteInternoNacionalSeleccionar).click(function(){
+                tablaLoteI.destroy();
+                tablaLoteI= $('#tablaLoteInterno').DataTable(tablaInterno(ultimoBotonClickeado))
                 tablaLoteI.ajax.url('/lotesinternos/sinDNJSON/' + $(loteProveedorNacional).val()).load();
             })
 
+            $(loteInternoProvincialSeleccionar).click(function(){
+                tablaLoteI.destroy();
+                tablaLoteI= $('#tablaLoteInterno').DataTable(tablaInterno(ultimoBotonClickeado))
+                tablaLoteI.ajax.url('/lotesinternos/sinDPJSON/' + $(loteProveedorProvincial).val()).load();
+            })
 
+            $(depositoNacionalSeleccionar).click(function(){
+                tablaD.destroy();
+                tablaD= $('#tablaDeposito').DataTable(tablaDeposito(ultimoBotonClickeado))
+                tablaD.ajax.url('/depositosnacionales/depnacjson').load()
+            })
+
+            $(depositoProvincialSeleccionar).click(function(){
+                tablaD.destroy();
+                tablaD= $('#tablaDeposito').DataTable(tablaDeposito(ultimoBotonClickeado))
+                tablaD.ajax.url('/depositosprovinciales/depprojson').load()
+            })
 
             function validarFechaDeLlegadaDepositoNacional(){
                 quitarError($(fechaDeLlegadaDepositoNacional))

@@ -75,7 +75,7 @@ router.use(
 router.use(
 	"/centrosdevacunacion",
 	isAuthenticated,
-	authorize(["Super Admin"]),
+	authorize(["Super Admin", "Operador de logistica"]),
 	centrodevacunacionRoutes
 );
 router.use(
@@ -87,7 +87,7 @@ router.use(
 router.use(
 	"/depositosprovinciales",
 	isAuthenticated,
-	authorize(["Super Admin"]),
+	authorize(["Super Admin", "Operador de logistica"]),
 	depositoprovincialRoutes
 );
 router.use(
@@ -105,7 +105,7 @@ router.use(
 router.use(
 	"/lotesinternos",
 	isAuthenticated,
-	authorize(["Super Admin", "Gestor de compras", "Operador de logistica", "Agente de salud"]),
+	authorize(["Super Admin", "Gestor de compras", "Agente de salud", "Operador de logistica"]),
 	loteinternoRoutes
 );
 router.use(
@@ -139,17 +139,17 @@ router.use(
 	usuarioRoutes
 );
 router.use(
-	"/provincia",
+    "/provincia",
 	isAuthenticated,
 	authorize(["Super Admin"]),
-	provinciaRoutes // Rutas de Provincia
+    provinciaRoutes // Rutas de Provincia
 );
 
 router.use(
-	"/localidad",
+    "/localidad",
 	isAuthenticated,
 	authorize(["Super Admin"]),
-	localidadRoutes // Rutas de Localidad
+    localidadRoutes // Rutas de Localidad
 );
 router.use(
 	"/reportes", isAuthenticated,

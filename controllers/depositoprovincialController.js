@@ -30,6 +30,18 @@ const listarDepositosProvinciales = async (req, res) => {
 	}
 };
 
+const listarDepositosProvincialesJSON = async (req, res) => {
+	try {
+		const depositosPro = await DepositoProvincial.findAll({
+			where: { activo: 1 },
+			raw: true,
+		});
+		res.json(depositosPro);
+	} catch (error) {
+		console.error(error);
+	}
+}
+
 // Muestra formulario de creacion de Deposito Provincial
 const formDepProv = async (req, res) => {
 	try {
@@ -191,6 +203,7 @@ const altaDepositoProvincial = async (req, res) => {
 module.exports = {
 	getLocalidadesByProvinciaFromAPI,
 	listarDepositosProvinciales,
+	listarDepositosProvincialesJSON,
 	formDepProv,
 	createDepProv,
 	editDepProv,
