@@ -77,7 +77,7 @@ const listarAplicacion = async (req, res) => {
 		}
 
 		console.log("Aplicaciones encontradas:", aplicaciones.length);
-		res.render("aplicacion/viewAplicacion", { aplicaciones: aplicaciones });
+		res.render("aplicacion/viewAplicacion", { aplicaciones: aplicaciones, rol: usuario.rol });
 	} catch (error) {
 		console.error("Error al listar aplicaciones:", error);
 		req.flash(

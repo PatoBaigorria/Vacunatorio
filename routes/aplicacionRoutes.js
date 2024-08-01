@@ -10,12 +10,12 @@ router.get(
 );
 router.get(
 	"/crear",
-	authorize(["Super Admin", "Agente de salud"]),
+	authorize(["Agente de salud"]),
 	aplicacionController.formAplicacion
 );
 router.post(
 	"/",
-	authorize(["Super Admin", "Agente de salud"]),
+	authorize(["Agente de salud"]),
 	aplicacionController.createAplicacion
 );
 router.post(

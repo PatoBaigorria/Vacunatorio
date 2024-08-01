@@ -40,7 +40,8 @@ body
                                     button.btn.btn-secondary#cancelAltaBtn(type='button' data-dismiss='modal') Cancelar
                                     button.btn.btn-danger#confirmAltaBtn(type='button') Confirmar
                     div(style='text-align: left')
-                        a.btn.btn-primary.btn-lg(href='/aplicaciones/crear') Crear
+                        if(user.rol != 'Super Admin')
+                            a.btn.btn-primary.btn-lg(href='/aplicaciones/crear') Crear
                         br
                         br
                         div.table.responsive
@@ -55,6 +56,30 @@ script.
         return `${day}/${month}/${year}`;
     }
     let tabla 
+    let rol = !{JSON.stringify(rol)}
+    let arregloDeColumnas = 
+        [
+            {data: 'idAplicacion', title: 'ID de la aplicación'},
+            {data: 'Persona.apellido', title: 'Apellido del Paciente'},
+            {data: 'Agentedesalud.Persona.apellido', title: 'Apellido del Agente de Salud'},
+            {data: 'Loteinterno.numeroDeSerie', title: 'Número de Serie de la Vacuna'},
+            {data: 'fechaDeAplicacion', title: 'Fecha de Aplicación',render: function(data) { return formatDate(data); } },
+        ]
+    if(rol != 'Super Admin') {
+        arregloDeColumnas.push({
+            data: 'opciones', title: 'Opciones',
+            render: function (data, type, row) {
+                const editBtn = `<button title='Editar' class='btn btn-warning btn-sm fa-solid fa-pencil'></button>`
+                const deactivateBtn = `<button title='Dar de baja' class='btn btn-danger btn-sm fa-solid fa-exclamation-circle'></button>`
+                const activateBtn = `<button title='Dar de alta' class='btn btn-success btn-sm fa-solid fa-check-circle'></button>`
+                if (row.activo == 1)
+                    return `${editBtn} | ${deactivateBtn}`;
+                else
+                    return `${editBtn} | ${activateBtn}`;
+            }
+        })
+    }
+
     $(document).ready(function() {
         tabla = $(aplicaciones).DataTable({
             data: !{JSON.stringify(aplicaciones)},
@@ -63,32 +88,14 @@ script.
             language: {
                 url: '/idiomaTabla.json'
             },
-            columns:[
-                {data: 'idAplicacion', title: 'ID de la aplicación'},
-                {data: 'Persona.apellido', title: 'Apellido del Paciente'},
-                {data: 'Agentedesalud.Persona.apellido', title: 'Apellido del Agente de Salud'},
-                {data: 'Loteinterno.numeroDeSerie', title: 'Número de Serie de la Vacuna'},
-                {data: 'fechaDeAplicacion', title: 'Fecha de Aplicación',render: function(data) { return formatDate(data); } },
-                {
-                    data: 'opciones', title: 'Opciones',
-                    render: function (data, type, row) {
-                        const editBtn = `<button title='Editar' class='btn btn-warning btn-sm fa-solid fa-pencil'></button>`
-                        const deactivateBtn = `<button title='Dar de baja' class='btn btn-danger btn-sm fa-solid fa-exclamation-circle'></button>`
-                        const activateBtn = `<button title='Dar de alta' class='btn btn-success btn-sm fa-solid fa-check-circle'></button>`
-                        if (row.activo == 1)
-                            return `${editBtn} | ${deactivateBtn}`;
-                        else
-                            return `${editBtn} | ${activateBtn}`;
-                    }
-                }
-            ],
+            columns:arregloDeColumnas,
             order: [[0, 'desc']],
             columnDefs: [
                 {orderable: false, targets:[4]},
-                {className: 'dt-center', targets: [0, 1, 2, 3, 4, 5]},
+                {className: 'dt-center', targets: rol != 'Super Admin' ? [0, 1, 2, 3, 4, 5] : [0, 1, 2, 3, 4] },
                 { width: '12%', targets: [0, 1] },
                 { width: '14%', targets: [2, 3] },	
-                { width: '10%', targets: [4, 5] },
+                { width: '10%', targets: rol != 'Super Admin' ? [4, 5] : [4] },
             ]
         })
 
