@@ -40,34 +40,83 @@ block content
             br
             .form-group
                 label.form-label(for='fechaDeAplicacion') Fecha de Aplicación:
-                input.form-control.is-valid#fechaDeAplicacion(type='date' name='fechaDeAplicacion' value=aplicacion.fechaDeAplicacion required)
-                .invalid-feedback.d-none#fechaDeAplicacionSuperior La fecha seleccionada es superior a la fecha actual
+                    input.form-control.is-valid#fechaDeAplicacion(type='date' name='fechaDeAplicacion' value=aplicacion.fechaDeAplicacion required)
+                    .invalid-feedback.d-none#fechaDeAplicacionVacio El campo no puede estar vacío
+                    .invalid-feedback.d-none#fechaDeAplicacionSuperior La fecha de aplicación es superior a la actual
+                    .invalid-feedback.d-none#fechaDeAplicacionLlegadaACentro La fecha de aplicación no puede ser anterior a la llegada al centro de vacunación
+                    .d-none#fechaDeAplicacionVencida ADVERTENCIA: El lote seleccionado se encuentra vencido. Puede continuar, pero se recomienda precaución
             br
             div.text-center
                 button.btn.btn-primary(type='submit') Actualizar
                 | &nbsp;&nbsp;&nbsp;&nbsp;
                 button.btn.btn-primary(type='button' onclick='window.history.back()') Volver
     script.
+        let numeroDeSerieLote = !{JSON.stringify(aplicacion)}.numeroDeSerie
         document.addEventListener('DOMContentLoaded', function() {
             const fechaInput = document.getElementById('fechaDeAplicacion');
 
             fechaInput.addEventListener('change', function() {
-                validarFecha();
+                validarFechaDeAplicacion();
             });
 
-            function validarFecha() {
-                const fechaSeleccionada = new Date(fechaInput.value);
-                const fechaActual = new Date();
+            async function validarFechaDeAplicacion() {
+                try{
+                    quitarError($(fechaDeAplicacion))
+                    if($(fechaDeAplicacionVencida).is(':visible')) {
+                        $(fechaDeAplicacionVencida).addClass('d-none')  
+                    }
+                    if (!$(fechaDeAplicacion).val()) {
+                        mostrarError($(fechaDeAplicacion), 'Vacio')
+                    } else {
+                        const fechaIngresada = new Date($(fechaDeAplicacion).val())
+                        const fechaActual = new Date()
+                        fechaIngresada.setHours(24, 0, 0, 0)
+                        fechaActual.setHours(0, 0, 0, 0)
+                        console.log('Fecha actual: ' + fechaActual)
+                        console.log('Fecha ingresada: ' + fechaIngresada)
+                        let loteInterno; 
+                        await $.ajax({
+                            url: '/lotesinternos/lotesinternosJSON',
+                            type: 'GET',
+                            contentType: 'application/json',
+                            success: function(response){
+                                loteInterno = response.find(lote => lote.numeroDeSerie == numeroDeSerieLote)
+                            },
+                            error: function(response){
 
-                if (fechaSeleccionada > fechaActual) {
-                    fechaInput.classList.add('is-invalid');
-                    document.getElementById('fechaDeAplicacionSuperior').classList.remove('d-none');
-                } else {
-                    fechaInput.classList.remove('is-invalid');
-                    document.getElementById('fechaDeAplicacionSuperior').classList.add('d-none');
+                            }
+                        })
+
+                        const fechaVencimiento = new Date(loteInterno.Loteproveedor.fechaDeVencimiento)
+                        if(loteInterno.fechaDeLlegadaCentroDeVacunacion != null){
+                            const fechaDeLlegadaACentro = new Date(loteInterno.fechaDeLlegadaCentroDeVacunacion)
+                            if(fechaIngresada < fechaDeLlegadaACentro){
+                                mostrarError($(fechaDeAplicacion), 'LlegadaACentro')
+                            } else if (fechaIngresada > fechaActual) {
+                                mostrarError($(fechaDeAplicacion), 'Superior')
+                            } else if (fechaIngresada > fechaVencimiento) {
+                                mostrarError($(fechaDeAplicacion), 'Vencida')
+                                $(fechaDeAplicacion).addClass('is-valid').removeClass('is-invalid')
+                            }
+                        } else {
+                            mostrarError($(fechaDeAplicacion), 'LlegadaACentro')
+                        }
+                    }
+                } catch(error){
+                    console.log(error)
                 }
             }
         });
+
+        function mostrarError(campo, error) {
+            campo.addClass('is-invalid').removeClass('is-valid')
+            $(`#${campo.attr('id')}${error}`).removeClass('d-none')
+        }
+
+        function quitarError(campo) {
+            campo.addClass('is-valid').removeClass('is-invalid')
+            $(`div[id^=${campo.attr('id')}].invalid-feedback`).addClass('d-none')
+        }
 
         function agenteS(agentes, pacientes) {
             console.log(agentes);
