@@ -68,6 +68,22 @@ async function listarCentrosJSON(req, res) {
 	}
 }
 
+async function listarCentrosDeVacunacionJSON(req, res) {
+	try {
+		const centros = await CentroDeVacunacion.findAll(
+			{
+				where: { activo: 1 },
+			},
+			{
+				raw: 1
+			}
+		);
+		res.json(centros);
+	} catch (error) {
+		res.status(500).json({ success: false, message: `Error al listar centros de vacunación: ${error.message}` });
+	}
+}
+
 async function listarCentrosJSON(req, res) {
 	const { provincia } = req.params;
 	try {
@@ -314,6 +330,7 @@ module.exports = {
 	getLocalidadesByProvinciaFromAPI,
 	listarCentrosDeVacunacion,
 	listarCentrosJSON,
+	listarCentrosDeVacunacionJSON,
 	formCentroVac,
 	createCentroVac,
 	detailsCentroVac,

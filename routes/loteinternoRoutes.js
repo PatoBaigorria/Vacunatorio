@@ -15,8 +15,10 @@ router.get(
 );
 router.get("/sinDNJSON/:numeroDeLote", authorize(["Operador de logistica"]), loteInternoController.listarLotesSinDNJSON);
 router.get("/sinDPJSON/:numeroDeLote", authorize(["Operador de logistica"]), loteInternoController.listarLotesSinDPJSON);
+router.get("/sinCDVJSON/:numeroDeLote", authorize(["Operador de logistica"]), loteInternoController.listarLotesSinCDVJSON);
 router.put("/actualizarDN", authorize(["Operador de logistica"]), loteInternoController.actualizarFechasDNLIJSON);
 router.put("/actualizarDP", authorize(["Operador de logistica"]), loteInternoController.actualizarFechasDPLIJSON);
+router.put("/actualizarCDV", authorize(["Operador de logistica"]), loteInternoController.actualizarFechasCDVLIJSON);
 router.get(
 	"/crear",
 	authorize(["Gestor de compras"]),

@@ -10,6 +10,11 @@ router.get(
 	centroDeVacunacionController.getLocalidadesByProvinciaFromAPI
 );
 router.get(
+	'/centrosJSON/',
+	authorize(["Operador de logistica"]),
+	centroDeVacunacionController.listarCentrosDeVacunacionJSON
+);
+router.get(
 	"/",
 	authorize(["Super Admin"]),
 	centroDeVacunacionController.listarCentrosDeVacunacion

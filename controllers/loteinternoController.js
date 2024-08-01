@@ -87,6 +87,31 @@ const listarLotesSinDPJSON = async (req, res) => {
 		console.error(error);
 	}
 }
+const listarLotesSinCDVJSON = async (req, res) => {
+	try {
+		const lotesInternos = await LoteInterno.findAll({
+			include: [{
+				model: LoteProveedor,
+				where: {
+					numeroDeLote: req.params.numeroDeLote
+				}
+			},
+			{
+				model: Laboratorio,
+			}
+			],
+			where: {
+				fechaDeLlegadaDepositoProvincial: { [Op.ne]: null },
+				fechaDeSalidaDepositoNacional: { [Op.ne]: null },
+				idDepositoProvincial: { [Op.ne]: null },
+			},
+			raw: true
+		});
+		res.json(lotesInternos);
+	} catch (error) {
+		console.error(error);
+	}
+}
 
 const actualizarFechasDNLIJSON = async (req, res) => {
 	try {
@@ -124,6 +149,34 @@ const actualizarFechasDPLIJSON = async (req, res) => {
 				fechaDeSalidaDepositoNacional,
 				fechaDeLlegadaDepositoProvincial,
 				idDepositoProvincial
+			},
+			{
+				where: {
+					numeroDeSerie: {
+						[Op.in]: numerosDeSerie
+					}
+				},
+			}
+		);
+		res.json({ success: true });
+	} catch (error) {
+		res.json(error.message)
+	}
+}
+const actualizarFechasCDVLIJSON = async (req, res) => {
+	try {
+		let { idCentroDeVacunacion, fechaDeLlegadaCentroDeVacunacion, fechaDeSalidaDepositoProvincial, numerosDeSerie } = req.body;
+		if (fechaDeSalidaDepositoProvincial == '') {
+			fechaDeSalidaDepositoProvincial = null
+		}
+		if (fechaDeLlegadaCentroDeVacunacion == '') {
+			fechaDeLlegadaCentroDeVacunacion = null
+		}
+		await LoteInterno.update(
+			{
+				fechaDeSalidaDepositoProvincial,
+				fechaDeLlegadaCentroDeVacunacion,
+				idCentroDeVacunacion
 			},
 			{
 				where: {
@@ -510,8 +563,10 @@ module.exports = {
 	listarLotesInternosJSON,
 	listarLotesSinDNJSON,
 	listarLotesSinDPJSON,
+	listarLotesSinCDVJSON,
 	actualizarFechasDNLIJSON,
 	actualizarFechasDPLIJSON,
+	actualizarFechasCDVLIJSON,
 	formLoteInterno,
 	createLoteInterno,
 	createLoteInternoDesdeProveedor,

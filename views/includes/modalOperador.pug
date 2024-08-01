@@ -21,7 +21,7 @@ mixin modalesOperador()
                         button.btn.btn-warning#botonProvincial(type='button' data-bs-toggle='modal' data-bs-target='#modalDepositoProvincial') Registrar envio al Depósito provincial
                         br
                         br
-                        button.btn.btn-warning#botonCentroDeSalud(type='button' data-bs-toggle='modal' data-bs-target='#modalCentroDeVacunacion') Registrar envio al Centro de Vacunación
+                        button.btn.btn-warning#botonCentroDeVacunacion(type='button' data-bs-toggle='modal' data-bs-target='#modalCentroDeVacunacion') Registrar envio al Centro de Vacunación
     .modal.fade(id='modalDepositoNacional' tabindex='-1' aria-labelledby='modalDepositoNacionalLabel' aria-hidden='true')
         .modal-dialog
             .modal-content
@@ -170,17 +170,27 @@ mixin modalesOperador()
                 .modal-body
                     div.table.responsive
                         table#tablaDeposito.table.table-striped.table-bordered
+    .modal.fade(id='ModalDataTableCentroDeVacunacion' tabindex='-1' aria-labelledby='ModalDataTableCentroDeVacunacionLabel' aria-hidden='true')
+        .modal-dialog(style="max-width: 1000px;")
+            .modal-content
+                .modal-header
+                    h5.modal-title Tabla de Centros de vacunación
+                    button.btn-close(type='button' data-bs-dismiss='modal' aria-label='Close')
+                .modal-body
+                    div.table.responsive
+                        table#tablaCentrosDeVacunacion.table.table-striped.table-bordered
 
     script.
         $(document).ready(function () {
             let tablaLoteI=new DataTable('#tablaLoteInterno');
             let tablaLoteP=new DataTable('#tablaLoteProveedor');
             let tablaD=new DataTable('#tablaDeposito');
+            let tablaC=new DataTable('#tablaCentrosDeVacunacion')
             let fechaCompra;
             let numerosDeSerie;
             let ultimoBotonClickeado;
 
-            $('#botonNacional, #botonProvincial, #botonCentroDeSalud').on('click', function () {
+            $('#botonNacional, #botonProvincial, #botonCentroDeVacunacion').on('click', function () {
                 ultimoBotonClickeado = this.id.slice(5, this.id.length)
             })
 
@@ -288,7 +298,7 @@ mixin modalesOperador()
                             attr: {
                                 id:'Seleccionar',
                                 'data-bs-toggle':'modal',
-                                'data-bs-target':'#modalDeposito'+nivel,
+                                'data-bs-target':'#modal'+ (nivel=='CentroDeVacunacion' ? 'CentroDeVacunacion' : 'Deposito'+nivel),
                                 'data-bs-dismiss':'modal'
                             },
                             action: function ( e, dt, node, config) {
@@ -304,8 +314,9 @@ mixin modalesOperador()
                                         }
                                         numerosDeSerie.push(seleccionado[i]['numeroDeSerie'])
                                     }
-                                    $('#loteInterno'+nivel).val(texto);
-                                    $('#formDeposito'+nivel).removeClass('d-none')
+                                    console.log('#loteInterno'+(nivel=='CentroDeVacunacion' ? 'CentroDeVacunacion' : 'Deposito'+nivel))
+                                    $('#loteInterno'+(nivel=='CentroDeVacunacion' ? 'CentroDeVacunacion' : 'Deposito'+nivel)).val(texto);
+                                    $('#form'+(nivel=='CentroDeVacunacion' ? 'CentroDeVacunacion' : 'Deposito'+nivel)).removeClass('d-none')
                                     //numeroDeSerieLote=seleccionado[0]['numeroDeSerie'];
                                     //$('#fechaDeAplicacion').attr('disabled', false)
                                 }
@@ -383,6 +394,74 @@ mixin modalesOperador()
                 }
             }
 
+            function tablaCentro(nivel, urlAjax){
+                return {
+                    ajax: {
+                        url: urlAjax,
+                        dataSrc: ""
+                    },
+                    select: {
+                        style: 'single',
+                        items: 'row'
+                    },
+                    lengthChange: false,
+                    pageLength: 15,
+                    language: {
+                        url: '/idiomaTabla.json'
+                    },
+                    order: [[0, 'desc']],
+                    columns: [
+                        {data: 'id'+(nivel=='CentroDeVacunacion' ? 'CentroDeVacunacion' : 'Deposito'+nivel), title: 'ID'},
+                        {data: 'direccion', title: 'Dirección'},
+                        {data: 'localidad', title: 'Localidad'},
+                        {data: 'provincia', title: 'Provincia'}
+                    ],
+                    columnDefs: [
+                        {className: 'dt-center', targets: [0, 1, 2, 3]},
+                    ],
+                    dom: '<"top"Bf>rt<"bottom"lp><"clear">',
+                    buttons: [
+                        {
+                            text: 'Seleccionar',
+                            className: 'btn btn-primary',
+                            attr: {
+                                id:'Seleccionar',
+                                'data-bs-toggle':'modal',
+                                'data-bs-target':'#modal'+(nivel=='CentroDeVacunacion' ? 'CentroDeVacunacion' : 'Deposito'+nivel),
+                                'data-bs-dismiss':'modal'
+                            },
+                            action: function ( e, dt, node, config) {
+                                var seleccionado = dt.rows({selected:true}).data();
+                                if (seleccionado.length>0){
+                                    if(nivel=='Provincial'){
+                                        $('#inputDepositoProvincial').val(seleccionado[0]['idDepositoProvincial'] );
+                                        $('#fechaLlegadaDepositoProvincial').removeClass('d-none')
+                                        $('#fechaSalidaDepositoNacional').removeClass('d-none')
+                                        quitarError($(fechaDeSalidaDepositoNacional))
+                                        quitarError($(fechaDeLlegadaDepositoProvincial))
+                                        $('#confirmarDepositoProvincial').removeClass('d-none')
+                                        //validarFechaDeSalidaDepositoNacional()
+                                        //validarFechaDeLlegadaDepositoProvincial()
+                                    } else if(nivel=='Nacional'){
+                                        $('#inputDepositoNacional').val(seleccionado[0]['idDepositoNacional'] );
+                                        $('#fechaLlegadaDepositoNacional').removeClass('d-none')
+                                    } else {
+                                        $('#inputCentroDeVacunacion').val(seleccionado[0]['idCentroDeVacunacion'] );
+                                        $('#fechaSalidaDepositoProvincial').removeClass('d-none')
+                                        quitarError($('#fechaDeSalidaDepositoProvincial'))
+                                        quitarError($('#fechaDeLlegadaCentroDeVacunacion'))
+                                        $('#fechaLlegadaCentroDeVacunacion').removeClass('d-none')
+                                        $('#confirmarCentroDeVacunacion').removeClass('d-none')
+                                    }
+                                    //numeroDeSerieLote=seleccionado[0]['numeroDeSerie'];
+                                    //$('#fechaDeAplicacion').attr('disabled', false)
+                                }
+                            }
+                        }
+                    ]
+                }
+            }
+
             $(loteProveedorNacionalSeleccionar).click(function(){
                 tablaLoteP.destroy();
                 tablaLoteP = $('#tablaLoteProveedor').DataTable(tablaProveedor(ultimoBotonClickeado))
@@ -393,9 +472,19 @@ mixin modalesOperador()
                 tablaLoteP = $('#tablaLoteProveedor').DataTable(tablaProveedor(ultimoBotonClickeado))
             })
 
+            $(loteProveedorCentroDeVacunacionSeleccionar).click(function(){
+                tablaLoteP.destroy();
+                tablaLoteP = $('#tablaLoteProveedor').DataTable(tablaProveedor(ultimoBotonClickeado))
+            })
+
             $(loteInternoNacionalSeleccionar).click(function(){
                 tablaLoteI.destroy();
                 tablaLoteI= $('#tablaLoteInterno').DataTable(tablaInterno(ultimoBotonClickeado, '/lotesinternos/sinDNJSON/' + $(loteProveedorNacional).val()))
+            })
+
+            $(loteInternoCentroDeVacunacionSeleccionar).click(function(){
+                tablaLoteI.destroy();
+                tablaLoteI= $('#tablaLoteInterno').DataTable(tablaInterno(ultimoBotonClickeado, '/lotesinternos/sinCDVJSON/' + $(loteProveedorCentroDeVacunacion).val()))
             })
 
             $(loteInternoProvincialSeleccionar).click(function(){
@@ -411,6 +500,11 @@ mixin modalesOperador()
             $(depositoProvincialSeleccionar).click(function(){
                 tablaD.destroy();
                 tablaD= $('#tablaDeposito').DataTable(tablaDeposito(ultimoBotonClickeado,'/depositosprovinciales/depprojson'))
+            })
+
+            $(CentroDeVacunacionSeleccionar).click(function(){
+                tablaC.destroy();
+                tablaC= $('#tablaCentrosDeVacunacion').DataTable(tablaCentro(ultimoBotonClickeado, '/centrosdevacunacion/centrosJSON'))
             })
 
             function validarFechaDeLlegadaDepositoNacional(){
@@ -552,6 +646,39 @@ mixin modalesOperador()
                         $('#fechaSalidaDepositoNacional').addClass('d-none')
                         $('#formDepositoProvincial').addClass('d-none')
                         //validarFechaDeLlegadaDepositoProvincial()
+                    },
+                    error: function (error) {
+                        alert(error)
+                    }
+                })
+            })
+
+            $('#confirmarCentroDeVacunacion').click(function (event) {
+                let datos = {
+                    idCentroDeVacunacion: $(inputCentroDeVacunacion).val(),
+                    fechaDeLlegadaCentroDeVacunacion: $(fechaDeLlegadaCentroDeVacunacion).val(),
+                    fechaDeSalidaDepositoProvincial: $(fechaDeSalidaDepositoProvincial).val(),
+                    numerosDeSerie: numerosDeSerie
+                    }
+                $.ajax({
+                    url: '/lotesinternos/actualizarCDV',
+                    method: 'PUT',
+                    contentType: 'application/json',
+                    data: JSON.stringify(datos),
+                    success: function (response) {
+                        mostrarAlerta("Lotes internos actualizados con exito.")
+                        $('#loteProveedorCentroDeVacunacion').val('');
+                        $('#formLoteInternoCentroDeVacunacion').addClass('d-none')
+                        $('#loteInternoCentroDeVacunacion').val('')
+                        $('#inputCentroDeVacunacion').val('')
+                        $('#fechaDeLlegadaCentroDeVacunacion').val('')
+                        $('#fechaLlegadaCentroDeVacunacion').addClass('d-none')
+                        $('#fechaDeSalidaDepositoProvincial').val('')
+                        $('#fechaSalidaDepositoProvincial').addClass('d-none')
+                        $('#formCentroDeVacunacion').addClass('d-none')
+                        $('#confirmarCentroDeVacunacion').addClass('d-none')
+
+                        //validarFechaDeLlegadaDepositoCentroDeVacunacion()
                     },
                     error: function (error) {
                         alert(error)
