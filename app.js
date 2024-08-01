@@ -3,13 +3,13 @@ Super Admin
 - Laboratorio
 	- Mapa de laboratorio en alta no anda
 - Centro de vacunación
-	- Combo box de localidades carga las de Baires en alta
-	- El buscador en el listado debe filtrar por dirección tambien
+	- Combo box de localidades carga las de Baires en alta LISTO
+	- El buscador en el listado debe filtrar por dirección tambien LISTO
 - Traslado
-	- El listado de traslados debe ordenar de forma descendente
-	- Mejorar el filtro de busqueda
+	- El listado de traslados debe ordenar de forma descendente LISTO
+	- Mejorar el filtro de busqueda LISTO
 	- Ocultar el botón 'Crear'
-	- Agregar la columna idTraslado
+	- Agregar la columna idTraslado LISTO
 	- ¿Es necesario que tenga la columna 'Opciones'?
 - Aplicación
 	- Ocultar el botón 'Crear'
@@ -18,14 +18,14 @@ Super Admin
 - Descarte
 	- Listar todos los descartes
 - Depósito nacional
-	- Filtrar por dirección
+	- Filtrar por dirección LISTO
 
 
 - Lote interno
 	- Se pierde el recorrido de los centros de vacunación cuando se hacen traslados
 Logistitca:
 - Lote interno
-	- Corregir el deails de lote interno
+	- Corregir el deails de lote interno LISTO
 - Descartes cambia de DNIAgente a idUsuario y los mismos son cargados y vistos por ellos
 - Corregir todas las tablas para que tengan menos columnas ✔ (Eze)
 - Dividir las vistas por rol ✔ (Pato)

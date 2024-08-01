@@ -32,7 +32,7 @@ body
         .form-group
             label.form-label(for='localidad') Localidad:
             input-group.has-validation
-                select.form-select(name="localidad" id="localidad" required)
+                select.form-select(name="localidad" id="localidad" required disabled)
                     option(disabled selected hidden value="") Selecciona una localidad
                     each localidad in localidades
                         option(value=localidad)= localidad
@@ -46,6 +46,9 @@ script.
     document.addEventListener('DOMContentLoaded', function () {
         const provinciaSelect = document.getElementById('provincia');
         const localidadSelect = document.getElementById('localidad');
+
+        // Deshabilitar el select de localidad por defecto
+        localidadSelect.disabled = true;
 
         provinciaSelect.addEventListener('change', async function () {
             const selectedProvincia = provinciaSelect.value;
@@ -85,6 +88,9 @@ script.
                 // Limpiar el estado de localidad
                 quitarError($(localidadSelect));
 
+                // Habilitar el select de localidad
+                localidadSelect.disabled = false;
+
             } catch (error) {
                 console.error('Error al obtener localidades:', error);
             }
@@ -95,98 +101,99 @@ script.
     });
 
     // Función para mostrar errores
-        function mostrarAlerta() {
-            $('#mensajeAlerta').text("¡Datos incorrectos! Por favor, verifica la información ingresada.");
-            $('#alertModal').modal('show');
+    function mostrarAlerta() {
+        $('#mensajeAlerta').text("¡Datos incorrectos! Por favor, verifica la información ingresada.");
+        $('#alertModal').modal('show');
+    }
+
+    // Funciones para mostrar y quitar errores
+    function mostrarError(campo, error) {
+        campo.addClass('is-invalid').removeClass('is-valid').addClass();
+        $('#' + campo.attr('id') + error).removeClass('d-none');
+    }
+
+    function quitarError(campo) {
+        campo.addClass('is-valid').removeClass('is-invalid');
+        $('div[id^=' + campo.attr('id') + '].invalid-feedback').addClass('d-none');
+    }
+
+    function validarComboBox(campo){
+        if(!campo.val()){
+            mostrarError(campo, 'SinSeleccionar');
+            $('#' + campo.attr('id') + 'SinSeleccionar').removeClass('d-none');
+        } else {
+            quitarError(campo);
         }
+    }
 
-        // Funciones para mostrar y quitar errores
-        function mostrarError(campo, error) {
-            campo.addClass('is-invalid').removeClass('is-valid').addClass();
-            $('#' + campo.attr('id') + error).removeClass('d-none');
+    function validarDireccion() {
+        quitarError($('#direccion'));
+        const direccionValue = $('#direccion').val();
+        if (!direccionValue) {
+            mostrarError($('#direccion'), 'Vacio');
+        } else if (direccionValue.length < 5 || direccionValue.length > 100) {
+            mostrarError($('#direccion'), 'Invalido');
         }
+    }
+    
+    $('#direccion').on('keyup focusout', function () {
+        validarDireccion();
+    });
 
-        function quitarError(campo) {
-            campo.addClass('is-valid').removeClass('is-invalid');
-            $('div[id^=' + campo.attr('id') + '].invalid-feedback').addClass('d-none');
+    $('#provincia, #localidad').on('change', function () {
+        validarComboBox($(this));
+    });
+
+    let press = 0
+    $('#alertModal').on('keyup', function (event) {
+        // Si la tecla presionada es "Enter", oculta el modal
+        if(event.key === 'Enter'){
+            press = press+1
         }
-
-        function validarComboBox(campo){
-            if(!campo.val()){
-                mostrarError(campo, 'SinSeleccionar');
-                $('#' + campo.attr('id') + 'SinSeleccionar').removeClass('d-none');
-            } else {
-                quitarError(campo);
-            }
+        if (event.key === 'Escape' || press == 2) {
+            $('#alertModal').modal('hide');
+            press = 0
         }
+    });
 
-        function validarDireccion() {
-            quitarError($('#direccion'));
-            const direccionValue = $('#direccion').val();
-            if (!direccionValue) {
-                mostrarError($('#direccion'), 'Vacio');
-            } else if (direccionValue.length < 5 || direccionValue.length > 100) {
-                mostrarError($('#direccion'), 'Invalido');
-            }
+    $('#alertModal').on('hidden.bs.modal', function () {
+        // Buscar el primer elemento con la clase 'is-invalid' y hacer foco en él
+        var primerInvalido = $('.is-invalid:first');
+        if (primerInvalido.length > 0) {
+            primerInvalido.focus();
         }
-        $('#direccion').on('keyup focusout', function () {
-            validarDireccion();
-        });
+    });
 
-        $('#provincia, #localidad').on('change', function () {
-            validarComboBox($(this));
-        });
+    // Evento cuando se oculta el modal
+    $('#alertModal').on('hidden.bs.modal', function () {
+        // Buscar el primer elemento con la clase 'is-invalid' y hacer foco en él
+        var primerInvalido = $('.is-invalid:first');
+        if (primerInvalido.length > 0) {
+            primerInvalido.focus();
+        }
+    });
 
-        let press = 0
-        $('#alertModal').on('keyup', function (event) {
-            // Si la tecla presionada es "Enter", oculta el modal
-            if(event.key === 'Enter'){
-                press = press+1
-            }
-            if (event.key === 'Escape' || press == 2) {
-                $('#alertModal').modal('hide');
-                press = 0
-            }
-        });
+    $('#direccion').trigger('focusout');
+    $('#provincia, #localidad').trigger('change');
 
-        $('#alertModal').on('hidden.bs.modal', function () {
-            // Buscar el primer elemento con la clase 'is-invalid' y hacer foco en él
-            var primerInvalido = $('.is-invalid:first');
-            if (primerInvalido.length > 0) {
-                primerInvalido.focus();
-            }
-        });
-
-        // Evento cuando se oculta el modal
-        $('#alertModal').on('hidden.bs.modal', function () {
-            // Buscar el primer elemento con la clase 'is-invalid' y hacer foco en él
-            var primerInvalido = $('.is-invalid:first');
-            if (primerInvalido.length > 0) {
-                primerInvalido.focus();
-            }
-        });
-
-        $('#direccion').trigger('focusout');
-        $('#provincia, #localidad').trigger('change');
-
-        // Asociar el evento submit al formulario
-        $('#form input').on('keypress', function (event) {
-            if (event.which === 13) {
-                console.log("Formulario enviado por teclado");
-                //console.log(validarFormulario());
-                if(!validarFormulario()){
-                    event.preventDefault();
-                }
-                // Puedes agregar lógica adicional aquí si es necesario
-            }
-        });
-
-        $('#form button[type="submit"]').on('click', function (event) {
-            console.log("Botón de envío clicado");
-            if (!validarFormulario()) {
+    // Asociar el evento submit al formulario
+    $('#form input').on('keypress', function (event) {
+        if (event.which === 13) {
+            console.log("Formulario enviado por teclado");
+            //console.log(validarFormulario());
+            if(!validarFormulario()){
                 event.preventDefault();
             }
-        });
+            // Puedes agregar lógica adicional aquí si es necesario
+        }
+    });
+
+    $('#form button[type="submit"]').on('click', function (event) {
+        console.log("Botón de envío clicado");
+        if (!validarFormulario()) {
+            event.preventDefault();
+        }
+    });
 
 
 

@@ -1,4 +1,4 @@
-const title ='Detalle del lote interno'
+- const title ='Detalle del lote interno'
 include ..\includes\layout
 block content
   html(lang="es")
@@ -30,6 +30,11 @@ block content
             label.form-label.text-center(for="fechaDeLlegadaDepositoNacional") Fecha de llegada al Depósito Nacional
             .input-group
               input.form-control.text-center#fechaDeLlegadaDepositoNacional(type="date" name="fechaDeLlegadaDepositoNacional" value=loteInterno.fechaDeLlegadaDepositoNacional disabled)
+        if loteInterno.fechaDeSalidaDepositoNacional != null
+          .form-group
+            label.form-label.text-center(for="idDepositoNacional") Depósito Nacional:
+            .input-group
+              input.form-control.text-center#idDepositoNacional(name="idDepositoNacional" value=loteInterno.idDepositoNacional disabled)
         if loteInterno.fechaDeSalidaDepositoNacional != null
           .form-group
             label.form-label.text-center(for="fechaDeSalidaDepositoNacional") Fecha de salida al Depósito Provincial:
