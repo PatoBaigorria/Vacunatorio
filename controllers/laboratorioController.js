@@ -9,6 +9,7 @@ const listarLaboratorios = async (req, res) => {
 		});
 		res.render("laboratorio/viewLaboratorio", {
 			laboratorios: laboratorios,
+			rol: req.user.rol,
 		});
 	} catch (error) {
 		res.status(500).json({ message: "Error al obtener los laboratorios." });
@@ -25,7 +26,7 @@ async function listarLaboratorioPorJSON(req, res) {
 				type: sequelize.QueryTypes.SELECT
 			}
 		);
-		if (laboratorio.length>0) {
+		if (laboratorio.length > 0) {
 			res.json({ success: true, data: laboratorio });
 		} else {
 			res.json({ success: false, message: "No se encontro el laboratorio seleccionado." });
@@ -101,7 +102,7 @@ const createLaboratorio = async (req, res) => {
 			laboratorio.dataValues.idLaboratorio,
 			"Alta"
 		);
-		if(ventana==='true'){
+		if (ventana === 'true') {
 			res.send(`
                 <html>
                     <body>

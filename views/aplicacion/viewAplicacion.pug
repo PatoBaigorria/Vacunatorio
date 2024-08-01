@@ -91,21 +91,12 @@ script.
             columns:arregloDeColumnas,
             order: [[0, 'desc']],
             columnDefs: [
-                {orderable: false, targets:[4]},
                 {className: 'dt-center', targets: rol != 'Super Admin' ? [0, 1, 2, 3, 4, 5] : [0, 1, 2, 3, 4] },
                 { width: '12%', targets: [0, 1] },
                 { width: '14%', targets: [2, 3] },	
                 { width: '10%', targets: rol != 'Super Admin' ? [4, 5] : [4] },
             ]
         })
-
-        function agregarMensajeSiActivoOInactivo(td, cellData, rowData, row, col) {
-            if (cellData == 1) {
-                $(td).text('Activo')
-            } else {
-                $(td).text('Inactivo')
-            }
-        }
     })
 
     $(document).ready(function() {

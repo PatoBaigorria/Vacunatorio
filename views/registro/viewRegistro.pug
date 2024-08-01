@@ -44,12 +44,13 @@ script.
                 url: '/idiomaTabla.json'
             },
             columns: [
-                { data: 'Usuario.nombreUsuario', title: 'Nombre de Usuario' },
+                { data: 'Usuario.apellido', title: 'Apellido del usuario' },
                 { data: 'idFila', title: 'ID Fila' },
                 { data: 'nombreDeTabla', title: 'Nombre de la Tabla' },
                 { data: 'tipoDeAccion', title: 'Tipo de Acción' },
                 { data: 'fecha', title: 'Fecha', render: function (data) { return formatDate(data); } }
             ],
+            ordering: false,
             columnDefs: [
                 { className: 'dt-center', targets: [0, 1, 2, 3, 4] },
                 { width: '10%', targets: [0, 1] },

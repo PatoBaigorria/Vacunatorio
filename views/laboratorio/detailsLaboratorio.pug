@@ -40,8 +40,9 @@ block content
                     input.form-control.text-center(type="text" name="latitud" value=laboratorio.latitud disabled)
             br
             div.text-center
-                button.btn.btn-primary#detalle Editar
-                | &nbsp;&nbsp;&nbsp;&nbsp;
+                if(user.rol != 'Super Admin')
+                    button.btn.btn-primary#detalle Editar
+                    | &nbsp;&nbsp;&nbsp;&nbsp;
                 button(type="button" class="btn btn-primary" onclick="window.history.back()") Volver
 script.
     $(function () {

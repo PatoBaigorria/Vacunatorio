@@ -18,10 +18,11 @@ const listarLotesInternos = async (req, res) => {
 				{ model: LoteProveedor, attributes: ["numeroDeLote"] },
 				{ model: Laboratorio, attributes: ["nombreLaboratorio"] },
 			],
-			raw:true,
+			raw: true,
 		});
 		res.render("loteinterno/viewLoteInterno", {
 			lotesInternos: lotesInternos,
+			rol: req.user.rol,
 		});
 	} catch (error) {
 		req.flash(
@@ -36,11 +37,13 @@ const listarLotesInternosJSON = async (req, res) => {
 	try {
 		const lotesInternos = await LoteInterno.findAll({
 			include: [
-				{ model: LoteProveedor,
-					where:{
+				{
+					model: LoteProveedor,
+					where: {
 						activo: 1
-					},					
-					attributes: ["numeroDeLote", "tipoDeVacuna", "nombreComercial", "fechaDeVencimiento"] },
+					},
+					attributes: ["numeroDeLote", "tipoDeVacuna", "nombreComercial", "fechaDeVencimiento"]
+				},
 				{ model: Laboratorio, attributes: ["nombreLaboratorio"] },
 				{
 					model: CentroDeVacunacion,

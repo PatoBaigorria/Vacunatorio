@@ -40,7 +40,8 @@ body
                                     button.btn.btn-secondary(id="cancelAltaBtn" type="button" data-dismiss="modal") Cancelar
                                     button.btn.btn-danger(id="confirmAltaBtn" type="button") Confirmar
                     div(style="text-align: left;")
-                        a.btn.btn-primary.btn-lg(href="/traslados/crear") Crear
+                        if(user.rol != 'Super Admin')
+                            a.btn.btn-primary.btn-lg(href="/traslados/crear") Crear
                         br
                         br
                         div.table.responsive
@@ -54,23 +55,20 @@ script.
         const year = date.getUTCFullYear();
         return `${day}/${month}/${year}`;
     }
-
     let tabla;
+    let rol = !{JSON.stringify(rol)}
     $(document).ready(function() {
-        tabla = $('#traslados').DataTable({
-            data: !{JSON.stringify(traslados)},
-            pageLength: 15,
-            lengthMenu: [15, 25, 35, 45],
-            language: {
-                url: '/idiomaTabla.json'
-            },
-            columns: [
-                {data: 'idTraslado', title: 'ID del traslado'},
+        let arregloDeCol = 
+            [
+                { data: 'idTraslado', title: 'ID del traslado'},
                 { data: 'numeroDeSerie', title: 'Número de Serie' },
                 { data: 'idCentroDeVacunacion', title: 'ID del Centro de Vacunación' },
                 { data: 'fechaDeSalida', title: 'Fecha de Salida del Traslado', render: function(data) { return formatDate(data); } },
                 { data: 'fechaDeLlegada', title: 'Fecha de Llegada del Traslado', createdCell: agregarMensajeLlegada, render: function(data) { return formatDate(data); } },
                 { data: 'activo', title: 'Estado del traslado', createdCell: agregarMensajeSiActivoOInactivo },
+            ]
+        if(rol != 'Super Admin') {
+            arregloDeCol.push(
                 {
                     data: 'opciones', title: 'Opciones',
                     render: function(data, type, row) {
@@ -82,14 +80,22 @@ script.
                         else
                             return `${editBtn} | ${activateBtn}`;
                     }
-                }
-            ],
+                })
+        }
+        tabla = $(traslados).DataTable({
+            data: !{JSON.stringify(traslados)},
+            pageLength: 15,
+            lengthMenu: [15, 25, 35, 45],
+            language: {
+                url: '/idiomaTabla.json'
+            },
+            columns: arregloDeCol,
             order: [[0, 'desc']],
             columnDefs: [
-                { orderable: false, targets: [5] }, // Columna de "Opciones"
-                { searchable: false, targets: [5] },
-                { className: "dt-center", targets: [0, 1, 2, 3, 4, 5] },
-                { width: '20%', targets: [5] },
+                { orderable: false, targets: rol != 'Super Admin' ? [5, 6] : [5] }, // Columna de "Opciones"
+                { searchable: false, targets: rol != 'Super Admin' ? [0, 1, 2, 5, 6] : [0, 1, 2, 5] },
+                { className: "dt-center", targets: rol != 'Super Admin' ? [0, 1, 2, 3, 4, 5, 6] : [0, 1, 2, 3, 4, 5] },
+                { width: '20%', targets: rol != 'Super Admin' ? [6] : [5] },
             ]
         });
 

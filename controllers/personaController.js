@@ -45,6 +45,7 @@ const listarPersonas = async (req, res) => {
 
 		res.render("persona/viewPersona", {
 			personas: personas,
+			rol: req.user.rol,
 		});
 	} catch (error) {
 		res.status(500).json({ message: "Error al obtener las personas." + error.message });

@@ -1,6 +1,6 @@
 const { LoteProveedor, Laboratorio } = require("../models/relaciones");
 const { detailsPersona } = require("./personaController");
-const { createLoteInternoDesdeProveedor } = require("./loteInternoController");
+const { createLoteInternoDesdeProveedor } = require("./loteinternoController");
 const { createRegistro } = require("./registroController");
 
 
@@ -59,6 +59,7 @@ const listarLotesProveedores = async (req, res) => {
 		console.log(lotesProveedores);
 		res.render("loteproveedor/viewLoteProveedor", {
 			lotesProveedores: lotesProveedores,
+			rol: req.user.rol,
 		});
 	} catch (error) {
 		res.status(500).json({
@@ -104,9 +105,9 @@ const createLoteProveedor = async (req, res) => {
 			fechaDeCompra,
 			activo: 1,
 		});
-		if(ventana==='true'){
+		if (ventana === 'true') {
 			let arregloDeLotes = []
-			for(i=0;i<cantidadDeLotesInternos;i++){
+			for (i = 0; i < cantidadDeLotesInternos; i++) {
 				arregloDeLotes.push({
 					numeroDeLote: lote.dataValues.numeroDeLote,
 					idLaboratorio: idLaboratorio,
@@ -123,7 +124,7 @@ const createLoteProveedor = async (req, res) => {
 					activo: 1,
 				})
 			}
-			await createLoteInternoDesdeProveedor(req,arregloDeLotes);
+			await createLoteInternoDesdeProveedor(req, arregloDeLotes);
 		}
 		await createRegistro(
 			req.user.idUsuario,
@@ -137,7 +138,7 @@ const createLoteProveedor = async (req, res) => {
 			lote.dataValues.numeroDeLote,
 			"Alta"
 		);
-		if(ventana==='true'){
+		if (ventana === 'true') {
 			res.send(`
                 <html>
                     <body>

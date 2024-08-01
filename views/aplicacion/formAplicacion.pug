@@ -79,7 +79,7 @@ script.
 
         function cargarPacientes() {
             const pacientes = !{JSON.stringify(pacientes)};
-            $(DNIPaciente).empty(); // Limpiar antes de agregar nuevos
+            $(DNIPaciente).empty();
             if (pacientes.length === 0) {
                 $(DNIPaciente).append(`<option disabled selected hidden value="">No hay pacientes dados de alta</option>`).prop('disabled', true);
                 mostrarError($(DNIPaciente), 'SinPacientes');
@@ -177,14 +177,14 @@ script.
         })
 
         $(document).ready(function() {
-                var params = new URLSearchParams(window.location.search);
-                var boton = params.get('boton');
-                var dniPaciente = params.get('dni');
-                if (boton==='true'){
-                    $('nav').css('display', 'none')
-                    $('#volver').css('display', 'none')
-                }
-                $('#DNIPaciente').val(dniPaciente);
+            var params = new URLSearchParams(window.location.search);
+            var boton = params.get('boton');
+            var dniPaciente = params.get('dni');
+            if (boton==='true'){
+                $('nav').css('display', 'none')
+                $('#volver').css('display', 'none')
+            }
+            $('#DNIPaciente').val(dniPaciente);
             })
 
             $('form button[type="submit"]').on('click', function (event) {

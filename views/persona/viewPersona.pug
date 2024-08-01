@@ -39,13 +39,15 @@ body
                                     button.btn.btn-secondary(id="cancelAltaBtn" type="button" data-dismiss="modal") Cancelar
                                     button.btn.btn-danger(id="confirmAltaBtn" type="button") Confirmar
                     div(style="text-align: left;")
-                        a.btn.btn-primary.btn-lg(href="/personas/alta") Alta
+                        if(user.rol != 'Super Admin')
+                            a.btn.btn-primary.btn-lg(href="/personas/alta") Alta
                         br
                         br
                         div.table.responsive 
                             table#personas.table.table-striped.table-bordered
 script.
     let tabla 
+    let rol = !{JSON.stringify(rol)}
     $(document).ready(function() {
         tabla = $(personas).DataTable({
             data: !{JSON.stringify(personas)},
@@ -66,21 +68,22 @@ script.
                         const editBtn = `<button title="Editar" class="btn btn-warning btn-sm fa-solid fa-pencil"></button>`;
                         const deactivateBtn = `<button title="Dar de baja" class="btn btn-danger btn-sm fa-solid fa-exclamation-circle"></button>`;
                         const activateBtn = `<button title="Dar de alta" class="btn btn-success btn-sm fa-solid fa-check-circle"></button>`;
-                        if (row.activo == 1)
-                            return `${detailsBtn} | ${editBtn} | ${deactivateBtn}`;
+                        if(rol == 'Super Admin')
+                            return `${detailsBtn}`
+                        else if (row.activo == 1)
+                            return `${detailsBtn} | ${editBtn} | ${deactivateBtn}`
                         else
-                            return `${detailsBtn} | ${editBtn} | ${activateBtn}`;
-
+                            return `${detailsBtn} | ${editBtn} | ${activateBtn}`
                     }
                 }
             ],
             order: [[2, 'desc']],
             columnDefs: [
-                //{orderable: false, targets:[13]}, // Columna de "Opciones"
+                {orderable: false, targets:[3, 4]}, // Columna de "Opciones"
                 {searchable: false, targets:[3, 4]},
                 {className: "dt-center", targets: [0, 1, 2, 3, 4]},
-                //{ width: "7%", targets: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11] },
-                //{ width: "5%", targets: [14] }
+                { width: "15%", targets: [0, 1, 2] },
+                { width: "10%", targets: [3, 4] }
             ]
         });
 

@@ -41,13 +41,15 @@ body
                                     button.btn.btn-secondary#cancelAltaBtn(type="button" data-dismiss="modal") Cancelar
                                     button.btn.btn-danger#confirmAltaBtn(type="button") Confirmar
                     div(style="text-align: left")
-                        a.btn.btn-primary.btn-lg(href="/laboratorios/alta") Alta
+                        if(user.rol != 'Super Admin')
+                            a.btn.btn-primary.btn-lg(href="/laboratorios/alta") Alta
                         br
                         br
                         div.table.responsive 
                             table#laboratorios.table.table-striped.table-bordered
 script.
-    let tabla 
+    let tabla
+    let rol = !{JSON.stringify(rol)}
     $(document).ready(function() {
         tabla = $(laboratorios).DataTable({
             data: !{JSON.stringify(laboratorios)},
@@ -67,7 +69,9 @@ script.
                         const editBtn = `<button title="Editar" class="btn btn-warning btn-sm fa-solid fa-pencil"></button>`
                         const deactivateBtn = `<button title="Dar de baja" class="btn btn-danger btn-sm fa-solid fa-exclamation-circle"></button>`
                         const activateBtn = `<button title="Dar de alta" class="btn btn-success btn-sm fa-solid fa-check-circle"></button>`
-                        if (row.activo == 1)
+                        if(rol == 'Super Admin')
+                            return `${detailsBtn}`
+                        else if (row.activo == 1)
                             return `${detailsBtn} | ${editBtn} | ${deactivateBtn}`
                         else
                             return `${detailsBtn} | ${editBtn} | ${activateBtn}`
@@ -78,8 +82,8 @@ script.
                 { orderable: false, targets: [3] },
                 { searchable: false, targets: [3] },
                 { className: "dt-center", targets: [0, 1, 2, 3] },
-                //{ width: '15%', targets: [0, 1, 2] },
-                //{ width: '8%', targets: [3] },
+                { width: '15%', targets: [0, 1] },
+                { width: '5%', targets: [2, 3] },
             ]
         })
 

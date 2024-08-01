@@ -29,6 +29,7 @@ const listarTraslados = async (req, res) => {
 		}
 		res.render("traslado/viewTraslado", {
 			traslados: traslados,
+			rol: req.user.rol,
 		});
 	} catch (error) {
 		res.status(500).json({

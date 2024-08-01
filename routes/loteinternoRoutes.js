@@ -5,7 +5,7 @@ const authorize = require("../middleware/authorize");
 
 router.get(
 	"/lotesinternosJSON",
-	authorize(["Super Admin", "Agente de salud"]),
+	authorize(["Agente de salud"]),
 	loteInternoController.listarLotesInternosJSON
 );
 router.get(
@@ -15,12 +15,12 @@ router.get(
 );
 router.get(
 	"/crear",
-	authorize(["Super Admin", "Gestor de compras"]),
+	authorize(["Gestor de compras"]),
 	loteInternoController.formLoteInterno
 );
 router.post(
 	"/",
-	authorize(["Super Admin", "Gestor de compras"]),
+	authorize(["Gestor de compras"]),
 	loteInternoController.createLoteInterno
 );
 router.get(
@@ -30,27 +30,27 @@ router.get(
 );
 router.get(
 	"/:id",
-	authorize(["Super Admin", "Gestor de compras"]),
+	authorize(["Gestor de compras"]),
 	loteInternoController.editLoteInterno
 );
 router.put(
 	"/:id",
-	authorize(["Super Admin", "Gestor de compras"]),
+	authorize(["Gestor de compras"]),
 	loteInternoController.updateLoteInterno
 );
 router.delete(
 	"/:id",
-	authorize(["Super Admin", "Gestor de compras"]),
+	authorize(["Gestor de compras"]),
 	loteInternoController.deleteLoteInterno
 );
 router.put(
 	"/:id/baja",
-	authorize(["Super Admin", "Gestor de compras"]),
+	authorize(["Gestor de compras"]),
 	loteInternoController.bajaLoteInterno
 );
 router.put(
 	"/:id/alta",
-	authorize(["Super Admin", "Gestor de compras"]),
+	authorize(["Gestor de compras"]),
 	loteInternoController.altaLoteInterno
 );
 

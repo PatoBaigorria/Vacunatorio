@@ -40,13 +40,15 @@ body
                                     button.btn.btn-secondary#cancelAltaBtn(type="button" data-dismiss="modal") Cancelar
                                     button.btn.btn-danger#confirmAltaBtn(type="button") Confirmar
                     div(style="text-align: left")
-                        a.btn.btn-primary.btn-lg(href="/lotesinternos/crear") Crear
+                        if(user.rol != 'Super Admin')
+                            a.btn.btn-primary.btn-lg(href="/lotesinternos/crear") Crear
                         br
                         br
                         div.table.responsive
                             table#lotesinternos.table.table-striped.table-bordered
 script.
     let tabla 
+    let rol = !{JSON.stringify(rol)}
     $(document).ready(function() {
         tabla = $(lotesinternos).DataTable({
             data: !{JSON.stringify(lotesInternos)},
@@ -67,10 +69,12 @@ script.
                         const editBtn = `<button title="Editar" class="btn btn-warning btn-sm fa-solid fa-pencil"></button>`
                         const deactivateBtn = `<button title="Dar de baja" class="btn btn-danger btn-sm fa-solid fa-exclamation-circle"></button>`
                         const activateBtn = `<button title="Dar de alta" class="btn btn-success btn-sm fa-solid fa-check-circle"></button>`
-                        if (row.activo == 1)
-                            return `${detailsBtn} | ${editBtn} | ${deactivateBtn}`;
+                        if(rol == 'Super Admin')
+                            return `${detailsBtn}`
+                        else if (row.activo == 1)
+                            return `${detailsBtn} | ${editBtn} | ${deactivateBtn}`
                         else
-                            return `${detailsBtn} | ${editBtn} | ${activateBtn}`;
+                            return `${detailsBtn} | ${editBtn} | ${activateBtn}`
                     }
                 }
             ],

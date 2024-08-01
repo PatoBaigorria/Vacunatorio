@@ -21,6 +21,7 @@ const listarDepositosNacionales = async (req, res) => {
 		});
 		res.render("depositonacional/viewDepositoNacional", {
 			depositosNac: depositosNac,
+			rol: req.user.rol,
 		});
 	} catch (error) {
 		res.status(500).json({

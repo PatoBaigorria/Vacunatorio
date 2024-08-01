@@ -10,12 +10,12 @@ router.get(
 );
 router.get(
 	"/crear",
-	authorize(["Super Admin", "Operador de logistica", "Agente de salud"]),
+	authorize(["Operador de logistica", "Agente de salud"]),
 	descarteController.formDescarte
 );
 router.post(
 	"/",
-	authorize(["Super Admin", "Operador de logistica", "Agente de salud"]),
+	authorize(["Operador de logistica", "Agente de salud"]),
 	descarteController.createDescarte
 );
 router.get(
@@ -25,17 +25,17 @@ router.get(
 );
 router.get(
 	"/:id",
-	authorize(["Super Admin", "Operador de logistica", "Agente de salud"]),
+	authorize(["Operador de logistica", "Agente de salud"]),
 	descarteController.editDescarte
 );
 router.put(
 	"/:id",
-	authorize(["Super Admin", "Operador de logistica", "Agente de salud"]),
+	authorize(["Operador de logistica", "Agente de salud"]),
 	descarteController.updateDescarte
 );
 router.delete(
 	"/:id",
-	authorize(["Super Admin", "Operador de logistica", "Agente de salud"]),
+	authorize(["Operador de logistica", "Agente de salud"]),
 	descarteController.deleteDescarte
 );
 

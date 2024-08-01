@@ -18,37 +18,38 @@ const getLocalidadesByProvinciaFromAPI = async (req, res) => {
 
 const listarCentrosDeVacunacion = async (req, res) => {
 	try {
-	  const usuario = req.user; // Asumiendo que tienes el usuario en la request
-	  
-	  let centrosVac;
-  
-	  if (usuario.rol === 'Super Admin') {
-		// Si el usuario es el super admin, traer todos los datos sin filtrar
-		centrosVac = await CentroDeVacunacion.findAll({
-		  raw: true
+		const usuario = req.user; // Asumiendo que tienes el usuario en la request
+
+		let centrosVac;
+
+		if (usuario.rol === 'Super Admin') {
+			// Si el usuario es el super admin, traer todos los datos sin filtrar
+			centrosVac = await CentroDeVacunacion.findAll({
+				raw: true
+			});
+		} else {
+			// Si el usuario no es el super admin, filtrar por provincia y localidad
+			centrosVac = await CentroDeVacunacion.findAll({
+				where: { provincia: usuario.provincia },
+				raw: true
+			});
+		}
+
+		res.render("centrodevacunacion/viewCentroDeVacunacion", {
+			centrosVac: centrosVac,
+			rol: usuario.rol,
 		});
-	  } else {
-		// Si el usuario no es el super admin, filtrar por provincia y localidad
-		centrosVac = await CentroDeVacunacion.findAll({
-		  where: { provincia: usuario.provincia },
-		  raw: true
-		});
-	  }
-  
-	  res.render("centrodevacunacion/viewCentroDeVacunacion", {
-		centrosVac: centrosVac,
-	  });
 	} catch (error) {
-	  req.flash(
-		"error",
-		`Hubo un error al intentar listar los centros de vacunación. ${error.message}`
-	  );
-	  res.json({
-		success: `Hubo un error al intentar listar los centros de vacunación. ${error.message}`,
-	  });
+		req.flash(
+			"error",
+			`Hubo un error al intentar listar los centros de vacunación. ${error.message}`
+		);
+		res.json({
+			success: `Hubo un error al intentar listar los centros de vacunación. ${error.message}`,
+		});
 	}
-  };
-  
+};
+
 
 async function listarCentrosJSON(req, res) {
 	const { provincia } = req.params;

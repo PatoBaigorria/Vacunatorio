@@ -24,7 +24,7 @@ const bulkCreateRegistro = async (arregloDeRegistros) => {
 const listarRegistros = async (req, res) => {
 	try {
 		const registros = await Registro.findAll({
-			include: [{ model: Usuario, attributes: ["nombreUsuario"] }],
+			include: [{ model: Usuario, attributes: ["idUsuario", "apellido"] }],
 			order: [["fecha", "DESC"]],
 		});
 		res.render("registro/viewRegistro", {

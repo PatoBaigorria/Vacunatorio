@@ -13,12 +13,12 @@ router.get(
 );
 router.get(
 	"/alta",
-	authorize(["Super Admin", "Gestor de compras"]),
+	authorize(["Gestor de compras"]),
 	loteProveedorController.formLoteProveedor
 );
 router.post(
 	"/",
-	authorize(["Super Admin", "Gestor de compras"]),
+	authorize(["Gestor de compras"]),
 	loteProveedorController.createLoteProveedor
 );
 router.get(
@@ -28,27 +28,27 @@ router.get(
 );
 router.get(
 	"/:id",
-	authorize(["Super Admin", "Gestor de compras"]),
+	authorize(["Gestor de compras"]),
 	loteProveedorController.editLoteProveedor
 );
 router.put(
 	"/:id",
-	authorize(["Super Admin", "Gestor de compras"]),
+	authorize(["Gestor de compras"]),
 	loteProveedorController.updateLoteProveedor
 );
 router.delete(
 	"/:id",
-	authorize(["Super Admin", "Gestor de compras"]),
+	authorize(["Gestor de compras"]),
 	loteProveedorController.deleteLoteProveedor
 );
 router.put(
 	"/:id/baja",
-	authorize(["Super Admin", "Gestor de compras"]),
+	authorize(["Gestor de compras"]),
 	loteProveedorController.bajaLoteProveedor
 );
 router.put(
 	"/:id/alta",
-	authorize(["Super Admin", "Gestor de compras"]),
+	authorize(["Gestor de compras"]),
 	loteProveedorController.altaLoteProveedor
 );
 

@@ -40,7 +40,8 @@ body
                                     button.btn.btn-secondary#cancelAltaBtn(type='button' data-dismiss='modal') Cancelar
                                     button.btn.btn-danger#confirmAltaBtn(type='button') Confirmar
                     div(style='text-align: left')
-                        a.btn.btn-primary.btn-lg(href='/lotesproveedores/alta') Alta
+                        if(user.rol != 'Super Admin')
+                            a.btn.btn-primary.btn-lg(href='/lotesproveedores/alta') Alta
                         br
                         br
                         div.table.responsive
@@ -68,10 +69,12 @@ script.
                         const editBtn = `<button title='Editar' class='btn btn-warning btn-sm fa-solid fa-pencil'></button>`
                         const deactivateBtn = `<button title='Dar de baja' class='btn btn-danger btn-sm fa-solid fa-exclamation-circle'></button>`
                         const activateBtn = `<button title='Dar de alta' class='btn btn-success btn-sm fa-solid fa-check-circle'></button>`
-                        if (row.activo == 1)
-                            return `${detailsBtn} | ${editBtn} | ${deactivateBtn}`;
+                        if(rol == 'Super Admin')
+                            return `${detailsBtn}`
+                        else if (row.activo == 1)
+                            return `${detailsBtn} | ${editBtn} | ${deactivateBtn}`
                         else
-                            return `${detailsBtn} | ${editBtn} | ${activateBtn}`;
+                            return `${detailsBtn} | ${editBtn} | ${activateBtn}`
                     }
                 }
             ],
@@ -92,7 +95,7 @@ script.
             }
         }
     })
-    
+
     $(document).ready(function() {
         $('.flash-message').addClass('fade-in')
         setTimeout(function() {
@@ -153,7 +156,7 @@ script.
                 $('#cancelAltaBtn, .modal-header button.close').on('click', function() {
                     $(confirmAltaModal).modal('hide')
                 })
-                
+
                 $(document).on('keydown', function(e) {
                     if (e.key === 'Enter' && $(confirmAltaModal).is(':visible')) {
                         $(confirmAltaBtn).trigger('click');

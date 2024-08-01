@@ -34,7 +34,8 @@ body
                 input.form-control.text-center(type='date' name='fechaDeDescarte' value=descarte.fechaDeDescarte disabled)
         br
         div.text-center
-            button.btn.btn-primary#detalle Editar
+            if(user.rol != 'Super Admin')
+                button.btn.btn-primary#detalle Editar
             | &nbsp;&nbsp;&nbsp;&nbsp;
             button.btn.btn-primary(type="button" onclick="window.history.back()") Volver
 script.

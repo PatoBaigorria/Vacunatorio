@@ -20,32 +20,32 @@ router.post(
 );
 router.post(
 	"/createJSON",
-	authorize(["Super Admin", "Agente de salud"]),
+	authorize(["Agente de salud"]),
 	aplicacionController.createAplicacionJSON
 );
 router.get(
 	"/:id",
-	authorize(["Super Admin", "Agente de salud"]),
+	authorize(["Agente de salud"]),
 	aplicacionController.editAplicacion
 );
 router.put(
 	"/:id",
-	authorize(["Super Admin", "Agente de salud"]),
+	authorize(["Agente de salud"]),
 	aplicacionController.updateAplicacion
 );
 router.delete(
 	"/:id",
-	authorize(["Super Admin", "Agente de salud"]),
+	authorize(["Agente de salud"]),
 	aplicacionController.deleteAplicacion
 );
 router.put(
 	"/:id/baja",
-	authorize(["Super Admin", "Agente de salud"]),
+	authorize(["Agente de salud"]),
 	aplicacionController.bajaAplicacion
 );
 router.put(
 	"/:id/alta",
-	authorize(["Super Admin", "Agente de salud"]),
+	authorize(["Agente de salud"]),
 	aplicacionController.altaAplicacion
 );
 

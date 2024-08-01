@@ -5,21 +5,36 @@ const Op = require('sequelize').Op;
 // Obtener todos los descartes
 const listarDescartes = async (req, res) => {
     try {
-        const descartes = await Descarte.findAll({
-            include: [{
-                model: Usuario,
-                attributes: ["apellido"],
-            }],
-            where: {
-                activo: 1,
-                idUsuario: req.user.idUsuario
-            },
-            raw: true
-        });
+        let descartes;
+        let rol = req.user.rol
+        if (rol === 'Super Admin') {
+            descartes = await Descarte.findAll({
+                include: [{
+                    model: Usuario,
+                    attributes: ["apellido"],
+                }],
+                where: {
+                    activo: 1,
+                },
+                raw: true
+            });
+        } else {
+            descartes = await Descarte.findAll({
+                include: [{
+                    model: Usuario,
+                    attributes: ["apellido"],
+                }],
+                where: {
+                    activo: 1,
+                    idUsuario: req.user.idUsuario
+                },
+                raw: true
+            });
 
-        console.log(descartes)
+            console.log(descartes)
+        }
 
-        res.render("descarte/viewDescarte", { descartes: descartes });
+        res.render("descarte/viewDescarte", { descartes: descartes, rol: rol });
     } catch (error) {
         res.status(500).json({
             message: "Error al obtener los descartes. " + error.message
@@ -179,6 +194,7 @@ const editDescarte = async (req, res) => {
             descarte: descarte,
             motivos: motivos,
             empresas: empresas,
+            rol: req.user.rol,
         });
     } catch (error) {
         res.status(500).json({

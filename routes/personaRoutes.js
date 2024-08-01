@@ -11,22 +11,22 @@ router.get(
 );
 router.get(
 	"/alta",
-	authorize(["Super Admin", "Agente de salud"]),
+	authorize(["Agente de salud"]),
 	personaController.formPersona
 );
 router.get(
 	"/personasJSON",
-	authorize(["Super Admin", "Agente de salud"]),
+	authorize(["Agente de salud"]),
 	personaController.listarPersonasJSON
 );
 router.get(
 	"/agentesJSON",
-	authorize(["Super Admin", "Agente de salud"]),
+	authorize(["Agente de salud"]),
 	personaController.listarAgentesJSON
 );
 router.post(
 	"/",
-	authorize(["Super Admin", "Agente de salud"]),
+	authorize(["Agente de salud"]),
 	personaController.createPersona
 );
 router.get(
@@ -36,27 +36,27 @@ router.get(
 );
 router.get(
 	"/:id",
-	authorize(["Super Admin", "Agente de salud"]),
+	authorize(["Agente de salud"]),
 	personaController.editPersona
 );
 router.put(
 	"/:id",
-	authorize(["Super Admin", "Agente de salud"]),
+	authorize(["Agente de salud"]),
 	personaController.updatePersona
 );
 router.delete(
 	"/:id",
-	authorize(["Super Admin", "Agente de salud"]),
+	authorize(["Agente de salud"]),
 	personaController.deletePersona
 );
 router.put(
 	"/:id/baja",
-	authorize(["Super Admin", "Agente de salud"]),
+	authorize(["Agente de salud"]),
 	personaController.bajaPersona
 );
 router.put(
 	"/:id/alta",
-	authorize(["Super Admin", "Agente de salud"]),
+	authorize(["Agente de salud"]),
 	personaController.altaPersona
 );
 

@@ -67,11 +67,11 @@ body
             label.form-label.text-center(for="localidad") Localidad:
             .input-group.has-validation
                 input.form-control.text-center(type="text" id="localidad" name="localidad" value=persona.localidad disabled)
-
         br
         div.text-center
-            button.btn.btn-primary#detalle Editar
-            | &nbsp;&nbsp;&nbsp;&nbsp;
+            if(user.rol != 'Super Admin')
+                button.btn.btn-primary#detalle Editar
+                | &nbsp;&nbsp;&nbsp;&nbsp;
             button.btn.btn-primary(type="button" onclick="window.history.back()") Volver
 script.
     $(function () {

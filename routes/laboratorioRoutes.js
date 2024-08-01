@@ -10,17 +10,17 @@ router.get(
 );
 router.get(
 	"/alta",
-	authorize(["Super Admin", "Gestor de compras"]),
+	authorize(["Gestor de compras"]),
 	laboratorioController.formLaboratorio
 );
 router.get(
 	'/laboratoriosJSON',
-	authorize(["Super Admin", "Gestor de compras"]),
+	authorize(["Gestor de compras"]),
 	laboratorioController.listarLaboratoriosPorJSON
 );
 router.post(
 	"/",
-	authorize(["Super Admin", "Gestor de compras"]),
+	authorize(["Gestor de compras"]),
 	laboratorioController.createLaboratorio
 );
 router.get(
@@ -30,22 +30,22 @@ router.get(
 );
 router.get(
 	"/:id",
-	authorize(["Super Admin", "Gestor de compras"]),
+	authorize(["Gestor de compras"]),
 	laboratorioController.editLaboratorio
 );
 router.put(
 	"/:id",
-	authorize(["Super Admin", "Gestor de compras"]),
+	authorize(["Gestor de compras"]),
 	laboratorioController.updateLaboratorio
 );
 router.get(
 	'/laboratorioJSON/:nombre',
-	authorize(["Super Admin", "Gestor de compras"]),
+	authorize(["Gestor de compras"]),
 	laboratorioController.listarLaboratorioPorJSON
 );
 router.delete(
 	"/:id",
-	authorize(["Super Admin", "Gestor de compras"]),
+	authorize(["Gestor de compras"]),
 	laboratorioController.deleteLaboratorio
 );
 router.put(
