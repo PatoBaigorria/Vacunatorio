@@ -293,6 +293,9 @@ mixin modalesAgente()
                         contentType: 'application/json',
                         data: JSON.stringify(aplicacion),
                         success: function(response){
+                            if (response.reload){
+                                tablaLote.ajax.reload()
+                            }
                             if(response.flash){
                                 $('#flash').text(response.flash).show()
                                 setTimeout(function() {

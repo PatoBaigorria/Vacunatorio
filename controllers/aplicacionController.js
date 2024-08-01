@@ -191,8 +191,7 @@ const createAplicacion = async (req, res) => {
 
 const createAplicacionJSON = async (req, res) => {
 	try {
-		const { DNIPaciente, DNIAgente, numeroDeSerie, fechaDeAplicacion } =
-			req.body;
+		const { DNIPaciente, DNIAgente, numeroDeSerie, fechaDeAplicacion } = req.body;
 		const aplicacion = await Aplicacion.create({
 			DNIPaciente,
 			DNIAgente,
@@ -200,6 +199,17 @@ const createAplicacionJSON = async (req, res) => {
 			fechaDeAplicacion,
 			activo: 1,
 		});
+
+		let loteInterno = await LoteInterno.findByPk(numeroDeSerie);
+		let cant = loteInterno.getDataValue('cantidadDeVacunasRestantes')
+		if (cant-1 == 0){
+			loteInterno.update({cantidadDeVacunasRestantes: cant-1, activo:false})
+		} else {
+			loteInterno.update({cantidadDeVacunasRestantes: cant-1})
+		}
+		loteInterno.save();
+		
+
 		await createRegistro(
 			req.user.idUsuario,
 			"Aplicacion",
@@ -212,7 +222,7 @@ const createAplicacionJSON = async (req, res) => {
 			aplicacion.dataValues.idAplicacion,
 			"Alta"
 		);
-		res.status(200).json({ flash: 'La aplicación fue registrada exitosamente.' })
+		res.status(200).json({ flash: 'La aplicación fue registrada exitosamente.', reload: cant-1==0})
 	} catch (error) {
 		req.flash(
 			"error",
