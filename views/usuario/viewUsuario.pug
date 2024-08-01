@@ -56,7 +56,8 @@ script.
             },
             columns:[
                 {data: 'idUsuario', title:'idUsuario'},
-                {data: 'nombreUsuario', title: 'Nombre del usuario'},
+                {data: 'apellido', title: 'Apellido del usuario'},
+                {data: 'nombre', title: 'Nombre del usuario'},
                 {data: 'email', title: 'Email del usuario'},
                 {data: 'rol', title: 'Rol del usuario'},
                 {data: 'activo', title: 'Estado del usuario', createdCell: agregarMensajeSiActivoOInactivo},
@@ -74,9 +75,9 @@ script.
                 }
             ],
             columnDefs: [
-                {orderable: false, targets:[4, 5]}, // Columna de "Opciones"
-                {searchable: true, targets:[0,1,2,3]},
-                {className: "dt-center", targets: [0, 1, 2, 3, 4, 5]},
+                {orderable: false, targets:[5, 6]}, // Columna de "Opciones"
+                {searchable: true, targets:[0,1,2,3,4]},
+                {className: "dt-center", targets: [0, 1, 2, 3, 4, 5,6]},
                 //{ width: "7%", targets: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11] },
                 //{ width: "5%", targets: [14] }
             ]

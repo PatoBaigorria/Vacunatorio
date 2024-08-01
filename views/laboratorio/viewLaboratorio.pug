@@ -41,10 +41,6 @@ body
                                     button.btn.btn-secondary#cancelAltaBtn(type="button" data-dismiss="modal") Cancelar
                                     button.btn.btn-danger#confirmAltaBtn(type="button") Confirmar
                     div(style="text-align: left")
-                        if(user.rol != 'Super Admin')
-                            a.btn.btn-primary.btn-lg(href="/laboratorios/alta") Alta
-                        br
-                        br
                         div.table.responsive 
                             table#laboratorios.table.table-striped.table-bordered
 script.
@@ -79,8 +75,8 @@ script.
                 }
             ],
             columnDefs: [
-                { orderable: false, targets: [3] },
-                { searchable: false, targets: [3] },
+                { orderable: false, targets: [2, 3] },
+                { searchable: false, targets: [2, 3] },
                 { className: "dt-center", targets: [0, 1, 2, 3] },
                 { width: '15%', targets: [0, 1] },
                 { width: '5%', targets: [2, 3] },
