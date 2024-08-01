@@ -5,8 +5,8 @@ block content
     .container.mt-4
         .row.justify-content-center
             .col-md-5
-                h2.mx-auto.text-center(style="white-space: nowrap;") Completa los filtros para 
-                h2.mx-auto.text-center(style="white-space: nowrap;") el reporte de envíos de vacunas
+                h3.mx-auto.text-center(style="white-space: nowrap;") Completa los filtros para 
+                h3.mx-auto.text-center(style="white-space: nowrap;") el reporte de envíos de vacunas
                 .row.mb-3
                 form(action="/reportes/enviosvacunas" method="get")
                     .form-group
@@ -33,7 +33,7 @@ block content
                     .text-center.mt-4
                         button.btn.btn-primary(type="submit") Generar Reporte
 
-script(src="https://code.jquery.com/jquery-3.6.0.min.js")
+    script(src="https://code.jquery.com/jquery-3.6.0.min.js")
 script.
     async function cargarLocalidades(){
         const provincia = $('#provincia').val();

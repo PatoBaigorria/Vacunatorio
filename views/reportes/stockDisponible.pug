@@ -4,7 +4,8 @@ block content
   .container.mt-4
     .row.justify-content-center
       .col-md-8
-        h2.mx-auto.text-center(style="white-space: nowrap;") Reporte de Stock Disponible de Vacunas
+        h3.mx-auto.text-center(style="white-space: nowrap;") Reporte de Stock Disponible de Vacunas
+
 
         .text-center
           canvas#stockChart(width="400" height="200")
@@ -64,7 +65,7 @@ script.
         datalabels: {
           color: 'black',
           anchor: 'end',
-          align: 'top',
+          align: 'start',
           formatter: function(value, context) {
             return value !== 0 ? value : '';
           }
