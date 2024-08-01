@@ -202,13 +202,13 @@ const createAplicacionJSON = async (req, res) => {
 
 		let loteInterno = await LoteInterno.findByPk(numeroDeSerie);
 		let cant = loteInterno.getDataValue('cantidadDeVacunasRestantes')
-		if (cant-1 == 0){
-			loteInterno.update({cantidadDeVacunasRestantes: cant-1, activo:false})
+		if (cant - 1 == 0) {
+			loteInterno.update({ cantidadDeVacunasRestantes: cant - 1, activo: false })
 		} else {
-			loteInterno.update({cantidadDeVacunasRestantes: cant-1})
+			loteInterno.update({ cantidadDeVacunasRestantes: cant - 1 })
 		}
 		loteInterno.save();
-		
+
 
 		await createRegistro(
 			req.user.idUsuario,
@@ -222,7 +222,7 @@ const createAplicacionJSON = async (req, res) => {
 			aplicacion.dataValues.idAplicacion,
 			"Alta"
 		);
-		res.status(200).json({ flash: 'La aplicación fue registrada exitosamente.', reload: cant-1==0})
+		res.status(200).json({ flash: 'La aplicación fue registrada exitosamente.', reload: cant - 1 == 0 })
 	} catch (error) {
 		req.flash(
 			"error",
@@ -242,7 +242,21 @@ const editAplicacion = async (req, res) => {
 			return res.redirect("/aplicaciones");
 		}
 
-		const lotes = await LoteInterno.findAll();
+		const lotes = await LoteInterno.findAll({
+			include: [
+				{
+					model: CentroDeVacunacion,
+					where: {
+						idCentroDeVacunacion: { [Op.ne]: null },
+						provincia: req.user.provincia,
+						localidad: req.user.localidad
+					},
+					attributes: []
+				},
+				{ model: LoteProveedor, attributes: ["fechaDeVencimiento"], where: { activo: true } },
+			],
+			distinct: true
+		});
 
 		const pacientes = await Persona.findAll({
 			where: {
@@ -278,12 +292,6 @@ const editAplicacion = async (req, res) => {
 		res.json({ success: false, error: error.message });
 	}
 };
-
-
-
-
-
-
 
 const updateAplicacion = async (req, res) => {
 	try {
