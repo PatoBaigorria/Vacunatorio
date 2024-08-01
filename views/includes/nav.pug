@@ -94,6 +94,15 @@ nav.navbar.navbar-expand-md.bg-dark
 							a.nav-link.text-light(href="/descartes") 
 								i.fas.fa-trash-alt
 								|  Descartes
+						li.nav-item.dropdown
+							a.nav-link.dropdown-toggle.text-light#toggleLotes(data-bs-toggle="dropdown" data-bs-target="lotes" aria-haspopup="true" aria-expanded="false") 
+								i.fas.fa-boxes
+								|  Lotes
+							ul.dropdown-menu.bg-dark#lotes(aria-labelledby="toggleLotes")
+								li
+									a.nav-link.text-light(href="/lotesinternos") Internos
+								li
+									a.nav-link.text-light(href="/lotesproveedores") Proveedores
 					else if user.rol === 'Agente de salud'
 						li.nav-item
 							a.nav-link.text-light(href="/traslados") 

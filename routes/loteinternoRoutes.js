@@ -10,7 +10,7 @@ router.get(
 );
 router.get(
 	"/",
-	authorize(["Super Admin", "Gestor de compras"]),
+	authorize(["Super Admin", "Gestor de compras", "Operador de logistica"]),
 	loteInternoController.listarLotesInternos
 );
 router.get("/sinDNJSON/:numeroDeLote", authorize(["Operador de logistica"]), loteInternoController.listarLotesSinDNJSON);
@@ -31,12 +31,12 @@ router.post(
 );
 router.get(
 	"/details/:id",
-	authorize(["Super Admin", "Gestor de compras"]),
+	authorize(["Super Admin", "Gestor de compras", "Operador de logistica"]),
 	loteInternoController.detailsLoteInterno
 );
 router.get(
 	"/:id",
-	authorize(["Gestor de compras"]),
+	authorize(["Gestor de compras", "Operador de logistica"]),
 	loteInternoController.editLoteInterno
 );
 router.put(
